@@ -1,11 +1,5 @@
 import { FMP } from '../../fmp';
-import { config } from 'dotenv';
-import { resolve } from 'path';
-
-config({ path: resolve(__dirname, '../../../../../.env') });
-
-const API_KEY = process.env.FMP_API_KEY;
-const isCI = process.env.CI === 'true';
+import { API_KEY, isCI } from '../utils/test-setup';
 
 describe('Forex Endpoints', () => {
   if (!API_KEY || isCI) {
@@ -18,6 +12,9 @@ describe('Forex Endpoints', () => {
   let fmp: FMP;
 
   beforeAll(() => {
+    if (!API_KEY) {
+      throw new Error('FMP_API_KEY is required for testing');
+    }
     fmp = new FMP({ apiKey: API_KEY });
   });
 

@@ -1,20 +1,13 @@
 #!/usr/bin/env node
 
-import { config } from 'dotenv';
-import { resolve } from 'path';
 import { FMP } from '../src/fmp';
-
-// Load environment variables from root directory
-config({ path: resolve(__dirname, '../../../.env') });
 
 async function testAPI() {
   const API_KEY = process.env.FMP_API_KEY;
 
   if (!API_KEY) {
     console.log('❌ No FMP_API_KEY found in environment variables');
-    console.log(
-      'Please set FMP_API_KEY in your .env file in the root directory'
-    );
+    console.log('Please set FMP_API_KEY in your .env file in the root directory');
     process.exit(1);
   }
 
@@ -35,7 +28,7 @@ async function testAPI() {
       console.log(
         `✅ AAPL Quote: $${stock.price} (${stock.change > 0 ? '+' : ''}${
           stock.change
-        } | ${stock.changePercent}%)`
+        } | ${stock.changePercent}%)`,
       );
       console.log(`   Market Cap: $${(stock.marketCap / 1e9).toFixed(2)}B`);
       console.log(`   Volume: ${stock.volume.toLocaleString()}\n`);
@@ -65,11 +58,7 @@ async function testAPI() {
       limit: 1,
     });
 
-    if (
-      incomeStatement.success &&
-      incomeStatement.data &&
-      incomeStatement.data.length > 0
-    ) {
+    if (incomeStatement.success && incomeStatement.data && incomeStatement.data.length > 0) {
       const statement = incomeStatement.data[0];
       console.log(`✅ Income Statement for ${statement.calendarYear}`);
       console.log(`   Period: ${statement.period}`);
@@ -84,15 +73,9 @@ async function testAPI() {
 
     if (marketHours.success && marketHours.data) {
       console.log(`✅ Market Hours: ${marketHours.data.stockExchangeName}`);
-      console.log(
-        `   Stock Market Open: ${marketHours.data.isTheStockMarketOpen}`
-      );
-      console.log(
-        `   Forex Market Open: ${marketHours.data.isTheForexMarketOpen}`
-      );
-      console.log(
-        `   Crypto Market Open: ${marketHours.data.isTheCryptoMarketOpen}\n`
-      );
+      console.log(`   Stock Market Open: ${marketHours.data.isTheStockMarketOpen}`);
+      console.log(`   Forex Market Open: ${marketHours.data.isTheForexMarketOpen}`);
+      console.log(`   Crypto Market Open: ${marketHours.data.isTheCryptoMarketOpen}\n`);
     } else {
       console.log('❌ Failed to get market hours:', marketHours.error);
     }

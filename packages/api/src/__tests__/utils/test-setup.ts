@@ -11,6 +11,7 @@ export const isCI = process.env.CI === 'true';
  * Only skip if no API key is available
  */
 export function shouldSkipTests(): boolean {
+  console.log('API_KEY   ===> ', API_KEY?.length);
   return !API_KEY;
 }
 

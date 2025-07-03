@@ -1,13 +1,5 @@
 import { FMP } from '../fmp';
-
-import { config } from 'dotenv';
-import { resolve } from 'path';
-
-config({ path: resolve(__dirname, '../../../../.env') });
-
-// Skip tests if no API key is provided or if running in CI
-const API_KEY = process.env.FMP_API_KEY;
-const isCI = process.env.CI === 'true';
+import { API_KEY, isCI } from './utils/test-setup';
 
 describe('FMP API Integration Tests', () => {
   if (!API_KEY || isCI) {
@@ -25,6 +17,9 @@ describe('FMP API Integration Tests', () => {
   let fmp: FMP;
 
   beforeAll(() => {
+    if (!API_KEY) {
+      throw new Error('FMP_API_KEY is required for testing');
+    }
     fmp = new FMP({
       apiKey: API_KEY,
     });
