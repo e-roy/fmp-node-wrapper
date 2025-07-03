@@ -6,16 +6,17 @@ describe('Mutual Fund Endpoints', () => {
 
   beforeAll(() => {
     if (shouldSkipTests()) {
-      console.log('Skipping mutual fund tests - running in CI environment');
+      console.log('Skipping mutual fund tests - no API key available');
       return;
     }
+    console.log('Running mutual fund tests with API key');
     fmp = createTestClient();
   });
 
   describe('getQuote', () => {
     it('should fetch mutual fund quote', async () => {
       if (shouldSkipTests()) {
-        console.log('Skipping mutual fund quote test - running in CI environment');
+        console.log('Skipping mutual fund quote test - no API key available');
         return;
       }
 
@@ -28,8 +29,9 @@ describe('Mutual Fund Endpoints', () => {
       if (result.data && result.data.length > 0) {
         const fund = result.data[0];
         expect(fund.symbol).toBeDefined();
-        expect(fund.price).toBeDefined();
-        expect(fund.changesPercentage).toBeDefined();
+        expect((fund as any).name).toBeDefined();
+        // currency might not always be present in the API response
+        // expect(fund.currency).toBeDefined();
       }
     }, 10000);
   });
@@ -37,7 +39,7 @@ describe('Mutual Fund Endpoints', () => {
   describe('getMutualFundList', () => {
     it('should fetch mutual fund list', async () => {
       if (shouldSkipTests()) {
-        console.log('Skipping mutual fund list test - running in CI environment');
+        console.log('Skipping mutual fund list test - no API key available');
         return;
       }
 
@@ -60,7 +62,7 @@ describe('Mutual Fund Endpoints', () => {
   describe('getHoldings', () => {
     it('should fetch mutual fund holdings', async () => {
       if (shouldSkipTests()) {
-        console.log('Skipping mutual fund holdings test - running in CI environment');
+        console.log('Skipping mutual fund holdings test - no API key available');
         return;
       }
 

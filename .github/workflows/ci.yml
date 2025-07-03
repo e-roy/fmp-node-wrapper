@@ -11,6 +11,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      FMP_API_KEY: ${{ secrets.FMP_API_KEY }}
 
     strategy:
       matrix:
@@ -54,10 +56,11 @@ jobs:
       - name: Check code formatting
         run: pnpm format:check
 
+      - name: Debug env
+        run: env | sort
+
       - name: Run tests
         run: pnpm test
-        env:
-          FMP_API_KEY: ${{ secrets.FMP_API_KEY }}
 
       - name: Build packages
         run: pnpm build
