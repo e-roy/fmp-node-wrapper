@@ -79,7 +79,7 @@ jobs:
           FMP_API_KEY: ${{ secrets.FMP_API_KEY }}
 
       - name: Run tests
-        run: pnpm test
+        run: FMP_API_KEY=${{ secrets.FMP_API_KEY }} pnpm test
         env:
           FMP_API_KEY: ${{ secrets.FMP_API_KEY }}
 
