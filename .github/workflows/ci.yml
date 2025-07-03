@@ -59,6 +59,14 @@ jobs:
       - name: Debug env
         run: env | sort
 
+      - name: Check FMP_API_KEY
+        run: |
+          if [ -n "$FMP_API_KEY" ]; then
+            echo "FMP_API_KEY is set (length: ${#FMP_API_KEY})"
+          else
+            echo "FMP_API_KEY is NOT set"
+          fi
+
       - name: Run tests
         run: pnpm test
 
