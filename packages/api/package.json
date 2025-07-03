@@ -22,7 +22,7 @@
     "lint": "npx eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
     "test": "jest",
-    "test:ci": "FMP_API_KEY=$FMP_API_KEY jest",
+    "test:ci": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:unit": "jest --testPathPattern=\"src/__tests__/(client|fmp)\\.test\\.ts\"",

@@ -58,8 +58,6 @@ jobs:
 
       - name: Run tests
         run: pnpm test:ci
-        env:
-          FMP_API_KEY: ${{ secrets.FMP_API_KEY }}
 
       - name: Build packages
         run: pnpm build
