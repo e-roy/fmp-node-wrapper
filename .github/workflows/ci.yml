@@ -67,6 +67,17 @@ jobs:
             echo "FMP_API_KEY is NOT set"
           fi
 
+      - name: Debug environment before tests
+        run: |
+          echo "=== Environment Debug ==="
+          echo "CI: $CI"
+          echo "FMP_API_KEY: $FMP_API_KEY"
+          echo "FMP_API_KEY length: ${#FMP_API_KEY}"
+          echo "All env vars containing FMP:"
+          env | grep -i fmp || echo "No FMP env vars found"
+        env:
+          FMP_API_KEY: ${{ secrets.FMP_API_KEY }}
+
       - name: Run tests
         run: pnpm test
         env:
