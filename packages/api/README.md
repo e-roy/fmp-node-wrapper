@@ -198,6 +198,55 @@ const forexList = await fmp.forex.getForexList();
 // Cryptocurrency
 const cryptoQuote = await fmp.crypto.getQuote({ symbol: 'BTCUSD' });
 const cryptoList = await fmp.crypto.getCryptoList();
+```
+
+## Testing
+
+This package includes comprehensive tests for all endpoints. There are two test scripts available:
+
+### Local Development
+
+```bash
+pnpm test
+```
+
+- Uses Jest to run all tests
+- Automatically loads API key from `.env` file
+- Requires a valid FMP API key in your `.env` file
+
+### CI Environment
+
+```bash
+pnpm test:ci
+```
+
+- Uses Jest with explicit environment variable passing
+- Requires `FMP_API_KEY` environment variable to be set
+- Used by CI/CD pipelines
+
+### Test Structure
+
+- **Unit Tests**: Test individual functions and utilities
+- **Integration Tests**: Test actual API calls with real data
+- **Type Tests**: Ensure TypeScript types are correct
+- **Endpoint Tests**: Comprehensive coverage of all API endpoints
+
+### Running Specific Tests
+
+```bash
+# Run only unit tests
+pnpm test:unit
+
+# Run only integration tests
+pnpm test:integration
+
+# Run tests for specific endpoints
+pnpm test:stock
+pnpm test:financial
+pnpm test:market
+pnpm test:forex
+pnpm test:economic
+```
 
 // ETFs
 const etfQuote = await fmp.etf.getQuote({ symbol: 'SPY' });
@@ -210,7 +259,8 @@ const mfHoldings = await fmp.mutualFund.getHoldings({ symbol: 'VFINX' });
 // Bonds
 const bondQuote = await fmp.bond.getQuote({ symbol: 'US10Y' });
 const bondList = await fmp.bond.getBondList();
-```
+
+````
 
 ## Response Format
 
@@ -223,7 +273,7 @@ interface APIResponse<T> {
   error?: string;
   status?: number;
 }
-```
+````
 
 ### Example Response
 
@@ -271,10 +321,12 @@ import { StockQuote, CompanyProfile, IncomeStatement } from 'fmp-node-api';
 const quote: APIResponse<StockQuote[]> = await fmp.stock.getQuote({
   symbol: 'AAPL',
 });
-const profile: APIResponse<CompanyProfile[]> =
-  await fmp.stock.getCompanyProfile({ symbol: 'AAPL' });
-const income: APIResponse<IncomeStatement[]> =
-  await fmp.financial.getIncomeStatement({ symbol: 'AAPL' });
+const profile: APIResponse<CompanyProfile[]> = await fmp.stock.getCompanyProfile({
+  symbol: 'AAPL',
+});
+const income: APIResponse<IncomeStatement[]> = await fmp.financial.getIncomeStatement({
+  symbol: 'AAPL',
+});
 ```
 
 ## Utilities

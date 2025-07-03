@@ -2,14 +2,6 @@
 
 import { FMP } from '../../fmp';
 
-// Debug logging
-console.log('TEST SETUP - CI:', process.env.CI);
-console.log('TEST SETUP - FMP_API_KEY:', process.env.FMP_API_KEY ? 'SET' : 'NOT SET');
-console.log(
-  'TEST SETUP - FMP_API_KEY length:',
-  process.env.FMP_API_KEY ? process.env.FMP_API_KEY.length : 'N/A',
-);
-
 // Get API key from environment (loaded by Jest setup)
 export const API_KEY = process.env.FMP_API_KEY;
 export const isCI = process.env.CI === 'true';

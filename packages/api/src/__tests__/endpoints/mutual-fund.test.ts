@@ -9,7 +9,6 @@ describe('Mutual Fund Endpoints', () => {
       console.log('Skipping mutual fund tests - no API key available');
       return;
     }
-    console.log('Running mutual fund tests with API key');
     fmp = createTestClient();
   });
 

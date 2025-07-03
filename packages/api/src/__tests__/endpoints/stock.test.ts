@@ -15,7 +15,6 @@ describe('Stock Endpoints', () => {
       console.log('Skipping stock tests - no API key available');
       return;
     }
-    console.log('Running stock tests with API key');
     fmp = createTestClient();
   });
 
