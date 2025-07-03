@@ -9,9 +9,7 @@ export function Footer() {
             <div className="w-6 h-6 bg-blue-600 rounded flex items-center justify-center">
               <span className="text-white font-bold text-xs">F</span>
             </div>
-            <span className="text-neutral-600 dark:text-neutral-300">
-              FMP Node Wrapper
-            </span>
+            <span className="text-neutral-600 dark:text-neutral-300">FMP Node Wrapper</span>
           </div>
 
           <div className="flex space-x-6 text-sm text-neutral-500 dark:text-neutral-400">

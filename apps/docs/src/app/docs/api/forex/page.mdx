@@ -18,10 +18,11 @@ const quote = await fmp.forex.getQuote({ symbol: 'EURUSD' });
 
 // Get historical forex data
 const historical = await fmp.forex.getHistoricalPrice({
-    symbol: 'EURUSD',
-    from: '2024-01-01',
-    to: '2024-01-31'
+symbol: 'EURUSD',
+from: '2024-01-01',
+to: '2024-01-31'
 });`}
+
 </CodeBlock>
 
 ## Available Methods
@@ -42,8 +43,8 @@ Get real-time forex quote for a currency pair.
 
 **Parameters:**
 
-| Parameter | Type     | Required | Description                    |
-| --------- | -------- | -------- | ------------------------------ |
+| Parameter | Type     | Required | Description                           |
+| --------- | -------- | -------- | ------------------------------------- |
 | `symbol`  | `string` | Yes      | Currency pair symbol (e.g., 'EURUSD') |
 
 **Example:**
@@ -52,10 +53,11 @@ Get real-time forex quote for a currency pair.
 {`const quote = await fmp.forex.getQuote({ symbol: 'EURUSD' });
 
 if (quote.success) {
-    console.log('Exchange Rate:', quote.data[0].price);
-    console.log('Change:', quote.data[0].change);
-    console.log('Change %:', quote.data[0].changesPercentage);
+console.log('Exchange Rate:', quote.data[0].price);
+console.log('Change:', quote.data[0].change);
+console.log('Change %:', quote.data[0].changesPercentage);
 }`}
+
 </CodeBlock>
 
 ### getHistoricalPrice
@@ -74,12 +76,12 @@ Get historical forex data for a currency pair.
 
 **Parameters:**
 
-| Parameter     | Type     | Required | Description                    |
-| ------------- | -------- | -------- | ------------------------------ |
-| `symbol`      | `string` | Yes      | Currency pair symbol (e.g., 'EURUSD') |
-| `from`        | `string` | No       | Start date (YYYY-MM-DD)       |
-| `to`          | `string` | No       | End date (YYYY-MM-DD)         |
-| `timeseries`  | `number` | No       | Number of days for timeseries |
+| Parameter    | Type     | Required | Description                           |
+| ------------ | -------- | -------- | ------------------------------------- |
+| `symbol`     | `string` | Yes      | Currency pair symbol (e.g., 'EURUSD') |
+| `from`       | `string` | No       | Start date (YYYY-MM-DD)               |
+| `to`         | `string` | No       | End date (YYYY-MM-DD)                 |
+| `timeseries` | `number` | No       | Number of days for timeseries         |
 
 **Example:**
 
@@ -91,8 +93,9 @@ Get historical forex data for a currency pair.
 });
 
 if (historical.success) {
-    console.log('Historical Data:', historical.data.historical);
+console.log('Historical Data:', historical.data.historical);
 }`}
+
 </CodeBlock>
 
 ### getForexList
@@ -115,8 +118,9 @@ Get list of all available forex pairs.
 {`const forexList = await fmp.forex.getForexList();
 
 if (forexList.success) {
-    console.log('Available Pairs:', forexList.data);
+console.log('Available Pairs:', forexList.data);
 }`}
+
 </CodeBlock>
 
 ## Response Types
@@ -124,7 +128,7 @@ if (forexList.success) {
 ### ForexQuote
 
 <CodeBlock language="typescript">
-{`interface ForexQuote {
+  {`interface ForexQuote {
     symbol: string;
     name: string;
     price: number;
@@ -153,7 +157,7 @@ if (forexList.success) {
 ### ForexCurrency
 
 <CodeBlock language="typescript">
-{`interface ForexCurrency {
+  {`interface ForexCurrency {
     symbol: string;
     name: string;
     currency: string;
@@ -180,13 +184,14 @@ Here are some common currency pairs you can use:
 {`const response = await fmp.forex.getQuote({ symbol: 'INVALID' });
 
 if (response.success) {
-    // Handle successful response
-    console.log(response.data);
+// Handle successful response
+console.log(response.data);
 } else {
-    // Handle error
-    console.error('Error:', response.error);
-    console.error('Status:', response.status);
+// Handle error
+console.error('Error:', response.error);
+console.error('Status:', response.status);
 }`}
+
 </CodeBlock>
 
 ## Rate Limiting
@@ -195,4 +200,4 @@ Forex endpoints are subject to FMP's rate limits. For production applications, c
 
 ---
 
-**Next:** Explore other endpoint categories like [Stock Data](/docs/api/stock) or [Financial Data](/docs/api/financial). 
+**Next:** Explore other endpoint categories like [Stock Data](/docs/api/stock) or [Financial Data](/docs/api/financial).

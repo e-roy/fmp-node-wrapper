@@ -3,10 +3,7 @@
 /**
  * Format currency value
  */
-export function formatCurrency(
-  value: number,
-  currency: string = 'USD'
-): string {
+export function formatCurrency(value: number, currency: string = 'USD'): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: currency,

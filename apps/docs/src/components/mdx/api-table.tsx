@@ -36,10 +36,7 @@ export function ApiTable({ endpoints }: ApiTableProps) {
         </thead>
         <tbody>
           {endpoints.map((endpoint, index) => (
-            <tr
-              key={index}
-              className="hover:bg-neutral-50 dark:hover:bg-neutral-700"
-            >
+            <tr key={index} className="hover:bg-neutral-50 dark:hover:bg-neutral-700">
               <td className="px-4 py-3 text-sm border-b border-neutral-300 dark:border-neutral-600">
                 <span
                   className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
@@ -79,9 +76,7 @@ export interface ParameterTableProps {
 export function ParameterTable({ parameters }: ParameterTableProps) {
   return (
     <div className="my-6 overflow-x-auto">
-      <h4 className="text-lg font-semibold mb-3 text-neutral-900 dark:text-white">
-        Parameters
-      </h4>
+      <h4 className="text-lg font-semibold mb-3 text-neutral-900 dark:text-white">Parameters</h4>
       <table className="min-w-full border border-neutral-300 dark:border-neutral-600 rounded-lg">
         <thead>
           <tr className="bg-neutral-50 dark:bg-neutral-800">
@@ -101,10 +96,7 @@ export function ParameterTable({ parameters }: ParameterTableProps) {
         </thead>
         <tbody>
           {parameters.map((param, index) => (
-            <tr
-              key={index}
-              className="hover:bg-neutral-50 dark:hover:bg-neutral-700"
-            >
+            <tr key={index} className="hover:bg-neutral-50 dark:hover:bg-neutral-700">
               <td className="px-4 py-3 text-sm font-mono text-neutral-900 dark:text-neutral-100 border-b border-neutral-300 dark:border-neutral-600">
                 {param.name}
               </td>

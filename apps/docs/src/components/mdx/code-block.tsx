@@ -76,15 +76,11 @@ export function CodeBlock({
               size="icon"
               onClick={handleCopy}
               className={cn(
-                'opacity-0 group-hover:opacity-100 transition-opacity duration-200 h-6 w-6 text-neutral-300 hover:text-white hover:bg-neutral-700'
+                'opacity-0 group-hover:opacity-100 transition-opacity duration-200 h-6 w-6 text-neutral-300 hover:text-white hover:bg-neutral-700',
               )}
               title="Copy code"
             >
-              {copied ? (
-                <Check className="w-3 h-3 text-green-400" />
-              ) : (
-                <Copy className="w-3 h-3" />
-              )}
+              {copied ? <Check className="w-3 h-3 text-green-400" /> : <Copy className="w-3 h-3" />}
             </Button>
           )}
         </div>
@@ -108,15 +104,11 @@ export function CodeBlock({
             size="icon"
             onClick={handleCopy}
             className={cn(
-              'absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-neutral-800/80 hover:bg-neutral-700 h-8 w-8 text-neutral-300 hover:text-white'
+              'absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-neutral-800/80 hover:bg-neutral-700 h-8 w-8 text-neutral-300 hover:text-white',
             )}
             title="Copy code"
           >
-            {copied ? (
-              <Check className="w-4 h-4 text-green-400" />
-            ) : (
-              <Copy className="w-4 h-4" />
-            )}
+            {copied ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
           </Button>
         )}
       </div>

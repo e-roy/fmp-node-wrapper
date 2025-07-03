@@ -21,6 +21,7 @@ const prices = await fmp.bond.getBondPrices();
 
 // Get yield curve data
 const yieldCurve = await fmp.bond.getYieldCurve();`}
+
 </CodeBlock>
 
 ## Available Methods
@@ -45,10 +46,11 @@ Get current treasury rates for different maturities.
 {`const rates = await fmp.bond.getTreasuryRates();
 
 if (rates.success) {
-    console.log('3-Month Rate:', rates.data[0].month3);
-    console.log('10-Year Rate:', rates.data[0].year10);
-    console.log('30-Year Rate:', rates.data[0].year30);
+console.log('3-Month Rate:', rates.data[0].month3);
+console.log('10-Year Rate:', rates.data[0].year10);
+console.log('30-Year Rate:', rates.data[0].year30);
 }`}
+
 </CodeBlock>
 
 ### getBondPrices
@@ -71,8 +73,9 @@ Get bond prices and yields.
 {`const prices = await fmp.bond.getBondPrices();
 
 if (prices.success) {
-    console.log('Bond Prices:', prices.data);
+console.log('Bond Prices:', prices.data);
 }`}
+
 </CodeBlock>
 
 ### getYieldCurve
@@ -95,8 +98,9 @@ Get yield curve data for analysis.
 {`const yieldCurve = await fmp.bond.getYieldCurve();
 
 if (yieldCurve.success) {
-    console.log('Yield Curve:', yieldCurve.data);
+console.log('Yield Curve:', yieldCurve.data);
 }`}
+
 </CodeBlock>
 
 ### getCorporateBonds
@@ -119,8 +123,9 @@ Get corporate bond data and yields.
 {`const corporate = await fmp.bond.getCorporateBonds();
 
 if (corporate.success) {
-    console.log('Corporate Bonds:', corporate.data);
+console.log('Corporate Bonds:', corporate.data);
 }`}
+
 </CodeBlock>
 
 ## Response Types
@@ -128,7 +133,7 @@ if (corporate.success) {
 ### TreasuryRate
 
 <CodeBlock language="typescript">
-{`interface TreasuryRate {
+  {`interface TreasuryRate {
     date: string;
     month1: number;
     month2: number;
@@ -148,7 +153,7 @@ if (corporate.success) {
 ### BondPrice
 
 <CodeBlock language="typescript">
-{`interface BondPrice {
+  {`interface BondPrice {
     symbol: string;
     name: string;
     price: number;
@@ -163,7 +168,7 @@ if (corporate.success) {
 ### YieldCurve
 
 <CodeBlock language="typescript">
-{`interface YieldCurve {
+  {`interface YieldCurve {
     date: string;
     maturity: string;
     yield: number;
@@ -197,26 +202,28 @@ The yield curve is a key indicator for economic health:
 const rates = await fmp.bond.getTreasuryRates();
 
 if (rates.success) {
-    const current = rates.data[0];
-    const shortTerm = current.month3;  // 3-month rate
-    const mediumTerm = current.year5;  // 5-year rate
-    const longTerm = current.year10;   // 10-year rate
-    
+const current = rates.data[0];
+const shortTerm = current.month3; // 3-month rate
+const mediumTerm = current.year5; // 5-year rate
+const longTerm = current.year10; // 10-year rate
+
     // Normal yield curve (upward sloping)
     if (shortTerm < mediumTerm && mediumTerm < longTerm) {
       console.log('Normal Yield Curve - Healthy economy');
     }
-    
+
     // Flat yield curve
     else if (Math.abs(shortTerm - longTerm) < 0.5) {
       console.log('Flat Yield Curve - Economic uncertainty');
     }
-    
+
     // Inverted yield curve (recession indicator)
     else if (shortTerm > longTerm) {
       console.log('Inverted Yield Curve - Recession warning');
     }
+
 }`}
+
 </CodeBlock>
 
 ## Bond Spread Analysis
@@ -229,16 +236,18 @@ const [treasury, corporate] = await Promise.all([
 ]);
 
 if (treasury.success && corporate.success) {
-    const treasury10Y = treasury.data[0].year10;
-    const corporate10Y = corporate.data.find(bond => 
-      bond.maturity.includes('10')
-    )?.yield;
-    
+const treasury10Y = treasury.data[0].year10;
+const corporate10Y = corporate.data.find(bond =>
+bond.maturity.includes('10')
+)?.yield;
+
     if (corporate10Y) {
       const spread = corporate10Y - treasury10Y;
       console.log('10-Year Credit Spread:', spread);
     }
+
 }`}
+
 </CodeBlock>
 
 ## Common Use Cases
@@ -256,6 +265,7 @@ const [rates, prices, yieldCurve] = await Promise.all([
 console.log('Current Rates:', rates.data[0]);
 console.log('Bond Prices:', prices.data.slice(0, 5));
 console.log('Yield Curve:', yieldCurve.data);`}
+
 </CodeBlock>
 
 ### Duration Analysis
@@ -265,12 +275,14 @@ console.log('Yield Curve:', yieldCurve.data);`}
 const rates = await fmp.bond.getTreasuryRates();
 
 if (rates.success) {
-    const current = rates.data[0];
-    const rateChange = current.year10 - current.year5;
-    
+const current = rates.data[0];
+const rateChange = current.year10 - current.year5;
+
     // Higher duration bonds are more sensitive to rate changes
     console.log('Rate Change (5Y to 10Y):', rateChange);
+
 }`}
+
 </CodeBlock>
 
 ## Error Handling
@@ -279,13 +291,14 @@ if (rates.success) {
 {`const response = await fmp.bond.getTreasuryRates();
 
 if (response.success) {
-    // Handle successful response
-    console.log(response.data);
+// Handle successful response
+console.log(response.data);
 } else {
-    // Handle error
-    console.error('Error:', response.error);
-    console.error('Status:', response.status);
+// Handle error
+console.error('Error:', response.error);
+console.error('Status:', response.status);
 }`}
+
 </CodeBlock>
 
 ## Rate Limiting
@@ -310,4 +323,4 @@ Bond markets typically trade:
 
 ---
 
-**Next:** Explore other endpoint categories like [Economic Data](/docs/api/economic) or [Mutual Fund Data](/docs/api/mutual-fund). 
+**Next:** Explore other endpoint categories like [Economic Data](/docs/api/economic) or [Mutual Fund Data](/docs/api/mutual-fund).

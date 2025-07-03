@@ -18,13 +18,12 @@ Get started with the FMP Node Wrapper in just a few steps:
 
 <CodeBlock language="bash">{`npm install fmp-node-api`}</CodeBlock>
 
-
 <CodeBlock language="typescript">
 {`import { FMPClient, FMPEndpoints } from 'fmp-node-api';
 
 // Initialize the client
 const client = new FMPClient({
-    apiKey: 'your-api-key-here',
+apiKey: 'your-api-key-here',
 });
 
 // Create endpoints instance
@@ -34,8 +33,6 @@ const fmp = new FMPEndpoints(client);
 const quote = await fmp.getQuote({ symbol: 'AAPL' });`}
 
 </CodeBlock>
-
-
 
 ## Key Features
 

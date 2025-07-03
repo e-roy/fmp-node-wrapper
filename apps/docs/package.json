@@ -10,8 +10,8 @@
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "type-check": "tsc --noEmit",
-    "format": "prettier --write .",
-    "format:check": "prettier --check .",
+    "format": "prettier --write \"src/**/*.{ts,tsx,mdx}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,mdx}\"",
     "clean": "rm -rf .next"
   },
   "dependencies": {

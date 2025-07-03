@@ -16,9 +16,7 @@ describe('FMPClient', () => {
   it('should have axios instance', () => {
     const axiosInstance = client.getAxiosInstance();
     expect(axiosInstance).toBeDefined();
-    expect(axiosInstance.defaults.baseURL).toBe(
-      'https://financialmodelingprep.com/api/v3'
-    );
+    expect(axiosInstance.defaults.baseURL).toBe('https://financialmodelingprep.com/api/v3');
   });
 
   it('should handle GET requests', async () => {

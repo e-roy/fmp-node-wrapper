@@ -186,8 +186,7 @@ describe('Common Types', () => {
         exchangeShortName: 'NASDAQ',
         industry: 'Consumer Electronics',
         website: 'https://www.apple.com',
-        description:
-          'Apple Inc. designs, manufactures, and markets smartphones...',
+        description: 'Apple Inc. designs, manufactures, and markets smartphones...',
         ceo: 'Tim Cook',
         sector: 'Technology',
         country: 'US',

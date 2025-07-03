@@ -15,9 +15,7 @@ describe('FMP API Integration Tests', () => {
       if (isCI) {
         console.log('Skipping integration tests - running in CI environment');
       } else {
-        console.log(
-          'Skipping integration tests - no FMP_API_KEY found in environment'
-        );
+        console.log('Skipping integration tests - no FMP_API_KEY found in environment');
       }
       expect(true).toBe(true);
     });
@@ -55,8 +53,7 @@ describe('FMP API Integration Tests', () => {
 
       // Accept either an empty array or a failed response
       expect(
-        (Array.isArray(result.data) && result.data.length === 0) ||
-          result.success === false
+        (Array.isArray(result.data) && result.data.length === 0) || result.success === false,
       ).toBe(true);
     }, 10000);
   });

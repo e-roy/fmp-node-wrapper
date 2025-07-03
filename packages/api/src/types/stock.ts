@@ -16,9 +16,7 @@ export interface StockQuoteParams extends SymbolParams {}
 
 export interface StockProfileParams extends SymbolParams {}
 
-export interface StockHistoricalPriceParams
-  extends SymbolParams,
-    DateRangeParams {
+export interface StockHistoricalPriceParams extends SymbolParams, DateRangeParams {
   timeseries?: number;
 }
 
@@ -33,9 +31,7 @@ export interface StockSplitsParams extends SymbolParams {}
 
 export interface StockDividendParams extends SymbolParams {}
 
-export interface StockInsiderTradingParams
-  extends SymbolParams,
-    PaginationParams {}
+export interface StockInsiderTradingParams extends SymbolParams, PaginationParams {}
 
 export interface StockInstitutionalHoldersParams extends SymbolParams {}
 
@@ -43,9 +39,7 @@ export interface StockMutualFundHoldersParams extends SymbolParams {}
 
 export interface StockMajorHoldersParams extends SymbolParams {}
 
-export interface StockAnalystEstimatesParams
-  extends SymbolParams,
-    PaginationParams {}
+export interface StockAnalystEstimatesParams extends SymbolParams, PaginationParams {}
 
 export interface StockPriceTargetParams extends SymbolParams {}
 

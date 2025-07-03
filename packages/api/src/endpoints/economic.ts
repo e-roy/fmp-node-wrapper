@@ -21,9 +21,7 @@ export class EconomicEndpoints {
   /**
    * Get treasury rates
    */
-  async getTreasuryRates(
-    params: TreasuryRateParams = {}
-  ): Promise<APIResponse<TreasuryRate[]>> {
+  async getTreasuryRates(params: TreasuryRateParams = {}): Promise<APIResponse<TreasuryRate[]>> {
     const queryParams: QueryParams = {};
     if (params.from) queryParams.from = params.from;
     if (params.to) queryParams.to = params.to;
@@ -35,7 +33,7 @@ export class EconomicEndpoints {
    * Get federal funds rate
    */
   async getFederalFundsRate(
-    params: FederalFundsRateParams = {}
+    params: FederalFundsRateParams = {},
   ): Promise<APIResponse<FederalFundsRate[]>> {
     const queryParams: QueryParams = {};
     if (params.from) queryParams.from = params.from;
@@ -69,9 +67,7 @@ export class EconomicEndpoints {
   /**
    * Get unemployment data
    */
-  async getUnemployment(
-    params: UnemploymentParams = {}
-  ): Promise<APIResponse<Unemployment[]>> {
+  async getUnemployment(params: UnemploymentParams = {}): Promise<APIResponse<Unemployment[]>> {
     const queryParams: QueryParams = {};
     if (params.from) queryParams.from = params.from;
     if (params.to) queryParams.to = params.to;

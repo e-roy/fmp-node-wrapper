@@ -12,11 +12,7 @@ export const metadata: Metadata = {
   description: 'Documentation for the FMP Node Wrapper',
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>

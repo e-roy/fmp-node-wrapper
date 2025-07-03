@@ -12,8 +12,8 @@ First, set up your client:
 
 // Initialize the client
 const fmp = new FMP({
-    apiKey: process.env.FMP_API_KEY || 'your-api-key-here',
-    timeout: 15000,
+apiKey: process.env.FMP_API_KEY || 'your-api-key-here',
+timeout: 15000,
 });`}
 
 </CodeBlock>
@@ -41,12 +41,13 @@ Create a simple stock price monitoring script:
     } catch (error) {
       console.error('Error monitoring stock:', error);
     }
+
 }
 
 // Monitor multiple stocks
 const symbols = ['AAPL', 'MSFT', 'GOOGL', 'TSLA'];
 for (const symbol of symbols) {
-    await monitorStockPrice(symbol);
+await monitorStockPrice(symbol);
 }`}
 
 </CodeBlock>
@@ -62,49 +63,49 @@ Build a comprehensive financial analysis dashboard:
 // Get company profile
 const profile = await fmp.stock.getCompanyProfile({ symbol });
 if (profile.success && profile.data?.[0]) {
-    const company = profile.data[0];
-    console.log('Company: ' + company.companyName);
-    console.log('Industry: ' + company.industry);
-    console.log('Sector: ' + company.sector);
-    console.log('Market Cap: $' + (company.marketCap / 1e9).toFixed(2) + 'B');
-    console.log('Beta: ' + company.beta);
+const company = profile.data[0];
+console.log('Company: ' + company.companyName);
+console.log('Industry: ' + company.industry);
+console.log('Sector: ' + company.sector);
+console.log('Market Cap: $' + (company.marketCap / 1e9).toFixed(2) + 'B');
+console.log('Beta: ' + company.beta);
 }
 
 // Get financial ratios
 const ratios = await fmp.financial.getFinancialRatios({ symbol });
 if (ratios.success && ratios.data?.[0]) {
-    const ratio = ratios.data[0];
-    console.log('\\n--- Key Ratios ---');
-    console.log('P/E Ratio: ' + ratio.priceEarningsRatio);
-    console.log('P/B Ratio: ' + ratio.priceToBookRatio);
-    console.log('ROE: ' + (ratio.returnOnEquity _ 100).toFixed(2) + '%');
-    console.log('ROA: ' + (ratio.returnOnAssets _ 100).toFixed(2) + '%');
-    console.log('Debt/Equity: ' + ratio.debtEquityRatio);
-    console.log('Current Ratio: ' + ratio.currentRatio);
+const ratio = ratios.data[0];
+console.log('\\n--- Key Ratios ---');
+console.log('P/E Ratio: ' + ratio.priceEarningsRatio);
+console.log('P/B Ratio: ' + ratio.priceToBookRatio);
+console.log('ROE: ' + (ratio.returnOnEquity _ 100).toFixed(2) + '%');
+console.log('ROA: ' + (ratio.returnOnAssets _ 100).toFixed(2) + '%');
+console.log('Debt/Equity: ' + ratio.debtEquityRatio);
+console.log('Current Ratio: ' + ratio.currentRatio);
 }
 
 // Get recent financial statements
 const incomeStatement = await fmp.financial.getIncomeStatement({
-    symbol,
-    period: 'annual',
-    limit: 3,
+symbol,
+period: 'annual',
+limit: 3,
 });
 
 if (incomeStatement.success && incomeStatement.data) {
-    console.log('\\n--- Recent Performance ---');
-    incomeStatement.data.forEach((year) => {
-      console.log(\`\${year.calendarYear}:\`);
-      console.log(' Revenue: $' + (year.revenue / 1e9).toFixed(2) + 'B');
-      console.log(' Net Income: $' + (year.netIncome / 1e9).toFixed(2) + 'B');
-      console.log(' Profit Margin: ' + (year.netIncomeRatio \* 100).toFixed(2) + '%');
-    });
-  }
+console.log('\\n--- Recent Performance ---');
+incomeStatement.data.forEach((year) => {
+console.log(\`\${year.calendarYear}:\`);
+console.log(' Revenue: $' + (year.revenue / 1e9).toFixed(2) + 'B');
+console.log(' Net Income: $' + (year.netIncome / 1e9).toFixed(2) + 'B');
+console.log(' Profit Margin: ' + (year.netIncomeRatio \* 100).toFixed(2) + '%');
+});
+}
 }
 
 // Analyze multiple companies
 const companies = ['AAPL', 'MSFT', 'GOOGL'];
-    for (const company of companies) {
-    await analyzeCompany(company);
+for (const company of companies) {
+await analyzeCompany(company);
 }`}
 
 </CodeBlock>
@@ -171,12 +172,13 @@ Analyze historical price data and calculate returns:
       );
 
     }
+
 }
 
 // Analyze historical data for multiple stocks
 const symbols = ['AAPL', 'MSFT', 'GOOGL'];
 for (const symbol of symbols) {
-    await analyzeHistoricalData(symbol, 3);
+await analyzeHistoricalData(symbol, 3);
 }`}
 
 </CodeBlock>
@@ -199,7 +201,7 @@ let totalValue = 0;
 let totalCost = 0;
 
 for (const position of portfolio) {
-    const quote = await fmp.stock.getQuote({ symbol: position.symbol });
+const quote = await fmp.stock.getQuote({ symbol: position.symbol });
 
     if (quote.success && quote.data?.[0]) {
       const stock = quote.data[0];
@@ -231,15 +233,15 @@ console.log('=== Portfolio Summary ===');
 console.log(\`Total Cost: $\${totalCost.toFixed(2)}\`);
 console.log(\`Total Value: $\${totalValue.toFixed(2)}\`);
 console.log(
-    \`Total Gain/Loss: $\${portfolioGainLoss.toFixed(2)} (\${portfolioGainLossPercent.toFixed(2)}%)\`
+\`Total Gain/Loss: $\${portfolioGainLoss.toFixed(2)} (\${portfolioGainLossPercent.toFixed(2)}%)\`
 );
 }
 
 // Example portfolio
 const portfolio: PortfolioPosition[] = [
-    { symbol: 'AAPL', shares: 10, costBasis: 150.0 },
-    { symbol: 'MSFT', shares: 5, costBasis: 300.0 },
-    { symbol: 'GOOGL', shares: 3, costBasis: 2500.0 },
+{ symbol: 'AAPL', shares: 10, costBasis: 150.0 },
+{ symbol: 'MSFT', shares: 5, costBasis: 300.0 },
+{ symbol: 'GOOGL', shares: 3, costBasis: 2500.0 },
 ];
 
 await trackPortfolio(portfolio);`}
@@ -267,11 +269,11 @@ Create a market scanner to find stocks meeting specific criteria:
 console.log('Scanning market for value stocks...\\n');
 
 for (const symbol of symbols) {
-    try {
-      const [quote, ratios] = await Promise.all([
-        fmp.stock.getQuote({ symbol }),
-        fmp.financial.getFinancialRatios({ symbol }),
-      ]);
+try {
+const [quote, ratios] = await Promise.all([
+fmp.stock.getQuote({ symbol }),
+fmp.financial.getFinancialRatios({ symbol }),
+]);
 
       if (
         quote.success &&
@@ -308,12 +310,12 @@ for (const symbol of symbols) {
 
 console.log('=== Value Stocks Found ===\\n');
 results.forEach(stock => {
-    console.log(\`\${stock.name} (\${stock.symbol})\`);
-    console.log(\` Price: $\${stock.price.toFixed(2)}\`);
-    console.log(\` P/E: \${stock.pe.toFixed(2)}\`);
-    console.log(\` P/B: \${stock.pb.toFixed(2)}\`);
-    console.log(\` ROE: \${(stock.roe \* 100).toFixed(2)}%\`);
-    console.log('');
+console.log(\`\${stock.name} (\${stock.symbol})\`);
+console.log(\` Price: $\${stock.price.toFixed(2)}\`);
+console.log(\` P/E: \${stock.pe.toFixed(2)}\`);
+console.log(\` P/B: \${stock.pb.toFixed(2)}\`);
+console.log(\` ROE: \${(stock.roe \* 100).toFixed(2)}%\`);
+console.log('');
 });
 }
 
@@ -329,47 +331,47 @@ Create a comprehensive dashboard covering multiple asset classes:
 {`async function multiAssetDashboard() {
   console.log('=== Multi-Asset Market Dashboard ===\\n');
 
-  // Stock market data
-  const [stockQuote, marketPerformance] = await Promise.all([
-    fmp.stock.getQuote({ symbol: 'SPY' }),
-    fmp.market.getMarketPerformance()
-  ]);
+// Stock market data
+const [stockQuote, marketPerformance] = await Promise.all([
+fmp.stock.getQuote({ symbol: 'SPY' }),
+fmp.market.getMarketPerformance()
+]);
 
-  if (stockQuote.success && marketPerformance.success) {
-    console.log('📊 Stock Market:');
-    console.log(\` S&P 500: $\${stockQuote.data[0].price} (\${stockQuote.data[0].changesPercentage.toFixed(2)}%)\`);
-    console.log(\` Top Performer: \${marketPerformance.data[0]?.name} (\${marketPerformance.data[0]?.changesPercentage.toFixed(2)}%)\`);
-  }
+if (stockQuote.success && marketPerformance.success) {
+console.log('📊 Stock Market:');
+console.log(\` S&P 500: $\${stockQuote.data[0].price} (\${stockQuote.data[0].changesPercentage.toFixed(2)}%)\`);
+console.log(\` Top Performer: \${marketPerformance.data[0]?.name} (\${marketPerformance.data[0]?.changesPercentage.toFixed(2)}%)\`);
+}
 
-  // Forex data
-  const forexQuote = await fmp.forex.getQuote({ symbol: 'EURUSD' });
-  if (forexQuote.success) {
-    console.log('\\n💱 Forex:');
-    console.log(\` EUR/USD: \${forexQuote.data[0].price} (\${forexQuote.data[0].changesPercentage.toFixed(2)}%)\`);
-  }
+// Forex data
+const forexQuote = await fmp.forex.getQuote({ symbol: 'EURUSD' });
+if (forexQuote.success) {
+console.log('\\n💱 Forex:');
+console.log(\` EUR/USD: \${forexQuote.data[0].price} (\${forexQuote.data[0].changesPercentage.toFixed(2)}%)\`);
+}
 
-  // Crypto data
-  const cryptoQuote = await fmp.crypto.getQuote({ symbol: 'BTCUSD' });
-  if (cryptoQuote.success) {
-    console.log('\\n🪙 Cryptocurrency:');
-    console.log(\` Bitcoin: $\${cryptoQuote.data[0].price.toLocaleString()} (\${cryptoQuote.data[0].changesPercentage.toFixed(2)}%)\`);
-  }
+// Crypto data
+const cryptoQuote = await fmp.crypto.getQuote({ symbol: 'BTCUSD' });
+if (cryptoQuote.success) {
+console.log('\\n🪙 Cryptocurrency:');
+console.log(\` Bitcoin: $\${cryptoQuote.data[0].price.toLocaleString()} (\${cryptoQuote.data[0].changesPercentage.toFixed(2)}%)\`);
+}
 
-  // ETF data
-  const etfQuote = await fmp.etf.getQuote({ symbol: 'QQQ' });
-  if (etfQuote.success) {
-    console.log('\\n📈 ETF:');
-    console.log(\` QQQ: $\${etfQuote.data[0].price} (\${etfQuote.data[0].changesPercentage.toFixed(2)}%)\`);
-  }
+// ETF data
+const etfQuote = await fmp.etf.getQuote({ symbol: 'QQQ' });
+if (etfQuote.success) {
+console.log('\\n📈 ETF:');
+console.log(\` QQQ: $\${etfQuote.data[0].price} (\${etfQuote.data[0].changesPercentage.toFixed(2)}%)\`);
+}
 
-  // Market hours
-  const marketHours = await fmp.market.getMarketHours();
-  if (marketHours.success) {
-    console.log('\\n🕐 Market Status:');
-    console.log(\` Stock Market: \${marketHours.data.stockMarket}\`);
-    console.log(\` Forex: \${marketHours.data.forex}\`);
-    console.log(\` Crypto: \${marketHours.data.crypto}\`);
-  }
+// Market hours
+const marketHours = await fmp.market.getMarketHours();
+if (marketHours.success) {
+console.log('\\n🕐 Market Status:');
+console.log(\` Stock Market: \${marketHours.data.stockMarket}\`);
+console.log(\` Forex: \${marketHours.data.forex}\`);
+console.log(\` Crypto: \${marketHours.data.crypto}\`);
+}
 }
 
 await multiAssetDashboard();`}
@@ -384,20 +386,20 @@ Analyze economic indicators and their market impact:
 {`async function economicAnalysis() {
   console.log('=== Economic Analysis ===\\n');
 
-  // Get treasury rates
-  const rates = await fmp.economic.getTreasuryRates();
-  if (rates.success) {
-    const current = rates.data[0];
-    console.log('📈 Treasury Rates:');
-    console.log(\` 3-Month: \${current.month3.toFixed(2)}%\`);
-    console.log(\` 2-Year: \${current.year2.toFixed(2)}%\`);
-    console.log(\` 10-Year: \${current.year10.toFixed(2)}%\`);
-    console.log(\` 30-Year: \${current.year30.toFixed(2)}%\`);
+// Get treasury rates
+const rates = await fmp.economic.getTreasuryRates();
+if (rates.success) {
+const current = rates.data[0];
+console.log('📈 Treasury Rates:');
+console.log(\` 3-Month: \${current.month3.toFixed(2)}%\`);
+console.log(\` 2-Year: \${current.year2.toFixed(2)}%\`);
+console.log(\` 10-Year: \${current.year10.toFixed(2)}%\`);
+console.log(\` 30-Year: \${current.year30.toFixed(2)}%\`);
 
     // Analyze yield curve
     const yieldCurve = current.year10 - current.month3;
     console.log(\`\\nYield Curve Spread (10Y - 3M): \${yieldCurve.toFixed(2)}%\`);
-    
+
     if (yieldCurve < 0) {
       console.log('⚠️  Inverted Yield Curve - Recession indicator');
     } else if (yieldCurve < 0.5) {
@@ -405,17 +407,18 @@ Analyze economic indicators and their market impact:
     } else {
       console.log('✅ Normal Yield Curve - Healthy economy');
     }
-  }
 
-  // Get economic calendar
-  const calendar = await fmp.economic.getEconomicCalendar();
-  if (calendar.success) {
-    const highImpact = calendar.data.filter(event => event.impact === 'High');
-    console.log(\`\\n📅 High-Impact Economic Events: \${highImpact.length}\`);
-    highImpact.slice(0, 3).forEach(event => {
-      console.log(\` - \${event.event} (\${event.date})\`);
-    });
-  }
+}
+
+// Get economic calendar
+const calendar = await fmp.economic.getEconomicCalendar();
+if (calendar.success) {
+const highImpact = calendar.data.filter(event => event.impact === 'High');
+console.log(\`\\n📅 High-Impact Economic Events: \${highImpact.length}\`);
+highImpact.slice(0, 3).forEach(event => {
+console.log(\` - \${event.event} (\${event.date})\`);
+});
+}
 }
 
 await economicAnalysis();`}
@@ -430,11 +433,11 @@ Analyze bond yields and create a bond ladder strategy:
 {`async function bondAnalysis() {
   console.log('=== Bond Analysis ===\\n');
 
-  // Get treasury rates for different maturities
-  const rates = await fmp.bond.getTreasuryRates();
-  if (rates.success) {
-    const current = rates.data[0];
-    
+// Get treasury rates for different maturities
+const rates = await fmp.bond.getTreasuryRates();
+if (rates.success) {
+const current = rates.data[0];
+
     console.log('📊 Treasury Yield Ladder:');
     const maturities = [
       { name: '3-Month', rate: current.month3 },
@@ -455,11 +458,12 @@ Analyze bond yields and create a bond ladder strategy:
     console.log(\`\\nAverage Yield: \${avgYield.toFixed(2)}%\`);
 
     // Find best yield
-    const bestYield = maturities.reduce((best, current) => 
+    const bestYield = maturities.reduce((best, current) =>
       current.rate > best.rate ? current : best
     );
     console.log(\`Best Yield: \${bestYield.name} at \${bestYield.rate.toFixed(2)}%\`);
-  }
+
+}
 }
 
 await bondAnalysis();`}
@@ -474,24 +478,24 @@ Compare different investment funds:
 {`async function fundComparison() {
   console.log('=== Fund Comparison ===\\n');
 
-  const funds = [
-    { symbol: 'SPY', name: 'SPDR S&P 500 ETF' },
-    { symbol: 'VFINX', name: 'Vanguard 500 Index Fund' },
-    { symbol: 'QQQ', name: 'Invesco QQQ Trust' }
-  ];
+const funds = [
+{ symbol: 'SPY', name: 'SPDR S&P 500 ETF' },
+{ symbol: 'VFINX', name: 'Vanguard 500 Index Fund' },
+{ symbol: 'QQQ', name: 'Invesco QQQ Trust' }
+];
 
-  const results = [];
+const results = [];
 
-  for (const fund of funds) {
-    try {
-      const [quote, profile] = await Promise.all([
-        fmp.etf.getQuote({ symbol: fund.symbol }).catch(() => 
-          fmp.mutualFund.getQuote({ symbol: fund.symbol })
-        ),
-        fmp.etf.getProfile({ symbol: fund.symbol }).catch(() => 
-          fmp.mutualFund.getProfile({ symbol: fund.symbol })
-        )
-      ]);
+for (const fund of funds) {
+try {
+const [quote, profile] = await Promise.all([
+fmp.etf.getQuote({ symbol: fund.symbol }).catch(() =>
+fmp.mutualFund.getQuote({ symbol: fund.symbol })
+),
+fmp.etf.getProfile({ symbol: fund.symbol }).catch(() =>
+fmp.mutualFund.getProfile({ symbol: fund.symbol })
+)
+]);
 
       if (quote.success && profile.success) {
         results.push({
@@ -506,15 +510,16 @@ Compare different investment funds:
     } catch (error) {
       console.error(\`Error getting data for \${fund.symbol}:\`, error);
     }
-  }
 
-  console.log('Fund Comparison Results:');
-  results.forEach(fund => {
-    console.log(\`\\n\${fund.name} (\${fund.symbol})\`);
-    console.log(\` Price: $\${fund.price.toFixed(2)} (\${fund.change > 0 ? '+' : ''}\${fund.change.toFixed(2)}%)\`);
-    console.log(\` Volume: \${fund.volume.toLocaleString()}\`);
-    console.log(\` Market Cap: $\${(fund.marketCap / 1e9).toFixed(2)}B\`);
-  });
+}
+
+console.log('Fund Comparison Results:');
+results.forEach(fund => {
+console.log(\`\\n\${fund.name} (\${fund.symbol})\`);
+console.log(\` Price: $\${fund.price.toFixed(2)} (\${fund.change > 0 ? '+' : ''}\${fund.change.toFixed(2)}%)\`);
+console.log(\` Volume: \${fund.volume.toLocaleString()}\`);
+console.log(\` Market Cap: $\${(fund.marketCap / 1e9).toFixed(2)}B\`);
+});
 }
 
 await fundComparison();`}
@@ -558,7 +563,7 @@ return null;
 // Usage
 const quote = await robustApiCall(() => fmp.stock.getQuote({ symbol: 'AAPL' }));
 if (quote) {
-    console.log('Stock price:', quote[0].price);
+console.log('Stock price:', quote[0].price);
 }`}
 
 </CodeBlock>
@@ -574,13 +579,14 @@ For better performance when making multiple API calls:
   const results = await Promise.allSettled(promises);
 
 const successful = results
-    .filter(
-    (result): result is PromiseFulfilledResult<any> =>
-    result.status === 'fulfilled' && result.value.success
-    )
-    .map(result => result.value.data[0]);
+.filter(
+(result): result is PromiseFulfilledResult<any> =>
+result.status === 'fulfilled' && result.value.success
+)
+.map(result => result.value.data[0]);
 
     return successful;
+
 }
 
 // Usage
@@ -613,8 +619,6 @@ export function example() {
 }`}
 
 </CodeBlock>
-
-
 
 ---
 

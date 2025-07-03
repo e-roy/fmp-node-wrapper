@@ -23,7 +23,7 @@ export function validateSymbol(symbol: string): void {
   const symbolRegex = /^[A-Z0-9.-]+$/;
   if (!symbolRegex.test(symbol.toUpperCase())) {
     throw new FMPError(
-      'Invalid symbol format. Symbols should contain only letters, numbers, dots, and hyphens'
+      'Invalid symbol format. Symbols should contain only letters, numbers, dots, and hyphens',
     );
   }
 }
@@ -60,10 +60,7 @@ export function validatePeriod(period: string): void {
  * Validate limit parameter
  */
 export function validateLimit(limit: number): void {
-  if (
-    limit !== undefined &&
-    (typeof limit !== 'number' || limit < 1 || limit > 1000)
-  ) {
+  if (limit !== undefined && (typeof limit !== 'number' || limit < 1 || limit > 1000)) {
     throw new FMPError('Limit must be a number between 1 and 1000');
   }
 }

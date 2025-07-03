@@ -1,17 +1,8 @@
 // Forex endpoints for FMP API
 
 import { FMPClient } from '../client';
-import {
-  APIResponse,
-  HistoricalPriceResponse,
-  QueryParams,
-} from '../types/common';
-import {
-  ForexQuote,
-  ForexPair,
-  ForexQuoteParams,
-  ForexHistoricalParams,
-} from '../types/forex';
+import { APIResponse, HistoricalPriceResponse, QueryParams } from '../types/common';
+import { ForexQuote, ForexPair, ForexQuoteParams, ForexHistoricalParams } from '../types/forex';
 
 export class ForexEndpoints {
   constructor(private client: FMPClient) {}
@@ -27,17 +18,14 @@ export class ForexEndpoints {
    * Get historical forex data
    */
   async getHistoricalPrice(
-    params: ForexHistoricalParams
+    params: ForexHistoricalParams,
   ): Promise<APIResponse<HistoricalPriceResponse>> {
     const queryParams: QueryParams = {};
     if (params.from) queryParams.from = params.from;
     if (params.to) queryParams.to = params.to;
     if (params.timeseries) queryParams.timeseries = params.timeseries;
 
-    return this.client.get(
-      `/historical-price-full/${params.symbol}`,
-      queryParams
-    );
+    return this.client.get(`/historical-price-full/${params.symbol}`, queryParams);
   }
 
   /**
@@ -84,18 +72,14 @@ export class ForexEndpoints {
   /**
    * Get forex rates for a specific currency
    */
-  async getForexRates(
-    baseCurrency: string = 'USD'
-  ): Promise<APIResponse<Record<string, number>>> {
+  async getForexRates(baseCurrency: string = 'USD'): Promise<APIResponse<Record<string, number>>> {
     return this.client.get(`/forex/${baseCurrency}`);
   }
 
   /**
    * Get forex rates for all currencies
    */
-  async getAllForexRates(): Promise<
-    APIResponse<Record<string, Record<string, number>>>
-  > {
+  async getAllForexRates(): Promise<APIResponse<Record<string, Record<string, number>>>> {
     return this.client.get('/forex');
   }
 }

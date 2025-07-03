@@ -7,9 +7,7 @@ export interface MutualFundQuoteParams extends SymbolParams {}
 
 export interface MutualFundProfileParams extends SymbolParams {}
 
-export interface MutualFundHoldersParams
-  extends SymbolParams,
-    PaginationParams {}
+export interface MutualFundHoldersParams extends SymbolParams, PaginationParams {}
 
 export interface MutualFundListParams {}
 

@@ -21,6 +21,7 @@ const hours = await fmp.market.getMarketHours();
 
 // Get sector performance
 const sectors = await fmp.market.getSectorPerformance();`}
+
 </CodeBlock>
 
 ## Available Methods
@@ -45,8 +46,9 @@ Get overall market performance data.
 {`const performance = await fmp.market.getMarketPerformance();
 
 if (performance.success) {
-  console.log('Market Performance:', performance.data);
+console.log('Market Performance:', performance.data);
 }`}
+
 </CodeBlock>
 
 ### getMarketHours
@@ -69,8 +71,9 @@ Get current market trading hours and status.
 {`const hours = await fmp.market.getMarketHours();
 
 if (hours.success) {
-  console.log('Market Status:', hours.data);
+console.log('Market Status:', hours.data);
 }`}
+
 </CodeBlock>
 
 ### getGainers
@@ -93,8 +96,9 @@ Get top gaining stocks for the day.
 {`const gainers = await fmp.market.getGainers();
 
 if (gainers.success) {
-  console.log('Top Gainers:', gainers.data);
+console.log('Top Gainers:', gainers.data);
 }`}
+
 </CodeBlock>
 
 ### getLosers
@@ -117,8 +121,9 @@ Get top losing stocks for the day.
 {`const losers = await fmp.market.getLosers();
 
 if (losers.success) {
-  console.log('Top Losers:', losers.data);
+console.log('Top Losers:', losers.data);
 }`}
+
 </CodeBlock>
 
 ### getMostActive
@@ -141,8 +146,9 @@ Get most actively traded stocks.
 {`const active = await fmp.market.getMostActive();
 
 if (active.success) {
-  console.log('Most Active:', active.data);
+console.log('Most Active:', active.data);
 }`}
+
 </CodeBlock>
 
 ### getSectorPerformance
@@ -165,8 +171,9 @@ Get performance data by sector.
 {`const sectors = await fmp.market.getSectorPerformance();
 
 if (sectors.success) {
-  console.log('Sector Performance:', sectors.data);
+console.log('Sector Performance:', sectors.data);
 }`}
+
 </CodeBlock>
 
 ### getMarketIndex
@@ -185,10 +192,10 @@ Get market index data with optional date range.
 
 **Parameters:**
 
-| Parameter | Type     | Required | Description                    |
-| --------- | -------- | -------- | ------------------------------ |
-| `from`    | `string` | No       | Start date (YYYY-MM-DD)       |
-| `to`      | `string` | No       | End date (YYYY-MM-DD)         |
+| Parameter | Type     | Required | Description             |
+| --------- | -------- | -------- | ----------------------- |
+| `from`    | `string` | No       | Start date (YYYY-MM-DD) |
+| `to`      | `string` | No       | End date (YYYY-MM-DD)   |
 
 **Example:**
 
@@ -199,8 +206,9 @@ Get market index data with optional date range.
 });
 
 if (index.success) {
-  console.log('Market Index:', index.data);
+console.log('Market Index:', index.data);
 }`}
+
 </CodeBlock>
 
 ## Response Types
@@ -208,7 +216,7 @@ if (index.success) {
 ### MarketHours
 
 <CodeBlock language="typescript">
-{`interface MarketHours {
+  {`interface MarketHours {
   stockMarket: string;
   bonds: string;
   forex: string;
@@ -219,7 +227,7 @@ if (index.success) {
 ### MarketPerformance
 
 <CodeBlock language="typescript">
-{`interface MarketPerformance {
+  {`interface MarketPerformance {
   symbol: string;
   name: string;
   change: number;
@@ -231,7 +239,7 @@ if (index.success) {
 ### MarketSectorPerformance
 
 <CodeBlock language="typescript">
-{`interface MarketSectorPerformance {
+  {`interface MarketSectorPerformance {
   sector: string;
   changesPercentage: number;
 }`}
@@ -240,7 +248,7 @@ if (index.success) {
 ### MarketIndex
 
 <CodeBlock language="typescript">
-{`interface MarketIndex {
+  {`interface MarketIndex {
   symbol: string;
   name: string;
   price: number;
@@ -290,6 +298,7 @@ const [performance, sectors, hours] = await Promise.all([
 console.log('Market Status:', hours.data);
 console.log('Top Performers:', performance.data.slice(0, 5));
 console.log('Sector Leaders:', sectors.data.slice(0, 3));`}
+
 </CodeBlock>
 
 ### Market Analysis
@@ -306,6 +315,7 @@ const declining = losers.data.length;
 const breadth = advancing - declining;
 
 console.log('Market Breadth:', breadth);`}
+
 </CodeBlock>
 
 ## Error Handling
@@ -314,13 +324,14 @@ console.log('Market Breadth:', breadth);`}
 {`const response = await fmp.market.getMarketPerformance();
 
 if (response.success) {
-  // Handle successful response
-  console.log(response.data);
+// Handle successful response
+console.log(response.data);
 } else {
-  // Handle error
-  console.error('Error:', response.error);
-  console.error('Status:', response.status);
+// Handle error
+console.error('Error:', response.error);
+console.error('Status:', response.status);
 }`}
+
 </CodeBlock>
 
 ## Rate Limiting
@@ -338,4 +349,4 @@ Market data availability depends on trading hours:
 
 ---
 
-**Next:** Explore other endpoint categories like [Stock Data](/docs/api/stock) or [Economic Data](/docs/api/economic). 
+**Next:** Explore other endpoint categories like [Stock Data](/docs/api/stock) or [Economic Data](/docs/api/economic).

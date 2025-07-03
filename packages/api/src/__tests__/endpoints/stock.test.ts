@@ -34,7 +34,7 @@ describe('Stock Endpoints', () => {
           expect(quote.volume).toBeGreaterThan(0);
         }
       },
-      FAST_TIMEOUT
+      FAST_TIMEOUT,
     );
 
     it(
@@ -45,11 +45,10 @@ describe('Stock Endpoints', () => {
         });
 
         expect(
-          (Array.isArray(result.data) && result.data.length === 0) ||
-            result.success === false
+          (Array.isArray(result.data) && result.data.length === 0) || result.success === false,
         ).toBe(true);
       },
-      FAST_TIMEOUT
+      FAST_TIMEOUT,
     );
   });
 
@@ -75,7 +74,7 @@ describe('Stock Endpoints', () => {
           // expect(profile.marketCap).toBeGreaterThan(0);
         }
       },
-      FAST_TIMEOUT
+      FAST_TIMEOUT,
     );
   });
 
@@ -92,7 +91,7 @@ describe('Stock Endpoints', () => {
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
       },
-      API_TIMEOUT
+      API_TIMEOUT,
     );
   });
 
@@ -113,7 +112,7 @@ describe('Stock Endpoints', () => {
           // expect(stock.currency).toBeDefined();
         }
       },
-      API_TIMEOUT
+      API_TIMEOUT,
     );
   });
 
@@ -135,7 +134,7 @@ describe('Stock Endpoints', () => {
           expect(marketCap.marketCap).toBeGreaterThan(0);
         }
       },
-      FAST_TIMEOUT
+      FAST_TIMEOUT,
     );
   });
 
@@ -152,7 +151,7 @@ describe('Stock Endpoints', () => {
         expect(result.data).toBeDefined();
         expect(Array.isArray(result.data)).toBe(true);
       },
-      FAST_TIMEOUT
+      FAST_TIMEOUT,
     );
   });
 
@@ -168,7 +167,7 @@ describe('Stock Endpoints', () => {
         expect(result.data).toBeDefined();
         expect(Array.isArray(result.data)).toBe(true);
       },
-      FAST_TIMEOUT
+      FAST_TIMEOUT,
     );
   });
 
@@ -184,7 +183,7 @@ describe('Stock Endpoints', () => {
         expect(result.data).toBeDefined();
         expect(Array.isArray(result.data)).toBe(true);
       },
-      FAST_TIMEOUT
+      FAST_TIMEOUT,
     );
   });
 });

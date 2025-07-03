@@ -417,10 +417,10 @@ Always check the success property before accessing data:
 {`const incomeStatement = await fmp.getIncomeStatement({ symbol: 'INVALID' });
 
 if (incomeStatement.success) {
-    console.log('Revenue:', incomeStatement.data[0].revenue);
+console.log('Revenue:', incomeStatement.data[0].revenue);
 } else {
-    console.error('Error:', incomeStatement.error);
-    console.error('Status:', incomeStatement.status);
+console.error('Error:', incomeStatement.error);
+console.error('Status:', incomeStatement.status);
 }`}
 
 </CodeBlock>

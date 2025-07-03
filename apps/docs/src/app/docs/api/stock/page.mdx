@@ -259,10 +259,10 @@ Always check the success property before accessing data:
 {`const quote = await fmp.getQuote({ symbol: 'INVALID' });
 
 if (quote.success) {
-    console.log('Stock Price:', quote.data[0].price);
+console.log('Stock Price:', quote.data[0].price);
 } else {
-    console.error('Error:', quote.error);
-    console.error('Status:', quote.status);
+console.error('Error:', quote.error);
+console.error('Status:', quote.status);
 }`}
 
 </CodeBlock>

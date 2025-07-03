@@ -1,17 +1,8 @@
 // Bond endpoints for FMP API
 
 import { FMPClient } from '../client';
-import {
-  APIResponse,
-  HistoricalPriceResponse,
-  QueryParams,
-} from '../types/common';
-import {
-  BondQuote,
-  BondList,
-  BondQuoteParams,
-  BondHistoricalParams,
-} from '../types/bond';
+import { APIResponse, HistoricalPriceResponse, QueryParams } from '../types/common';
+import { BondQuote, BondList, BondQuoteParams, BondHistoricalParams } from '../types/bond';
 
 export class BondEndpoints {
   constructor(private client: FMPClient) {}
@@ -27,17 +18,14 @@ export class BondEndpoints {
    * Get historical bond data
    */
   async getHistoricalPrice(
-    params: BondHistoricalParams
+    params: BondHistoricalParams,
   ): Promise<APIResponse<HistoricalPriceResponse>> {
     const queryParams: QueryParams = {};
     if (params.from) queryParams.from = params.from;
     if (params.to) queryParams.to = params.to;
     if (params.timeseries) queryParams.timeseries = params.timeseries;
 
-    return this.client.get(
-      `/historical-price-full/${params.symbol}`,
-      queryParams
-    );
+    return this.client.get(`/historical-price-full/${params.symbol}`, queryParams);
   }
 
   /**

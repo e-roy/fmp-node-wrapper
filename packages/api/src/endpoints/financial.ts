@@ -22,9 +22,7 @@ export class FinancialEndpoints {
     period = 'annual',
     limit = 5,
   }: FinancialStatementsParams): Promise<APIResponse<FinancialStatement[]>> {
-    return this.client.get(
-      `/income-statement/${symbol}?period=${period}&limit=${limit}`
-    );
+    return this.client.get(`/income-statement/${symbol}?period=${period}&limit=${limit}`);
   }
 
   /**
@@ -35,9 +33,7 @@ export class FinancialEndpoints {
     period = 'annual',
     limit = 5,
   }: FinancialStatementsParams): Promise<APIResponse<FinancialStatement[]>> {
-    return this.client.get(
-      `/balance-sheet-statement/${symbol}?period=${period}&limit=${limit}`
-    );
+    return this.client.get(`/balance-sheet-statement/${symbol}?period=${period}&limit=${limit}`);
   }
 
   /**
@@ -48,9 +44,7 @@ export class FinancialEndpoints {
     period = 'annual',
     limit = 5,
   }: FinancialStatementsParams): Promise<APIResponse<FinancialStatement[]>> {
-    return this.client.get(
-      `/cash-flow-statement/${symbol}?period=${period}&limit=${limit}`
-    );
+    return this.client.get(`/cash-flow-statement/${symbol}?period=${period}&limit=${limit}`);
   }
 
   /**
@@ -61,9 +55,7 @@ export class FinancialEndpoints {
     period = 'annual',
     limit = 5,
   }: KeyMetricsParams): Promise<APIResponse<KeyMetrics[]>> {
-    return this.client.get(
-      `/key-metrics/${symbol}?period=${period}&limit=${limit}`
-    );
+    return this.client.get(`/key-metrics/${symbol}?period=${period}&limit=${limit}`);
   }
 
   /**
@@ -85,8 +77,6 @@ export class FinancialEndpoints {
     period = 'annual',
     limit = 5,
   }: EnterpriseValueParams): Promise<APIResponse<EnterpriseValue[]>> {
-    return this.client.get(
-      `/enterprise-value/${symbol}?period=${period}&limit=${limit}`
-    );
+    return this.client.get(`/enterprise-value/${symbol}?period=${period}&limit=${limit}`);
   }
 }

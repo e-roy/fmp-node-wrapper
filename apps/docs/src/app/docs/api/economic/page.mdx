@@ -21,6 +21,7 @@ const rates = await fmp.economic.getTreasuryRates();
 
 // Get economic indicators
 const indicators = await fmp.economic.getEconomicIndicators();`}
+
 </CodeBlock>
 
 ## Available Methods
@@ -45,8 +46,9 @@ Get economic calendar with upcoming events and releases.
 {`const calendar = await fmp.economic.getEconomicCalendar();
 
 if (calendar.success) {
-  console.log('Economic Events:', calendar.data);
+console.log('Economic Events:', calendar.data);
 }`}
+
 </CodeBlock>
 
 ### getTreasuryRates
@@ -69,8 +71,9 @@ Get current treasury rates for different maturities.
 {`const rates = await fmp.economic.getTreasuryRates();
 
 if (rates.success) {
-  console.log('Treasury Rates:', rates.data);
+console.log('Treasury Rates:', rates.data);
 }`}
+
 </CodeBlock>
 
 ### getEconomicIndicators
@@ -93,8 +96,9 @@ Get key economic indicators and metrics.
 {`const indicators = await fmp.economic.getEconomicIndicators();
 
 if (indicators.success) {
-  console.log('Economic Indicators:', indicators.data);
+console.log('Economic Indicators:', indicators.data);
 }`}
+
 </CodeBlock>
 
 ### getInflationData
@@ -117,8 +121,9 @@ Get inflation data and metrics.
 {`const inflation = await fmp.economic.getInflationData();
 
 if (inflation.success) {
-  console.log('Inflation Data:', inflation.data);
+console.log('Inflation Data:', inflation.data);
 }`}
+
 </CodeBlock>
 
 ### getGDPData
@@ -141,8 +146,9 @@ Get GDP (Gross Domestic Product) data.
 {`const gdp = await fmp.economic.getGDPData();
 
 if (gdp.success) {
-  console.log('GDP Data:', gdp.data);
+console.log('GDP Data:', gdp.data);
 }`}
+
 </CodeBlock>
 
 ### getUnemploymentData
@@ -165,8 +171,9 @@ Get unemployment data and metrics.
 {`const unemployment = await fmp.economic.getUnemploymentData();
 
 if (unemployment.success) {
-  console.log('Unemployment Data:', unemployment.data);
+console.log('Unemployment Data:', unemployment.data);
 }`}
+
 </CodeBlock>
 
 ## Response Types
@@ -174,7 +181,7 @@ if (unemployment.success) {
 ### EconomicCalendar
 
 <CodeBlock language="typescript">
-{`interface EconomicCalendar {
+  {`interface EconomicCalendar {
   date: string;
   event: string;
   country: string;
@@ -189,7 +196,7 @@ if (unemployment.success) {
 ### TreasuryRate
 
 <CodeBlock language="typescript">
-{`interface TreasuryRate {
+  {`interface TreasuryRate {
   date: string;
   month1: number;
   month2: number;
@@ -209,7 +216,7 @@ if (unemployment.success) {
 ### EconomicIndicator
 
 <CodeBlock language="typescript">
-{`interface EconomicIndicator {
+  {`interface EconomicIndicator {
   indicator: string;
   value: number;
   date: string;
@@ -237,17 +244,18 @@ The treasury yield curve is a key economic indicator:
 const rates = await fmp.economic.getTreasuryRates();
 
 if (rates.success) {
-  const current = rates.data[0];
-  const shortTerm = current.month3; // 3-month rate
-  const longTerm = current.year10;  // 10-year rate
-  
-  const yieldCurve = longTerm - shortTerm;
-  console.log('Yield Curve Spread:', yieldCurve);
-  
-  if (yieldCurve < 0) {
-    console.log('Inverted Yield Curve - Recession indicator');
-  }
+const current = rates.data[0];
+const shortTerm = current.month3; // 3-month rate
+const longTerm = current.year10; // 10-year rate
+
+const yieldCurve = longTerm - shortTerm;
+console.log('Yield Curve Spread:', yieldCurve);
+
+if (yieldCurve < 0) {
+console.log('Inverted Yield Curve - Recession indicator');
+}
 }`}
+
 </CodeBlock>
 
 ## Economic Calendar Analysis
@@ -257,12 +265,13 @@ if (rates.success) {
 const calendar = await fmp.economic.getEconomicCalendar();
 
 if (calendar.success) {
-  const highImpact = calendar.data.filter(event => 
-    event.impact === 'High'
-  );
-  
-  console.log('High Impact Events:', highImpact);
+const highImpact = calendar.data.filter(event =>
+event.impact === 'High'
+);
+
+console.log('High Impact Events:', highImpact);
 }`}
+
 </CodeBlock>
 
 ## Common Use Cases
@@ -280,6 +289,7 @@ const [calendar, rates, indicators] = await Promise.all([
 console.log('Upcoming Events:', calendar.data.slice(0, 5));
 console.log('Current Rates:', rates.data[0]);
 console.log('Key Indicators:', indicators.data);`}
+
 </CodeBlock>
 
 ### Market Impact Analysis
@@ -293,6 +303,7 @@ const [rates, inflation] = await Promise.all([
 
 const realRate = rates.data[0].year10 - inflation.data[0].value;
 console.log('Real Interest Rate:', realRate);`}
+
 </CodeBlock>
 
 ## Error Handling
@@ -301,13 +312,14 @@ console.log('Real Interest Rate:', realRate);`}
 {`const response = await fmp.economic.getEconomicCalendar();
 
 if (response.success) {
-  // Handle successful response
-  console.log(response.data);
+// Handle successful response
+console.log(response.data);
 } else {
-  // Handle error
-  console.error('Error:', response.error);
-  console.error('Status:', response.status);
+// Handle error
+console.error('Error:', response.error);
+console.error('Status:', response.status);
 }`}
+
 </CodeBlock>
 
 ## Rate Limiting
@@ -325,4 +337,4 @@ Economic data is typically updated:
 
 ---
 
-**Next:** Explore other endpoint categories like [Market Data](/docs/api/market) or [Bond Data](/docs/api/bond). 
+**Next:** Explore other endpoint categories like [Market Data](/docs/api/market) or [Bond Data](/docs/api/bond).

@@ -51,18 +51,14 @@ export class MarketEndpoints {
   /**
    * Get sector performance
    */
-  async getSectorPerformance(): Promise<
-    APIResponse<MarketSectorPerformance[]>
-  > {
+  async getSectorPerformance(): Promise<APIResponse<MarketSectorPerformance[]>> {
     return this.client.get('/sector-performance');
   }
 
   /**
    * Get market index data
    */
-  async getMarketIndex(
-    params: MarketIndexParams = {}
-  ): Promise<APIResponse<MarketIndex[]>> {
+  async getMarketIndex(params: MarketIndexParams = {}): Promise<APIResponse<MarketIndex[]>> {
     const queryParams: QueryParams = {};
     if (params.from) queryParams.from = params.from;
     if (params.to) queryParams.to = params.to;

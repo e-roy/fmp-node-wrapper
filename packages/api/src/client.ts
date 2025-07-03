@@ -31,10 +31,7 @@ export class FMPClient {
   /**
    * Make a GET request to the API
    */
-  async get<T = any>(
-    endpoint: string,
-    params?: Record<string, any>
-  ): Promise<APIResponse<T>> {
+  async get<T = any>(endpoint: string, params?: Record<string, any>): Promise<APIResponse<T>> {
     try {
       const response = await this.client.get(endpoint, { params });
       return {
@@ -57,7 +54,7 @@ export class FMPClient {
   async post<T = any>(
     endpoint: string,
     data?: any,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<APIResponse<T>> {
     try {
       const response = await this.client.post(endpoint, data, config);

@@ -1,11 +1,7 @@
 // Cryptocurrency endpoints for FMP API
 
 import { FMPClient } from '../client';
-import {
-  APIResponse,
-  HistoricalPriceResponse,
-  QueryParams,
-} from '../types/common';
+import { APIResponse, HistoricalPriceResponse, QueryParams } from '../types/common';
 import {
   CryptoQuote,
   CryptoCurrency,
@@ -19,9 +15,7 @@ export class CryptoEndpoints {
   /**
    * Get real-time crypto quote
    */
-  async getQuote(
-    params: CryptoQuoteParams
-  ): Promise<APIResponse<CryptoQuote[]>> {
+  async getQuote(params: CryptoQuoteParams): Promise<APIResponse<CryptoQuote[]>> {
     return this.client.get(`/quote/${params.symbol}`);
   }
 
@@ -29,17 +23,14 @@ export class CryptoEndpoints {
    * Get historical crypto data
    */
   async getHistoricalPrice(
-    params: CryptoHistoricalParams
+    params: CryptoHistoricalParams,
   ): Promise<APIResponse<HistoricalPriceResponse>> {
     const queryParams: QueryParams = {};
     if (params.from) queryParams.from = params.from;
     if (params.to) queryParams.to = params.to;
     if (params.timeseries) queryParams.timeseries = params.timeseries;
 
-    return this.client.get(
-      `/historical-price-full/${params.symbol}`,
-      queryParams
-    );
+    return this.client.get(`/historical-price-full/${params.symbol}`, queryParams);
   }
 
   /**

@@ -25,18 +25,14 @@ export class ETFEndpoints {
   /**
    * Get ETF profile
    */
-  async getProfile(
-    params: ETFProfileParams
-  ): Promise<APIResponse<ETFProfile[]>> {
+  async getProfile(params: ETFProfileParams): Promise<APIResponse<ETFProfile[]>> {
     return this.client.get(`/profile/${params.symbol}`);
   }
 
   /**
    * Get ETF holdings
    */
-  async getHoldings(
-    params: ETFHoldersParams
-  ): Promise<APIResponse<ETFHolding[]>> {
+  async getHoldings(params: ETFHoldersParams): Promise<APIResponse<ETFHolding[]>> {
     const queryParams: QueryParams = {};
     if (params.limit) queryParams.limit = params.limit;
     if (params.page) queryParams.page = params.page;

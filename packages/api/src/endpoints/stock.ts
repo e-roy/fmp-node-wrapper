@@ -16,22 +16,14 @@ export class StockEndpoints {
   /**
    * Get real-time stock quote
    */
-  async getQuote({
-    symbol,
-  }: {
-    symbol: string;
-  }): Promise<APIResponse<StockQuote[]>> {
+  async getQuote({ symbol }: { symbol: string }): Promise<APIResponse<StockQuote[]>> {
     return this.client.get(`/quote/${symbol}`);
   }
 
   /**
    * Get company profile
    */
-  async getCompanyProfile({
-    symbol,
-  }: {
-    symbol: string;
-  }): Promise<APIResponse<CompanyProfile[]>> {
+  async getCompanyProfile({ symbol }: { symbol: string }): Promise<APIResponse<CompanyProfile[]>> {
     return this.client.get(`/profile/${symbol}`);
   }
 
@@ -52,7 +44,7 @@ export class StockEndpoints {
     if (to) params.append('to', to);
     const queryString = params.toString();
     return this.client.get(
-      `/historical-price-full/${symbol}${queryString ? `?${queryString}` : ''}`
+      `/historical-price-full/${symbol}${queryString ? `?${queryString}` : ''}`,
     );
   }
 
@@ -66,11 +58,7 @@ export class StockEndpoints {
   /**
    * Get market capitalization
    */
-  async getMarketCap({
-    symbol,
-  }: {
-    symbol: string;
-  }): Promise<APIResponse<MarketCap[]>> {
+  async getMarketCap({ symbol }: { symbol: string }): Promise<APIResponse<MarketCap[]>> {
     return this.client.get(`/market-capitalization/${symbol}`);
   }
 
@@ -90,32 +78,20 @@ export class StockEndpoints {
   /**
    * Get stock splits
    */
-  async getStockSplits({
-    symbol,
-  }: {
-    symbol: string;
-  }): Promise<APIResponse<StockSplit[]>> {
+  async getStockSplits({ symbol }: { symbol: string }): Promise<APIResponse<StockSplit[]>> {
     return this.client.get(`/stock_split_calendar/${symbol}`);
   }
 
   /**
    * Get dividend history
    */
-  async getDividendHistory({
-    symbol,
-  }: {
-    symbol: string;
-  }): Promise<APIResponse<StockDividend[]>> {
-    const response = await this.client.get(
-      `/historical-price-full/stock_dividend/${symbol}`
-    );
+  async getDividendHistory({ symbol }: { symbol: string }): Promise<APIResponse<StockDividend[]>> {
+    const response = await this.client.get(`/historical-price-full/stock_dividend/${symbol}`);
     // The API returns { symbol, historical: [...] }
     return {
       ...response,
       data:
-        response.success &&
-        response.data &&
-        Array.isArray(response.data.historical)
+        response.success && response.data && Array.isArray(response.data.historical)
           ? response.data.historical
           : [],
     };

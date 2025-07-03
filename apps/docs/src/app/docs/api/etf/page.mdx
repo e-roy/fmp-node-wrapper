@@ -21,6 +21,7 @@ const profile = await fmp.etf.getProfile({ symbol: 'SPY' });
 
 // Get ETF holdings
 const holdings = await fmp.etf.getHoldings({ symbol: 'SPY' });`}
+
 </CodeBlock>
 
 ## Available Methods
@@ -41,9 +42,9 @@ Get real-time ETF quote.
 
 **Parameters:**
 
-| Parameter | Type     | Required | Description                    |
-| --------- | -------- | -------- | ------------------------------ |
-| `symbol`  | `string` | Yes      | ETF symbol (e.g., 'SPY')      |
+| Parameter | Type     | Required | Description              |
+| --------- | -------- | -------- | ------------------------ |
+| `symbol`  | `string` | Yes      | ETF symbol (e.g., 'SPY') |
 
 **Example:**
 
@@ -51,10 +52,11 @@ Get real-time ETF quote.
 {`const quote = await fmp.etf.getQuote({ symbol: 'SPY' });
 
 if (quote.success) {
-    console.log('Price:', quote.data[0].price);
-    console.log('Change:', quote.data[0].change);
-    console.log('Volume:', quote.data[0].volume);
+console.log('Price:', quote.data[0].price);
+console.log('Change:', quote.data[0].change);
+console.log('Volume:', quote.data[0].volume);
 }`}
+
 </CodeBlock>
 
 ### getProfile
@@ -73,9 +75,9 @@ Get ETF profile and information.
 
 **Parameters:**
 
-| Parameter | Type     | Required | Description                    |
-| --------- | -------- | -------- | ------------------------------ |
-| `symbol`  | `string` | Yes      | ETF symbol (e.g., 'SPY')      |
+| Parameter | Type     | Required | Description              |
+| --------- | -------- | -------- | ------------------------ |
+| `symbol`  | `string` | Yes      | ETF symbol (e.g., 'SPY') |
 
 **Example:**
 
@@ -83,10 +85,11 @@ Get ETF profile and information.
 {`const profile = await fmp.etf.getProfile({ symbol: 'SPY' });
 
 if (profile.success) {
-    console.log('ETF Name:', profile.data[0].companyName);
-    console.log('Exchange:', profile.data[0].exchange);
-    console.log('Industry:', profile.data[0].industry);
+console.log('ETF Name:', profile.data[0].companyName);
+console.log('Exchange:', profile.data[0].exchange);
+console.log('Industry:', profile.data[0].industry);
 }`}
+
 </CodeBlock>
 
 ### getHoldings
@@ -105,11 +108,11 @@ Get ETF holdings and composition data.
 
 **Parameters:**
 
-| Parameter | Type     | Required | Description                    |
-| --------- | -------- | -------- | ------------------------------ |
-| `symbol`  | `string` | Yes      | ETF symbol (e.g., 'SPY')      |
-| `limit`   | `number` | No       | Number of holdings to return  |
-| `page`    | `number` | No       | Page number for pagination    |
+| Parameter | Type     | Required | Description                  |
+| --------- | -------- | -------- | ---------------------------- |
+| `symbol`  | `string` | Yes      | ETF symbol (e.g., 'SPY')     |
+| `limit`   | `number` | No       | Number of holdings to return |
+| `page`    | `number` | No       | Page number for pagination   |
 
 **Example:**
 
@@ -120,8 +123,9 @@ Get ETF holdings and composition data.
 });
 
 if (holdings.success) {
-    console.log('Holdings:', holdings.data);
+console.log('Holdings:', holdings.data);
 }`}
+
 </CodeBlock>
 
 ### getETFList
@@ -144,8 +148,9 @@ Get list of all available ETFs.
 {`const etfList = await fmp.etf.getETFList();
 
 if (etfList.success) {
-    console.log('Available ETFs:', etfList.data);
+console.log('Available ETFs:', etfList.data);
 }`}
+
 </CodeBlock>
 
 ## Response Types
@@ -153,7 +158,7 @@ if (etfList.success) {
 ### ETFQuote
 
 <CodeBlock language="typescript">
-{`interface ETFQuote {
+  {`interface ETFQuote {
     symbol: string;
     name: string;
     price: number;
@@ -182,7 +187,7 @@ if (etfList.success) {
 ### ETFProfile
 
 <CodeBlock language="typescript">
-{`interface ETFProfile {
+  {`interface ETFProfile {
     symbol: string;
     price: number;
     beta: number;
@@ -225,7 +230,7 @@ if (etfList.success) {
 ### ETFHolding
 
 <CodeBlock language="typescript">
-{`interface ETFHolding {
+  {`interface ETFHolding {
     asset: string;
     weight: number;
     shares: number;
@@ -252,13 +257,14 @@ Here are some popular ETF symbols you can use:
 {`const response = await fmp.etf.getQuote({ symbol: 'INVALID' });
 
 if (response.success) {
-    // Handle successful response
-    console.log(response.data);
+// Handle successful response
+console.log(response.data);
 } else {
-    // Handle error
-    console.error('Error:', response.error);
-    console.error('Status:', response.status);
+// Handle error
+console.error('Error:', response.error);
+console.error('Status:', response.status);
 }`}
+
 </CodeBlock>
 
 ## ETF Categories
@@ -277,4 +283,4 @@ ETF endpoints are subject to FMP's rate limits. For production applications, con
 
 ---
 
-**Next:** Explore other endpoint categories like [Stock Data](/docs/api/stock) or [Market Data](/docs/api/market). 
+**Next:** Explore other endpoint categories like [Stock Data](/docs/api/stock) or [Market Data](/docs/api/market).

@@ -35,9 +35,9 @@ Here's how to initialize the client:
 
 // Initialize the client with your API key
 const fmp = new FMP({
-    apiKey: 'your-api-key-here',
-    baseURL: 'https://financialmodelingprep.com/api/v3', // optional
-    timeout: 10000, // optional, default 10s
+apiKey: 'your-api-key-here',
+baseURL: 'https://financialmodelingprep.com/api/v3', // optional
+timeout: 10000, // optional, default 10s
 });`}
 
 </CodeBlock>
@@ -61,11 +61,11 @@ Let's make your first API call to get a stock quote:
 const quote = await fmp.stock.getQuote({ symbol: 'AAPL' });
 
 if (quote.success) {
-    console.log('Stock Price:', quote.data[0].price);
-    console.log('Change:', quote.data[0].change);
-    console.log('Market Cap:', quote.data[0].marketCap);
+console.log('Stock Price:', quote.data[0].price);
+console.log('Change:', quote.data[0].change);
+console.log('Market Cap:', quote.data[0].marketCap);
 } else {
-    console.error('Error:', quote.error);
+console.error('Error:', quote.error);
 }`}
 
 </CodeBlock>
@@ -97,12 +97,12 @@ data:
 {`const response = await fmp.stock.getQuote({ symbol: 'INVALID' });
 
 if (response.success) {
-    // Handle successful response
-    console.log(response.data);
+// Handle successful response
+console.log(response.data);
 } else {
-    // Handle error
-    console.error('Error:', response.error);
-    console.error('Status:', response.status);
+// Handle error
+console.error('Error:', response.error);
+console.error('Status:', response.status);
 }`}
 
 </CodeBlock>
@@ -116,11 +116,11 @@ For security, store your API key in environment variables:
 
 // Validate that API key exists
 if (!process.env.FMP_API_KEY) {
-    throw new Error('FMP_API_KEY environment variable is required');
+throw new Error('FMP_API_KEY environment variable is required');
 }
 
 const fmp = new FMP({
-    apiKey: process.env.FMP_API_KEY,
+apiKey: process.env.FMP_API_KEY,
 });`}
 
 </CodeBlock>

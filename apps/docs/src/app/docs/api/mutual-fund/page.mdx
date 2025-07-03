@@ -21,6 +21,7 @@ const profile = await fmp.mutualFund.getProfile({ symbol: 'VFINX' });
 
 // Get mutual fund list
 const funds = await fmp.mutualFund.getMutualFundList();`}
+
 </CodeBlock>
 
 ## Available Methods
@@ -41,9 +42,9 @@ Get real-time mutual fund quote.
 
 **Parameters:**
 
-| Parameter | Type     | Required | Description                    |
-| --------- | -------- | -------- | ------------------------------ |
-| `symbol`  | `string` | Yes      | Fund symbol (e.g., 'VFINX')   |
+| Parameter | Type     | Required | Description                 |
+| --------- | -------- | -------- | --------------------------- |
+| `symbol`  | `string` | Yes      | Fund symbol (e.g., 'VFINX') |
 
 **Example:**
 
@@ -51,10 +52,11 @@ Get real-time mutual fund quote.
 {`const quote = await fmp.mutualFund.getQuote({ symbol: 'VFINX' });
 
 if (quote.success) {
-    console.log('NAV:', quote.data[0].price);
-    console.log('Change:', quote.data[0].change);
-    console.log('Volume:', quote.data[0].volume);
+console.log('NAV:', quote.data[0].price);
+console.log('Change:', quote.data[0].change);
+console.log('Volume:', quote.data[0].volume);
 }`}
+
 </CodeBlock>
 
 ### getProfile
@@ -73,9 +75,9 @@ Get mutual fund profile and information.
 
 **Parameters:**
 
-| Parameter | Type     | Required | Description                    |
-| --------- | -------- | -------- | ------------------------------ |
-| `symbol`  | `string` | Yes      | Fund symbol (e.g., 'VFINX')   |
+| Parameter | Type     | Required | Description                 |
+| --------- | -------- | -------- | --------------------------- |
+| `symbol`  | `string` | Yes      | Fund symbol (e.g., 'VFINX') |
 
 **Example:**
 
@@ -83,10 +85,11 @@ Get mutual fund profile and information.
 {`const profile = await fmp.mutualFund.getProfile({ symbol: 'VFINX' });
 
 if (profile.success) {
-    console.log('Fund Name:', profile.data[0].companyName);
-    console.log('Category:', profile.data[0].industry);
-    console.log('Expense Ratio:', profile.data[0].expenseRatio);
+console.log('Fund Name:', profile.data[0].companyName);
+console.log('Category:', profile.data[0].industry);
+console.log('Expense Ratio:', profile.data[0].expenseRatio);
 }`}
+
 </CodeBlock>
 
 ### getMutualFundList
@@ -109,8 +112,9 @@ Get list of all available mutual funds.
 {`const funds = await fmp.mutualFund.getMutualFundList();
 
 if (funds.success) {
-    console.log('Available Funds:', funds.data);
+console.log('Available Funds:', funds.data);
 }`}
+
 </CodeBlock>
 
 ### getHoldings
@@ -129,11 +133,11 @@ Get mutual fund holdings and composition.
 
 **Parameters:**
 
-| Parameter | Type     | Required | Description                    |
-| --------- | -------- | -------- | ------------------------------ |
-| `symbol`  | `string` | Yes      | Fund symbol (e.g., 'VFINX')   |
-| `limit`   | `number` | No       | Number of holdings to return  |
-| `page`    | `number` | No       | Page number for pagination    |
+| Parameter | Type     | Required | Description                  |
+| --------- | -------- | -------- | ---------------------------- |
+| `symbol`  | `string` | Yes      | Fund symbol (e.g., 'VFINX')  |
+| `limit`   | `number` | No       | Number of holdings to return |
+| `page`    | `number` | No       | Page number for pagination   |
 
 **Example:**
 
@@ -144,8 +148,9 @@ Get mutual fund holdings and composition.
 });
 
 if (holdings.success) {
-    console.log('Fund Holdings:', holdings.data);
+console.log('Fund Holdings:', holdings.data);
 }`}
+
 </CodeBlock>
 
 ## Response Types
@@ -153,7 +158,7 @@ if (holdings.success) {
 ### MutualFundQuote
 
 <CodeBlock language="typescript">
-{`interface MutualFundQuote {
+  {`interface MutualFundQuote {
     symbol: string;
     name: string;
     price: number;
@@ -182,7 +187,7 @@ if (holdings.success) {
 ### MutualFundProfile
 
 <CodeBlock language="typescript">
-{`interface MutualFundProfile {
+  {`interface MutualFundProfile {
     symbol: string;
     price: number;
     beta: number;
@@ -225,7 +230,7 @@ if (holdings.success) {
 ### MutualFundHolding
 
 <CodeBlock language="typescript">
-{`interface MutualFundHolding {
+  {`interface MutualFundHolding {
     asset: string;
     weight: number;
     shares: number;
@@ -270,13 +275,15 @@ const [fund1, fund2] = await Promise.all([
 ]);
 
 if (fund1.success && fund2.success) {
-    const expense1 = fund1.data[0].expenseRatio || 0;
-    const expense2 = fund2.data[0].expenseRatio || 0;
-    
+const expense1 = fund1.data[0].expenseRatio || 0;
+const expense2 = fund2.data[0].expenseRatio || 0;
+
     console.log('VFINX Expense Ratio:', expense1);
     console.log('FAGIX Expense Ratio:', expense2);
     console.log('Difference:', expense2 - expense1);
+
 }`}
+
 </CodeBlock>
 
 ### Performance Comparison
@@ -289,12 +296,14 @@ const [fund1, fund2] = await Promise.all([
 ]);
 
 if (fund1.success && fund2.success) {
-    const perf1 = fund1.data[0].changesPercentage;
-    const perf2 = fund2.data[0].changesPercentage;
-    
+const perf1 = fund1.data[0].changesPercentage;
+const perf2 = fund2.data[0].changesPercentage;
+
     console.log('VFINX Performance:', perf1);
     console.log('VTSMX Performance:', perf2);
+
 }`}
+
 </CodeBlock>
 
 ## Common Use Cases
@@ -312,6 +321,7 @@ const [quote, profile, holdings] = await Promise.all([
 console.log('Current NAV:', quote.data[0].price);
 console.log('Fund Details:', profile.data[0]);
 console.log('Top Holdings:', holdings.data);`}
+
 </CodeBlock>
 
 ### Fund Screening
@@ -321,12 +331,14 @@ console.log('Top Holdings:', holdings.data);`}
 const funds = await fmp.mutualFund.getMutualFundList();
 
 if (funds.success) {
-    const indexFunds = funds.data.filter(fund => 
-      fund.name.toLowerCase().includes('index')
-    );
-    
+const indexFunds = funds.data.filter(fund =>
+fund.name.toLowerCase().includes('index')
+);
+
     console.log('Index Funds:', indexFunds.slice(0, 10));
+
 }`}
+
 </CodeBlock>
 
 ## Error Handling
@@ -335,13 +347,14 @@ if (funds.success) {
 {`const response = await fmp.mutualFund.getQuote({ symbol: 'INVALID' });
 
 if (response.success) {
-    // Handle successful response
-    console.log(response.data);
+// Handle successful response
+console.log(response.data);
 } else {
-    // Handle error
-    console.error('Error:', response.error);
-    console.error('Status:', response.status);
+// Handle error
+console.error('Error:', response.error);
+console.error('Status:', response.status);
 }`}
+
 </CodeBlock>
 
 ## Rate Limiting
@@ -363,4 +376,4 @@ Mutual funds trade at their Net Asset Value (NAV), which is calculated once per 
 
 ---
 
-**Next:** Explore other endpoint categories like [ETF Data](/docs/api/etf) or [Stock Data](/docs/api/stock). 
+**Next:** Explore other endpoint categories like [ETF Data](/docs/api/etf) or [Stock Data](/docs/api/stock).

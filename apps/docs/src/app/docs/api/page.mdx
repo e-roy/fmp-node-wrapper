@@ -13,7 +13,7 @@ First, initialize the client with your API key:
 
 // Initialize the client
 const fmp = new FMP({
-    apiKey: 'your-api-key-here',
+apiKey: 'your-api-key-here',
 });`}
 
 </CodeBlock>
@@ -27,8 +27,7 @@ The library is organized into different endpoint categories:
     {
       method: 'GET',
       path: '/stock/*',
-      description:
-        'Stock-related endpoints for quotes, historical data, and market information',
+      description: 'Stock-related endpoints for quotes, historical data, and market information',
     },
     {
       method: 'GET',
@@ -39,44 +38,37 @@ The library is organized into different endpoint categories:
     {
       method: 'GET',
       path: '/forex/*',
-      description:
-        'Foreign exchange endpoints for currency quotes and historical data',
+      description: 'Foreign exchange endpoints for currency quotes and historical data',
     },
     {
       method: 'GET',
       path: '/crypto/*',
-      description:
-        'Cryptocurrency endpoints for crypto quotes and historical data',
+      description: 'Cryptocurrency endpoints for crypto quotes and historical data',
     },
     {
       method: 'GET',
       path: '/etf/*',
-      description:
-        'ETF endpoints for quotes, profiles, and holdings data',
+      description: 'ETF endpoints for quotes, profiles, and holdings data',
     },
     {
       method: 'GET',
       path: '/market/*',
-      description:
-        'Market endpoints for performance, hours, and sector data',
+      description: 'Market endpoints for performance, hours, and sector data',
     },
     {
       method: 'GET',
       path: '/economic/*',
-      description:
-        'Economic indicators and calendar data',
+      description: 'Economic indicators and calendar data',
     },
     {
       method: 'GET',
       path: '/bond/*',
-      description:
-        'Bond data and treasury rates',
+      description: 'Bond data and treasury rates',
     },
     {
       method: 'GET',
       path: '/mutual-fund/*',
-      description:
-        'Mutual fund quotes and data',
+      description: 'Mutual fund quotes and data',
     },
   ]}
 />
@@ -102,12 +94,12 @@ Always check the success property before accessing data:
 {`const response = await fmp.stock.getQuote({ symbol: 'AAPL' });
 
 if (response.success) {
-    // Handle successful response
-    console.log(response.data);
+// Handle successful response
+console.log(response.data);
 } else {
-    // Handle error
-    console.error('Error:', response.error);
-    console.error('Status:', response.status);
+// Handle error
+console.error('Error:', response.error);
+console.error('Status:', response.status);
 }`}
 
 </CodeBlock>
@@ -220,8 +212,8 @@ const quote = await fmp.stock.getQuote({
 
 // Full type safety for responses
 if (quote.success) {
-    const price = quote.data[0].price; // TypeScript knows this is a number
-    const symbol = quote.data[0].symbol; // TypeScript knows this is a string
+const price = quote.data[0].price; // TypeScript knows this is a number
+const symbol = quote.data[0].symbol; // TypeScript knows this is a string
 }`}
 
 </CodeBlock>
