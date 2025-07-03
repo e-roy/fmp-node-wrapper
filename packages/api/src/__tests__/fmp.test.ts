@@ -1,5 +1,6 @@
 import { FMP } from '../fmp';
 import { FMPClient } from '../client';
+import { API_KEY } from './utils/test-setup';
 
 describe('FMP', () => {
   let fmp: FMP;
@@ -70,5 +71,12 @@ describe('FMP', () => {
         new FMP({ apiKey: 'valid-api-key' });
       }).not.toThrow();
     });
+  });
+});
+
+describe('FMP API Smoke Test', () => {
+  it('should have an API key set for integration tests', () => {
+    expect(typeof API_KEY).toBe('string');
+    expect(API_KEY && API_KEY.length).toBeGreaterThan(0);
   });
 });

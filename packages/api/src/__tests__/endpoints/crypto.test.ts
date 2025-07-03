@@ -1,16 +1,24 @@
 import { FMP } from '../../fmp';
-import { createTestClient, skipIfNoApiKey } from '../utils/test-setup';
+import { createTestClient, shouldSkipTests } from '../utils/test-setup';
 
 describe('Crypto Endpoints', () => {
   let fmp: FMP;
 
   beforeAll(() => {
-    if (skipIfNoApiKey()) return;
+    if (shouldSkipTests()) {
+      console.log('Skipping crypto tests - no API key available');
+      return;
+    }
     fmp = createTestClient();
   });
 
   describe('getQuote', () => {
     it('should fetch crypto quote', async () => {
+      if (shouldSkipTests()) {
+        console.log('Skipping crypto quote test - no API key available');
+        return;
+      }
+
       const result = await fmp.crypto.getQuote({ symbol: 'BTCUSD' });
 
       expect(result.success).toBe(true);
@@ -28,6 +36,11 @@ describe('Crypto Endpoints', () => {
 
   describe('getCryptoList', () => {
     it('should fetch crypto list', async () => {
+      if (shouldSkipTests()) {
+        console.log('Skipping crypto list test - no API key available');
+        return;
+      }
+
       const result = await fmp.crypto.getCryptoList();
 
       expect(result.success).toBe(true);
@@ -45,6 +58,11 @@ describe('Crypto Endpoints', () => {
 
   describe('getHistoricalPrice', () => {
     it('should fetch crypto historical price', async () => {
+      if (shouldSkipTests()) {
+        console.log('Skipping crypto historical price test - no API key available');
+        return;
+      }
+
       const result = await fmp.crypto.getHistoricalPrice({
         symbol: 'BTCUSD',
         from: '2024-01-01',

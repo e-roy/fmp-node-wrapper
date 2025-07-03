@@ -4,23 +4,33 @@ import { config } from 'dotenv';
 import { resolve } from 'path';
 import { FMP } from '../../fmp';
 
-// Load environment variables
-config({ path: resolve(__dirname, '../../../../../.env') });
+// Load environment variables from .env file, but don't override existing process.env
+config({ path: resolve(__dirname, '../../../../../.env'), override: false });
 
+// Get API key from environment, with fallback to .env
 export const API_KEY = process.env.FMP_API_KEY;
 export const isCI = process.env.CI === 'true';
 
+// Debug logging
+if (isCI) {
+  console.log('Running in CI environment');
+  console.log('API_KEY available:', !!API_KEY);
+}
+
 /**
- * Skip tests if no API key is provided or running in CI
+ * Check if tests should be skipped
+ * Only skip if no API key is available
+ */
+export function shouldSkipTests(): boolean {
+  return !API_KEY;
+}
+
+/**
+ * Skip tests if no API key is provided
+ * @deprecated Use shouldSkipTests() instead
  */
 export function skipIfNoApiKey() {
-  if (!API_KEY || isCI) {
-    it('should skip tests when no API key is provided or running in CI', () => {
-      expect(true).toBe(true);
-    });
-    return true;
-  }
-  return false;
+  return shouldSkipTests();
 }
 
 /**
