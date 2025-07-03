@@ -77,6 +77,6 @@ describe('FMP', () => {
 describe('FMP API Smoke Test', () => {
   it('should have an API key set for integration tests', () => {
     expect(typeof API_KEY).toBe('string');
-    expect(API_KEY && API_KEY.length).toBeGreaterThan(0);
+    expect(API_KEY?.length || 0).toBeGreaterThan(0);
   });
 });

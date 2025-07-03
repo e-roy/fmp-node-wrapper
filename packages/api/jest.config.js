@@ -15,4 +15,5 @@ module.exports = {
   },
   moduleNameMapper: {},
   collectCoverageFrom: ['src/**/*.ts', '!src/**/*.d.ts', '!src/**/*.test.ts'],
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
 };
