@@ -1,0 +1,140 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+---
+description: File structure of entire project
+globs: 
+alwaysApply: true
+---
+
+# FMP Node Wrapper - Project Structure Rules
+
+## Project Overview
+
+This is a monorepo for a Financial Modeling Prep (FMP) API Node.js wrapper, organized using pnpm workspaces and Turbo for build orchestration.
+
+## Important: Command Execution Requirements
+
+**CRITICAL**: All commands must be run from the root directory (`fmp-node-wrapper/`). Never run commands from subdirectories like `apps/docs/` or `packages/api/`.
+
+**Package Management**: This project uses **pnpm** exclusively for package management. Do not use npm or yarn. All package operations must use pnpm commands.
+
+## Root Structure
+
+```
+fmp-node-wrapper/
+├── apps/                    # Application packages
+│   └── docs/               # Next.js documentation site
+├── packages/               # Library packages
+│   └── api/               # Main FMP API wrapper (includes all types)
+├── scripts/               # Build and utility scripts
+├── package.json           # Root package.json with workspace scripts
+├── pnpm-workspace.yaml    # Workspace configuration
+├── turbo.json            # Turbo build pipeline configuration
+└── tsconfig.json         # Root TypeScript configuration
+```
+
+## Package Structure
+
+### Apps
+
+- **`apps/docs/`**: Next.js documentation site
+  - Uses `fmp-node-api` as workspace dependency
+  - Built with Next.js 15, React 19, and Tailwind CSS
+  - MDX support for rich documentation with `@mdx-js/react`, `@next/mdx`, and `remark-gfm`
+  - UI components using Radix UI primitives, Lucide React icons, and class-variance-authority
+  - Syntax highlighting with `prism-react-renderer` and `react-syntax-highlighter`
+  - Theme support with `next-themes` for dark/light mode
+  - Organized component structure:
+    - `components/mdx/` - MDX-specific components (code blocks, API tables)
+    - `components/layout/` - Layout components (header, footer)
+    - `components/theme/` - Theme-related components (theme provider, toggle)
+    - `components/ui/` - Reusable UI components (buttons, cards)
+  - Documentation pages organized as:
+    - `docs/getting-started/` - Getting started guide
+    - `docs/examples/` - Code examples and tutorials
+    - `docs/api/` - API reference with subcategories (`stock/`, `financial/`)
+
+### Packages
+
+- **`packages/api/`**: Main FMP API wrapper (`fmp-node-api`)
+  - Core API client implementation
+  - Endpoint modules for different API categories
+  - All TypeScript types and interfaces (including shared types)
+  - Shared utilities and constants
+  - Jest tests and manual testing scripts
+  - Built with tsup for multiple output formats
+
+## Build System
+
+- **Turbo**: Monorepo build orchestration
+- **pnpm**: Package manager with workspace support
+- **tsup**: TypeScript bundling for packages
+- **Jest**: Testing framework
+- **ESLint + Prettier**: Code quality and formatting
+
+## Key Scripts
+
+**All commands must be run from the root directory using pnpm:**
+
+### Development & Build
+- `pnpm dev`: Start development mode for all packages
+- `pnpm docs:dev`: Start docs development server
+- `pnpm api:dev`: Start API package development mode
+- `pnpm build`: Build all packages
+- `pnpm clean`: Clean build artifacts
+- `pnpm clean:install`: Clean all node_modules and reinstall
+
+### Testing Commands
+- `pnpm test`: Run all tests across packages
+- `pnpm test:watch`: Run tests in watch mode
+- `pnpm test:coverage`: Run tests with coverage report
+- `pnpm test:api`: Run manual API tests
+- `pnpm test:unit`: Run unit tests for API package
+- `pnpm test:integration`: Run integration tests for API package
+- `pnpm test:endpoints`: Run all endpoint tests
+- `pnpm test:stock`: Run stock endpoint tests
+- `pnpm test:financial`: Run financial endpoint tests
+- `pnpm test:market`: Run market endpoint tests
+- `pnpm test:forex`: Run forex endpoint tests
+- `pnpm test:economic`: Run economic endpoint tests
+
+### Code Quality
+- `pnpm lint`: Lint all TypeScript files
+- `pnpm lint:fix`: Fix linting issues automatically
+- `pnpm type-check`: Run TypeScript type checking
+- `pnpm format`: Format code with Prettier
+- `pnpm format:check`: Check code formatting
+
+### Package Management
+- `pnpm install`: Install all workspace dependencies
+- `pnpm add <package>`: Add package to root (use `--filter` for specific workspaces)
+- `pnpm remove <package>`: Remove package from root (use `--filter` for specific workspaces)
+
+### Publishing
+- `pnpm publish-packages`: Build, lint, test, version, and publish packages
+
+## Development Workflow
+
+1. **Always start from the root directory** (`fmp-node-wrapper/`)
+2. Use `pnpm` for all package operations
+3. API implementation and types are in `packages/api/`
+4. Documentation site consumes the API package
+5. Turbo handles build dependencies and caching
+
+## File Naming Conventions
+
+- Use kebab-case for file and directory names
+- Use PascalCase for React components
+- Use camelCase for TypeScript functions and variables
+- Use UPPER_SNAKE_CASE for constants
+
+## Import Patterns
+
+- Internal packages use workspace dependencies: `"fmp-node-api": "workspace:*"`
+- External dependencies are managed at the package level
+- All types are included in the main API package
+- API client is imported from `fmp-node-api`
+

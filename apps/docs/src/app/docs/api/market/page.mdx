@@ -1,0 +1,341 @@
+# Market Endpoints
+
+Access market-wide data including performance metrics, trading hours, and sector information.
+
+## Overview
+
+The market endpoints provide access to broad market data, including overall market performance, trading hours, sector performance, and market indices.
+
+## Quick Start
+
+<CodeBlock language="typescript">
+{`import { FMP } from 'fmp-node-api';
+
+const fmp = new FMP({ apiKey: 'your-api-key' });
+
+// Get market performance
+const performance = await fmp.market.getMarketPerformance();
+
+// Get market hours
+const hours = await fmp.market.getMarketHours();
+
+// Get sector performance
+const sectors = await fmp.market.getSectorPerformance();`}
+</CodeBlock>
+
+## Available Methods
+
+### getMarketPerformance
+
+Get overall market performance data.
+
+<ApiTable
+  endpoints={[
+    {
+      method: 'GET',
+      path: '/market-performance',
+      description: 'Get market performance data',
+    },
+  ]}
+/>
+
+**Example:**
+
+<CodeBlock language="typescript">
+{`const performance = await fmp.market.getMarketPerformance();
+
+if (performance.success) {
+  console.log('Market Performance:', performance.data);
+}`}
+</CodeBlock>
+
+### getMarketHours
+
+Get current market trading hours and status.
+
+<ApiTable
+  endpoints={[
+    {
+      method: 'GET',
+      path: '/market-hours',
+      description: 'Get market hours and status',
+    },
+  ]}
+/>
+
+**Example:**
+
+<CodeBlock language="typescript">
+{`const hours = await fmp.market.getMarketHours();
+
+if (hours.success) {
+  console.log('Market Status:', hours.data);
+}`}
+</CodeBlock>
+
+### getGainers
+
+Get top gaining stocks for the day.
+
+<ApiTable
+  endpoints={[
+    {
+      method: 'GET',
+      path: '/gainers',
+      description: 'Get top gaining stocks',
+    },
+  ]}
+/>
+
+**Example:**
+
+<CodeBlock language="typescript">
+{`const gainers = await fmp.market.getGainers();
+
+if (gainers.success) {
+  console.log('Top Gainers:', gainers.data);
+}`}
+</CodeBlock>
+
+### getLosers
+
+Get top losing stocks for the day.
+
+<ApiTable
+  endpoints={[
+    {
+      method: 'GET',
+      path: '/losers',
+      description: 'Get top losing stocks',
+    },
+  ]}
+/>
+
+**Example:**
+
+<CodeBlock language="typescript">
+{`const losers = await fmp.market.getLosers();
+
+if (losers.success) {
+  console.log('Top Losers:', losers.data);
+}`}
+</CodeBlock>
+
+### getMostActive
+
+Get most actively traded stocks.
+
+<ApiTable
+  endpoints={[
+    {
+      method: 'GET',
+      path: '/most-active',
+      description: 'Get most active stocks',
+    },
+  ]}
+/>
+
+**Example:**
+
+<CodeBlock language="typescript">
+{`const active = await fmp.market.getMostActive();
+
+if (active.success) {
+  console.log('Most Active:', active.data);
+}`}
+</CodeBlock>
+
+### getSectorPerformance
+
+Get performance data by sector.
+
+<ApiTable
+  endpoints={[
+    {
+      method: 'GET',
+      path: '/sector-performance',
+      description: 'Get sector performance data',
+    },
+  ]}
+/>
+
+**Example:**
+
+<CodeBlock language="typescript">
+{`const sectors = await fmp.market.getSectorPerformance();
+
+if (sectors.success) {
+  console.log('Sector Performance:', sectors.data);
+}`}
+</CodeBlock>
+
+### getMarketIndex
+
+Get market index data with optional date range.
+
+<ApiTable
+  endpoints={[
+    {
+      method: 'GET',
+      path: '/market-index',
+      description: 'Get market index data',
+    },
+  ]}
+/>
+
+**Parameters:**
+
+| Parameter | Type     | Required | Description                    |
+| --------- | -------- | -------- | ------------------------------ |
+| `from`    | `string` | No       | Start date (YYYY-MM-DD)       |
+| `to`      | `string` | No       | End date (YYYY-MM-DD)         |
+
+**Example:**
+
+<CodeBlock language="typescript">
+{`const index = await fmp.market.getMarketIndex({
+  from: '2024-01-01',
+  to: '2024-01-31'
+});
+
+if (index.success) {
+  console.log('Market Index:', index.data);
+}`}
+</CodeBlock>
+
+## Response Types
+
+### MarketHours
+
+<CodeBlock language="typescript">
+{`interface MarketHours {
+  stockMarket: string;
+  bonds: string;
+  forex: string;
+  crypto: string;
+}`}
+</CodeBlock>
+
+### MarketPerformance
+
+<CodeBlock language="typescript">
+{`interface MarketPerformance {
+  symbol: string;
+  name: string;
+  change: number;
+  price: number;
+  changesPercentage: number;
+}`}
+</CodeBlock>
+
+### MarketSectorPerformance
+
+<CodeBlock language="typescript">
+{`interface MarketSectorPerformance {
+  sector: string;
+  changesPercentage: number;
+}`}
+</CodeBlock>
+
+### MarketIndex
+
+<CodeBlock language="typescript">
+{`interface MarketIndex {
+  symbol: string;
+  name: string;
+  price: number;
+  changesPercentage: number;
+  change: number;
+  dayLow: number;
+  dayHigh: number;
+  yearHigh: number;
+  yearLow: number;
+  marketCap: number;
+  priceAvg50: number;
+  priceAvg200: number;
+  volume: number;
+  avgVolume: number;
+  exchange: string;
+  open: number;
+  previousClose: number;
+  eps: number;
+  pe: number;
+  earningsAnnouncement: string;
+  sharesOutstanding: number;
+  timestamp: number;
+}`}
+</CodeBlock>
+
+## Market Data Insights
+
+Market endpoints provide valuable insights for:
+
+- **Market Sentiment** - Understanding overall market direction
+- **Sector Rotation** - Identifying which sectors are performing well
+- **Trading Activity** - Monitoring volume and activity levels
+- **Market Timing** - Understanding when markets are open/closed
+
+## Common Use Cases
+
+### Market Dashboard
+
+<CodeBlock language="typescript">
+{`// Create a market dashboard
+const [performance, sectors, hours] = await Promise.all([
+  fmp.market.getMarketPerformance(),
+  fmp.market.getSectorPerformance(),
+  fmp.market.getMarketHours()
+]);
+
+console.log('Market Status:', hours.data);
+console.log('Top Performers:', performance.data.slice(0, 5));
+console.log('Sector Leaders:', sectors.data.slice(0, 3));`}
+</CodeBlock>
+
+### Market Analysis
+
+<CodeBlock language="typescript">
+{`// Analyze market breadth
+const [gainers, losers] = await Promise.all([
+  fmp.market.getGainers(),
+  fmp.market.getLosers()
+]);
+
+const advancing = gainers.data.length;
+const declining = losers.data.length;
+const breadth = advancing - declining;
+
+console.log('Market Breadth:', breadth);`}
+</CodeBlock>
+
+## Error Handling
+
+<CodeBlock language="typescript">
+{`const response = await fmp.market.getMarketPerformance();
+
+if (response.success) {
+  // Handle successful response
+  console.log(response.data);
+} else {
+  // Handle error
+  console.error('Error:', response.error);
+  console.error('Status:', response.status);
+}`}
+</CodeBlock>
+
+## Rate Limiting
+
+Market endpoints are subject to FMP's rate limits. For production applications, consider implementing appropriate rate limiting strategies.
+
+## Market Hours
+
+Market data availability depends on trading hours:
+
+- **Stock Market** - Typically 9:30 AM - 4:00 PM ET (Monday-Friday)
+- **Pre-Market** - 4:00 AM - 9:30 AM ET
+- **After-Hours** - 4:00 PM - 8:00 PM ET
+- **Weekends/Holidays** - Limited data availability
+
+---
+
+**Next:** Explore other endpoint categories like [Stock Data](/docs/api/stock) or [Economic Data](/docs/api/economic). 

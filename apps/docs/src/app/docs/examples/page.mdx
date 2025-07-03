@@ -1,0 +1,622 @@
+# Examples
+
+This section provides practical examples of how to use the FMP Node
+Wrapper for common use cases.
+
+## Basic Setup
+
+First, set up your client:
+
+<CodeBlock language="typescript">
+{`import { FMP } from 'fmp-node-api';
+
+// Initialize the client
+const fmp = new FMP({
+    apiKey: process.env.FMP_API_KEY || 'your-api-key-here',
+    timeout: 15000,
+});`}
+
+</CodeBlock>
+
+## Example 1: Stock Price Monitor
+
+Create a simple stock price monitoring script:
+
+<CodeBlock language="typescript">
+{`async function monitorStockPrice(symbol: string) {
+    try {
+      const quote = await fmp.stock.getQuote({ symbol });
+
+      if (quote.success && quote.data?.[0]) {
+        const stock = quote.data[0];
+        console.log(\`\\n\${stock.name} (\${stock.symbol})\`);
+        console.log(\`Price: $\${stock.price}\`);
+        console.log(\`Change: \${stock.change > 0 ? '+' : ''}\${stock.change} (\${stock.changePercent}%)\`);
+        console.log(\`Market Cap: $\${(stock.marketCap / 1e9).toFixed(2)}B\`);
+        console.log(\`Volume: \${stock.volume.toLocaleString()}\`);
+      } else {
+        console.error('Failed to get quote:', quote.error);
+      }
+
+    } catch (error) {
+      console.error('Error monitoring stock:', error);
+    }
+}
+
+// Monitor multiple stocks
+const symbols = ['AAPL', 'MSFT', 'GOOGL', 'TSLA'];
+for (const symbol of symbols) {
+    await monitorStockPrice(symbol);
+}`}
+
+</CodeBlock>
+
+## Example 2: Financial Analysis Dashboard
+
+Build a comprehensive financial analysis dashboard:
+
+<CodeBlock language="typescript">
+{`async function analyzeCompany(symbol: string) {
+    console.log(\`\\n=== Financial Analysis: \${symbol} ===\\n\`);
+
+// Get company profile
+const profile = await fmp.stock.getCompanyProfile({ symbol });
+if (profile.success && profile.data?.[0]) {
+    const company = profile.data[0];
+    console.log('Company: ' + company.companyName);
+    console.log('Industry: ' + company.industry);
+    console.log('Sector: ' + company.sector);
+    console.log('Market Cap: $' + (company.marketCap / 1e9).toFixed(2) + 'B');
+    console.log('Beta: ' + company.beta);
+}
+
+// Get financial ratios
+const ratios = await fmp.financial.getFinancialRatios({ symbol });
+if (ratios.success && ratios.data?.[0]) {
+    const ratio = ratios.data[0];
+    console.log('\\n--- Key Ratios ---');
+    console.log('P/E Ratio: ' + ratio.priceEarningsRatio);
+    console.log('P/B Ratio: ' + ratio.priceToBookRatio);
+    console.log('ROE: ' + (ratio.returnOnEquity _ 100).toFixed(2) + '%');
+    console.log('ROA: ' + (ratio.returnOnAssets _ 100).toFixed(2) + '%');
+    console.log('Debt/Equity: ' + ratio.debtEquityRatio);
+    console.log('Current Ratio: ' + ratio.currentRatio);
+}
+
+// Get recent financial statements
+const incomeStatement = await fmp.financial.getIncomeStatement({
+    symbol,
+    period: 'annual',
+    limit: 3,
+});
+
+if (incomeStatement.success && incomeStatement.data) {
+    console.log('\\n--- Recent Performance ---');
+    incomeStatement.data.forEach((year) => {
+      console.log(\`\${year.calendarYear}:\`);
+      console.log(' Revenue: $' + (year.revenue / 1e9).toFixed(2) + 'B');
+      console.log(' Net Income: $' + (year.netIncome / 1e9).toFixed(2) + 'B');
+      console.log(' Profit Margin: ' + (year.netIncomeRatio \* 100).toFixed(2) + '%');
+    });
+  }
+}
+
+// Analyze multiple companies
+const companies = ['AAPL', 'MSFT', 'GOOGL'];
+    for (const company of companies) {
+    await analyzeCompany(company);
+}`}
+
+</CodeBlock>
+
+## Example 3: Historical Data Analysis
+
+Analyze historical price data and calculate returns:
+
+<CodeBlock language="typescript">
+{`async function analyzeHistoricalData(symbol: string, years: number = 5) {
+    const endDate = new Date();
+    const startDate = new Date();
+    startDate.setFullYear(endDate.getFullYear() - years);
+
+    const historicalData = await fmp.stock.getHistoricalPrice({
+      symbol,
+      from: startDate.toISOString().split('T')[0],
+      to: endDate.toISOString().split('T')[0],
+    });
+
+    if (historicalData.success && historicalData.data?.historical) {
+      const prices = historicalData.data.historical;
+
+      // Calculate total return
+      const firstPrice = prices[prices.length - 1].close;
+      const lastPrice = prices[0].close;
+      const totalReturn = ((lastPrice - firstPrice) / firstPrice) * 100;
+
+      // Calculate volatility (standard deviation of daily returns)
+      const dailyReturns = [];
+      for (let i = 1; i < prices.length; i++) {
+        const dailyReturn =
+          (prices[i - 1].close - prices[i].close) / prices[i].close;
+        dailyReturns.push(dailyReturn);
+      }
+
+      const avgReturn =
+        dailyReturns.reduce((sum, ret) => sum + ret, 0) / dailyReturns.length;
+      const variance =
+        dailyReturns.reduce((sum, ret) => sum + Math.pow(ret - avgReturn, 2), 0) /
+        dailyReturns.length;
+      const volatility = Math.sqrt(variance) * Math.sqrt(252) * 100; // Annualized
+
+      console.log(\`\\n=== Historical Analysis: \${symbol} ===\`);
+      console.log(\`Period: \${years} years\`);
+      console.log(\`Total Return: \${totalReturn.toFixed(2)}%\`);
+      console.log(\`Annualized Volatility: \${volatility.toFixed(2)}%\`);
+      console.log(\`Starting Price: $\${firstPrice.toFixed(2)}\`);
+      console.log(\`Ending Price: $\${lastPrice.toFixed(2)}\`);
+
+      // Find best and worst days
+      const bestDay = prices.reduce((best, day) =>
+        day.changePercent > best.changePercent ? day : best
+      );
+      const worstDay = prices.reduce((worst, day) =>
+        day.changePercent < worst.changePercent ? day : worst
+      );
+
+       console.log(
+        \`\\nBest Day: \${bestDay.date} (+\${bestDay.changePercent.toFixed(2)}%)\`
+      );
+      console.log(
+        \`Worst Day: \${worstDay.date} (\${worstDay.changePercent.toFixed(2)}%)\`
+      );
+
+    }
+}
+
+// Analyze historical data for multiple stocks
+const symbols = ['AAPL', 'MSFT', 'GOOGL'];
+for (const symbol of symbols) {
+    await analyzeHistoricalData(symbol, 3);
+}`}
+
+</CodeBlock>
+
+## Example 4: Portfolio Tracker
+
+Create a simple portfolio tracking system:
+
+<CodeBlock language="typescript">
+{`interface PortfolioPosition {
+    symbol: string;
+    shares: number;
+    costBasis: number;
+}
+
+async function trackPortfolio(portfolio: PortfolioPosition[]) {
+console.log('\\n=== Portfolio Tracker ===\\n');
+
+let totalValue = 0;
+let totalCost = 0;
+
+for (const position of portfolio) {
+    const quote = await fmp.stock.getQuote({ symbol: position.symbol });
+
+    if (quote.success && quote.data?.[0]) {
+      const stock = quote.data[0];
+      const currentValue = stock.price * position.shares;
+      const costValue = position.costBasis * position.shares;
+      const gainLoss = currentValue - costValue;
+      const gainLossPercent = (gainLoss / costValue) * 100;
+
+      console.log(\`\${position.symbol}:\`);
+      console.log(\`  Shares: \${position.shares}\`);
+      console.log(\`  Current Price: $\${stock.price.toFixed(2)}\`);
+      console.log(\`  Cost Basis: $\${position.costBasis.toFixed(2)}\`);
+      console.log(\`  Current Value: $\${currentValue.toFixed(2)}\`);
+      console.log(
+        \`  Gain/Loss: $\${gainLoss.toFixed(2)} (\${gainLossPercent.toFixed(2)}%)\`
+      );
+      console.log('');
+
+      totalValue += currentValue;
+      totalCost += costValue;
+    }
+
+}
+
+const portfolioGainLoss = totalValue - totalCost;
+const portfolioGainLossPercent = (portfolioGainLoss / totalCost) \* 100;
+
+console.log('=== Portfolio Summary ===');
+console.log(\`Total Cost: $\${totalCost.toFixed(2)}\`);
+console.log(\`Total Value: $\${totalValue.toFixed(2)}\`);
+console.log(
+    \`Total Gain/Loss: $\${portfolioGainLoss.toFixed(2)} (\${portfolioGainLossPercent.toFixed(2)}%)\`
+);
+}
+
+// Example portfolio
+const portfolio: PortfolioPosition[] = [
+    { symbol: 'AAPL', shares: 10, costBasis: 150.0 },
+    { symbol: 'MSFT', shares: 5, costBasis: 300.0 },
+    { symbol: 'GOOGL', shares: 3, costBasis: 2500.0 },
+];
+
+await trackPortfolio(portfolio);`}
+
+</CodeBlock>
+
+## Example 5: Market Scanner
+
+Create a market scanner to find stocks meeting specific criteria:
+
+<CodeBlock language="typescript">
+{`async function marketScanner() {
+  const symbols = [
+    'AAPL',
+    'MSFT',
+    'GOOGL',
+    'TSLA',
+    'AMZN',
+    'META',
+    'NVDA',
+    'NFLX',
+  ];
+  const results = [];
+
+console.log('Scanning market for value stocks...\\n');
+
+for (const symbol of symbols) {
+    try {
+      const [quote, ratios] = await Promise.all([
+        fmp.stock.getQuote({ symbol }),
+        fmp.financial.getFinancialRatios({ symbol }),
+      ]);
+
+      if (
+        quote.success &&
+        ratios.success &&
+        quote.data?.[0] &&
+        ratios.data?.[0]
+      ) {
+        const stock = quote.data[0];
+        const ratio = ratios.data[0];
+
+        // Define criteria for "value" stocks
+        const isValueStock =
+          ratio.priceEarningsRatio < 20 &&
+          ratio.priceToBookRatio < 5 &&
+          ratio.returnOnEquity > 0.15 &&
+          stock.price > 10;
+
+        if (isValueStock) {
+          results.push({
+            symbol,
+            name: stock.name,
+            price: stock.price,
+            pe: ratio.priceEarningsRatio,
+            pb: ratio.priceToBookRatio,
+            roe: ratio.returnOnEquity,
+          });
+        }
+      }
+    } catch (error) {
+      console.error(\`Error scanning \${symbol}:\`, error);
+    }
+
+}
+
+console.log('=== Value Stocks Found ===\\n');
+results.forEach(stock => {
+    console.log(\`\${stock.name} (\${stock.symbol})\`);
+    console.log(\` Price: $\${stock.price.toFixed(2)}\`);
+    console.log(\` P/E: \${stock.pe.toFixed(2)}\`);
+    console.log(\` P/B: \${stock.pb.toFixed(2)}\`);
+    console.log(\` ROE: \${(stock.roe \* 100).toFixed(2)}%\`);
+    console.log('');
+});
+}
+
+await marketScanner();`}
+
+</CodeBlock>
+
+## Example 6: Multi-Asset Dashboard
+
+Create a comprehensive dashboard covering multiple asset classes:
+
+<CodeBlock language="typescript">
+{`async function multiAssetDashboard() {
+  console.log('=== Multi-Asset Market Dashboard ===\\n');
+
+  // Stock market data
+  const [stockQuote, marketPerformance] = await Promise.all([
+    fmp.stock.getQuote({ symbol: 'SPY' }),
+    fmp.market.getMarketPerformance()
+  ]);
+
+  if (stockQuote.success && marketPerformance.success) {
+    console.log('📊 Stock Market:');
+    console.log(\` S&P 500: $\${stockQuote.data[0].price} (\${stockQuote.data[0].changesPercentage.toFixed(2)}%)\`);
+    console.log(\` Top Performer: \${marketPerformance.data[0]?.name} (\${marketPerformance.data[0]?.changesPercentage.toFixed(2)}%)\`);
+  }
+
+  // Forex data
+  const forexQuote = await fmp.forex.getQuote({ symbol: 'EURUSD' });
+  if (forexQuote.success) {
+    console.log('\\n💱 Forex:');
+    console.log(\` EUR/USD: \${forexQuote.data[0].price} (\${forexQuote.data[0].changesPercentage.toFixed(2)}%)\`);
+  }
+
+  // Crypto data
+  const cryptoQuote = await fmp.crypto.getQuote({ symbol: 'BTCUSD' });
+  if (cryptoQuote.success) {
+    console.log('\\n🪙 Cryptocurrency:');
+    console.log(\` Bitcoin: $\${cryptoQuote.data[0].price.toLocaleString()} (\${cryptoQuote.data[0].changesPercentage.toFixed(2)}%)\`);
+  }
+
+  // ETF data
+  const etfQuote = await fmp.etf.getQuote({ symbol: 'QQQ' });
+  if (etfQuote.success) {
+    console.log('\\n📈 ETF:');
+    console.log(\` QQQ: $\${etfQuote.data[0].price} (\${etfQuote.data[0].changesPercentage.toFixed(2)}%)\`);
+  }
+
+  // Market hours
+  const marketHours = await fmp.market.getMarketHours();
+  if (marketHours.success) {
+    console.log('\\n🕐 Market Status:');
+    console.log(\` Stock Market: \${marketHours.data.stockMarket}\`);
+    console.log(\` Forex: \${marketHours.data.forex}\`);
+    console.log(\` Crypto: \${marketHours.data.crypto}\`);
+  }
+}
+
+await multiAssetDashboard();`}
+
+</CodeBlock>
+
+## Example 7: Economic Analysis
+
+Analyze economic indicators and their market impact:
+
+<CodeBlock language="typescript">
+{`async function economicAnalysis() {
+  console.log('=== Economic Analysis ===\\n');
+
+  // Get treasury rates
+  const rates = await fmp.economic.getTreasuryRates();
+  if (rates.success) {
+    const current = rates.data[0];
+    console.log('📈 Treasury Rates:');
+    console.log(\` 3-Month: \${current.month3.toFixed(2)}%\`);
+    console.log(\` 2-Year: \${current.year2.toFixed(2)}%\`);
+    console.log(\` 10-Year: \${current.year10.toFixed(2)}%\`);
+    console.log(\` 30-Year: \${current.year30.toFixed(2)}%\`);
+
+    // Analyze yield curve
+    const yieldCurve = current.year10 - current.month3;
+    console.log(\`\\nYield Curve Spread (10Y - 3M): \${yieldCurve.toFixed(2)}%\`);
+    
+    if (yieldCurve < 0) {
+      console.log('⚠️  Inverted Yield Curve - Recession indicator');
+    } else if (yieldCurve < 0.5) {
+      console.log('⚠️  Flat Yield Curve - Economic uncertainty');
+    } else {
+      console.log('✅ Normal Yield Curve - Healthy economy');
+    }
+  }
+
+  // Get economic calendar
+  const calendar = await fmp.economic.getEconomicCalendar();
+  if (calendar.success) {
+    const highImpact = calendar.data.filter(event => event.impact === 'High');
+    console.log(\`\\n📅 High-Impact Economic Events: \${highImpact.length}\`);
+    highImpact.slice(0, 3).forEach(event => {
+      console.log(\` - \${event.event} (\${event.date})\`);
+    });
+  }
+}
+
+await economicAnalysis();`}
+
+</CodeBlock>
+
+## Example 8: Bond Portfolio Analysis
+
+Analyze bond yields and create a bond ladder strategy:
+
+<CodeBlock language="typescript">
+{`async function bondAnalysis() {
+  console.log('=== Bond Analysis ===\\n');
+
+  // Get treasury rates for different maturities
+  const rates = await fmp.bond.getTreasuryRates();
+  if (rates.success) {
+    const current = rates.data[0];
+    
+    console.log('📊 Treasury Yield Ladder:');
+    const maturities = [
+      { name: '3-Month', rate: current.month3 },
+      { name: '6-Month', rate: current.month6 },
+      { name: '1-Year', rate: current.year1 },
+      { name: '2-Year', rate: current.year2 },
+      { name: '5-Year', rate: current.year5 },
+      { name: '10-Year', rate: current.year10 },
+      { name: '30-Year', rate: current.year30 }
+    ];
+
+    maturities.forEach(maturity => {
+      console.log(\` \${maturity.name.padEnd(8)}: \${maturity.rate.toFixed(2)}%\`);
+    });
+
+    // Calculate average yield
+    const avgYield = maturities.reduce((sum, m) => sum + m.rate, 0) / maturities.length;
+    console.log(\`\\nAverage Yield: \${avgYield.toFixed(2)}%\`);
+
+    // Find best yield
+    const bestYield = maturities.reduce((best, current) => 
+      current.rate > best.rate ? current : best
+    );
+    console.log(\`Best Yield: \${bestYield.name} at \${bestYield.rate.toFixed(2)}%\`);
+  }
+}
+
+await bondAnalysis();`}
+
+</CodeBlock>
+
+## Example 9: Fund Comparison Tool
+
+Compare different investment funds:
+
+<CodeBlock language="typescript">
+{`async function fundComparison() {
+  console.log('=== Fund Comparison ===\\n');
+
+  const funds = [
+    { symbol: 'SPY', name: 'SPDR S&P 500 ETF' },
+    { symbol: 'VFINX', name: 'Vanguard 500 Index Fund' },
+    { symbol: 'QQQ', name: 'Invesco QQQ Trust' }
+  ];
+
+  const results = [];
+
+  for (const fund of funds) {
+    try {
+      const [quote, profile] = await Promise.all([
+        fmp.etf.getQuote({ symbol: fund.symbol }).catch(() => 
+          fmp.mutualFund.getQuote({ symbol: fund.symbol })
+        ),
+        fmp.etf.getProfile({ symbol: fund.symbol }).catch(() => 
+          fmp.mutualFund.getProfile({ symbol: fund.symbol })
+        )
+      ]);
+
+      if (quote.success && profile.success) {
+        results.push({
+          name: fund.name,
+          symbol: fund.symbol,
+          price: quote.data[0].price,
+          change: quote.data[0].changesPercentage,
+          volume: quote.data[0].volume,
+          marketCap: quote.data[0].marketCap
+        });
+      }
+    } catch (error) {
+      console.error(\`Error getting data for \${fund.symbol}:\`, error);
+    }
+  }
+
+  console.log('Fund Comparison Results:');
+  results.forEach(fund => {
+    console.log(\`\\n\${fund.name} (\${fund.symbol})\`);
+    console.log(\` Price: $\${fund.price.toFixed(2)} (\${fund.change > 0 ? '+' : ''}\${fund.change.toFixed(2)}%)\`);
+    console.log(\` Volume: \${fund.volume.toLocaleString()}\`);
+    console.log(\` Market Cap: $\${(fund.marketCap / 1e9).toFixed(2)}B\`);
+  });
+}
+
+await fundComparison();`}
+
+</CodeBlock>
+
+## Error Handling Best Practices
+
+Always implement proper error handling:
+
+<CodeBlock language="typescript">
+{`async function robustApiCall<T>(
+  apiCall: () => Promise<{ success: boolean; data?: T; error?: string }>,
+  retries: number = 3
+): Promise<T | null> {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const response = await apiCall();
+
+      if (response.success && response.data) {
+        return response.data;
+      } else {
+        console.warn(\`Attempt \${attempt} failed:\`, response.error);
+      }
+    } catch (error) {
+      console.error(\`Attempt \${attempt} error:\`, error);
+    }
+
+    if (attempt < retries) {
+      // Wait before retrying (exponential backoff)
+      await new Promise(resolve =>
+        setTimeout(resolve, Math.pow(2, attempt) * 1000)
+      );
+    }
+
+}
+
+return null;
+}
+
+// Usage
+const quote = await robustApiCall(() => fmp.stock.getQuote({ symbol: 'AAPL' }));
+if (quote) {
+    console.log('Stock price:', quote[0].price);
+}`}
+
+</CodeBlock>
+
+## Performance Optimization
+
+For better performance when making multiple API calls:
+
+<CodeBlock language="typescript">
+{`async function batchApiCalls(symbols: string[]) {
+  // Make concurrent API calls
+  const promises = symbols.map(symbol => fmp.stock.getQuote({ symbol }));
+  const results = await Promise.allSettled(promises);
+
+const successful = results
+    .filter(
+    (result): result is PromiseFulfilledResult<any> =>
+    result.status === 'fulfilled' && result.value.success
+    )
+    .map(result => result.value.data[0]);
+
+    return successful;
+}
+
+// Usage
+const symbols = ['AAPL', 'MSFT', 'GOOGL', 'TSLA', 'AMZN'];
+const quotes = await batchApiCalls(symbols);
+console.log(\`Retrieved \${quotes.length} quotes successfully\`);`}
+
+</CodeBlock>
+
+## Code Block Features
+
+### Copy Button
+
+All code blocks automatically include a copy button that appears on hover. You can also disable it if needed:
+
+<CodeBlock language="typescript" showCopyButton={false}>
+{`// This code block has the copy button disabled
+const example = "Copy button is hidden for this block";`}
+
+</CodeBlock>
+
+### Filename Display
+
+You can also display a filename for better context:
+
+<CodeBlock language="typescript" filename="example.ts">
+{`// This shows a filename in the header
+export function example() {
+    return "Hello World";
+}`}
+
+</CodeBlock>
+
+
+
+---
+
+**Need more examples?** Check out the [API Reference](/docs/api) for detailed endpoint
+documentation.

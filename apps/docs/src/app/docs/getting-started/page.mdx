@@ -1,0 +1,170 @@
+# Getting Started
+
+Welcome to the FMP Node Wrapper! This guide will help you get up and
+running quickly.
+
+## Installation
+
+Install the package using pnpm (recommended):
+
+<CodeBlock language="bash">{`pnpm add fmp-node-api`}</CodeBlock>
+
+Or using npm:
+
+<CodeBlock language="bash">{`npm install fmp-node-api`}</CodeBlock>
+
+Or using yarn:
+
+<CodeBlock language="bash">{`yarn add fmp-node-api`}</CodeBlock>
+
+## API Key Setup
+
+To use the FMP Node Wrapper, you'll need an API key from Financial
+Modeling Prep:
+
+1. Visit [Financial Modeling Prep](https://financialmodelingprep.com/) (opens in new tab)
+2. Sign up for an account
+3. Navigate to your dashboard to get your API key
+
+## Basic Setup
+
+Here's how to initialize the client:
+
+<CodeBlock language="typescript">
+{`import { FMP } from 'fmp-node-api';
+
+// Initialize the client with your API key
+const fmp = new FMP({
+    apiKey: 'your-api-key-here',
+    baseURL: 'https://financialmodelingprep.com/api/v3', // optional
+    timeout: 10000, // optional, default 10s
+});`}
+
+</CodeBlock>
+
+## Configuration Options
+
+The `FMP` client accepts the following configuration options:
+
+| Option    | Type     | Default                                      | Description                     |
+| --------- | -------- | -------------------------------------------- | ------------------------------- |
+| `apiKey`  | `string` | **Required**                                 | Your FMP API key                |
+| `baseURL` | `string` | `'https://financialmodelingprep.com/api/v3'` | Base URL for API requests       |
+| `timeout` | `number` | `10000`                                      | Request timeout in milliseconds |
+
+## Your First API Call
+
+Let's make your first API call to get a stock quote:
+
+<CodeBlock language="typescript">
+{`// Get real-time stock quote
+const quote = await fmp.stock.getQuote({ symbol: 'AAPL' });
+
+if (quote.success) {
+    console.log('Stock Price:', quote.data[0].price);
+    console.log('Change:', quote.data[0].change);
+    console.log('Market Cap:', quote.data[0].marketCap);
+} else {
+    console.error('Error:', quote.error);
+}`}
+
+</CodeBlock>
+
+## Response Format
+
+All API methods return a consistent response format:
+
+<CodeBlock language="typescript">
+  {`interface ApiResponse<T> {
+    success: boolean;
+    data?: T;
+    error?: string;
+    status?: number;
+}`}
+</CodeBlock>
+
+- `success`: Boolean indicating if the request was successful
+- `data`: The response data (only present when `success` is `true`)
+- `error`: Error message (only present when `success` is `false`)
+- `status`: HTTP status code (only present when `success` is `false`)
+
+## Error Handling
+
+Always check the `success` property before accessing the
+data:
+
+<CodeBlock language="typescript">
+{`const response = await fmp.stock.getQuote({ symbol: 'INVALID' });
+
+if (response.success) {
+    // Handle successful response
+    console.log(response.data);
+} else {
+    // Handle error
+    console.error('Error:', response.error);
+    console.error('Status:', response.status);
+}`}
+
+</CodeBlock>
+
+## Environment Variables
+
+For security, store your API key in environment variables:
+
+<CodeBlock language="typescript">
+{`import { FMP } from 'fmp-node-api';
+
+// Validate that API key exists
+if (!process.env.FMP_API_KEY) {
+    throw new Error('FMP_API_KEY environment variable is required');
+}
+
+const fmp = new FMP({
+    apiKey: process.env.FMP_API_KEY,
+});`}
+
+</CodeBlock>
+
+Create a `.env` file in your project root:
+
+<CodeBlock language="env">{`# Your FMP API key (get one at https://financialmodelingprep.com/developer)
+FMP_API_KEY=your-api-key-here`}</CodeBlock>
+
+**⚠️ Security Note:** Never commit your `.env` file to version control. It should already be in your `.gitignore`.
+
+## 💡 Pro Tip
+
+All code blocks in this documentation include a copy button that appears when you hover over them. Click the copy icon to quickly copy the code to your clipboard!
+
+## Next Steps
+
+Now that you have the basics set up, explore:
+
+- [API Reference](/docs/api) - Complete endpoint documentation
+- [Stock Endpoints](/docs/api/stock) - Stock-specific API methods
+- [Financial Endpoints](/docs/api/financial) - Financial statement methods
+- [Examples](/docs/examples) - Practical code samples
+
+## Common Issues
+
+### API Key Issues
+
+- Make sure your API key is valid and active
+- Check your FMP account for any usage limits
+- Verify the API key is correctly passed to the client
+
+### Network Issues
+
+- Check your internet connection
+- Verify the base URL is accessible
+- Consider increasing the timeout for slower connections
+
+### TypeScript Issues
+
+- Ensure you're using TypeScript 4.5+ for best type support
+- All types are included in the main package
+
+---
+
+**Ready to explore the API?** Check out the [API Reference](/docs/api) for detailed endpoint
+documentation.

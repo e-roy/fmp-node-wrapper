@@ -1,0 +1,280 @@
+# ETF Endpoints
+
+Access ETF (Exchange-Traded Fund) data including quotes, profiles, and holdings information.
+
+## Overview
+
+The ETF endpoints provide access to ETF market data, including real-time quotes, fund profiles, holdings information, and ETF listings.
+
+## Quick Start
+
+<CodeBlock language="typescript">
+{`import { FMP } from 'fmp-node-api';
+
+const fmp = new FMP({ apiKey: 'your-api-key' });
+
+// Get ETF quote
+const quote = await fmp.etf.getQuote({ symbol: 'SPY' });
+
+// Get ETF profile
+const profile = await fmp.etf.getProfile({ symbol: 'SPY' });
+
+// Get ETF holdings
+const holdings = await fmp.etf.getHoldings({ symbol: 'SPY' });`}
+</CodeBlock>
+
+## Available Methods
+
+### getQuote
+
+Get real-time ETF quote.
+
+<ApiTable
+  endpoints={[
+    {
+      method: 'GET',
+      path: '/quote/{symbol}',
+      description: 'Get real-time ETF quote',
+    },
+  ]}
+/>
+
+**Parameters:**
+
+| Parameter | Type     | Required | Description                    |
+| --------- | -------- | -------- | ------------------------------ |
+| `symbol`  | `string` | Yes      | ETF symbol (e.g., 'SPY')      |
+
+**Example:**
+
+<CodeBlock language="typescript">
+{`const quote = await fmp.etf.getQuote({ symbol: 'SPY' });
+
+if (quote.success) {
+    console.log('Price:', quote.data[0].price);
+    console.log('Change:', quote.data[0].change);
+    console.log('Volume:', quote.data[0].volume);
+}`}
+</CodeBlock>
+
+### getProfile
+
+Get ETF profile and information.
+
+<ApiTable
+  endpoints={[
+    {
+      method: 'GET',
+      path: '/profile/{symbol}',
+      description: 'Get ETF profile',
+    },
+  ]}
+/>
+
+**Parameters:**
+
+| Parameter | Type     | Required | Description                    |
+| --------- | -------- | -------- | ------------------------------ |
+| `symbol`  | `string` | Yes      | ETF symbol (e.g., 'SPY')      |
+
+**Example:**
+
+<CodeBlock language="typescript">
+{`const profile = await fmp.etf.getProfile({ symbol: 'SPY' });
+
+if (profile.success) {
+    console.log('ETF Name:', profile.data[0].companyName);
+    console.log('Exchange:', profile.data[0].exchange);
+    console.log('Industry:', profile.data[0].industry);
+}`}
+</CodeBlock>
+
+### getHoldings
+
+Get ETF holdings and composition data.
+
+<ApiTable
+  endpoints={[
+    {
+      method: 'GET',
+      path: '/etf-holder/{symbol}',
+      description: 'Get ETF holdings',
+    },
+  ]}
+/>
+
+**Parameters:**
+
+| Parameter | Type     | Required | Description                    |
+| --------- | -------- | -------- | ------------------------------ |
+| `symbol`  | `string` | Yes      | ETF symbol (e.g., 'SPY')      |
+| `limit`   | `number` | No       | Number of holdings to return  |
+| `page`    | `number` | No       | Page number for pagination    |
+
+**Example:**
+
+<CodeBlock language="typescript">
+{`const holdings = await fmp.etf.getHoldings({ 
+    symbol: 'SPY',
+    limit: 10 
+});
+
+if (holdings.success) {
+    console.log('Holdings:', holdings.data);
+}`}
+</CodeBlock>
+
+### getETFList
+
+Get list of all available ETFs.
+
+<ApiTable
+  endpoints={[
+    {
+      method: 'GET',
+      path: '/etf/list',
+      description: 'Get list of all ETFs',
+    },
+  ]}
+/>
+
+**Example:**
+
+<CodeBlock language="typescript">
+{`const etfList = await fmp.etf.getETFList();
+
+if (etfList.success) {
+    console.log('Available ETFs:', etfList.data);
+}`}
+</CodeBlock>
+
+## Response Types
+
+### ETFQuote
+
+<CodeBlock language="typescript">
+{`interface ETFQuote {
+    symbol: string;
+    name: string;
+    price: number;
+    changesPercentage: number;
+    change: number;
+    dayLow: number;
+    dayHigh: number;
+    yearHigh: number;
+    yearLow: number;
+    marketCap: number;
+    priceAvg50: number;
+    priceAvg200: number;
+    volume: number;
+    avgVolume: number;
+    exchange: string;
+    open: number;
+    previousClose: number;
+    eps: number;
+    pe: number;
+    earningsAnnouncement: string;
+    sharesOutstanding: number;
+    timestamp: number;
+}`}
+</CodeBlock>
+
+### ETFProfile
+
+<CodeBlock language="typescript">
+{`interface ETFProfile {
+    symbol: string;
+    price: number;
+    beta: number;
+    volumeAvg: number;
+    marketCap: number;
+    lastDiv: number;
+    range: string;
+    changes: number;
+    companyName: string;
+    currency: string;
+    cik: string;
+    isin: string;
+    cusip: string;
+    exchange: string;
+    exchangeShortName: string;
+    industry: string;
+    website: string;
+    description: string;
+    ceo: string;
+    sector: string;
+    country: string;
+    fullTimeEmployees: number;
+    phone: string;
+    address: string;
+    city: string;
+    state: string;
+    zip: string;
+    dcfDiff: number;
+    dcf: number;
+    image: string;
+    ipoDate: string;
+    defaultImage: boolean;
+    isEtf: boolean;
+    isActivelyTrading: boolean;
+    isAdr: boolean;
+    isFund: boolean;
+}`}
+</CodeBlock>
+
+### ETFHolding
+
+<CodeBlock language="typescript">
+{`interface ETFHolding {
+    asset: string;
+    weight: number;
+    shares: number;
+    marketValue: number;
+}`}
+</CodeBlock>
+
+## Popular ETFs
+
+Here are some popular ETF symbols you can use:
+
+- **SPY** - SPDR S&P 500 ETF Trust
+- **QQQ** - Invesco QQQ Trust
+- **IWM** - iShares Russell 2000 ETF
+- **VTI** - Vanguard Total Stock Market ETF
+- **VEA** - Vanguard FTSE Developed Markets ETF
+- **VWO** - Vanguard FTSE Emerging Markets ETF
+- **BND** - Vanguard Total Bond Market ETF
+- **GLD** - SPDR Gold Shares
+
+## Error Handling
+
+<CodeBlock language="typescript">
+{`const response = await fmp.etf.getQuote({ symbol: 'INVALID' });
+
+if (response.success) {
+    // Handle successful response
+    console.log(response.data);
+} else {
+    // Handle error
+    console.error('Error:', response.error);
+    console.error('Status:', response.status);
+}`}
+</CodeBlock>
+
+## ETF Categories
+
+ETFs can be categorized by their investment focus:
+
+- **Equity ETFs** - Track stock indices or sectors
+- **Bond ETFs** - Track bond indices
+- **Commodity ETFs** - Track commodity prices
+- **International ETFs** - Track foreign markets
+- **Sector ETFs** - Track specific industry sectors
+
+## Rate Limiting
+
+ETF endpoints are subject to FMP's rate limits. For production applications, consider implementing appropriate rate limiting strategies.
+
+---
+
+**Next:** Explore other endpoint categories like [Stock Data](/docs/api/stock) or [Market Data](/docs/api/market). 

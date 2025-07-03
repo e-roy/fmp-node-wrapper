@@ -1,0 +1,198 @@
+# Forex Endpoints
+
+Access foreign exchange data including real-time quotes, historical data, and currency information.
+
+## Overview
+
+The forex endpoints provide access to foreign exchange market data, including real-time currency quotes, historical performance data, and currency pair information.
+
+## Quick Start
+
+<CodeBlock language="typescript">
+{`import { FMP } from 'fmp-node-api';
+
+const fmp = new FMP({ apiKey: 'your-api-key' });
+
+// Get forex quote
+const quote = await fmp.forex.getQuote({ symbol: 'EURUSD' });
+
+// Get historical forex data
+const historical = await fmp.forex.getHistoricalPrice({
+    symbol: 'EURUSD',
+    from: '2024-01-01',
+    to: '2024-01-31'
+});`}
+</CodeBlock>
+
+## Available Methods
+
+### getQuote
+
+Get real-time forex quote for a currency pair.
+
+<ApiTable
+  endpoints={[
+    {
+      method: 'GET',
+      path: '/quote/{symbol}',
+      description: 'Get real-time forex quote',
+    },
+  ]}
+/>
+
+**Parameters:**
+
+| Parameter | Type     | Required | Description                    |
+| --------- | -------- | -------- | ------------------------------ |
+| `symbol`  | `string` | Yes      | Currency pair symbol (e.g., 'EURUSD') |
+
+**Example:**
+
+<CodeBlock language="typescript">
+{`const quote = await fmp.forex.getQuote({ symbol: 'EURUSD' });
+
+if (quote.success) {
+    console.log('Exchange Rate:', quote.data[0].price);
+    console.log('Change:', quote.data[0].change);
+    console.log('Change %:', quote.data[0].changesPercentage);
+}`}
+</CodeBlock>
+
+### getHistoricalPrice
+
+Get historical forex data for a currency pair.
+
+<ApiTable
+  endpoints={[
+    {
+      method: 'GET',
+      path: '/historical-price-full/{symbol}',
+      description: 'Get historical forex data',
+    },
+  ]}
+/>
+
+**Parameters:**
+
+| Parameter     | Type     | Required | Description                    |
+| ------------- | -------- | -------- | ------------------------------ |
+| `symbol`      | `string` | Yes      | Currency pair symbol (e.g., 'EURUSD') |
+| `from`        | `string` | No       | Start date (YYYY-MM-DD)       |
+| `to`          | `string` | No       | End date (YYYY-MM-DD)         |
+| `timeseries`  | `number` | No       | Number of days for timeseries |
+
+**Example:**
+
+<CodeBlock language="typescript">
+{`const historical = await fmp.forex.getHistoricalPrice({
+    symbol: 'EURUSD',
+    from: '2024-01-01',
+    to: '2024-01-31'
+});
+
+if (historical.success) {
+    console.log('Historical Data:', historical.data.historical);
+}`}
+</CodeBlock>
+
+### getForexList
+
+Get list of all available forex pairs.
+
+<ApiTable
+  endpoints={[
+    {
+      method: 'GET',
+      path: '/forex',
+      description: 'Get list of all forex pairs',
+    },
+  ]}
+/>
+
+**Example:**
+
+<CodeBlock language="typescript">
+{`const forexList = await fmp.forex.getForexList();
+
+if (forexList.success) {
+    console.log('Available Pairs:', forexList.data);
+}`}
+</CodeBlock>
+
+## Response Types
+
+### ForexQuote
+
+<CodeBlock language="typescript">
+{`interface ForexQuote {
+    symbol: string;
+    name: string;
+    price: number;
+    changesPercentage: number;
+    change: number;
+    dayLow: number;
+    dayHigh: number;
+    yearHigh: number;
+    yearLow: number;
+    marketCap: number;
+    priceAvg50: number;
+    priceAvg200: number;
+    volume: number;
+    avgVolume: number;
+    exchange: string;
+    open: number;
+    previousClose: number;
+    eps: number;
+    pe: number;
+    earningsAnnouncement: string;
+    sharesOutstanding: number;
+    timestamp: number;
+}`}
+</CodeBlock>
+
+### ForexCurrency
+
+<CodeBlock language="typescript">
+{`interface ForexCurrency {
+    symbol: string;
+    name: string;
+    currency: string;
+    stockExchange: string;
+    exchangeShortName: string;
+}`}
+</CodeBlock>
+
+## Common Currency Pairs
+
+Here are some common currency pairs you can use:
+
+- **EURUSD** - Euro / US Dollar
+- **GBPUSD** - British Pound / US Dollar
+- **USDJPY** - US Dollar / Japanese Yen
+- **USDCHF** - US Dollar / Swiss Franc
+- **AUDUSD** - Australian Dollar / US Dollar
+- **USDCAD** - US Dollar / Canadian Dollar
+- **NZDUSD** - New Zealand Dollar / US Dollar
+
+## Error Handling
+
+<CodeBlock language="typescript">
+{`const response = await fmp.forex.getQuote({ symbol: 'INVALID' });
+
+if (response.success) {
+    // Handle successful response
+    console.log(response.data);
+} else {
+    // Handle error
+    console.error('Error:', response.error);
+    console.error('Status:', response.status);
+}`}
+</CodeBlock>
+
+## Rate Limiting
+
+Forex endpoints are subject to FMP's rate limits. For production applications, consider implementing appropriate rate limiting strategies.
+
+---
+
+**Next:** Explore other endpoint categories like [Stock Data](/docs/api/stock) or [Financial Data](/docs/api/financial). 

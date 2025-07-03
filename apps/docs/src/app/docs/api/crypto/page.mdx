@@ -1,0 +1,203 @@
+# Crypto Endpoints
+
+Access cryptocurrency data including real-time quotes, historical data, and crypto information.
+
+## Overview
+
+The crypto endpoints provide access to cryptocurrency market data, including real-time crypto quotes, historical performance data, and cryptocurrency information.
+
+## Quick Start
+
+<CodeBlock language="typescript">
+{`import { FMP } from 'fmp-node-api';
+
+const fmp = new FMP({ apiKey: 'your-api-key' });
+
+// Get crypto quote
+const quote = await fmp.crypto.getQuote({ symbol: 'BTCUSD' });
+
+// Get historical crypto data
+const historical = await fmp.crypto.getHistoricalPrice({
+    symbol: 'BTCUSD',
+    from: '2024-01-01',
+    to: '2024-01-31'
+});`}
+</CodeBlock>
+
+## Available Methods
+
+### getQuote
+
+Get real-time cryptocurrency quote.
+
+<ApiTable
+  endpoints={[
+    {
+      method: 'GET',
+      path: '/quote/{symbol}',
+      description: 'Get real-time crypto quote',
+    },
+  ]}
+/>
+
+**Parameters:**
+
+| Parameter | Type     | Required | Description                    |
+| --------- | -------- | -------- | ------------------------------ |
+| `symbol`  | `string` | Yes      | Crypto symbol (e.g., 'BTCUSD') |
+
+**Example:**
+
+<CodeBlock language="typescript">
+{`const quote = await fmp.crypto.getQuote({ symbol: 'BTCUSD' });
+
+if (quote.success) {
+    console.log('Price:', quote.data[0].price);
+    console.log('Change:', quote.data[0].change);
+    console.log('Market Cap:', quote.data[0].marketCap);
+}`}
+</CodeBlock>
+
+### getHistoricalPrice
+
+Get historical cryptocurrency data.
+
+<ApiTable
+  endpoints={[
+    {
+      method: 'GET',
+      path: '/historical-price-full/{symbol}',
+      description: 'Get historical crypto data',
+    },
+  ]}
+/>
+
+**Parameters:**
+
+| Parameter     | Type     | Required | Description                    |
+| ------------- | -------- | -------- | ------------------------------ |
+| `symbol`      | `string` | Yes      | Crypto symbol (e.g., 'BTCUSD') |
+| `from`        | `string` | No       | Start date (YYYY-MM-DD)       |
+| `to`          | `string` | No       | End date (YYYY-MM-DD)         |
+| `timeseries`  | `number` | No       | Number of days for timeseries |
+
+**Example:**
+
+<CodeBlock language="typescript">
+{`const historical = await fmp.crypto.getHistoricalPrice({
+    symbol: 'BTCUSD',
+    from: '2024-01-01',
+    to: '2024-01-31'
+});
+
+if (historical.success) {
+    console.log('Historical Data:', historical.data.historical);
+}`}
+</CodeBlock>
+
+### getCryptoList
+
+Get list of all available cryptocurrencies.
+
+<ApiTable
+  endpoints={[
+    {
+      method: 'GET',
+      path: '/cryptocurrency',
+      description: 'Get list of all cryptocurrencies',
+    },
+  ]}
+/>
+
+**Example:**
+
+<CodeBlock language="typescript">
+{`const cryptoList = await fmp.crypto.getCryptoList();
+
+if (cryptoList.success) {
+    console.log('Available Cryptocurrencies:', cryptoList.data);
+}`}
+</CodeBlock>
+
+## Response Types
+
+### CryptoQuote
+
+<CodeBlock language="typescript">
+{`interface CryptoQuote {
+    symbol: string;
+    name: string;
+    price: number;
+    changesPercentage: number;
+    change: number;
+    dayLow: number;
+    dayHigh: number;
+    yearHigh: number;
+    yearLow: number;
+    marketCap: number;
+    priceAvg50: number;
+    priceAvg200: number;
+    volume: number;
+    avgVolume: number;
+    exchange: string;
+    open: number;
+    previousClose: number;
+    eps: number;
+    pe: number;
+    earningsAnnouncement: string;
+    sharesOutstanding: number;
+    timestamp: number;
+}`}
+</CodeBlock>
+
+### CryptoCurrency
+
+<CodeBlock language="typescript">
+{`interface CryptoCurrency {
+    symbol: string;
+    name: string;
+    currency: string;
+    stockExchange: string;
+    exchangeShortName: string;
+}`}
+</CodeBlock>
+
+## Popular Cryptocurrencies
+
+Here are some popular cryptocurrency symbols you can use:
+
+- **BTCUSD** - Bitcoin / US Dollar
+- **ETHUSD** - Ethereum / US Dollar
+- **ADAUSD** - Cardano / US Dollar
+- **DOTUSD** - Polkadot / US Dollar
+- **LINKUSD** - Chainlink / US Dollar
+- **LTCUSD** - Litecoin / US Dollar
+- **XRPUSD** - Ripple / US Dollar
+- **BCHUSD** - Bitcoin Cash / US Dollar
+
+## Error Handling
+
+<CodeBlock language="typescript">
+{`const response = await fmp.crypto.getQuote({ symbol: 'INVALID' });
+
+if (response.success) {
+    // Handle successful response
+    console.log(response.data);
+} else {
+    // Handle error
+    console.error('Error:', response.error);
+    console.error('Status:', response.status);
+}`}
+</CodeBlock>
+
+## Rate Limiting
+
+Cryptocurrency endpoints are subject to FMP's rate limits. For production applications, consider implementing appropriate rate limiting strategies.
+
+## Market Data
+
+Cryptocurrency markets operate 24/7, unlike traditional stock markets. This means you can get real-time data at any time of day.
+
+---
+
+**Next:** Explore other endpoint categories like [Forex Data](/docs/api/forex) or [Stock Data](/docs/api/stock). 

@@ -1,0 +1,46 @@
+{
+  "name": "fmp-node-wrapper",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "docs:dev": "turbo run dev --filter=fmp-docs",
+    "api:dev": "turbo run dev --filter=fmp-node-api",
+    "test:api": "turbo run test:manual --filter=fmp-node-api",
+    "test": "turbo run test",
+    "test:watch": "turbo run test:watch",
+    "test:coverage": "turbo run test:coverage",
+    "test:unit": "turbo run test:unit --filter=fmp-node-api",
+    "test:integration": "turbo run test:integration --filter=fmp-node-api",
+    "test:endpoints": "turbo run test:endpoints --filter=fmp-node-api",
+    "test:stock": "turbo run test:stock --filter=fmp-node-api",
+    "test:financial": "turbo run test:financial --filter=fmp-node-api",
+    "test:market": "turbo run test:market --filter=fmp-node-api",
+    "test:forex": "turbo run test:forex --filter=fmp-node-api",
+    "test:economic": "turbo run test:economic --filter=fmp-node-api",
+    "lint": "pnpm exec eslint packages/api/src/**/*.ts apps/docs/src/**/*.ts",
+    "lint:fix": "turbo run lint:fix",
+    "clean": "turbo run clean",
+    "clean:install": "npx rimraf node_modules packages/api/node_modules apps/docs/node_modules pnpm-lock.yaml && pnpm install",
+    "type-check": "turbo run type-check",
+    "format": "turbo run format",
+    "format:check": "turbo run format:check",
+    "publish-packages": "turbo run build lint test && changeset version && changeset publish"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.1",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "eslint": "^8.57.1",
+    "jest": "^29.7.0",
+    "rimraf": "^5.0.5",
+    "ts-jest": "^29.1.2",
+    "turbo": "^2.5.4",
+    "typescript": "^5.3.3"
+  },
+  "packageManager": "pnpm@9.2.0",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

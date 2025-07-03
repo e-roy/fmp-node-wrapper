@@ -1,0 +1,253 @@
+# API Reference
+
+The FMP Node Wrapper provides a comprehensive set of methods to interact
+with the Financial Modeling Prep API. All methods return a consistent
+response format and include full TypeScript support.
+
+## Client Setup
+
+First, initialize the client with your API key:
+
+<CodeBlock language="typescript">
+{`import { FMP } from 'fmp-node-api';
+
+// Initialize the client
+const fmp = new FMP({
+    apiKey: 'your-api-key-here',
+});`}
+
+</CodeBlock>
+
+## Available Endpoints
+
+The library is organized into different endpoint categories:
+
+<ApiTable
+  endpoints={[
+    {
+      method: 'GET',
+      path: '/stock/*',
+      description:
+        'Stock-related endpoints for quotes, historical data, and market information',
+    },
+    {
+      method: 'GET',
+      path: '/financial/*',
+      description:
+        'Financial statement endpoints for income statements, balance sheets, and cash flows',
+    },
+    {
+      method: 'GET',
+      path: '/forex/*',
+      description:
+        'Foreign exchange endpoints for currency quotes and historical data',
+    },
+    {
+      method: 'GET',
+      path: '/crypto/*',
+      description:
+        'Cryptocurrency endpoints for crypto quotes and historical data',
+    },
+    {
+      method: 'GET',
+      path: '/etf/*',
+      description:
+        'ETF endpoints for quotes, profiles, and holdings data',
+    },
+    {
+      method: 'GET',
+      path: '/market/*',
+      description:
+        'Market endpoints for performance, hours, and sector data',
+    },
+    {
+      method: 'GET',
+      path: '/economic/*',
+      description:
+        'Economic indicators and calendar data',
+    },
+    {
+      method: 'GET',
+      path: '/bond/*',
+      description:
+        'Bond data and treasury rates',
+    },
+    {
+      method: 'GET',
+      path: '/mutual-fund/*',
+      description:
+        'Mutual fund quotes and data',
+    },
+  ]}
+/>
+
+## Response Format
+
+All API methods return a consistent response format:
+
+<CodeBlock language="typescript">
+  {`interface ApiResponse<T> {
+    success: boolean;
+    data?: T;
+    error?: string;
+    status?: number;
+}`}
+</CodeBlock>
+
+## Error Handling
+
+Always check the success property before accessing data:
+
+<CodeBlock language="typescript">
+{`const response = await fmp.stock.getQuote({ symbol: 'AAPL' });
+
+if (response.success) {
+    // Handle successful response
+    console.log(response.data);
+} else {
+    // Handle error
+    console.error('Error:', response.error);
+    console.error('Status:', response.status);
+}`}
+
+</CodeBlock>
+
+## Endpoint Categories
+
+### Stock Endpoints
+
+Access real-time and historical stock data:
+
+- **Quotes** - Real-time stock quotes and market data
+- **Historical Data** - Historical price data with flexible intervals
+- **Market Information** - Market cap, volume, and other metrics
+- **Company Information** - Company profiles and details
+
+[View Stock Endpoints →](/docs/api/stock)
+
+### Financial Endpoints
+
+Access financial statements and ratios:
+
+- **Income Statements** - Revenue, expenses, and profit metrics
+- **Balance Sheets** - Assets, liabilities, and equity
+- **Cash Flow Statements** - Operating, investing, and financing cash flows
+- **Financial Ratios** - Key financial ratios and metrics
+
+[View Financial Endpoints →](/docs/api/financial)
+
+### Forex Endpoints
+
+Access foreign exchange data:
+
+- **Currency Quotes** - Real-time forex rates
+- **Historical Data** - Historical currency performance
+- **Currency Pairs** - Major and minor currency pairs
+
+[View Forex Endpoints →](/docs/api/forex)
+
+### Crypto Endpoints
+
+Access cryptocurrency data:
+
+- **Crypto Quotes** - Real-time cryptocurrency prices
+- **Historical Data** - Historical crypto performance
+- **Crypto List** - Available cryptocurrencies
+
+[View Crypto Endpoints →](/docs/api/crypto)
+
+### ETF Endpoints
+
+Access ETF data:
+
+- **ETF Quotes** - Real-time ETF prices
+- **ETF Profiles** - ETF information and details
+- **ETF Holdings** - Holdings and composition data
+
+[View ETF Endpoints →](/docs/api/etf)
+
+### Market Endpoints
+
+Access market-wide data:
+
+- **Market Performance** - Overall market performance
+- **Market Hours** - Trading hours and status
+- **Sector Performance** - Sector-specific performance
+- **Gainers/Losers** - Top gainers and losers
+
+[View Market Endpoints →](/docs/api/market)
+
+### Economic Endpoints
+
+Access economic indicators:
+
+- **Economic Calendar** - Economic events and releases
+- **Economic Indicators** - Key economic metrics
+- **Treasury Rates** - Government bond yields
+
+[View Economic Endpoints →](/docs/api/economic)
+
+### Bond Endpoints
+
+Access bond and treasury data:
+
+- **Treasury Rates** - Government bond yields
+- **Bond Prices** - Bond pricing information
+- **Yield Curves** - Yield curve data
+
+[View Bond Endpoints →](/docs/api/bond)
+
+### Mutual Fund Endpoints
+
+Access mutual fund data:
+
+- **Fund Quotes** - Real-time mutual fund prices
+- **Fund Profiles** - Fund information and details
+- **Fund Performance** - Historical fund performance
+
+[View Mutual Fund Endpoints →](/docs/api/mutual-fund)
+
+## TypeScript Support
+
+The library includes comprehensive TypeScript definitions for all
+endpoints:
+
+<CodeBlock language="typescript">
+{`// Full type safety for parameters
+const quote = await fmp.stock.getQuote({ 
+    symbol: 'AAPL' // TypeScript will ensure this is a string
+});
+
+// Full type safety for responses
+if (quote.success) {
+    const price = quote.data[0].price; // TypeScript knows this is a number
+    const symbol = quote.data[0].symbol; // TypeScript knows this is a string
+}`}
+
+</CodeBlock>
+
+## Configuration Options
+
+The client accepts several configuration options:
+
+| Option    | Type     | Default                                      | Description                     |
+| --------- | -------- | -------------------------------------------- | ------------------------------- |
+| `apiKey`  | `string` | **Required**                                 | Your FMP API key                |
+| `baseURL` | `string` | `'https://financialmodelingprep.com/api/v3'` | Base URL for API requests       |
+| `timeout` | `number` | `10000`                                      | Request timeout in milliseconds |
+
+## Rate Limiting
+
+The library respects FMP's rate limits and will automatically handle
+rate limiting responses. For production applications, consider
+implementing your own rate limiting strategy.
+
+## Examples
+
+Check out our [Examples](/docs/examples) section for
+practical code samples and common use cases.
+
+---
+
+**Ready to get started?** Check out the [Getting Started Guide](/docs/getting-started) or explore
+specific endpoint categories above.

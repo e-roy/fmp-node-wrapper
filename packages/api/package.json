@@ -1,0 +1,66 @@
+{
+  "name": "fmp-node-api",
+  "version": "0.0.0",
+  "description": "A comprehensive Node.js wrapper for Financial Modeling Prep API",
+  "disclaimer": "This package is not affiliated with, endorsed by, or sponsored by Financial Modeling Prep (FMP). This is an independent, community-developed wrapper.",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist/**"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "npx eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:unit": "jest --testPathPattern=\"src/__tests__/(client|fmp)\\.test\\.ts\"",
+    "test:integration": "jest --testPathPattern=\"src/__tests__/integration\\.test\\.ts\"",
+    "test:endpoints": "jest --testPathPattern=\"src/__tests__/endpoints\"",
+    "test:stock": "jest --testPathPattern=\"src/__tests__/endpoints/stock\\.test\\.ts\"",
+    "test:financial": "jest --testPathPattern=\"src/__tests__/endpoints/financial\\.test\\.ts\"",
+    "test:market": "jest --testPathPattern=\"src/__tests__/endpoints/market\\.test\\.ts\"",
+    "test:forex": "jest --testPathPattern=\"src/__tests__/endpoints/forex\\.test\\.ts\"",
+    "test:economic": "jest --testPathPattern=\"src/__tests__/endpoints/economic\\.test\\.ts\"",
+    "test:manual": "tsx scripts/test-manual.ts",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write src/**/*.ts",
+    "format:check": "prettier --check src/**/*.ts",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "financial",
+    "api",
+    "stocks",
+    "market",
+    "fmp",
+    "financial-modeling-prep"
+  ],
+  "author": "Eric <https://github.com/e-roy>",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.11.0",
+    "@types/axios": "^0.14.0",
+    "dotenv": "^16.3.1",
+    "jest": "^29.7.0",
+    "prettier": "^3.2.5",
+    "ts-jest": "^29.1.2",
+    "tsup": "^8.0.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  }
+}

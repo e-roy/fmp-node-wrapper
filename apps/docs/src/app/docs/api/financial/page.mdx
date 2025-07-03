@@ -1,0 +1,446 @@
+# Financial Endpoints
+
+The Financial Endpoints provide access to financial statements, ratios,
+and fundamental data for companies.
+
+## Available Methods
+
+<ApiTable
+  endpoints={[
+    {
+      method: 'GET',
+      path: '/income-statement/{symbol}',
+      description: 'Get income statement data',
+    },
+    {
+      method: 'GET',
+      path: '/balance-sheet-statement/{symbol}',
+      description: 'Get balance sheet data',
+    },
+    {
+      method: 'GET',
+      path: '/cash-flow-statement/{symbol}',
+      description: 'Get cash flow statement data',
+    },
+    {
+      method: 'GET',
+      path: '/financial-ratios/{symbol}',
+      description: 'Get financial ratios',
+    },
+  ]}
+/>
+
+## Get Income Statement
+
+Retrieve income statement data including revenue, expenses, and profit
+metrics.
+
+<CodeBlock language="typescript">
+  {`const incomeStatement = await fmp.getIncomeStatement({
+    symbol: 'AAPL',
+    period: 'annual',
+    limit: 5,
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+    {
+      name: 'period',
+      type: 'string',
+      required: false,
+      description: 'Period type: "annual" or "quarter" (default: "annual")',
+    },
+    {
+      name: 'limit',
+      type: 'number',
+      required: false,
+      description: 'Number of periods to retrieve (default: 5)',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        date: '2023-09-30',
+        symbol: 'AAPL',
+        reportedCurrency: 'USD',
+        cik: '0000320193',
+        fillingDate: '2023-10-27',
+        acceptedDate: '2023-10-27T16:30:00.000+00:00',
+        calendarYear: '2023',
+        period: 'FY',
+        revenue: 383285000000,
+        costOfRevenue: 214137000000,
+        grossProfit: 169148000000,
+        grossProfitRatio: 0.4414,
+        researchAndDevelopmentExpenses: 29915000000,
+        generalAndAdministrativeExpenses: 0,
+        sellingAndMarketingExpenses: 0,
+        sellingGeneralAndAdministrativeExpenses: 24809000000,
+        otherExpenses: 0,
+        operatingExpenses: 54724000000,
+        costAndExpenses: 268861000000,
+        interestExpense: 3933000000,
+        depreciationAndAmortization: 11104000000,
+        ebitda: 130000000000,
+        ebitdaratio: 0.3392,
+        operatingIncome: 114301000000,
+        operatingIncomeRatio: 0.2983,
+        totalOtherIncomeExpensesNet: -1000000000,
+        incomeBeforeTax: 113301000000,
+        incomeBeforeTaxRatio: 0.2957,
+        incomeTaxExpense: 16741000000,
+        netIncome: 96995000000,
+        netIncomeRatio: 0.2531,
+        eps: 6.16,
+        epsDiluted: 6.13,
+        ebit: 114301000000,
+        ebitRatio: 0.2983,
+        link: 'https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/aapl-20230930.htm',
+        finalLink: 'https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/aapl-20230930.htm'
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Balance Sheet
+
+Retrieve balance sheet data including assets, liabilities, and equity.
+
+<CodeBlock language="typescript">
+  {`const balanceSheet = await fmp.getBalanceSheet({
+    symbol: 'AAPL',
+    period: 'quarter',
+    limit: 4,
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+    {
+      name: 'period',
+      type: 'string',
+      required: false,
+      description: 'Period type: "annual" or "quarter" (default: "annual")',
+    },
+    {
+      name: 'limit',
+      type: 'number',
+      required: false,
+      description: 'Number of periods to retrieve (default: 5)',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        date: '2023-09-30',
+        symbol: 'AAPL',
+        reportedCurrency: 'USD',
+        cik: '0000320193',
+        fillingDate: '2023-10-27',
+        acceptedDate: '2023-10-27T16:30:00.000+00:00',
+        calendarYear: '2023',
+        period: 'FY',
+        cashAndCashEquivalents: 29965000000,
+        shortTermInvestments: 31592000000,
+        cashAndShortTermInvestments: 61557000000,
+        netReceivables: 29508000000,
+        inventory: 6331000000,
+        totalCurrentAssets: 143713000000,
+        propertyPlantEquipmentNet: 43663000000,
+        goodwill: 0,
+        intangibleAssets: 0,
+        goodwillAndIntangibleAssets: 0,
+        longTermInvestments: 100544000000,
+        taxAssets: 0,
+        otherNonCurrentAssets: 0,
+        totalNonCurrentAssets: 144226000000,
+        otherAssets: 0,
+        totalAssets: 352755000000,
+        accountPayables: 62611000000,
+        shortTermDebt: 9598000000,
+        taxPayables: 0,
+        deferredRevenue: 8091000000,
+        otherCurrentLiabilities: 0,
+        totalCurrentLiabilities: 145308000000,
+        longTermDebt: 95057000000,
+        deferredRevenueNonCurrent: 0,
+        deferredTaxLiabilitiesNonCurrent: 0,
+        otherNonCurrentLiabilities: 0,
+        totalNonCurrentLiabilities: 95057000000,
+        otherLiabilities: 0,
+        capitalLeaseObligations: 0,
+        totalLiabilities: 240365000000,
+        preferredStock: 0,
+        commonStock: 64849000000,
+        retainedEarnings: 21400000000,
+        accumulatedOtherComprehensiveIncomeLoss: -1100000000,
+        othertotalStockholdersEquity: 0,
+        totalStockholdersEquity: 112390000000,
+        totalEquityGrossMinorityInterest: 0,
+        minorityInterest: 0,
+        totalEquity: 112390000000,
+        totalLiabilitiesAndStockholdersEquity: 352755000000,
+        minorityInterest: 0,
+        totalLiabilitiesAndTotalEquity: 352755000000,
+        totalInvestments: 100544000000,
+        totalDebt: 104655000000,
+        netDebt: 74698000000,
+        link: 'https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/aapl-20230930.htm',
+        finalLink: 'https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/aapl-20230930.htm'
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Cash Flow Statement
+
+Retrieve cash flow statement data including operating, investing, and
+financing activities.
+
+<CodeBlock language="typescript">
+  {`const cashFlow = await fmp.getCashFlow({
+    symbol: 'AAPL',
+    period: 'annual',
+    limit: 5,
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+    {
+      name: 'period',
+      type: 'string',
+      required: false,
+      description: 'Period type: "annual" or "quarter" (default: "annual")',
+    },
+    {
+      name: 'limit',
+      type: 'number',
+      required: false,
+      description: 'Number of periods to retrieve (default: 5)',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        date: '2023-09-30',
+        symbol: 'AAPL',
+        reportedCurrency: 'USD',
+        cik: '0000320193',
+        fillingDate: '2023-10-27',
+        acceptedDate: '2023-10-27T16:30:00.000+00:00',
+        calendarYear: '2023',
+        period: 'FY',
+        netIncome: 96995000000,
+        depreciationAndAmortization: 11104000000,
+        deferredIncomeTax: 0,
+        stockBasedCompensation: 0,
+        changeInWorkingCapital: 0,
+        accountsReceivables: 0,
+        inventory: 0,
+        accountsPayables: 0,
+        otherWorkingCapital: 0,
+        otherNonCashItems: 0,
+        netCashProvidedByOperatingActivities: 110543000000,
+        investmentsInPropertyPlantAndEquipment: -10955900000,
+        acquisitionsNet: 0,
+        purchasesOfInvestments: 0,
+        salesMaturitiesOfInvestments: 0,
+        otherInvestingActivites: 0,
+        netCashUsedForInvestingActivites: -10955900000,
+        debtRepayment: -9500000000,
+        commonStockIssued: 0,
+        commonStockRepurchased: -77550000000,
+        dividendsPaid: -15000000000,
+        otherFinancingActivites: 0,
+        netCashUsedProvidedByFinancingActivities: -99550000000,
+        effectOfForexChangesOnCash: 0,
+        netChangeInCash: 0,
+        cashAtEndOfPeriod: 29965000000,
+        cashAtBeginningOfPeriod: 29965000000,
+        operatingCashFlow: 110543000000,
+        capitalExpenditure: -10955900000,
+        freeCashFlow: 99587000000,
+        link: 'https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/aapl-20230930.htm',
+        finalLink: 'https://www.sec.gov/Archives/edgar/data/320193/000032019323000106/aapl-20230930.htm'
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Financial Ratios
+
+Retrieve key financial ratios and metrics for analysis.
+
+<CodeBlock language="typescript">
+  {`const ratios = await fmp.getFinancialRatios({
+    symbol: 'AAPL',
+    period: 'annual',
+    limit: 5,
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+    {
+      name: 'period',
+      type: 'string',
+      required: false,
+      description: 'Period type: "annual" or "quarter" (default: "annual")',
+    },
+    {
+      name: 'limit',
+      type: 'number',
+      required: false,
+      description: 'Number of periods to retrieve (default: 5)',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        date: '2023-09-30',
+        symbol: 'AAPL',
+        period: 'FY',
+        currentRatio: 0.99,
+        quickRatio: 0.95,
+        cashRatio: 0.42,
+        daysOfSalesOutstanding: 22.11,
+        daysOfInventoryOutstanding: 6.02,
+        operatingCycle: 28.13,
+        daysOfPayablesOutstanding: 106.67,
+        cashConversionCycle: -78.54,
+        grossProfitMargin: 0.44,
+        operatingProfitMargin: 0.30,
+        pretaxProfitMargin: 0.30,
+        netProfitMargin: 0.25,
+        effectiveTaxRate: 0.15,
+        returnOnAssets: 0.27,
+        returnOnEquity: 0.86,
+        returnOnCapitalEmployed: 0.32,
+        netIncomePerEBT: 0.85,
+        ebtPerEbit: 0.99,
+        ebitPerRevenue: 0.30,
+        debtRatio: 0.68,
+        debtEquityRatio: 2.14,
+        longTermDebtToCapitalization: 0.46,
+        totalDebtToCapitalization: 0.48,
+        interestCoverage: 29.07,
+        cashFlowToDebtRatio: 1.06,
+        companyEquityMultiplier: 3.14,
+        receivablesTurnover: 16.51,
+        payablesTurnover: 3.42,
+        inventoryTurnover: 60.67,
+        fixedAssetTurnover: 8.78,
+        assetTurnover: 1.09,
+        operatingCashFlowPerShare: 7.00,
+        freeCashFlowPerShare: 6.31,
+        cashPerShare: 1.90,
+        payoutRatio: 0.15,
+        operatingCashFlowSalesRatio: 0.29,
+        freeCashFlowOperatingCashFlowRatio: 0.90,
+        cashFlowCoverageRatios: 1.06,
+        shortTermCoverageRatios: 1.06,
+        capitalExpenditureCoverageRatio: 10.09,
+        dividendPaidAndCapexCoverageRatio: 8.77,
+        dividendPayoutRatio: 0.15,
+        priceBookValueRatio: 35.73,
+        priceToBookRatio: 35.73,
+        priceToSalesRatio: 8.95,
+        priceEarningsRatio: 31.44,
+        priceToFreeCashFlowsRatio: 23.82,
+        priceToOperatingCashFlowsRatio: 21.46,
+        priceCashFlowRatio: 21.46,
+        priceEarningsToGrowthRatio: 2.62,
+        priceSalesRatio: 8.95,
+        dividendYield: 0.48,
+        enterpriseValueMultiple: 26.89,
+        priceFairValue: 35.73
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Error Handling
+
+Always check the success property before accessing data:
+
+<CodeBlock language="typescript">
+{`const incomeStatement = await fmp.getIncomeStatement({ symbol: 'INVALID' });
+
+if (incomeStatement.success) {
+    console.log('Revenue:', incomeStatement.data[0].revenue);
+} else {
+    console.error('Error:', incomeStatement.error);
+    console.error('Status:', incomeStatement.status);
+}`}
+
+</CodeBlock>
+
+## Data Availability
+
+Financial statement data availability depends on:
+
+- **Company filing schedule** - Quarterly and annual reports
+- **Data processing time** - FMP processes filings after SEC release
+- **Subscription tier** - Some data may require premium plans
+
+## Next Steps
+
+Explore other endpoint categories:
+
+- [Stock Endpoints](/docs/api/stock) - Real-time and historical stock data
+- [Examples](/docs/examples) - Practical code samples
+
+---
+
+**Ready to explore stock data?** Check out the [Stock Endpoints](/docs/api/stock) for real-time quotes and
+market information.

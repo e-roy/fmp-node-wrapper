@@ -1,0 +1,84 @@
+# FMP Node Wrapper Documentation
+
+Welcome to the comprehensive documentation for the FMP Node Wrapper - a powerful Node.js library for interacting with the Financial Modeling Prep API.
+
+## What is FMP Node Wrapper?
+
+The FMP Node Wrapper is a TypeScript-first Node.js library that provides a clean, intuitive interface for accessing financial data from the Financial Modeling Prep API. It offers:
+
+- **Type Safety**: Full TypeScript support with comprehensive type definitions
+- **Easy Integration**: Simple setup and straightforward API calls
+- **Comprehensive Coverage**: Support for all major FMP API endpoints
+- **Error Handling**: Consistent error handling across all endpoints
+- **Performance**: Optimized for high-performance applications
+
+## Quick Start
+
+Get started with the FMP Node Wrapper in just a few steps:
+
+<CodeBlock language="bash">{`npm install fmp-node-api`}</CodeBlock>
+
+
+<CodeBlock language="typescript">
+{`import { FMPClient, FMPEndpoints } from 'fmp-node-api';
+
+// Initialize the client
+const client = new FMPClient({
+    apiKey: 'your-api-key-here',
+});
+
+// Create endpoints instance
+const fmp = new FMPEndpoints(client);
+
+// Get a stock quote
+const quote = await fmp.getQuote({ symbol: 'AAPL' });`}
+
+</CodeBlock>
+
+
+
+## Key Features
+
+### 🚀 **Easy Setup**
+
+Simple initialization with your API key and optional configuration.
+
+### 📊 **Stock Data**
+
+Access real-time and historical stock data, quotes, and market information.
+
+### 💰 **Financial Statements**
+
+Retrieve income statements, balance sheets, and cash flow statements.
+
+### 📈 **Historical Data**
+
+Get historical price data with flexible date ranges and intervals.
+
+### 🏢 **Company Information**
+
+Access company profiles, ratios, and fundamental data.
+
+## Getting Started
+
+Ready to dive in? Start with our [Getting Started Guide](/docs/getting-started) to learn how to set up and use the library.
+
+## API Reference
+
+Explore the complete [API Reference](/docs/api) to see all available endpoints and their usage.
+
+## Examples
+
+Check out our [Examples](/docs/examples) section for practical code samples and use cases.
+
+## Support
+
+If you need help or have questions:
+
+- Check the [API Reference](/docs/api) for detailed endpoint documentation
+- Review the [Examples](/docs/examples) for common use cases
+- Open an issue on our GitHub repository
+
+---
+
+**Ready to get started?** [Install the package](/docs/getting-started) and begin building with financial data today!
