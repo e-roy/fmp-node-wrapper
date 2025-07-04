@@ -100,8 +100,7 @@ Thumbs.db
 # Turbo
 .turbo
 
-# Changesets
-.changeset/
+# Changesets - REMOVED: .changeset/ should be committed to git
 
 # Testing
 coverage/
