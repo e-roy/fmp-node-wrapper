@@ -15,14 +15,6 @@ export function shouldSkipTests(): boolean {
 }
 
 /**
- * Skip tests if no API key is provided
- * @deprecated Use shouldSkipTests() instead
- */
-export function skipIfNoApiKey() {
-  return shouldSkipTests();
-}
-
-/**
  * Create FMP client for testing
  */
 export function createTestClient(): FMP {

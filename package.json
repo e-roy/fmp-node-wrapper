@@ -9,7 +9,6 @@
     "api:dev": "turbo run dev --filter=fmp-node-api",
     "test:api": "turbo run test:manual --filter=fmp-node-api",
     "test": "turbo run test",
-    "test:ci": "turbo run test:ci",
     "test:watch": "turbo run test:watch",
     "test:coverage": "turbo run test:coverage",
     "test:unit": "turbo run test:unit --filter=fmp-node-api",

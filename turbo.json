@@ -22,11 +22,6 @@
       "outputs": ["coverage/**"],
       "env": ["FMP_API_KEY", "NODE_ENV"]
     },
-    "test:ci": {
-      "dependsOn": ["^build"],
-      "outputs": ["coverage/**"],
-      "env": ["FMP_API_KEY", "NODE_ENV"]
-    },
     "test:watch": {
       "cache": false,
       "persistent": true

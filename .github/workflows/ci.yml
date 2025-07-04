@@ -56,17 +56,8 @@ jobs:
       - name: Check code formatting
         run: pnpm format:check
 
-      - name: Debug environment variables (safe)
-        run: |
-          echo "=== Environment Debug ==="
-          echo "NODE_ENV: $NODE_ENV"
-          echo "FMP_API_KEY exists: ${{ secrets.FMP_API_KEY != '' }}"
-          echo "All env vars containing 'FMP':"
-          env | grep -E "(FMP|NODE)" || echo "No FMP or NODE env vars found"
-          echo "========================"
-
       - name: Run tests
-        run: pnpm test:ci
+        run: pnpm test
 
       - name: Build packages
         run: pnpm build

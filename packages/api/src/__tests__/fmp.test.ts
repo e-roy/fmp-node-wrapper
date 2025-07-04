@@ -76,6 +76,12 @@ describe('FMP', () => {
 
 describe('FMP API Smoke Test', () => {
   it('should have an API key set for integration tests', () => {
+    if (!API_KEY) {
+      console.log('⚠️  No FMP_API_KEY found - integration tests will be skipped');
+      console.log(
+        '   Set FMP_API_KEY in your .env file or environment variables to run integration tests',
+      );
+    }
     expect(typeof API_KEY).toBe('string');
     expect(API_KEY?.length || 0).toBeGreaterThan(0);
   });
