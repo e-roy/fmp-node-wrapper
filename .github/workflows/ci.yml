@@ -66,6 +66,8 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     if: github.event_name == 'release' && github.event.action == 'published'
+    env:
+      FMP_API_KEY: ${{ secrets.FMP_API_KEY }}
 
     steps:
       - uses: actions/checkout@v4
