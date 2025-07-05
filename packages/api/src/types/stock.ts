@@ -181,14 +181,6 @@ export interface SectorPerformance {
   changesPercentage: number;
 }
 
-export interface StockList {
-  symbol: string;
-  name: string;
-  currency: string;
-  stockExchange: string;
-  exchangeShortName: string;
-}
-
 export interface MarketCap {
   symbol: string;
   date: string;

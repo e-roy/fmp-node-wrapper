@@ -34,28 +34,6 @@ describe('Crypto Endpoints', () => {
     }, 10000);
   });
 
-  describe('getCryptoList', () => {
-    it('should fetch crypto list', async () => {
-      if (shouldSkipTests()) {
-        console.log('Skipping crypto list test - no API key available');
-        return;
-      }
-
-      const result = await fmp.crypto.getCryptoList();
-
-      expect(result.success).toBe(true);
-      expect(result.data).toBeDefined();
-      expect(Array.isArray(result.data)).toBe(true);
-
-      if (result.data && result.data.length > 0) {
-        const crypto = result.data[0];
-        expect(crypto.symbol).toBeDefined();
-        expect(crypto.name).toBeDefined();
-        expect(crypto.currency).toBeDefined();
-      }
-    }, 10000);
-  });
-
   describe('getHistoricalPrice', () => {
     it('should fetch crypto historical price', async () => {
       if (shouldSkipTests()) {

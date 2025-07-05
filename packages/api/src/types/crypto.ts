@@ -35,11 +35,3 @@ export interface CryptoQuote {
   sharesOutstanding: number;
   timestamp: number;
 }
-
-export interface CryptoCurrency {
-  symbol: string;
-  name: string;
-  currency: string;
-  stockExchange: string;
-  exchangeShortName: string;
-}

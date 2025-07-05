@@ -34,29 +34,6 @@ describe('ETF Endpoints', () => {
     }, 10000);
   });
 
-  describe('getETFList', () => {
-    it('should fetch ETF list', async () => {
-      if (shouldSkipTests()) {
-        console.log('Skipping ETF list test - running in CI environment');
-        return;
-      }
-
-      const result = await fmp.etf.getETFList();
-
-      expect(result.success).toBe(true);
-      expect(result.data).toBeDefined();
-      expect(Array.isArray(result.data)).toBe(true);
-
-      if (result.data && result.data.length > 0) {
-        const etf = result.data[0];
-        expect(etf.symbol).toBeDefined();
-        expect(etf.name).toBeDefined();
-        // currency might not always be present in the API response
-        // expect(etf.currency).toBeDefined();
-      }
-    }, 10000);
-  });
-
   describe('getHoldings', () => {
     it('should fetch ETF holdings', async () => {
       if (shouldSkipTests()) {

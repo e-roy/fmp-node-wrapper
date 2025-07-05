@@ -81,11 +81,3 @@ export interface ETFHolding {
   shares: number;
   marketValue: number;
 }
-
-export interface ETFList {
-  symbol: string;
-  name: string;
-  currency: string;
-  stockExchange: string;
-  exchangeShortName: string;
-}

@@ -6,7 +6,6 @@ import {
   ETFQuote,
   ETFProfile,
   ETFHolding,
-  ETFList,
   ETFQuoteParams,
   ETFProfileParams,
   ETFHoldersParams,
@@ -38,12 +37,5 @@ export class ETFEndpoints {
     if (params.page) queryParams.page = params.page;
 
     return this.client.get(`/etf-holder/${params.symbol}`, queryParams);
-  }
-
-  /**
-   * Get list of all ETFs
-   */
-  async getETFList(): Promise<APIResponse<ETFList[]>> {
-    return this.client.get('/etf/list');
   }
 }

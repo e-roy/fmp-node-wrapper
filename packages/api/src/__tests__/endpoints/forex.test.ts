@@ -47,19 +47,4 @@ describe('Forex Endpoints', () => {
       expect(result.data).toBeDefined();
     }, 15000);
   });
-
-  describe('getForexList', () => {
-    it('should fetch forex pairs list', async () => {
-      const result = await fmp.forex.getForexList();
-      expect(result.success).toBe(true);
-      expect(result.data).toBeDefined();
-      expect(Array.isArray(result.data)).toBe(true);
-
-      if (result.data && result.data.length > 0) {
-        const pair = result.data[0];
-        expect(pair.symbol).toBeDefined();
-        expect(pair.name).toBeDefined();
-      }
-    }, 15000);
-  });
 });

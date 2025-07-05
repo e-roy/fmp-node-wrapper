@@ -1,3 +1,4 @@
+import { StockList } from '@/types/list';
 import {
   StockQuote,
   StockSplit,
@@ -11,7 +12,6 @@ import {
   StockRating,
   StockGrade,
   SectorPerformance,
-  StockList,
   MarketCap,
   StockQuoteParams,
   StockProfileParams,

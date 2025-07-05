@@ -30,10 +30,10 @@ describe('Stock Endpoints', () => {
 
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
-        expect(Array.isArray(result.data)).toBe(true);
+        expect(Object.keys(result.data || {}).length).toBeGreaterThan(0);
 
-        if (result.data && result.data.length > 0) {
-          const quote = result.data[0];
+        if (result.data) {
+          const quote = result.data;
           expect(quote.symbol).toBe(TEST_SYMBOLS.STOCK);
           expect(quote.price).toBeGreaterThan(0);
           expect(quote.marketCap).toBeGreaterThan(0);
@@ -54,9 +54,7 @@ describe('Stock Endpoints', () => {
           symbol: 'INVALID_SYMBOL_12345',
         });
 
-        expect(
-          (Array.isArray(result.data) && result.data.length === 0) || result.success === false,
-        ).toBe(true);
+        expect(Object.keys(result.data || {}).length === 0 || result.success === false).toBe(true);
       },
       FAST_TIMEOUT,
     );
@@ -76,10 +74,10 @@ describe('Stock Endpoints', () => {
 
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
-        expect(Array.isArray(result.data)).toBe(true);
+        expect(Object.keys(result.data || {}).length).toBeGreaterThan(0);
 
-        if (result.data && result.data.length > 0) {
-          const profile = result.data[0];
+        if (result.data) {
+          const profile = result.data;
           expect(profile.symbol).toBe(TEST_SYMBOLS.STOCK);
           expect(profile.companyName).toBeDefined();
           expect(profile.industry).toBeDefined();
@@ -113,31 +111,6 @@ describe('Stock Endpoints', () => {
     );
   });
 
-  describe('getStockList', () => {
-    it(
-      'should fetch stock list',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping stock list test - no API key available');
-          return;
-        }
-        const result = await fmp.stock.getStockList();
-        expect(result.success).toBe(true);
-        expect(result.data).toBeDefined();
-        expect(Array.isArray(result.data)).toBe(true);
-
-        if (result.data && result.data.length > 0) {
-          const stock = result.data[0];
-          expect(stock.symbol).toBeDefined();
-          expect(stock.name).toBeDefined();
-          // Note: currency is not always returned in stock list
-          // expect(stock.currency).toBeDefined();
-        }
-      },
-      API_TIMEOUT,
-    );
-  });
-
   describe('getMarketCap', () => {
     it(
       'should fetch market cap for AAPL',
@@ -152,10 +125,10 @@ describe('Stock Endpoints', () => {
 
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
-        expect(Array.isArray(result.data)).toBe(true);
+        expect(Object.keys(result.data || {}).length).toBeGreaterThan(0);
 
-        if (result.data && result.data.length > 0) {
-          const marketCap = result.data[0];
+        if (result.data) {
+          const marketCap = result.data;
           expect(marketCap.symbol).toBe(TEST_SYMBOLS.STOCK);
           expect(marketCap.marketCap).toBeGreaterThan(0);
         }

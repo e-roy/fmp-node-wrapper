@@ -3,7 +3,6 @@ import { APIResponse, StockQuote, CompanyProfile } from '../types';
 import {
   StockHistoricalPriceResponse,
   EarningsCalendar,
-  StockList,
   MarketCap,
   StockSplit,
   StockDividend,
@@ -16,15 +15,27 @@ export class StockEndpoints {
   /**
    * Get real-time stock quote
    */
-  async getQuote({ symbol }: { symbol: string }): Promise<APIResponse<StockQuote[]>> {
-    return this.client.get(`/quote/${symbol}`);
+  async getQuote({ symbol }: { symbol: string }): Promise<APIResponse<StockQuote | null>> {
+    const response = await this.client.get(`/quote/${symbol}`);
+    return {
+      ...response,
+      data: response.success && response.data && response.data.length > 0 ? response.data[0] : null,
+    };
   }
 
   /**
    * Get company profile
    */
-  async getCompanyProfile({ symbol }: { symbol: string }): Promise<APIResponse<CompanyProfile[]>> {
-    return this.client.get(`/profile/${symbol}`);
+  async getCompanyProfile({
+    symbol,
+  }: {
+    symbol: string;
+  }): Promise<APIResponse<CompanyProfile | null>> {
+    const response = await this.client.get(`/profile/${symbol}`);
+    return {
+      ...response,
+      data: response.success && response.data && response.data.length > 0 ? response.data[0] : null,
+    };
   }
 
   /**
@@ -49,17 +60,15 @@ export class StockEndpoints {
   }
 
   /**
-   * Get list of all stocks
-   */
-  async getStockList(): Promise<APIResponse<StockList[]>> {
-    return this.client.get('/stock/list');
-  }
-
-  /**
    * Get market capitalization
    */
-  async getMarketCap({ symbol }: { symbol: string }): Promise<APIResponse<MarketCap[]>> {
-    return this.client.get(`/market-capitalization/${symbol}`);
+  async getMarketCap({ symbol }: { symbol: string }): Promise<APIResponse<MarketCap | null>> {
+    // return this.client.get(`/market-capitalization/${symbol}`);
+    const response = await this.client.get(`/market-capitalization/${symbol}`);
+    return {
+      ...response,
+      data: response.success && response.data && response.data.length > 0 ? response.data[0] : null,
+    };
   }
 
   /**

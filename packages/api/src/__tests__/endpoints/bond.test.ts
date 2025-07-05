@@ -34,28 +34,6 @@ describe('Bond Endpoints', () => {
     }, 10000);
   });
 
-  describe('getBondList', () => {
-    it('should fetch bond list', async () => {
-      if (shouldSkipTests()) {
-        console.log('Skipping bond list test - running in CI environment');
-        return;
-      }
-
-      const result = await fmp.bond.getBondList();
-
-      expect(result.success).toBe(true);
-      expect(result.data).toBeDefined();
-      expect(Array.isArray(result.data)).toBe(true);
-
-      if (result.data && result.data.length > 0) {
-        const bond = result.data[0];
-        expect(bond.symbol).toBeDefined();
-        expect(bond.name).toBeDefined();
-        expect(bond.currency).toBeDefined();
-      }
-    }, 10000);
-  });
-
   describe('getHistoricalPrice', () => {
     it('should fetch bond historical price', async () => {
       if (shouldSkipTests()) {

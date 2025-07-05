@@ -35,29 +35,6 @@ describe('Mutual Fund Endpoints', () => {
     }, 10000);
   });
 
-  describe('getMutualFundList', () => {
-    it('should fetch mutual fund list', async () => {
-      if (shouldSkipTests()) {
-        console.log('Skipping mutual fund list test - no API key available');
-        return;
-      }
-
-      const result = await fmp.mutualFund.getMutualFundList();
-
-      expect(result.success).toBe(true);
-      expect(result.data).toBeDefined();
-      expect(Array.isArray(result.data)).toBe(true);
-
-      if (result.data && result.data.length > 0) {
-        const fund = result.data[0];
-        expect(fund.symbol).toBeDefined();
-        expect(fund.name).toBeDefined();
-        // currency might not always be present in the API response
-        // expect(fund.currency).toBeDefined();
-      }
-    }, 10000);
-  });
-
   describe('getHoldings', () => {
     it('should fetch mutual fund holdings', async () => {
       if (shouldSkipTests()) {

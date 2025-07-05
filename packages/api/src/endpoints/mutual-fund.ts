@@ -6,7 +6,6 @@ import {
   MutualFundQuote,
   MutualFundProfile,
   MutualFundHolding,
-  MutualFundList,
   MutualFundQuoteParams,
   MutualFundProfileParams,
   MutualFundHoldersParams,
@@ -38,12 +37,5 @@ export class MutualFundEndpoints {
     if (params.page) queryParams.page = params.page;
 
     return this.client.get(`/mutual-fund-holder/${params.symbol}`, queryParams);
-  }
-
-  /**
-   * Get list of all mutual funds
-   */
-  async getMutualFundList(): Promise<APIResponse<MutualFundList[]>> {
-    return this.client.get('/mutual-fund/list');
   }
 }

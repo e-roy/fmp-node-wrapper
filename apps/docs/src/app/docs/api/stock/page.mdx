@@ -36,7 +36,7 @@ Retrieve real-time stock quote data including price, change, volume, and
 market cap.
 
 <CodeBlock language="typescript">
-  {`const quote = await fmp.getQuote({ symbol: 'AAPL' });`}
+  {`const quote = await fmp.stock.getQuote({ symbol: 'AAPL' });`}
 </CodeBlock>
 
 <ParameterTable
@@ -55,32 +55,30 @@ market cap.
 <CodeBlock language="typescript">
   {`{
     success: true,
-    data: [
-      {
-        symbol: 'AAPL',
-        name: 'Apple Inc.',
-        price: 150.25,
-        changesPercentage: 2.15,
-        change: 3.15,
-        dayLow: 147.50,
-        dayHigh: 151.75,
-        yearHigh: 198.23,
-        yearLow: 124.17,
-        marketCap: 2375000000000,
-        priceAvg50: 145.67,
-        priceAvg200: 142.89,
-        volume: 45678900,
-        avgVolume: 52345600,
-        exchange: 'NASDAQ',
-        open: 148.50,
-        previousClose: 147.10,
-        eps: 6.16,
-        pe: 24.39,
-        earningsAnnouncement: '2024-01-25T21:30:00.000+00:00',
-        sharesOutstanding: 15800000000,
-        timestamp: 1703123456
-      }
-    ]
+    data: {      
+      symbol: 'AAPL',
+      name: 'Apple Inc.',
+      price: 150.25,
+      changesPercentage: 2.15,
+      change: 3.15,
+      dayLow: 147.50,
+      dayHigh: 151.75,
+      yearHigh: 198.23,
+      yearLow: 124.17,
+      marketCap: 2375000000000,
+      priceAvg50: 145.67,
+      priceAvg200: 142.89,
+      volume: 45678900,
+      avgVolume: 52345600,
+      exchange: 'NASDAQ',
+      open: 148.50,
+      previousClose: 147.10,
+      eps: 6.16,
+      pe: 24.39,
+      earningsAnnouncement: '2024-01-25T21:30:00.000+00:00',
+      sharesOutstanding: 15800000000,
+      timestamp: 1703123456
+    }
 }`}
 </CodeBlock>
 
@@ -89,7 +87,7 @@ market cap.
 Retrieve historical price data with flexible date ranges and intervals.
 
 <CodeBlock language="typescript">
-  {`const historicalData = await fmp.getHistoricalPrice({
+  {`const historicalData = await fmp.stock.getHistoricalPrice({
     symbol: 'AAPL',
     from: '2023-01-01',
     to: '2023-12-31',
@@ -161,7 +159,7 @@ Retrieve historical price data with flexible date ranges and intervals.
 Retrieve detailed company information and profile data.
 
 <CodeBlock language="typescript">
-  {`const profile = await fmp.getCompanyProfile({ symbol: 'AAPL' });`}
+  {`const profile = await fmp.stock.getCompanyProfile({ symbol: 'AAPL' });`}
 </CodeBlock>
 
 <ParameterTable
@@ -180,40 +178,38 @@ Retrieve detailed company information and profile data.
 <CodeBlock language="typescript">
   {`{
     success: true,
-    data: [
-      {
-        symbol: 'AAPL',
-        price: 150.25,
-        beta: 1.28,
-        volAvg: 52345600,
-        marketCap: 2375000000000,
-        lastDiv: 0.24,
-        range: '124.17-198.23',
-        changes: 3.15,
-        companyName: 'Apple Inc.',
-        currency: 'USD',
-        cik: '0000320193',
-        isin: 'US0378331005',
-        cusip: '037833100',
-        exchange: 'NASDAQ',
-        exchangeShortName: 'NASDAQ',
-        industry: 'Consumer Electronics',
-        website: 'https://www.apple.com',
-        description: 'Apple Inc. designs, manufactures, and markets smartphones, personal computers, tablets, wearables, and accessories worldwide.',
-        ceo: 'Timothy D. Cook',
-        sector: 'Technology',
-        country: 'US',
-        fullTimeEmployees: 164000,
-        phone: '1-408-996-1010',
-        address: 'One Apple Park Way',
-        city: 'Cupertino',
-        state: 'CA',
-        zip: '95014',
-        dcfDiff: 0.00,
-        dcf: 0.00,
-        image: 'https://financialmodelingprep.com/image-stock/AAPL.png'
-      }
-    ]
+    data: {
+      symbol: 'AAPL',
+      price: 150.25,
+      beta: 1.28,
+      volAvg: 52345600,
+      marketCap: 2375000000000,
+      lastDiv: 0.24,
+      range: '124.17-198.23',
+      changes: 3.15,
+      companyName: 'Apple Inc.',
+      currency: 'USD',
+      cik: '0000320193',
+      isin: 'US0378331005',
+      cusip: '037833100',
+      exchange: 'NASDAQ',
+      exchangeShortName: 'NASDAQ',
+      industry: 'Consumer Electronics',
+      website: 'https://www.apple.com',
+      description: 'Apple Inc. designs, manufactures, and markets smartphones, personal computers, tablets, wearables, and accessories worldwide.',
+      ceo: 'Timothy D. Cook',
+      sector: 'Technology',
+      country: 'US',
+      fullTimeEmployees: 164000,
+      phone: '1-408-996-1010',
+      address: 'One Apple Park Way',
+      city: 'Cupertino',
+      state: 'CA',
+      zip: '95014',
+      dcfDiff: 0.00,
+      dcf: 0.00,
+      image: 'https://financialmodelingprep.com/image-stock/AAPL.png'
+    }
 }`}
 </CodeBlock>
 
@@ -222,7 +218,7 @@ Retrieve detailed company information and profile data.
 Retrieve market capitalization data for a specific stock.
 
 <CodeBlock language="typescript">
-  {`const marketCap = await fmp.getMarketCap({ symbol: 'AAPL' });`}
+  {`const marketCap = await fmp.stock.getMarketCap({ symbol: 'AAPL' });`}
 </CodeBlock>
 
 <ParameterTable
@@ -241,13 +237,11 @@ Retrieve market capitalization data for a specific stock.
 <CodeBlock language="typescript">
   {`{
     success: true,
-    data: [
-      {
-        symbol: 'AAPL',
-        date: '2023-12-29',
-        marketCap: 2375000000000
-      }
-    ]
+    data: {
+      symbol: 'AAPL',
+      date: '2023-12-29',
+      marketCap: 2375000000000
+    }
 }`}
 </CodeBlock>
 

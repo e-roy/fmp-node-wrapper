@@ -12,6 +12,7 @@ import { MutualFundEndpoints } from './endpoints/mutual-fund';
 import { BondEndpoints } from './endpoints/bond';
 import { EconomicEndpoints } from './endpoints/economic';
 import { MarketEndpoints } from './endpoints/market';
+import { ListEndpoints } from './endpoints/list';
 
 /**
  * Main FMP API client that provides access to all endpoints
@@ -45,6 +46,7 @@ export class FMP {
   public readonly bond: BondEndpoints;
   public readonly economic: EconomicEndpoints;
   public readonly market: MarketEndpoints;
+  public readonly list: ListEndpoints;
 
   constructor(config: FMPConfig) {
     // Validate API key at construction time
@@ -61,6 +63,7 @@ export class FMP {
     this.bond = new BondEndpoints(client);
     this.economic = new EconomicEndpoints(client);
     this.market = new MarketEndpoints(client);
+    this.list = new ListEndpoints(client);
   }
 
   /**

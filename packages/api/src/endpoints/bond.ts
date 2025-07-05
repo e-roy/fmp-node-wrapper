@@ -2,7 +2,7 @@
 
 import { FMPClient } from '../client';
 import { APIResponse, HistoricalPriceResponse, QueryParams } from '../types/common';
-import { BondQuote, BondList, BondQuoteParams, BondHistoricalParams } from '../types/bond';
+import { BondQuote, BondQuoteParams, BondHistoricalParams } from '../types/bond';
 
 export class BondEndpoints {
   constructor(private client: FMPClient) {}
@@ -26,12 +26,5 @@ export class BondEndpoints {
     if (params.timeseries) queryParams.timeseries = params.timeseries;
 
     return this.client.get(`/historical-price-full/${params.symbol}`, queryParams);
-  }
-
-  /**
-   * Get list of all bonds
-   */
-  async getBondList(): Promise<APIResponse<BondList[]>> {
-    return this.client.get('/bond/list');
   }
 }

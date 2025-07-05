@@ -81,11 +81,3 @@ export interface MutualFundHolding {
   shares: number;
   marketValue: number;
 }
-
-export interface MutualFundList {
-  symbol: string;
-  name: string;
-  currency: string;
-  stockExchange: string;
-  exchangeShortName: string;
-}

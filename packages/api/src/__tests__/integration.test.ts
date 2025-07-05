@@ -31,10 +31,10 @@ describe('FMP API Integration Tests', () => {
 
       expect(result.success).toBe(true);
       expect(result.data).toBeDefined();
-      expect(Array.isArray(result.data)).toBe(true);
+      expect(Object.keys(result.data || {}).length).toBeGreaterThan(0);
 
-      if (result.data && result.data.length > 0) {
-        const quote = result.data[0];
+      if (result.data) {
+        const quote = result.data;
         expect(quote.symbol).toBe('AAPL');
         expect(quote.price).toBeGreaterThan(0);
         expect(quote.marketCap).toBeGreaterThan(0);
@@ -46,10 +46,8 @@ describe('FMP API Integration Tests', () => {
         symbol: 'INVALID_SYMBOL_12345',
       });
 
-      // Accept either an empty array or a failed response
-      expect(
-        (Array.isArray(result.data) && result.data.length === 0) || result.success === false,
-      ).toBe(true);
+      // Accept either an empty object or a failed response
+      expect(Object.keys(result.data || {}).length === 0 || result.success === false).toBe(true);
     }, 10000);
   });
 
@@ -59,10 +57,10 @@ describe('FMP API Integration Tests', () => {
 
       expect(result.success).toBe(true);
       expect(result.data).toBeDefined();
-      expect(Array.isArray(result.data)).toBe(true);
+      expect(Object.keys(result.data || {}).length).toBeGreaterThan(0);
 
-      if (result.data && result.data.length > 0) {
-        const profile = result.data[0];
+      if (result.data) {
+        const profile = result.data;
         expect(profile.symbol).toBe('AAPL');
         expect(profile.companyName).toBeDefined();
         expect(profile.industry).toBeDefined();

@@ -4,25 +4,6 @@ A comprehensive Node.js wrapper for the Financial Modeling Prep (FMP) API with f
 
 > **📖 For development information, contributing guidelines, and project details, visit the [main repository](https://github.com/e-roy/fmp-node-wrapper).**
 
-## Disclaimer
-
-**This package is not affiliated with, endorsed by, or sponsored by Financial Modeling Prep (FMP).** This is an independent, community-developed Node.js wrapper for the FMP API.
-
-### Important Legal Information
-
-- **No Affiliation**: This library is developed independently and is not officially associated with Financial Modeling Prep
-- **No Warranty**: This software is provided "as is" without any warranties, express or implied
-- **User Responsibility**: Users are responsible for:
-  - Complying with FMP's terms of service and API usage limits
-  - Obtaining and maintaining valid API keys from Financial Modeling Prep
-  - Ensuring their usage complies with applicable laws and regulations
-- **Limitation of Liability**: The developers of this wrapper are not responsible for:
-  - Any issues with the underlying FMP API service
-  - Data accuracy or availability from the FMP API
-  - Any financial losses or damages resulting from the use of this library
-  - API rate limiting, downtime, or service interruptions
-- **Official Support**: For official support, documentation, or API issues, please contact Financial Modeling Prep directly at their official channels
-
 ## Features
 
 - 🚀 **Complete TypeScript Support** - Full type safety for all API responses
@@ -620,3 +601,22 @@ MIT License - see LICENSE file for details.
 ## Support
 
 For issues, questions, or contributions, please visit the [GitHub repository](https://github.com/e-roy/fmp-node-wrapper).
+
+## Disclaimer
+
+**This package is not affiliated with, endorsed by, or sponsored by Financial Modeling Prep (FMP).** This is an independent, community-developed Node.js wrapper for the FMP API.
+
+### Important Legal Information
+
+- **No Affiliation**: This library is developed independently and is not officially associated with Financial Modeling Prep
+- **No Warranty**: This software is provided "as is" without any warranties, express or implied
+- **User Responsibility**: Users are responsible for:
+  - Complying with FMP's terms of service and API usage limits
+  - Obtaining and maintaining valid API keys from Financial Modeling Prep
+  - Ensuring their usage complies with applicable laws and regulations
+- **Limitation of Liability**: The developers of this wrapper are not responsible for:
+  - Any issues with the underlying FMP API service
+  - Data accuracy or availability from the FMP API
+  - Any financial losses or damages resulting from the use of this library
+  - API rate limiting, downtime, or service interruptions
+- **Official Support**: For official support, documentation, or API issues, please contact Financial Modeling Prep directly at their official channels

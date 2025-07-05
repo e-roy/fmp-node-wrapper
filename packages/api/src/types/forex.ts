@@ -35,11 +35,3 @@ export interface ForexQuote {
   sharesOutstanding: number;
   timestamp: number;
 }
-
-export interface ForexPair {
-  symbol: string;
-  name: string;
-  currency: string;
-  stockExchange: string;
-  exchangeShortName: string;
-}

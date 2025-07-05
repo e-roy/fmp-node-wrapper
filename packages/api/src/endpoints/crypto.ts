@@ -2,12 +2,7 @@
 
 import { FMPClient } from '../client';
 import { APIResponse, HistoricalPriceResponse, QueryParams } from '../types/common';
-import {
-  CryptoQuote,
-  CryptoCurrency,
-  CryptoQuoteParams,
-  CryptoHistoricalParams,
-} from '../types/crypto';
+import { CryptoQuote, CryptoQuoteParams, CryptoHistoricalParams } from '../types/crypto';
 
 export class CryptoEndpoints {
   constructor(private client: FMPClient) {}
@@ -31,12 +26,5 @@ export class CryptoEndpoints {
     if (params.timeseries) queryParams.timeseries = params.timeseries;
 
     return this.client.get(`/historical-price-full/${params.symbol}`, queryParams);
-  }
-
-  /**
-   * Get list of all cryptocurrencies
-   */
-  async getCryptoList(): Promise<APIResponse<CryptoCurrency[]>> {
-    return this.client.get('/cryptocurrency');
   }
 }

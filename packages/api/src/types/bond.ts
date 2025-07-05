@@ -35,11 +35,3 @@ export interface BondQuote {
   sharesOutstanding: number;
   timestamp: number;
 }
-
-export interface BondList {
-  symbol: string;
-  name: string;
-  currency: string;
-  stockExchange: string;
-  exchangeShortName: string;
-}

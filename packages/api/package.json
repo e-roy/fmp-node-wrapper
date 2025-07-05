@@ -33,6 +33,7 @@
     "test:forex": "jest --testPathPattern=\"src/__tests__/endpoints/forex\\.test\\.ts\"",
     "test:economic": "jest --testPathPattern=\"src/__tests__/endpoints/economic\\.test\\.ts\"",
     "test:manual": "tsx scripts/test-manual.ts",
+    "test:endpoint": "tsx scripts/test-endpoint.ts",
     "type-check": "tsc --noEmit",
     "format": "prettier --write src/**/*.ts",
     "format:check": "prettier --check src/**/*.ts",

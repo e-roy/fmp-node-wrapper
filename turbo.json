@@ -29,6 +29,9 @@
     "test:manual": {
       "cache": false
     },
+    "test:endpoint": {
+      "cache": false
+    },
     "test:coverage": {
       "dependsOn": ["^build"],
       "outputs": ["coverage/**"],
