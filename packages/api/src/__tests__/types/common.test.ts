@@ -8,7 +8,6 @@ import {
   PaginationParams,
   PeriodParams,
   Quote,
-  CompanyProfile,
   Period,
   Exchange,
 } from '../../types/common';
@@ -160,54 +159,6 @@ describe('Common Types', () => {
       expect(quote.price).toBe(150.25);
       expect(quote.change).toBe(2.15);
       expect(quote.changePercent).toBe(1.45);
-    });
-  });
-
-  describe('CompanyProfile Interface', () => {
-    it('should validate CompanyProfile structure', () => {
-      const profile: CompanyProfile = {
-        symbol: 'AAPL',
-        price: 150.25,
-        beta: 1.25,
-        volAvg: 45000000,
-        mktCap: 2500000000000,
-        lastDiv: 0.24,
-        range: '120.00-180.00',
-        changes: 2.15,
-        companyName: 'Apple Inc.',
-        currency: 'USD',
-        cik: '0000320193',
-        isin: 'US0378331005',
-        cusip: '037833100',
-        exchange: 'NASDAQ',
-        exchangeShortName: 'NASDAQ',
-        industry: 'Consumer Electronics',
-        website: 'https://www.apple.com',
-        description: 'Apple Inc. designs, manufactures, and markets smartphones...',
-        ceo: 'Tim Cook',
-        sector: 'Technology',
-        country: 'US',
-        fullTimeEmployees: '164000',
-        phone: '+1 408-996-1010',
-        address: 'One Apple Park Way',
-        city: 'Cupertino',
-        state: 'CA',
-        zip: '95014',
-        dcfDiff: 5.25,
-        dcf: 155.5,
-        image: 'https://financialmodelingprep.com/image-stock/AAPL.png',
-        ipoDate: '1980-12-12',
-        defaultImage: false,
-        isEtf: false,
-        isActivelyTrading: true,
-        isAdr: false,
-        isFund: false,
-      };
-
-      expect(profile.symbol).toBe('AAPL');
-      expect(profile.companyName).toBe('Apple Inc.');
-      expect(profile.sector).toBe('Technology');
-      expect(profile.isEtf).toBe(false);
     });
   });
 

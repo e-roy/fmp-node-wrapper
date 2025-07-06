@@ -55,9 +55,6 @@ async function testEndpoint() {
       case 'quote':
         result = await fmp.stock.getQuote({ symbol: 'AAPL' });
         break;
-      case 'profile':
-        result = await fmp.stock.getCompanyProfile({ symbol: 'AAPL' });
-        break;
       case 'historical':
         result = await fmp.stock.getHistoricalPrice({
           symbol: 'AAPL',
@@ -95,6 +92,82 @@ async function testEndpoint() {
           symbol: 'AAPL',
           period: 'annual',
           limit: 1,
+        });
+        break;
+      case 'key-metrics':
+        result = await fmp.financial.getKeyMetrics({
+          symbol: 'AAPL',
+          period: 'annual',
+          limit: 1,
+        });
+        break;
+      case 'financial-ratios':
+        result = await fmp.financial.getFinancialRatios({
+          symbol: 'AAPL',
+          period: 'annual',
+          limit: 1,
+        });
+        break;
+      case 'enterprise-value':
+        result = await fmp.financial.getEnterpriseValue({
+          symbol: 'AAPL',
+          period: 'annual',
+          limit: 1,
+        });
+        break;
+      case 'cashflow-growth':
+        result = await fmp.financial.getCashflowGrowth({
+          symbol: 'AAPL',
+          period: 'annual',
+          limit: 1,
+        });
+        break;
+      case 'income-growth':
+        result = await fmp.financial.getIncomeGrowth({
+          symbol: 'AAPL',
+          period: 'annual',
+          limit: 1,
+        });
+        break;
+      case 'balance-sheet-growth':
+        result = await fmp.financial.getBalanceSheetGrowth({
+          symbol: 'AAPL',
+          period: 'annual',
+          limit: 1,
+        });
+        break;
+      case 'financial-growth':
+        result = await fmp.financial.getFinancialGrowth({
+          symbol: 'AAPL',
+          period: 'annual',
+          limit: 1,
+        });
+        break;
+
+      // Company endpoints
+      case 'company-profile':
+        result = await fmp.company.getCompanyProfile({ symbol: 'AAPL' });
+        break;
+      case 'executive-compensation':
+        result = await fmp.company.getExecutiveCompensation({ symbol: 'AAPL' });
+        break;
+      case 'company-notes':
+        result = await fmp.company.getCompanyNotes({ symbol: 'AAPL' });
+        break;
+      case 'historical-employee-count':
+        result = await fmp.company.getHistoricalEmployeeCount({ symbol: 'AAPL' });
+        break;
+      case 'shares-float':
+        result = await fmp.company.getSharesFloat({ symbol: 'AAPL' });
+        break;
+      case 'historical-shares-float':
+        result = await fmp.company.getHistoricalSharesFloat({ symbol: 'AAPL' });
+        break;
+      case 'earnings-call-transcript':
+        result = await fmp.company.getEarningsCallTranscript({
+          symbol: 'AAPL',
+          year: 2020,
+          quarter: 3,
         });
         break;
 

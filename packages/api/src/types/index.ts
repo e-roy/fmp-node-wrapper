@@ -11,3 +11,4 @@ export * from './economic';
 export * from './market';
 export * from './calendar';
 export * from './list';
+export * from './company';

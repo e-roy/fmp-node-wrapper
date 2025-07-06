@@ -1,0 +1,521 @@
+# Company Endpoints
+
+The Company Endpoints provide access to comprehensive company information including profiles, executive compensation, company notes, employee data, shares float information, and earnings call transcripts.
+
+## Available Methods
+
+<ApiTable
+  endpoints={[
+    {
+      method: 'GET',
+      path: '/profile/{symbol}',
+      description: 'Get comprehensive company profile information',
+    },
+    {
+      method: 'GET',
+      path: '/governance/executive_compensation',
+      description: 'Get executive compensation data',
+    },
+    {
+      method: 'GET',
+      path: '/company-notes',
+      description: 'Get company notes and financial statements',
+    },
+    {
+      method: 'GET',
+      path: '/historical/employee_count',
+      description: 'Get historical employee count data',
+    },
+    {
+      method: 'GET',
+      path: '/shares_float',
+      description: 'Get current shares float information',
+    },
+    {
+      method: 'GET',
+      path: '/historical/shares_float',
+      description: 'Get historical shares float data',
+    },
+    {
+      method: 'GET',
+      path: '/earning_call_transcript/{symbol}',
+      description: 'Get earnings call transcripts',
+    },
+  ]}
+/>
+
+## Get Company Profile
+
+Retrieve comprehensive company profile information including financial metrics, company details, and market data.
+
+<CodeBlock language="typescript">
+  {`const profile = await fmp.company.getCompanyProfile({ symbol: 'AAPL' });`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol (e.g., "AAPL", "MSFT")',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: {
+      symbol: 'AAPL',
+      price: 150.25,
+      beta: 1.28,
+      volAvg: 52345600,
+      mktCap: 2375000000000,
+      lastDiv: 0.24,
+      range: '124.17-198.23',
+      changes: 3.15,
+      companyName: 'Apple Inc.',
+      currency: 'USD',
+      cik: '0000320193',
+      isin: 'US0378331005',
+      cusip: '037833100',
+      exchange: 'NASDAQ',
+      exchangeShortName: 'NASDAQ',
+      industry: 'Consumer Electronics',
+      website: 'https://www.apple.com',
+      description: 'Apple Inc. designs, manufactures, and markets smartphones, personal computers, tablets, wearables, and accessories worldwide.',
+      ceo: 'Timothy D. Cook',
+      sector: 'Technology',
+      country: 'US',
+      fullTimeEmployees: '164000',
+      phone: '1-408-996-1010',
+      address: 'One Apple Park Way',
+      city: 'Cupertino',
+      state: 'CA',
+      zip: '95014',
+      dcfDiff: 0.00,
+      dcf: 0.00,
+      image: 'https://financialmodelingprep.com/image-stock/AAPL.png',
+      ipoDate: '1980-12-12',
+      defaultImage: false,
+      isEtf: false,
+      isActivelyTrading: true,
+      isAdr: false,
+      isFund: false
+    }
+}`}
+</CodeBlock>
+
+## Get Executive Compensation
+
+Retrieve detailed executive compensation data including salary, bonuses, stock awards, and total compensation.
+
+<CodeBlock language="typescript">
+  {`const compensation = await fmp.company.getExecutiveCompensation({ symbol: 'AAPL' });`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        cik: '0000320193',
+        symbol: 'AAPL',
+        companyName: 'Apple Inc.',
+        industryTitle: 'Consumer Electronics',
+        acceptedDate: '2024-01-25',
+        filingDate: '2024-01-25',
+        nameAndPosition: 'Timothy D. Cook, Chief Executive Officer',
+        year: 2023,
+        salary: 3000000,
+        bonus: 0,
+        stock_award: 50000000,
+        incentive_plan_compensation: 0,
+        all_other_compensation: 0,
+        total: 53000000,
+        url: 'https://www.sec.gov/Archives/edgar/data/320193/000032019324000006/aap-20231230.htm'
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Company Notes
+
+Retrieve company notes and financial statement information.
+
+<CodeBlock language="typescript">
+  {`const notes = await fmp.company.getCompanyNotes({ symbol: 'AAPL' });`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        cik: '0000320193',
+        symbol: 'AAPL',
+        title: 'Notes to Consolidated Financial Statements',
+        exchange: 'NASDAQ'
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Historical Employee Count
+
+Retrieve historical employee count data over time.
+
+<CodeBlock language="typescript">
+  {`const employeeData = await fmp.company.getHistoricalEmployeeCount({ symbol: 'AAPL' });`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        symbol: 'AAPL',
+        cik: '0000320193',
+        acceptanceTime: '2024-01-25T21:30:00.000Z',
+        periodOfReport: '2023-12-30',
+        companyName: 'Apple Inc.',
+        formType: '10-K',
+        filingDate: '2024-01-25',
+        employeeCount: 164000,
+        source: 'SEC Filing'
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Shares Float
+
+Retrieve current shares float information including free float, float shares, and outstanding shares.
+
+<CodeBlock language="typescript">
+  {`const sharesFloat = await fmp.company.getSharesFloat({ symbol: 'AAPL' });`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: {
+      symbol: 'AAPL',
+      freeFloat: 0.85,
+      floatShares: 14921252530,
+      outstandingShares: 15800000000,
+      source: 'SEC Filing',
+      date: '2024-01-25'
+    }
+}`}
+</CodeBlock>
+
+## Get Historical Shares Float
+
+Retrieve historical shares float data over time.
+
+<CodeBlock language="typescript">
+  {`const historicalSharesFloat = await fmp.company.getHistoricalSharesFloat({ symbol: 'AAPL' });`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        symbol: 'AAPL',
+        freeFloat: 0.85,
+        floatShares: '14921252530',
+        outstandingShares: '15800000000',
+        source: 'SEC Filing',
+        date: '2024-01-25'
+      },
+      {
+        symbol: 'AAPL',
+        freeFloat: 0.84,
+        floatShares: '14850000000',
+        outstandingShares: '15750000000',
+        source: 'SEC Filing',
+        date: '2023-12-31'
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Earnings Call Transcript
+
+Retrieve earnings call transcripts for specific quarters and years.
+
+<CodeBlock language="typescript">
+  {`const transcript = await fmp.company.getEarningsCallTranscript({
+    symbol: 'AAPL',
+    year: 2024,
+    quarter: 1
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+    {
+      name: 'year',
+      type: 'number',
+      required: true,
+      description: 'Year of the earnings call',
+    },
+    {
+      name: 'quarter',
+      type: 'number',
+      required: true,
+      description: 'Quarter of the earnings call (1-4)',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        symbol: 'AAPL',
+        quarter: 1,
+        year: 2024,
+        date: '2024-01-25',
+        content: 'Operator: Good day, and welcome to the Apple Inc. Q1 2024 Earnings Conference Call...'
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Data Types
+
+### CompanyProfile
+
+<CodeBlock language="typescript">
+  {`interface CompanyProfile {
+  symbol: string;
+  price: number;
+  beta: number;
+  volAvg: number;
+  mktCap: number;
+  lastDiv: number;
+  range: string;
+  changes: number;
+  companyName: string;
+  currency: string;
+  cik: string;
+  isin: string;
+  cusip: string;
+  exchange: string;
+  exchangeShortName: string;
+  industry: string;
+  website: string;
+  description: string;
+  ceo: string;
+  sector: string;
+  country: string;
+  fullTimeEmployees: string;
+  phone: string;
+  address: string;
+  city: string;
+  state: string;
+  zip: string;
+  dcfDiff: number;
+  dcf: number;
+  image: string;
+  ipoDate: string;
+  defaultImage: boolean;
+  isEtf: boolean;
+  isActivelyTrading: boolean;
+  isAdr: boolean;
+  isFund: boolean;
+}`}
+</CodeBlock>
+
+### ExecutiveCompensation
+
+<CodeBlock language="typescript">
+  {`interface ExecutiveCompensation {
+  cik: string;
+  symbol: string;
+  companyName: string;
+  industryTitle: string;
+  acceptedDate: string;
+  filingDate: string;
+  nameAndPosition: string;
+  year: number;
+  salary: number;
+  bonus: number;
+  stock_award: number;
+  incentive_plan_compensation: number;
+  all_other_compensation: number;
+  total: number;
+  url: string;
+}`}
+</CodeBlock>
+
+### SharesFloat
+
+<CodeBlock language="typescript">
+  {`interface SharesFloat {
+  symbol: string;
+  freeFloat: number;
+  floatShares: number;
+  outstandingShares: number;
+  source: string;
+  date: string;
+}`}
+</CodeBlock>
+
+### HistoricalSharesFloat
+
+<CodeBlock language="typescript">
+  {`interface HistoricalSharesFloat {
+  symbol: string;
+  freeFloat: number;
+  floatShares: string;
+  outstandingShares: string;
+  source: string;
+  date: string;
+}`}
+</CodeBlock>
+
+## Error Handling
+
+All company endpoints return a standardized response format with error handling:
+
+<CodeBlock language="typescript">
+  {`interface UnwrappedAPIResponse<T> {
+  success: boolean;
+  data: T | null;
+  error?: string;
+}`}
+</CodeBlock>
+
+When an error occurs, the response will include:
+
+- `success: false`
+- `data: null`
+- `error: string` - Description of the error
+
+## Rate Limits
+
+Company endpoints are subject to the same rate limits as other FMP API endpoints. Please refer to your subscription plan for specific limits.
+
+## Examples
+
+### Complete Company Analysis
+
+<CodeBlock language="typescript">
+  {`// Get comprehensive company information
+const [profile, compensation, employeeData, sharesFloat] = await Promise.all([
+  fmp.company.getCompanyProfile({ symbol: 'AAPL' }),
+  fmp.company.getExecutiveCompensation({ symbol: 'AAPL' }),
+  fmp.company.getHistoricalEmployeeCount({ symbol: 'AAPL' }),
+  fmp.company.getSharesFloat({ symbol: 'AAPL' })
+]);
+
+// Analyze company metrics
+if (profile.success && profile.data) {
+console.log('Company:', profile.data.companyName);
+console.log('Market Cap:', profile.data.mktCap);
+console.log('Industry:', profile.data.industry);
+console.log('Employees:', profile.data.fullTimeEmployees);
+}`}
+
+</CodeBlock>
+
+### Historical Analysis
+
+<CodeBlock language="typescript">
+  {`// Get historical data for analysis
+const [historicalEmployees, historicalShares] = await Promise.all([
+  fmp.company.getHistoricalEmployeeCount({ symbol: 'AAPL' }),
+  fmp.company.getHistoricalSharesFloat({ symbol: 'AAPL' })
+]);
+
+// Analyze trends
+if (historicalEmployees.success && historicalEmployees.data) {
+const employeeGrowth = historicalEmployees.data
+.sort((a, b) => new Date(b.filingDate).getTime() - new Date(a.filingDate).getTime())
+.slice(0, 5);
+
+console.log('Recent employee count trends:', employeeGrowth);
+}`}
+
+</CodeBlock>

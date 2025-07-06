@@ -1,6 +1,6 @@
 # Stock Endpoints
 
-The Stock Endpoints provide access to real-time and historical stock data, quotes, company profiles, market capitalization, stock splits, and dividend history.
+The Stock Endpoints provide access to real-time and historical stock data, quotes, market capitalization, stock splits, and dividend history. For company profile information, see the [Company Endpoints](/docs/api/company).
 
 ## Available Methods
 
@@ -10,11 +10,6 @@ The Stock Endpoints provide access to real-time and historical stock data, quote
       method: 'GET',
       path: '/quote/{symbol}',
       description: 'Get real-time stock quote',
-    },
-    {
-      method: 'GET',
-      path: '/profile/{symbol}',
-      description: 'Get company profile information',
     },
     {
       method: 'GET',
@@ -86,65 +81,6 @@ Retrieve real-time stock quote data including price, change, volume, and market 
       earningsAnnouncement: '2024-01-25T21:30:00.000+00:00',
       sharesOutstanding: 15800000000,
       timestamp: 1703123456
-    }
-}`}
-</CodeBlock>
-
-## Get Company Profile
-
-Retrieve detailed company information and profile data.
-
-<CodeBlock language="typescript">
-  {`const profile = await fmp.stock.getCompanyProfile({ symbol: 'AAPL' });`}
-</CodeBlock>
-
-<ParameterTable
-  parameters={[
-    {
-      name: 'symbol',
-      type: 'string',
-      required: true,
-      description: 'Stock symbol',
-    },
-  ]}
-/>
-
-### Example Response
-
-<CodeBlock language="typescript">
-  {`{
-    success: true,
-    data: {
-      symbol: 'AAPL',
-      price: 150.25,
-      beta: 1.28,
-      volAvg: 52345600,
-      marketCap: 2375000000000,
-      lastDiv: 0.24,
-      range: '124.17-198.23',
-      changes: 3.15,
-      companyName: 'Apple Inc.',
-      currency: 'USD',
-      cik: '0000320193',
-      isin: 'US0378331005',
-      cusip: '037833100',
-      exchange: 'NASDAQ',
-      exchangeShortName: 'NASDAQ',
-      industry: 'Consumer Electronics',
-      website: 'https://www.apple.com',
-      description: 'Apple Inc. designs, manufactures, and markets smartphones, personal computers, tablets, wearables, and accessories worldwide.',
-      ceo: 'Timothy D. Cook',
-      sector: 'Technology',
-      country: 'US',
-      fullTimeEmployees: 164000,
-      phone: '1-408-996-1010',
-      address: 'One Apple Park Way',
-      city: 'Cupertino',
-      state: 'CA',
-      zip: '95014',
-      dcfDiff: 0.00,
-      dcf: 0.00,
-      image: 'https://financialmodelingprep.com/image-stock/AAPL.png'
     }
 }`}
 </CodeBlock>
@@ -371,6 +307,7 @@ Stock endpoints are subject to FMP's rate limits. For production applications, i
 
 Explore other endpoint categories:
 
+- [Company Endpoints](/docs/api/company) - Company profiles, executive compensation, and employee data
 - [Financial Endpoints](/docs/api/financial) - Financial statements and ratios
 - [Market Endpoints](/docs/api/market) - Market indices and sector data
 - [Calendar Endpoints](/docs/api/calendar) - Earnings, dividends, and economic calendars

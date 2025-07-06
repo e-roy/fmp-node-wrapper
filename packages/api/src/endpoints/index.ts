@@ -9,3 +9,4 @@ export { EconomicEndpoints } from './economic';
 export { MarketEndpoints } from './market';
 export { CalendarEndpoints } from './calendar';
 export { ListEndpoints } from './list';
+export { CompanyEndpoints } from './company';

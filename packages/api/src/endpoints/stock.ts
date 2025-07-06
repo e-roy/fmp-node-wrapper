@@ -1,5 +1,5 @@
 import { FMPClient } from '@/client';
-import { UnwrappedAPIResponse, CompanyProfile, DateRangeParams } from '@/types';
+import { UnwrappedAPIResponse, DateRangeParams } from '@/types';
 import {
   StockHistoricalPriceResponse,
   MarketCap,
@@ -19,20 +19,6 @@ export class StockEndpoints {
    */
   async getQuote({ symbol }: { symbol: string }): Promise<UnwrappedAPIResponse<StockQuote | null>> {
     return this.client.get(`/quote/${symbol}`, 'v3');
-  }
-
-  /**
-   * Get company profile
-   * https://site.financialmodelingprep.com/developer/docs#company-profile-company-information
-   * @param symbol - The stock symbol to get the profile for
-   * @returns Get a comprehensive overview of a company with our Company Profile endpoint. This endpoint provides key information such as price, beta, market capitalization, description, headquarters, and more.
-   */
-  async getCompanyProfile({
-    symbol,
-  }: {
-    symbol: string;
-  }): Promise<UnwrappedAPIResponse<CompanyProfile | null>> {
-    return this.client.get(`/profile/${symbol}`, 'v3');
   }
 
   /**

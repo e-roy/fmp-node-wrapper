@@ -60,34 +60,6 @@ describe('Stock Endpoints', () => {
     );
   });
 
-  describe('getCompanyProfile', () => {
-    it(
-      'should fetch company profile for AAPL',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping company profile test - no API key available');
-          return;
-        }
-        const result = await fmp.stock.getCompanyProfile({
-          symbol: TEST_SYMBOLS.STOCK,
-        });
-
-        expect(result.success).toBe(true);
-        expect(result.data).toBeDefined();
-        expect(Object.keys(result.data || {}).length).toBeGreaterThan(0);
-
-        if (result.data) {
-          const profile = result.data;
-          expect(profile.symbol).toBe(TEST_SYMBOLS.STOCK);
-          expect(profile.companyName).toBeDefined();
-          expect(profile.industry).toBeDefined();
-          expect(profile.sector).toBeDefined();
-        }
-      },
-      FAST_TIMEOUT,
-    );
-  });
-
   describe('getHistoricalPrice', () => {
     it(
       'should fetch historical prices for AAPL',

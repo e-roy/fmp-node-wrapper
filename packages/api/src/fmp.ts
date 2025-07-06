@@ -14,6 +14,7 @@ import { EconomicEndpoints } from './endpoints/economic';
 import { MarketEndpoints } from './endpoints/market';
 import { ListEndpoints } from './endpoints/list';
 import { CalendarEndpoints } from './endpoints/calendar';
+import { CompanyEndpoints } from './endpoints/company';
 
 /**
  * Main FMP API client that provides access to all endpoints
@@ -49,6 +50,7 @@ export class FMP {
   public readonly market: MarketEndpoints;
   public readonly list: ListEndpoints;
   public readonly calendar: CalendarEndpoints;
+  public readonly company: CompanyEndpoints;
 
   constructor(config: FMPConfig) {
     // Validate API key at construction time
@@ -67,6 +69,7 @@ export class FMP {
     this.market = new MarketEndpoints(client);
     this.list = new ListEndpoints(client);
     this.calendar = new CalendarEndpoints(client);
+    this.company = new CompanyEndpoints(client);
   }
 
   /**

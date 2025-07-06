@@ -58,7 +58,7 @@ describe('FMP API Integration Tests', () => {
 
   describe('Company Profile', () => {
     it('should fetch company profile for AAPL', async () => {
-      const result = await fmp.stock.getCompanyProfile({ symbol: 'AAPL' });
+      const result = await fmp.company.getCompanyProfile({ symbol: 'AAPL' });
 
       expect(result.success).toBe(true);
       expect(result.data).toBeDefined();

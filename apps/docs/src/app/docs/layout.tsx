@@ -35,6 +35,7 @@ const navigationGroups = [
     items: [
       { name: 'List Endpoints', href: '/docs/api/list' },
       { name: 'Calendar Endpoints', href: '/docs/api/calendar' },
+      { name: 'Company Endpoints', href: '/docs/api/company' },
     ],
   },
   {

@@ -30,7 +30,7 @@ describe('FMP', () => {
 
   it('should have working stock endpoints', () => {
     expect(typeof fmp.stock.getQuote).toBe('function');
-    expect(typeof fmp.stock.getCompanyProfile).toBe('function');
+    expect(typeof fmp.company.getCompanyProfile).toBe('function');
     expect(typeof fmp.stock.getHistoricalPrice).toBe('function');
   });
 
