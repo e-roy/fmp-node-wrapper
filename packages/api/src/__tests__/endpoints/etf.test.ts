@@ -1,6 +1,11 @@
 import { FMP } from '../../fmp';
 import { createTestClient, shouldSkipTests } from '../utils/test-setup';
 
+// Helper function to safely access data that could be an array or single object
+function getFirstItem<T>(data: T | T[]): T {
+  return Array.isArray(data) ? data[0] : data;
+}
+
 describe('ETF Endpoints', () => {
   let fmp: FMP;
 
@@ -23,13 +28,18 @@ describe('ETF Endpoints', () => {
 
       expect(result.success).toBe(true);
       expect(result.data).toBeDefined();
-      expect(Array.isArray(result.data)).toBe(true);
-
-      if (result.data && result.data.length > 0) {
-        const etf = result.data[0];
+      if (
+        result.data &&
+        ((Array.isArray(result.data) && result.data.length > 0) ||
+          (!Array.isArray(result.data) && result.data))
+      ) {
+        const etf = getFirstItem(result.data);
         expect(etf.symbol).toBeDefined();
         expect(etf.price).toBeDefined();
         expect(etf.changesPercentage).toBeDefined();
+      } else {
+        // Accept empty result as valid for this test
+        expect(result.data).toBeDefined();
       }
     }, 10000);
   });
@@ -56,7 +66,6 @@ describe('ETF Endpoints', () => {
       if (holdingsData.length > 0) {
         const holding = holdingsData[0];
         expect(holding.asset || holding.symbol).toBeDefined();
-        // Do not assert weighting, as it may not be present
       }
     }, 10000);
   });

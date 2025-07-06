@@ -1,6 +1,11 @@
 import { FMP } from '../../fmp';
 import { API_KEY, isCI } from '../utils/test-setup';
 
+// Helper function to safely access data that could be an array or single object
+function getFirstItem<T>(data: T | T[]): T {
+  return Array.isArray(data) ? data[0] : data;
+}
+
 describe('Market Endpoints', () => {
   if (!API_KEY || isCI) {
     it('should skip tests when no API key is provided or running in CI', () => {
@@ -39,8 +44,8 @@ describe('Market Endpoints', () => {
       expect(result.data).toBeDefined();
       expect(Array.isArray(result.data)).toBe(true);
 
-      if (result.data && result.data.length > 0) {
-        const performance = result.data[0];
+      if (result.data && Array.isArray(result.data) && result.data.length > 0) {
+        const performance = getFirstItem(result.data);
         expect(performance.ticker).toBeDefined();
         expect(performance.companyName).toBeDefined();
         expect(Number(performance.price)).toBeGreaterThan(0);
@@ -55,8 +60,8 @@ describe('Market Endpoints', () => {
       expect(result.data).toBeDefined();
       expect(Array.isArray(result.data)).toBe(true);
 
-      if (result.data && result.data.length > 0) {
-        const gainer = result.data[0];
+      if (result.data && Array.isArray(result.data) && result.data.length > 0) {
+        const gainer = getFirstItem(result.data);
         expect(gainer.ticker).toBeDefined();
         expect(gainer.companyName).toBeDefined();
         expect(Number(gainer.price)).toBeGreaterThan(0);
@@ -72,8 +77,8 @@ describe('Market Endpoints', () => {
       expect(result.data).toBeDefined();
       expect(Array.isArray(result.data)).toBe(true);
 
-      if (result.data && result.data.length > 0) {
-        const loser = result.data[0];
+      if (result.data && Array.isArray(result.data) && result.data.length > 0) {
+        const loser = getFirstItem(result.data);
         expect(loser.ticker).toBeDefined();
         expect(loser.companyName).toBeDefined();
         expect(Number(loser.price)).toBeGreaterThan(0);
@@ -90,8 +95,8 @@ describe('Market Endpoints', () => {
       expect(result.data).toBeDefined();
       expect(Array.isArray(result.data)).toBe(true);
 
-      if (result.data && result.data.length > 0) {
-        const active = result.data[0];
+      if (result.data && Array.isArray(result.data) && result.data.length > 0) {
+        const active = getFirstItem(result.data);
         expect(active.ticker).toBeDefined();
         expect(active.companyName).toBeDefined();
         expect(Number(active.price)).toBeGreaterThan(0);
@@ -108,8 +113,8 @@ describe('Market Endpoints', () => {
       expect(result.data).toBeDefined();
       expect(Array.isArray(result.data)).toBe(true);
 
-      if (result.data && result.data.length > 0) {
-        const sector = result.data[0];
+      if (result.data && Array.isArray(result.data) && result.data.length > 0) {
+        const sector = getFirstItem(result.data);
         expect(sector.sector).toBeDefined();
         expect(sector.changesPercentage).toBeDefined();
       }

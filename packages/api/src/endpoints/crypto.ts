@@ -1,30 +1,35 @@
 // Cryptocurrency endpoints for FMP API
 
-import { FMPClient } from '../client';
-import { APIResponse, HistoricalPriceResponse, QueryParams } from '../types/common';
-import { CryptoQuote, CryptoQuoteParams, CryptoHistoricalParams } from '../types/crypto';
+import { FMPClient } from '@/client';
+import { UnwrappedAPIResponse, HistoricalPriceResponse } from '../types/common';
+import { CryptoQuote, CryptoQuoteParams } from '../types/crypto';
 
 export class CryptoEndpoints {
   constructor(private client: FMPClient) {}
 
   /**
-   * Get real-time crypto quote
+   * Get crypto quote
    */
-  async getQuote(params: CryptoQuoteParams): Promise<APIResponse<CryptoQuote[]>> {
-    return this.client.get(`/quote/${params.symbol}`);
+  async getQuote(params: CryptoQuoteParams): Promise<UnwrappedAPIResponse<CryptoQuote[]>> {
+    return this.client.get('/quote', params);
   }
 
   /**
-   * Get historical crypto data
+   * Get historical crypto prices
    */
-  async getHistoricalPrice(
-    params: CryptoHistoricalParams,
-  ): Promise<APIResponse<HistoricalPriceResponse>> {
-    const queryParams: QueryParams = {};
-    if (params.from) queryParams.from = params.from;
-    if (params.to) queryParams.to = params.to;
-    if (params.timeseries) queryParams.timeseries = params.timeseries;
+  async getHistoricalPrice({
+    symbol,
+    from,
+    to,
+  }: {
+    symbol: string;
+    from?: string;
+    to?: string;
+  }): Promise<UnwrappedAPIResponse<HistoricalPriceResponse>> {
+    const params: Record<string, any> = {};
+    if (from) params.from = from;
+    if (to) params.to = to;
 
-    return this.client.get(`/historical-price-full/${params.symbol}`, queryParams);
+    return this.client.get(`/historical-price-full/${symbol}`, params);
   }
 }

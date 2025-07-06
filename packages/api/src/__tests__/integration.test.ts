@@ -1,6 +1,11 @@
 import { FMP } from '../fmp';
 import { API_KEY, isCI } from './utils/test-setup';
 
+// Helper function to safely access data that could be an array or single object
+function getFirstItem<T>(data: T | T[]): T {
+  return Array.isArray(data) ? data[0] : data;
+}
+
 describe('FMP API Integration Tests', () => {
   if (!API_KEY || isCI) {
     it('should skip tests when no API key is provided or running in CI', () => {
@@ -81,8 +86,8 @@ describe('FMP API Integration Tests', () => {
       expect(result.data).toBeDefined();
       expect(Array.isArray(result.data)).toBe(true);
 
-      if (result.data && result.data.length > 0) {
-        const statement = result.data[0];
+      if (result.data && Array.isArray(result.data) && result.data.length > 0) {
+        const statement = getFirstItem(result.data);
         expect(statement.symbol).toBe('AAPL');
         expect(statement.date).toBeDefined();
         expect(['annual', 'FY']).toContain(statement.period);

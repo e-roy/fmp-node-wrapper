@@ -14,6 +14,11 @@ import type {
   SplitsCalendar,
 } from '@/types/calendar';
 
+// Helper function to safely access data that could be an array or single object
+function getFirstItem<T>(data: T | T[]): T {
+  return Array.isArray(data) ? data[0] : data;
+}
+
 describe('Calendar Endpoints', () => {
   let fmp: FMP;
 
@@ -44,7 +49,7 @@ describe('Calendar Endpoints', () => {
 
         // Validate data structure if data exists
         if (result.data && Array.isArray(result.data) && result.data.length > 0) {
-          const earnings = result.data[0] as EarningsCalendar;
+          const earnings = getFirstItem(result.data) as EarningsCalendar;
           expect(earnings).toHaveProperty('date');
           expect(earnings).toHaveProperty('symbol');
           expect(earnings).toHaveProperty('eps');
@@ -130,8 +135,8 @@ describe('Calendar Endpoints', () => {
         expect(Array.isArray(result.data)).toBe(true);
 
         // Validate data structure if data exists
-        if (result.data && result.data.length > 0) {
-          const dividend = result.data[0] as DividendsCalendar;
+        if (result.data && Array.isArray(result.data) && result.data.length > 0) {
+          const dividend = getFirstItem(result.data) as DividendsCalendar;
           expect(dividend).toHaveProperty('date');
           expect(dividend).toHaveProperty('label');
           expect(dividend).toHaveProperty('adjDividend');
@@ -198,8 +203,8 @@ describe('Calendar Endpoints', () => {
         expect(Array.isArray(result.data)).toBe(true);
 
         // Validate data structure if data exists
-        if (result.data && result.data.length > 0) {
-          const economic = result.data[0] as EconomicsCalendar;
+        if (result.data && Array.isArray(result.data) && result.data.length > 0) {
+          const economic = getFirstItem(result.data) as EconomicsCalendar;
           expect(economic).toHaveProperty('date');
           expect(economic).toHaveProperty('country');
           expect(economic).toHaveProperty('event');
@@ -265,8 +270,8 @@ describe('Calendar Endpoints', () => {
         expect(Array.isArray(result.data)).toBe(true);
 
         // Validate data structure if data exists
-        if (result.data && result.data.length > 0) {
-          const ipo = result.data[0] as IPOCalendar;
+        if (result.data && Array.isArray(result.data) && result.data.length > 0) {
+          const ipo = getFirstItem(result.data) as IPOCalendar;
           expect(ipo).toHaveProperty('date');
           expect(ipo).toHaveProperty('company');
           expect(ipo).toHaveProperty('symbol');
@@ -329,8 +334,8 @@ describe('Calendar Endpoints', () => {
         expect(Array.isArray(result.data)).toBe(true);
 
         // Validate data structure if data exists
-        if (result.data && result.data.length > 0) {
-          const split = result.data[0] as SplitsCalendar;
+        if (result.data && Array.isArray(result.data) && result.data.length > 0) {
+          const split = getFirstItem(result.data) as SplitsCalendar;
           expect(split).toHaveProperty('date');
           expect(split).toHaveProperty('label');
           expect(split).toHaveProperty('symbol');

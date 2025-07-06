@@ -1,7 +1,7 @@
 // ETF endpoints for FMP API
 
-import { FMPClient } from '../client';
-import { APIResponse, QueryParams } from '../types/common';
+import { FMPClient } from '@/client';
+import { UnwrappedAPIResponse } from '../types/common';
 import {
   ETFQuote,
   ETFProfile,
@@ -15,27 +15,23 @@ export class ETFEndpoints {
   constructor(private client: FMPClient) {}
 
   /**
-   * Get real-time ETF quote
+   * Get ETF quote
    */
-  async getQuote(params: ETFQuoteParams): Promise<APIResponse<ETFQuote[]>> {
-    return this.client.get(`/quote/${params.symbol}`);
+  async getQuote(params: ETFQuoteParams): Promise<UnwrappedAPIResponse<ETFQuote[]>> {
+    return this.client.get('/quote', params);
   }
 
   /**
    * Get ETF profile
    */
-  async getProfile(params: ETFProfileParams): Promise<APIResponse<ETFProfile[]>> {
-    return this.client.get(`/profile/${params.symbol}`);
+  async getProfile(params: ETFProfileParams): Promise<UnwrappedAPIResponse<ETFProfile[]>> {
+    return this.client.get('/profile', params);
   }
 
   /**
    * Get ETF holdings
    */
-  async getHoldings(params: ETFHoldersParams): Promise<APIResponse<ETFHolding[]>> {
-    const queryParams: QueryParams = {};
-    if (params.limit) queryParams.limit = params.limit;
-    if (params.page) queryParams.page = params.page;
-
-    return this.client.get(`/etf-holder/${params.symbol}`, queryParams);
+  async getHoldings(params: ETFHoldersParams): Promise<UnwrappedAPIResponse<ETFHolding[]>> {
+    return this.client.get('/holdings', params);
   }
 }

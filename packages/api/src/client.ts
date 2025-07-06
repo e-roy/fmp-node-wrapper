@@ -1,5 +1,17 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
-import { FMPConfig, APIResponse } from './types';
+import { FMPConfig, UnwrappedAPIResponse } from './types';
+
+/**
+ * Utility function to unwrap single objects from arrays
+ * If the response is an array with only one item, return just that item
+ * Otherwise, return the original response
+ */
+function unwrapSingleObject<T>(data: T): T {
+  if (Array.isArray(data) && data.length === 1) {
+    return data[0];
+  }
+  return data;
+}
 
 export class FMPClient {
   private client: AxiosInstance;
@@ -31,12 +43,15 @@ export class FMPClient {
   /**
    * Make a GET request to the API
    */
-  async get<T = any>(endpoint: string, params?: Record<string, any>): Promise<APIResponse<T>> {
+  async get<T = any>(
+    endpoint: string,
+    params?: Record<string, any>,
+  ): Promise<UnwrappedAPIResponse<T>> {
     try {
       const response = await this.client.get(endpoint, { params });
       return {
         success: true,
-        data: response.data,
+        data: unwrapSingleObject(response.data),
         status: response.status,
       };
     } catch (error: any) {
@@ -55,12 +70,12 @@ export class FMPClient {
     endpoint: string,
     data?: any,
     config?: AxiosRequestConfig,
-  ): Promise<APIResponse<T>> {
+  ): Promise<UnwrappedAPIResponse<T>> {
     try {
       const response = await this.client.post(endpoint, data, config);
       return {
         success: true,
-        data: response.data,
+        data: unwrapSingleObject(response.data),
         status: response.status,
       };
     } catch (error: any) {

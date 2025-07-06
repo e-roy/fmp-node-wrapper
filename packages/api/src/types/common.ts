@@ -21,6 +21,19 @@ export interface ErrorResponse extends APIResponse<never> {
   status: number;
 }
 
+// Type utility to unwrap single objects from arrays
+// If T is an array type, unwrap it to the element type
+// Otherwise, keep T as is
+export type UnwrapSingle<T> = T extends [infer U] ? U : T extends (infer U)[] ? U | U[] : T;
+
+// API response with automatic unwrapping of single objects
+export interface UnwrappedAPIResponse<T = unknown> {
+  success: boolean;
+  data?: UnwrapSingle<T>;
+  error?: string;
+  status?: number;
+}
+
 // FMP API configuration
 export interface FMPConfig {
   apiKey: string;

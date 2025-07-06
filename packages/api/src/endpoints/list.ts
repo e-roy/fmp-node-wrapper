@@ -1,83 +1,49 @@
-import { BondList, CryptoList, ETFList, ForexList, MutualFundList, StockList } from '@/types/list';
-import { FMPClient } from '../client';
-import { APIResponse } from '../types';
+import { FMPClient } from '@/client';
+import { UnwrappedAPIResponse } from '../types';
+import { StockList, ETFList, MutualFundList, CryptoList, ForexList, BondList } from '../types/list';
 
 export class ListEndpoints {
   constructor(private client: FMPClient) {}
 
   /**
-   * Get list of all stocks
+   * Get stock list
    */
-  async getStockList(): Promise<APIResponse<StockList[]>> {
+  async getStockList(): Promise<UnwrappedAPIResponse<StockList[]>> {
     return this.client.get('/stock/list');
   }
 
   /**
-   * Get list of all ETFs
+   * Get ETF list
    */
-  async getETFList(): Promise<APIResponse<ETFList[]>> {
+  async getETFList(): Promise<UnwrappedAPIResponse<ETFList[]>> {
     return this.client.get('/etf/list');
   }
 
   /**
-   * Get list of all mutual funds
+   * Get mutual fund list
    */
-  async getMutualFundList(): Promise<APIResponse<MutualFundList[]>> {
+  async getMutualFundList(): Promise<UnwrappedAPIResponse<MutualFundList[]>> {
     return this.client.get('/mutual-fund/list');
   }
 
   /**
-   * Get list of all cryptocurrencies
+   * Get crypto list
    */
-  async getCryptoList(): Promise<APIResponse<CryptoList[]>> {
-    return this.client.get('/cryptocurrency');
+  async getCryptoList(): Promise<UnwrappedAPIResponse<CryptoList[]>> {
+    return this.client.get('/crypto/list');
   }
 
   /**
-   * Get list of all forex pairs
-   * Using the forex-specific endpoint
+   * Get forex list
    */
-  async getForexList(): Promise<APIResponse<ForexList[]>> {
-    try {
-      // Try the forex list endpoint first
-      const response = await this.client.get('/forex-list');
-
-      // If that doesn't work, try the general forex endpoint
-      if (!response.success || !response.data) {
-        const fallbackResponse = await this.client.get('/forex');
-        return {
-          ...fallbackResponse,
-          data: Array.isArray(fallbackResponse.data)
-            ? fallbackResponse.data
-            : Array.isArray(fallbackResponse.data?.forexList)
-              ? fallbackResponse.data.forexList
-              : [],
-        };
-      }
-
-      return {
-        ...response,
-        data: Array.isArray(response.data)
-          ? response.data
-          : Array.isArray(response.data?.forexList)
-            ? response.data.forexList
-            : [],
-      };
-    } catch (error) {
-      // If both endpoints fail, return empty array
-      return {
-        success: false,
-        error: 'Failed to fetch forex pairs',
-        status: 500,
-        data: [],
-      };
-    }
+  async getForexList(): Promise<UnwrappedAPIResponse<ForexList[]>> {
+    return this.client.get('/forex/list');
   }
 
   /**
-   * Get list of all bonds
+   * Get bond list
    */
-  async getBondList(): Promise<APIResponse<BondList[]>> {
+  async getBondList(): Promise<UnwrappedAPIResponse<BondList[]>> {
     return this.client.get('/bond/list');
   }
 }

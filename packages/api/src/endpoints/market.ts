@@ -1,7 +1,7 @@
 // Market endpoints for FMP API
 
-import { FMPClient } from '../client';
-import { APIResponse, QueryParams } from '../types/common';
+import { FMPClient } from '@/client';
+import { UnwrappedAPIResponse } from '../types/common';
 import {
   MarketHours,
   MarketPerformance,
@@ -16,53 +16,51 @@ export class MarketEndpoints {
   /**
    * Get market hours
    */
-  async getMarketHours(): Promise<APIResponse<MarketHours>> {
+  async getMarketHours(): Promise<UnwrappedAPIResponse<MarketHours>> {
     return this.client.get('/market-hours');
   }
 
   /**
    * Get market performance
    */
-  async getMarketPerformance(): Promise<APIResponse<MarketPerformance[]>> {
+  async getMarketPerformance(): Promise<UnwrappedAPIResponse<MarketPerformance[]>> {
     return this.client.get('/market-performance');
   }
 
   /**
-   * Get market gainers
+   * Get top gainers
    */
-  async getGainers(): Promise<APIResponse<MarketPerformance[]>> {
+  async getGainers(): Promise<UnwrappedAPIResponse<MarketPerformance[]>> {
     return this.client.get('/gainers');
   }
 
   /**
-   * Get market losers
+   * Get top losers
    */
-  async getLosers(): Promise<APIResponse<MarketPerformance[]>> {
+  async getLosers(): Promise<UnwrappedAPIResponse<MarketPerformance[]>> {
     return this.client.get('/losers');
   }
 
   /**
    * Get most active stocks
    */
-  async getMostActive(): Promise<APIResponse<MarketPerformance[]>> {
+  async getMostActive(): Promise<UnwrappedAPIResponse<MarketPerformance[]>> {
     return this.client.get('/most-active');
   }
 
   /**
    * Get sector performance
    */
-  async getSectorPerformance(): Promise<APIResponse<MarketSectorPerformance[]>> {
+  async getSectorPerformance(): Promise<UnwrappedAPIResponse<MarketSectorPerformance[]>> {
     return this.client.get('/sector-performance');
   }
 
   /**
-   * Get market index data
+   * Get market indices
    */
-  async getMarketIndex(params: MarketIndexParams = {}): Promise<APIResponse<MarketIndex[]>> {
-    const queryParams: QueryParams = {};
-    if (params.from) queryParams.from = params.from;
-    if (params.to) queryParams.to = params.to;
-
-    return this.client.get('/market-index', queryParams);
+  async getMarketIndex(
+    params: MarketIndexParams = {},
+  ): Promise<UnwrappedAPIResponse<MarketIndex[]>> {
+    return this.client.get('/market-index', params);
   }
 }

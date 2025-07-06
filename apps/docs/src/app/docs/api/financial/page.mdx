@@ -24,8 +24,38 @@ and fundamental data for companies.
     },
     {
       method: 'GET',
-      path: '/financial-ratios/{symbol}',
+      path: '/key-metrics/{symbol}',
+      description: 'Get key financial metrics',
+    },
+    {
+      method: 'GET',
+      path: '/ratios/{symbol}',
       description: 'Get financial ratios',
+    },
+    {
+      method: 'GET',
+      path: '/enterprise-value/{symbol}',
+      description: 'Get enterprise value data',
+    },
+    {
+      method: 'GET',
+      path: '/cash-flow-statement-growth/{symbol}',
+      description: 'Get cash flow growth metrics',
+    },
+    {
+      method: 'GET',
+      path: '/income-statement-growth/{symbol}',
+      description: 'Get income statement growth metrics',
+    },
+    {
+      method: 'GET',
+      path: '/balance-sheet-statement-growth/{symbol}',
+      description: 'Get balance sheet growth metrics',
+    },
+    {
+      method: 'GET',
+      path: '/financial-growth/{symbol}',
+      description: 'Get general financial growth metrics',
     },
   ]}
 />
@@ -404,6 +434,501 @@ Retrieve key financial ratios and metrics for analysis.
         dividendYield: 0.48,
         enterpriseValueMultiple: 26.89,
         priceFairValue: 35.73
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Key Metrics
+
+Retrieve key financial metrics including valuation ratios, profitability metrics, and efficiency ratios.
+
+<CodeBlock language="typescript">
+  {`const keyMetrics = await fmp.getKeyMetrics({
+    symbol: 'AAPL',
+    period: 'annual',
+    limit: 5,
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+    {
+      name: 'period',
+      type: 'string',
+      required: false,
+      description: 'Period type: "annual" or "quarter" (default: "annual")',
+    },
+    {
+      name: 'limit',
+      type: 'number',
+      required: false,
+      description: 'Number of periods to retrieve (default: 5)',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        date: '2023-09-30',
+        symbol: 'AAPL',
+        period: 'FY',
+        revenuePerShare: 24.16,
+        netIncomePerShare: 6.16,
+        operatingCashFlowPerShare: 7.00,
+        freeCashFlowPerShare: 6.31,
+        cashPerShare: 1.90,
+        bookValuePerShare: 3.58,
+        tangibleBookValuePerShare: 3.58,
+        shareholdersEquityPerShare: 3.58,
+        interestDebtPerShare: 6.65,
+        marketCap: 3000000000000,
+        enterpriseValue: 3100000000000,
+        peRatio: 31.44,
+        priceToSalesRatio: 8.95,
+        pocfratio: 21.46,
+        pfcfRatio: 23.82,
+        pbRatio: 35.73,
+        ptbRatio: 35.73,
+        evToSales: 8.95,
+        enterpriseValueOverEBITDA: 26.89,
+        evToOperatingCashFlow: 21.46,
+        evToFreeCashFlow: 23.82,
+        earningsYield: 0.032,
+        freeCashFlowYield: 0.042,
+        debtToEquity: 2.14,
+        debtToAssets: 0.68,
+        netDebtToEBITDA: 0.57,
+        currentRatio: 0.99,
+        interestCoverage: 29.07,
+        incomeQuality: 1.14,
+        dividendYield: 0.0048,
+        payoutRatio: 0.15,
+        salesGeneralAndAdministrativeToRevenue: 0.065,
+        researchAndDevelopmentToRevenue: 0.078,
+        intangiblesToTotalAssets: 0,
+        capexToOperatingCashFlow: 0.099,
+        capexToRevenue: 0.029,
+        capexToDepreciation: 0.99,
+        stockBasedCompensationToRevenue: 0.065,
+        grahamNumber: 15.23,
+        roic: 0.32,
+        returnOnTangibleAssets: 0.27,
+        grahamNetNet: 2.68,
+        workingCapital: -1600000000,
+        tangibleAssetValue: 352755000000,
+        netCurrentAssetValue: -96695000000,
+        investedCapital: 245000000000,
+        averageReceivables: 29508000000,
+        averagePayables: 62611000000,
+        averageInventory: 6331000000,
+        daysSalesOutstanding: 22.11,
+        daysPayablesOutstanding: 106.67,
+        daysOfInventoryOnHand: 6.02,
+        receivablesTurnover: 16.51,
+        payablesTurnover: 3.42,
+        inventoryTurnover: 60.67,
+        roe: 0.86,
+        capexPerShare: 0.69
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Enterprise Value
+
+Retrieve enterprise value data including market capitalization, debt, and cash calculations.
+
+<CodeBlock language="typescript">
+  {`const enterpriseValue = await fmp.getEnterpriseValue({
+    symbol: 'AAPL',
+    period: 'annual',
+    limit: 5,
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+    {
+      name: 'period',
+      type: 'string',
+      required: false,
+      description: 'Period type: "annual" or "quarter" (default: "annual")',
+    },
+    {
+      name: 'limit',
+      type: 'number',
+      required: false,
+      description: 'Number of periods to retrieve (default: 5)',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        date: '2023-09-30',
+        symbol: 'AAPL',
+        stockPrice: 175.43,
+        numberOfShares: 15728775000,
+        marketCapitalization: 3000000000000,
+        minusCashAndCashEquivalents: 61557000000,
+        addTotalDebt: 104655000000,
+        enterpriseValue: 3100000000000
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Cashflow Growth
+
+Retrieve cash flow growth metrics showing period-over-period changes in cash flow components.
+
+<CodeBlock language="typescript">
+  {`const cashflowGrowth = await fmp.getCashflowGrowth({
+    symbol: 'AAPL',
+    period: 'annual',
+    limit: 5,
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+    {
+      name: 'period',
+      type: 'string',
+      required: false,
+      description: 'Period type: "annual" or "quarter" (default: "annual")',
+    },
+    {
+      name: 'limit',
+      type: 'number',
+      required: false,
+      description: 'Number of periods to retrieve (default: 5)',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        date: '2023-09-30',
+        symbol: 'AAPL',
+        calendarYear: '2023',
+        period: 'FY',
+        growthNetIncome: 0.028,
+        growthDepreciationAndAmortization: 0.089,
+        growthDeferredIncomeTax: 0,
+        growthStockBasedCompensation: 0,
+        growthChangeInWorkingCapital: 0,
+        growthAccountsReceivables: 0,
+        growthInventory: 0,
+        growthAccountsPayables: 0,
+        growthOtherWorkingCapital: 0,
+        growthOtherNonCashItems: 0,
+        growthNetCashProvidedByOperatingActivites: 0.013,
+        growthInvestmentsInPropertyPlantAndEquipment: -0.089,
+        growthAcquisitionsNet: 0,
+        growthPurchasesOfInvestments: 0,
+        growthSalesMaturitiesOfInvestments: 0,
+        growthOtherInvestingActivites: 0,
+        growthNetCashUsedForInvestingActivites: -0.089,
+        growthDebtRepayment: -0.095,
+        growthCommonStockIssued: 0,
+        growthCommonStockRepurchased: -0.089,
+        growthDividendsPaid: 0.071,
+        growthOtherFinancingActivites: 0,
+        growthNetCashUsedProvidedByFinancingActivities: -0.089,
+        growthEffectOfForexChangesOnCash: 0,
+        growthNetChangeInCash: 0,
+        growthCashAtEndOfPeriod: 0,
+        growthCashAtBeginningOfPeriod: 0,
+        growthOperatingCashFlow: 0.013,
+        growthCapitalExpenditure: -0.089,
+        growthFreeCashFlow: 0.028
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Income Growth
+
+Retrieve income statement growth metrics showing period-over-period changes in revenue, expenses, and profitability.
+
+<CodeBlock language="typescript">
+  {`const incomeGrowth = await fmp.getIncomeGrowth({
+    symbol: 'AAPL',
+    period: 'annual',
+    limit: 5,
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+    {
+      name: 'period',
+      type: 'string',
+      required: false,
+      description: 'Period type: "annual" or "quarter" (default: "annual")',
+    },
+    {
+      name: 'limit',
+      type: 'number',
+      required: false,
+      description: 'Number of periods to retrieve (default: 5)',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        date: '2023-09-30',
+        symbol: 'AAPL',
+        calendarYear: '2023',
+        period: 'FY',
+        growthRevenue: -0.028,
+        growthCostOfRevenue: -0.032,
+        growthGrossProfit: -0.023,
+        growthGrossProfitRatio: 0.005,
+        growthResearchAndDevelopmentExpenses: 0.134,
+        growthGeneralAndAdministrativeExpenses: 0,
+        growthSellingAndMarketingExpenses: 0,
+        growthOtherExpenses: 0,
+        growthOperatingExpenses: 0.134,
+        growthCostAndExpenses: -0.028,
+        growthInterestExpense: 0.089,
+        growthDepreciationAndAmortization: 0.089,
+        growthEBITDA: -0.023,
+        growthEBITDARatio: 0.005,
+        growthOperatingIncome: -0.023,
+        growthOperatingIncomeRatio: 0.005,
+        growthTotalOtherIncomeExpensesNet: 0,
+        growthIncomeBeforeTax: -0.023,
+        growthIncomeBeforeTaxRatio: 0.005,
+        growthIncomeTaxExpense: -0.023,
+        growthNetIncome: -0.023,
+        growthNetIncomeRatio: 0.005,
+        growthEPS: -0.023,
+        growthEPSDiluted: -0.023,
+        growthWeightedAverageShsOut: 0,
+        growthWeightedAverageShsOutDil: 0
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Balance Sheet Growth
+
+Retrieve balance sheet growth metrics showing period-over-period changes in assets, liabilities, and equity.
+
+<CodeBlock language="typescript">
+  {`const balanceSheetGrowth = await fmp.getBalanceSheetGrowth({
+    symbol: 'AAPL',
+    period: 'annual',
+    limit: 5,
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+    {
+      name: 'period',
+      type: 'string',
+      required: false,
+      description: 'Period type: "annual" or "quarter" (default: "annual")',
+    },
+    {
+      name: 'limit',
+      type: 'number',
+      required: false,
+      description: 'Number of periods to retrieve (default: 5)',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        date: '2023-09-30',
+        symbol: 'AAPL',
+        calendarYear: '2023',
+        period: 'FY',
+        growthCashAndCashEquivalents: -0.089,
+        growthShortTermInvestments: -0.089,
+        growthCashAndShortTermInvestments: -0.089,
+        growthNetReceivables: -0.089,
+        growthInventory: -0.089,
+        growthOtherCurrentAssets: 0,
+        growthTotalCurrentAssets: -0.089,
+        growthPropertyPlantEquipmentNet: 0.089,
+        growthGoodwill: 0,
+        growthIntangibleAssets: 0,
+        growthGoodwillAndIntangibleAssets: 0,
+        growthLongTermInvestments: 0.089,
+        growthTaxAssets: 0,
+        growthOtherNonCurrentAssets: 0,
+        growthTotalNonCurrentAssets: 0.089,
+        growthOtherAssets: 0,
+        growthTotalAssets: 0,
+        growthAccountPayables: -0.089,
+        growthShortTermDebt: -0.089,
+        growthTaxPayables: 0,
+        growthDeferredRevenue: -0.089,
+        growthOtherCurrentLiabilities: 0,
+        growthTotalCurrentLiabilities: -0.089,
+        growthLongTermDebt: -0.089,
+        growthDeferredRevenueNonCurrent: 0,
+        growthDeferrredTaxLiabilitiesNonCurrent: 0,
+        growthOtherNonCurrentLiabilities: 0,
+        growthTotalNonCurrentLiabilities: -0.089,
+        growthOtherLiabilities: 0,
+        growthTotalLiabilities: -0.089,
+        growthCommonStock: 0,
+        growthRetainedEarnings: 0.089,
+        growthAccumulatedOtherComprehensiveIncomeLoss: 0,
+        growthOthertotalStockholdersEquity: 0,
+        growthTotalStockholdersEquity: 0.089,
+        growthTotalLiabilitiesAndStockholdersEquity: 0,
+        growthTotalInvestments: 0.089,
+        growthTotalDebt: -0.089,
+        growthNetDebt: -0.089
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Financial Growth
+
+Retrieve comprehensive financial growth metrics including revenue, earnings, and cash flow growth over multiple time periods.
+
+<CodeBlock language="typescript">
+  {`const financialGrowth = await fmp.getFinancialGrowth({
+    symbol: 'AAPL',
+    period: 'annual',
+    limit: 5,
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+    {
+      name: 'period',
+      type: 'string',
+      required: false,
+      description: 'Period type: "annual" or "quarter" (default: "annual")',
+    },
+    {
+      name: 'limit',
+      type: 'number',
+      required: false,
+      description: 'Number of periods to retrieve (default: 5)',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        date: '2023-09-30',
+        symbol: 'AAPL',
+        calendarYear: '2023',
+        period: 'FY',
+        revenueGrowth: -0.028,
+        grossProfitGrowth: -0.023,
+        ebitgrowth: -0.023,
+        operatingIncomeGrowth: -0.023,
+        netIncomeGrowth: -0.023,
+        epsgrowth: -0.023,
+        epsdilutedGrowth: -0.023,
+        weightedAverageSharesGrowth: 0,
+        weightedAverageSharesDilutedGrowth: 0,
+        dividendsperShareGrowth: 0.071,
+        operatingCashFlowGrowth: 0.013,
+        freeCashFlowGrowth: 0.028,
+        tenYRevenueGrowthPerShare: 0.089,
+        fiveYRevenueGrowthPerShare: 0.089,
+        threeYRevenueGrowthPerShare: 0.089,
+        tenYOperatingCFGrowthPerShare: 0.089,
+        fiveYOperatingCFGrowthPerShare: 0.089,
+        threeYOperatingCFGrowthPerShare: 0.089,
+        tenYNetIncomeGrowthPerShare: 0.089,
+        fiveYNetIncomeGrowthPerShare: 0.089,
+        threeYNetIncomeGrowthPerShare: 0.089,
+        tenYShareholdersEquityGrowthPerShare: 0.089,
+        fiveYShareholdersEquityGrowthPerShare: 0.089,
+        threeYShareholdersEquityGrowthPerShare: 0.089,
+        tenYDividendperShareGrowthPerShare: 0.089,
+        fiveYDividendperShareGrowthPerShare: 0.089,
+        threeYDividendperShareGrowthPerShare: 0.089,
+        receivablesGrowth: -0.089,
+        inventoryGrowth: -0.089,
+        assetGrowth: 0,
+        bookValueperShareGrowth: 0.089,
+        debtGrowth: -0.089,
+        rdexpenseGrowth: 0.134,
+        sgaexpensesGrowth: 0.134
       }
     ]
 }`}

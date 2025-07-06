@@ -1,5 +1,5 @@
 import { FMPClient } from '@/client';
-import { APIResponse } from '@/types';
+import { UnwrappedAPIResponse } from '@/types';
 import {
   EarningsCalendar,
   DividendsCalendar,
@@ -7,7 +7,11 @@ import {
   IPOCalendar,
   SplitsCalendar,
 } from '@/types/calendar';
-import { QueryParams } from '@/types/common';
+
+interface CalendarParams {
+  from?: string;
+  to?: string;
+}
 
 export class CalendarEndpoints {
   constructor(private client: FMPClient) {}
@@ -15,65 +19,65 @@ export class CalendarEndpoints {
   /**
    * Get earnings calendar
    */
-  async getEarningsCalendar(params: {
-    from?: string;
-    to?: string;
-  }): Promise<APIResponse<EarningsCalendar[]>> {
-    const queryParams: QueryParams = {};
-    if (params.from) queryParams.from = params.from;
-    if (params.to) queryParams.to = params.to;
-    return this.client.get('/earning_calendar', queryParams);
+  async getEarningsCalendar({ from, to }: CalendarParams = {}): Promise<
+    UnwrappedAPIResponse<EarningsCalendar[]>
+  > {
+    const params: Record<string, any> = {};
+    if (from) params.from = from;
+    if (to) params.to = to;
+
+    return this.client.get('/earnings-calendar', params);
   }
 
   /**
    * Get dividends calendar
    */
-  async getDividendsCalendar(params: {
-    from?: string;
-    to?: string;
-  }): Promise<APIResponse<DividendsCalendar[]>> {
-    const queryParams: QueryParams = {};
-    if (params.from) queryParams.from = params.from;
-    if (params.to) queryParams.to = params.to;
-    return this.client.get('/stock_dividend_calendar', queryParams);
+  async getDividendsCalendar({ from, to }: CalendarParams = {}): Promise<
+    UnwrappedAPIResponse<DividendsCalendar[]>
+  > {
+    const params: Record<string, any> = {};
+    if (from) params.from = from;
+    if (to) params.to = to;
+
+    return this.client.get('/dividend-calendar', params);
   }
 
   /**
-   * Get Economics Calendar
+   * Get economics calendar
    */
-  async getEconomicsCalendar(params: {
-    from?: string;
-    to?: string;
-  }): Promise<APIResponse<EconomicsCalendar[]>> {
-    const queryParams: QueryParams = {};
-    if (params.from) queryParams.from = params.from;
-    if (params.to) queryParams.to = params.to;
-    return this.client.get('/economic_calendar', queryParams);
+  async getEconomicsCalendar({ from, to }: CalendarParams = {}): Promise<
+    UnwrappedAPIResponse<EconomicsCalendar[]>
+  > {
+    const params: Record<string, any> = {};
+    if (from) params.from = from;
+    if (to) params.to = to;
+
+    return this.client.get('/economic-calendar', params);
   }
 
   /**
-   * Get IPO Calendar
+   * Get IPO calendar
    */
-  async getIPOCalendar(params: {
-    from?: string;
-    to?: string;
-  }): Promise<APIResponse<IPOCalendar[]>> {
-    const queryParams: QueryParams = {};
-    if (params.from) queryParams.from = params.from;
-    if (params.to) queryParams.to = params.to;
-    return this.client.get('/ipo_calendar', queryParams);
+  async getIPOCalendar({ from, to }: CalendarParams = {}): Promise<
+    UnwrappedAPIResponse<IPOCalendar[]>
+  > {
+    const params: Record<string, any> = {};
+    if (from) params.from = from;
+    if (to) params.to = to;
+
+    return this.client.get('/ipo-calendar', params);
   }
 
   /**
-   * Get Splits Calendar
+   * Get stock splits calendar
    */
-  async getSplitsCalendar(params: {
-    from?: string;
-    to?: string;
-  }): Promise<APIResponse<SplitsCalendar[]>> {
-    const queryParams: QueryParams = {};
-    if (params.from) queryParams.from = params.from;
-    if (params.to) queryParams.to = params.to;
-    return this.client.get('/stock_split_calendar', queryParams);
+  async getSplitsCalendar({ from, to }: CalendarParams = {}): Promise<
+    UnwrappedAPIResponse<SplitsCalendar[]>
+  > {
+    const params: Record<string, any> = {};
+    if (from) params.from = from;
+    if (to) params.to = to;
+
+    return this.client.get('/stock-split-calendar', params);
   }
 }

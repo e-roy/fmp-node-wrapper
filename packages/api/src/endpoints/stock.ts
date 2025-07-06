@@ -1,5 +1,5 @@
 import { FMPClient } from '@/client';
-import { APIResponse, StockQuote, CompanyProfile } from '@/types';
+import { UnwrappedAPIResponse, StockQuote, CompanyProfile } from '@/types';
 import { StockHistoricalPriceResponse, MarketCap, StockSplit, StockDividend } from '@/types/stock';
 
 export class StockEndpoints {
@@ -8,12 +8,8 @@ export class StockEndpoints {
   /**
    * Get real-time stock quote
    */
-  async getQuote({ symbol }: { symbol: string }): Promise<APIResponse<StockQuote | null>> {
-    const response = await this.client.get(`/quote/${symbol}`);
-    return {
-      ...response,
-      data: response.success && response.data && response.data.length > 0 ? response.data[0] : null,
-    };
+  async getQuote({ symbol }: { symbol: string }): Promise<UnwrappedAPIResponse<StockQuote | null>> {
+    return this.client.get(`/quote/${symbol}`);
   }
 
   /**
@@ -23,12 +19,8 @@ export class StockEndpoints {
     symbol,
   }: {
     symbol: string;
-  }): Promise<APIResponse<CompanyProfile | null>> {
-    const response = await this.client.get(`/profile/${symbol}`);
-    return {
-      ...response,
-      data: response.success && response.data && response.data.length > 0 ? response.data[0] : null,
-    };
+  }): Promise<UnwrappedAPIResponse<CompanyProfile | null>> {
+    return this.client.get(`/profile/${symbol}`);
   }
 
   /**
@@ -42,47 +34,44 @@ export class StockEndpoints {
     symbol: string;
     from?: string;
     to?: string;
-  }): Promise<APIResponse<StockHistoricalPriceResponse>> {
-    const params = new URLSearchParams();
-    if (from) params.append('from', from);
-    if (to) params.append('to', to);
-    const queryString = params.toString();
-    return this.client.get(
-      `/historical-price-full/${symbol}${queryString ? `?${queryString}` : ''}`,
-    );
+  }): Promise<UnwrappedAPIResponse<StockHistoricalPriceResponse>> {
+    const params: Record<string, any> = {};
+    if (from) params.from = from;
+    if (to) params.to = to;
+
+    return this.client.get(`/historical-price-full/${symbol}`, params);
   }
 
   /**
-   * Get market capitalization
+   * Get market cap
    */
-  async getMarketCap({ symbol }: { symbol: string }): Promise<APIResponse<MarketCap | null>> {
-    // return this.client.get(`/market-capitalization/${symbol}`);
-    const response = await this.client.get(`/market-capitalization/${symbol}`);
-    return {
-      ...response,
-      data: response.success && response.data && response.data.length > 0 ? response.data[0] : null,
-    };
+  async getMarketCap({
+    symbol,
+  }: {
+    symbol: string;
+  }): Promise<UnwrappedAPIResponse<MarketCap | null>> {
+    return this.client.get(`/market-capitalization/${symbol}`);
   }
 
   /**
    * Get stock splits
    */
-  async getStockSplits({ symbol }: { symbol: string }): Promise<APIResponse<StockSplit[]>> {
-    return this.client.get(`/stock_split_calendar/${symbol}`);
+  async getStockSplits({
+    symbol,
+  }: {
+    symbol: string;
+  }): Promise<UnwrappedAPIResponse<StockSplit[]>> {
+    return this.client.get(`/stock-split-calendar/${symbol}`);
   }
 
   /**
    * Get dividend history
    */
-  async getDividendHistory({ symbol }: { symbol: string }): Promise<APIResponse<StockDividend[]>> {
-    const response = await this.client.get(`/historical-price-full/stock_dividend/${symbol}`);
-    // The API returns { symbol, historical: [...] }
-    return {
-      ...response,
-      data:
-        response.success && response.data && Array.isArray(response.data.historical)
-          ? response.data.historical
-          : [],
-    };
+  async getDividendHistory({
+    symbol,
+  }: {
+    symbol: string;
+  }): Promise<UnwrappedAPIResponse<StockDividend[]>> {
+    return this.client.get(`/historical-price-full/stock_dividend/${symbol}`);
   }
 }

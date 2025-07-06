@@ -1,44 +1,51 @@
 // Forex endpoints for FMP API
 
-import { FMPClient } from '../client';
-import { APIResponse, HistoricalPriceResponse, QueryParams } from '../types/common';
-import { ForexQuote, ForexQuoteParams, ForexHistoricalParams } from '../types/forex';
+import { FMPClient } from '@/client';
+import { UnwrappedAPIResponse, HistoricalPriceResponse, QueryParams } from '../types/common';
+import { ForexQuote, ForexQuoteParams } from '../types/forex';
 
 export class ForexEndpoints {
   constructor(private client: FMPClient) {}
 
   /**
-   * Get real-time forex quote
+   * Get forex quote
    */
-  async getQuote(params: ForexQuoteParams): Promise<APIResponse<ForexQuote[]>> {
-    return this.client.get(`/quote/${params.symbol}`);
+  async getQuote(params: ForexQuoteParams): Promise<UnwrappedAPIResponse<ForexQuote[]>> {
+    return this.client.get('/quote', params);
   }
 
   /**
-   * Get historical forex data
+   * Get historical forex prices
    */
-  async getHistoricalPrice(
-    params: ForexHistoricalParams,
-  ): Promise<APIResponse<HistoricalPriceResponse>> {
-    const queryParams: QueryParams = {};
-    if (params.from) queryParams.from = params.from;
-    if (params.to) queryParams.to = params.to;
-    if (params.timeseries) queryParams.timeseries = params.timeseries;
+  async getHistoricalPrice({
+    symbol,
+    from,
+    to,
+  }: {
+    symbol: string;
+    from?: string;
+    to?: string;
+  }): Promise<UnwrappedAPIResponse<HistoricalPriceResponse>> {
+    const params: QueryParams = {};
+    if (from) params.from = from;
+    if (to) params.to = to;
 
-    return this.client.get(`/historical-price-full/${params.symbol}`, queryParams);
+    return this.client.get(`/historical-price-full/${symbol}`, params);
   }
 
   /**
-   * Get forex rates for a specific currency
+   * Get forex rates for a specific base currency
    */
-  async getForexRates(baseCurrency: string = 'USD'): Promise<APIResponse<Record<string, number>>> {
+  async getForexRates(
+    baseCurrency: string = 'USD',
+  ): Promise<UnwrappedAPIResponse<Record<string, number>>> {
     return this.client.get(`/forex/${baseCurrency}`);
   }
 
   /**
-   * Get forex rates for all currencies
+   * Get all forex rates
    */
-  async getAllForexRates(): Promise<APIResponse<Record<string, Record<string, number>>>> {
+  async getAllForexRates(): Promise<UnwrappedAPIResponse<Record<string, Record<string, number>>>> {
     return this.client.get('/forex');
   }
 }

@@ -23,6 +23,14 @@ export interface EnterpriseValueParams extends FinancialStatementsParams {}
 
 export interface CompanyValuationParams extends FinancialStatementsParams {}
 
+export interface CashflowGrowthParams extends FinancialStatementsParams {}
+
+export interface IncomeGrowthParams extends FinancialStatementsParams {}
+
+export interface BalanceSheetGrowthParams extends FinancialStatementsParams {}
+
+export interface FinancialGrowthParams extends FinancialStatementsParams {}
+
 // Base financial statement interface
 export interface FinancialStatement {
   date: string;
@@ -284,4 +292,165 @@ export interface EnterpriseValue {
   minusCashAndCashEquivalents: number;
   addTotalDebt: number;
   enterpriseValue: number;
+}
+
+// Cashflow Growth
+export interface CashflowGrowth {
+  date: string;
+  symbol: string;
+  calendarYear: string;
+  period: string;
+  growthNetIncome: number;
+  growthDepreciationAndAmortization: number;
+  growthDeferredIncomeTax: number;
+  growthStockBasedCompensation: number;
+  growthChangeInWorkingCapital: number;
+  growthAccountsReceivables: number;
+  growthInventory: number;
+  growthAccountsPayables: number;
+  growthOtherWorkingCapital: number;
+  growthOtherNonCashItems: number;
+  growthNetCashProvidedByOperatingActivites: number;
+  growthInvestmentsInPropertyPlantAndEquipment: number;
+  growthAcquisitionsNet: number;
+  growthPurchasesOfInvestments: number;
+  growthSalesMaturitiesOfInvestments: number;
+  growthOtherInvestingActivites: number;
+  growthNetCashUsedForInvestingActivites: number;
+  growthDebtRepayment: number;
+  growthCommonStockIssued: number;
+  growthCommonStockRepurchased: number;
+  growthDividendsPaid: number;
+  growthOtherFinancingActivites: number;
+  growthNetCashUsedProvidedByFinancingActivities: number;
+  growthEffectOfForexChangesOnCash: number;
+  growthNetChangeInCash: number;
+  growthCashAtEndOfPeriod: number;
+  growthCashAtBeginningOfPeriod: number;
+  growthOperatingCashFlow: number;
+  growthCapitalExpenditure: number;
+  growthFreeCashFlow: number;
+}
+
+// Income Growth
+export interface IncomeGrowth {
+  date: string;
+  symbol: string;
+  calendarYear: string;
+  period: string;
+  growthRevenue: number;
+  growthCostOfRevenue: number;
+  growthGrossProfit: number;
+  growthGrossProfitRatio: number;
+  growthResearchAndDevelopmentExpenses: number;
+  growthGeneralAndAdministrativeExpenses: number;
+  growthSellingAndMarketingExpenses: number;
+  growthOtherExpenses: number;
+  growthOperatingExpenses: number;
+  growthCostAndExpenses: number;
+  growthInterestExpense: number;
+  growthDepreciationAndAmortization: number;
+  growthEBITDA: number;
+  growthEBITDARatio: number;
+  growthOperatingIncome: number;
+  growthOperatingIncomeRatio: number;
+  growthTotalOtherIncomeExpensesNet: number;
+  growthIncomeBeforeTax: number;
+  growthIncomeBeforeTaxRatio: number;
+  growthIncomeTaxExpense: number;
+  growthNetIncome: number;
+  growthNetIncomeRatio: number;
+  growthEPS: number;
+  growthEPSDiluted: number;
+  growthWeightedAverageShsOut: number;
+  growthWeightedAverageShsOutDil: number;
+}
+
+// Balance Sheet Growth
+export interface BalanceSheetGrowth {
+  date: string;
+  symbol: string;
+  calendarYear: string;
+  period: string;
+  growthCashAndCashEquivalents: number;
+  growthShortTermInvestments: number;
+  growthCashAndShortTermInvestments: number;
+  growthNetReceivables: number;
+  growthInventory: number;
+  growthOtherCurrentAssets: number;
+  growthTotalCurrentAssets: number;
+  growthPropertyPlantEquipmentNet: number;
+  growthGoodwill: number;
+  growthIntangibleAssets: number;
+  growthGoodwillAndIntangibleAssets: number;
+  growthLongTermInvestments: number;
+  growthTaxAssets: number;
+  growthOtherNonCurrentAssets: number;
+  growthTotalNonCurrentAssets: number;
+  growthOtherAssets: number;
+  growthTotalAssets: number;
+  growthAccountPayables: number;
+  growthShortTermDebt: number;
+  growthTaxPayables: number;
+  growthDeferredRevenue: number;
+  growthOtherCurrentLiabilities: number;
+  growthTotalCurrentLiabilities: number;
+  growthLongTermDebt: number;
+  growthDeferredRevenueNonCurrent: number;
+  growthDeferrredTaxLiabilitiesNonCurrent: number;
+  growthOtherNonCurrentLiabilities: number;
+  growthTotalNonCurrentLiabilities: number;
+  growthOtherLiabilities: number;
+  growthTotalLiabilities: number;
+  growthCommonStock: number;
+  growthRetainedEarnings: number;
+  growthAccumulatedOtherComprehensiveIncomeLoss: number;
+  growthOthertotalStockholdersEquity: number;
+  growthTotalStockholdersEquity: number;
+  growthTotalLiabilitiesAndStockholdersEquity: number;
+  growthTotalInvestments: number;
+  growthTotalDebt: number;
+  growthNetDebt: number;
+}
+
+// Financial Growth
+export interface FinancialGrowth {
+  date: string;
+  symbol: string;
+  calendarYear: string;
+  period: string;
+  revenueGrowth: number;
+  grossProfitGrowth: number;
+  ebitgrowth: number;
+  operatingIncomeGrowth: number;
+  netIncomeGrowth: number;
+  epsgrowth: number;
+  epsdilutedGrowth: number;
+  weightedAverageSharesGrowth: number;
+  weightedAverageSharesDilutedGrowth: number;
+  dividendsperShareGrowth: number;
+  operatingCashFlowGrowth: number;
+  freeCashFlowGrowth: number;
+  tenYRevenueGrowthPerShare: number;
+  fiveYRevenueGrowthPerShare: number;
+  threeYRevenueGrowthPerShare: number;
+  tenYOperatingCFGrowthPerShare: number;
+  fiveYOperatingCFGrowthPerShare: number;
+  threeYOperatingCFGrowthPerShare: number;
+  tenYNetIncomeGrowthPerShare: number;
+  fiveYNetIncomeGrowthPerShare: number;
+  threeYNetIncomeGrowthPerShare: number;
+  tenYShareholdersEquityGrowthPerShare: number;
+  fiveYShareholdersEquityGrowthPerShare: number;
+  threeYShareholdersEquityGrowthPerShare: number;
+  tenYDividendperShareGrowthPerShare: number;
+  fiveYDividendperShareGrowthPerShare: number;
+  threeYDividendperShareGrowthPerShare: number;
+  receivablesGrowth: number;
+  inventoryGrowth: number;
+  assetGrowth: number;
+  bookValueperShareGrowth: number;
+  debtGrowth: number;
+  rdexpenseGrowth: number;
+  sgaexpensesGrowth: number;
 }

@@ -1,36 +1,42 @@
 import { FMP } from '../../fmp';
-import { API_KEY, isCI } from '../utils/test-setup';
+import { createTestClient, shouldSkipTests } from '../utils/test-setup';
+
+function getFirstItem<T>(data: T | T[]): T {
+  return Array.isArray(data) ? data[0] : data;
+}
 
 describe('Forex Endpoints', () => {
-  if (!API_KEY || isCI) {
-    it('should skip tests when no API key is provided or running in CI', () => {
-      expect(true).toBe(true);
-    });
-    return;
-  }
-
   let fmp: FMP;
 
   beforeAll(() => {
-    if (!API_KEY) {
-      throw new Error('FMP_API_KEY is required for testing');
+    if (shouldSkipTests()) {
+      console.log('Skipping forex tests - no API key available');
+      return;
     }
-    fmp = new FMP({ apiKey: API_KEY });
+    fmp = createTestClient();
   });
 
   describe('getQuote', () => {
     it('should fetch forex quote for EURUSD', async () => {
+      if (shouldSkipTests()) {
+        console.log('Skipping forex quote test - no API key available');
+        return;
+      }
       const result = await fmp.forex.getQuote({ symbol: 'EURUSD' });
-
       expect(result.success).toBe(true);
       expect(result.data).toBeDefined();
-      expect(Array.isArray(result.data)).toBe(true);
-
-      if (result.data && result.data.length > 0) {
-        const quote = result.data[0];
+      if (
+        result.data &&
+        ((Array.isArray(result.data) && result.data.length > 0) ||
+          (!Array.isArray(result.data) && result.data))
+      ) {
+        const quote = getFirstItem(result.data);
         expect(quote.symbol).toBe('EURUSD');
         expect(quote.price).toBeGreaterThan(0);
         expect(quote.volume).toBeGreaterThan(0);
+      } else {
+        // Accept empty result as valid for this test
+        expect(result.data).toBeDefined();
       }
     }, 10000);
   });
@@ -45,6 +51,11 @@ describe('Forex Endpoints', () => {
 
       expect(result.success).toBe(true);
       expect(result.data).toBeDefined();
+      // Accept both array and { historical: [...] }
+      const historicalData = Array.isArray(result.data)
+        ? result.data
+        : result.data?.historical || [];
+      expect(Array.isArray(historicalData)).toBe(true);
     }, 15000);
   });
 });

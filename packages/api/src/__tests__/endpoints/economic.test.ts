@@ -1,6 +1,11 @@
 import { FMP } from '../../fmp';
 import { API_KEY, isCI } from '../utils/test-setup';
 
+// Helper function to safely access data that could be an array or single object
+function getFirstItem<T>(data: T | T[]): T {
+  return Array.isArray(data) ? data[0] : data;
+}
+
 describe('Economic Endpoints', () => {
   if (!API_KEY || isCI) {
     it('should skip tests when no API key is provided or running in CI', () => {
@@ -29,8 +34,8 @@ describe('Economic Endpoints', () => {
       expect(result.data).toBeDefined();
       expect(Array.isArray(result.data)).toBe(true);
 
-      if (result.data && result.data.length > 0) {
-        const rate = result.data[0];
+      if (result.data && Array.isArray(result.data) && result.data.length > 0) {
+        const rate = getFirstItem(result.data);
         expect(rate.date).toBeDefined();
         expect(rate.month1).toBeDefined();
         expect(rate.year1).toBeDefined();
@@ -50,8 +55,8 @@ describe('Economic Endpoints', () => {
       expect(result.data).toBeDefined();
       expect(Array.isArray(result.data)).toBe(true);
 
-      if (result.data && result.data.length > 0) {
-        const rate = result.data[0];
+      if (result.data && Array.isArray(result.data) && result.data.length > 0) {
+        const rate = getFirstItem(result.data);
         expect(rate.date).toBeDefined();
         expect(rate.value).toBeDefined();
       }
@@ -69,8 +74,8 @@ describe('Economic Endpoints', () => {
       expect(result.data).toBeDefined();
       expect(Array.isArray(result.data)).toBe(true);
 
-      if (result.data && result.data.length > 0) {
-        const cpi = result.data[0];
+      if (result.data && Array.isArray(result.data) && result.data.length > 0) {
+        const cpi = getFirstItem(result.data);
         expect(cpi.date).toBeDefined();
         expect(cpi.value).toBeDefined();
       }
@@ -88,8 +93,8 @@ describe('Economic Endpoints', () => {
       expect(result.data).toBeDefined();
       expect(Array.isArray(result.data)).toBe(true);
 
-      if (result.data && result.data.length > 0) {
-        const gdp = result.data[0];
+      if (result.data && Array.isArray(result.data) && result.data.length > 0) {
+        const gdp = getFirstItem(result.data);
         expect(gdp.date).toBeDefined();
         expect(gdp.value).toBeDefined();
       }
@@ -107,8 +112,8 @@ describe('Economic Endpoints', () => {
       expect(result.data).toBeDefined();
       expect(Array.isArray(result.data)).toBe(true);
 
-      if (result.data && result.data.length > 0) {
-        const unemployment = result.data[0];
+      if (result.data && Array.isArray(result.data) && result.data.length > 0) {
+        const unemployment = getFirstItem(result.data);
         expect(unemployment.date).toBeDefined();
         expect(unemployment.value).toBeDefined();
       }
