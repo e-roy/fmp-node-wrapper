@@ -1,22 +1,17 @@
 import { FMPClient } from '@/client';
 import { UnwrappedAPIResponse } from '@/types';
 import {
-  FinancialStatement,
   FinancialStatementsParams,
   KeyMetrics,
   FinancialRatios,
   EnterpriseValue,
-  KeyMetricsParams,
-  FinancialRatiosParams,
-  EnterpriseValueParams,
-  CashflowGrowthParams,
   CashflowGrowth,
-  IncomeGrowthParams,
   IncomeGrowth,
-  BalanceSheetGrowthParams,
   BalanceSheetGrowth,
-  FinancialGrowthParams,
   FinancialGrowth,
+  IncomeStatement,
+  BalanceSheet,
+  CashFlowStatement,
 } from '@/types/financial';
 
 export class FinancialEndpoints {
@@ -24,23 +19,33 @@ export class FinancialEndpoints {
 
   /**
    * Get income statement
+   * https://site.financialmodelingprep.com/developer/docs#income-statements-financial-statements
+   * @param symbol - The stock symbol to get the income statement for
+   * @param period - The period to get the income statement for (annual or quarter)
+   * @param limit - The number of periods to get
+   * @returns FMP's Income Statement API provides access to real-time income statement data for a wide range of companies, including public companies, private companies, and ETFs. This data can be used to track a company's profitability over time, to compare a company to its competitors, and to identify trends in a company's business.
    */
   async getIncomeStatement({
     symbol,
     period = 'annual',
     limit = 5,
-  }: FinancialStatementsParams): Promise<UnwrappedAPIResponse<FinancialStatement[]>> {
+  }: FinancialStatementsParams): Promise<UnwrappedAPIResponse<IncomeStatement[]>> {
     return this.client.get(`/income-statement/${symbol}?period=${period}&limit=${limit}`, 'v3');
   }
 
   /**
    * Get balance sheet
+   * https://site.financialmodelingprep.com/developer/docs#balance-sheet-statements-financial-statements
+   * @param symbol - The stock symbol to get the balance sheet for
+   * @param period - The period to get the balance sheet for (annual or quarter)
+   * @param limit - The number of periods to get
+   * @returns The balance sheet is a financial statement that displays a company’s total assets, liabilities, and shareholder equity over a specific timeframe (quarterly or yearly). Investors can use this statement to determine if the company can fund its operations, meet its debt obligations, and pay a dividend.
    */
   async getBalanceSheet({
     symbol,
     period = 'annual',
     limit = 5,
-  }: FinancialStatementsParams): Promise<UnwrappedAPIResponse<FinancialStatement[]>> {
+  }: FinancialStatementsParams): Promise<UnwrappedAPIResponse<BalanceSheet[]>> {
     return this.client.get(
       `/balance-sheet-statement/${symbol}?period=${period}&limit=${limit}`,
       'v3',
@@ -49,56 +54,81 @@ export class FinancialEndpoints {
 
   /**
    * Get cash flow statement
+   * https://site.financialmodelingprep.com/developer/docs#cashflow-statements-financial-statements
+   * @param symbol - The stock symbol to get the cash flow statement for
+   * @param period - The period to get the cash flow statement for (annual or quarter)
+   * @param limit - The number of periods to get
+   * @returns The cash flow statement is a financial statement that highlights how cash moves through the company, including both cash inflows and outflows. This statement shows the cash flows in 3 main categories “Operating Cash Flows”, “Investing Cash Flows”, and “Financing Cash Flows”, which help investors to understand if the company is making money or losing money by conducting business.
    */
   async getCashFlowStatement({
     symbol,
     period = 'annual',
     limit = 5,
-  }: FinancialStatementsParams): Promise<UnwrappedAPIResponse<FinancialStatement[]>> {
+  }: FinancialStatementsParams): Promise<UnwrappedAPIResponse<CashFlowStatement[]>> {
     return this.client.get(`/cash-flow-statement/${symbol}?period=${period}&limit=${limit}`, 'v3');
   }
 
   /**
    * Get key metrics
+   * https://site.financialmodelingprep.com/developer/docs#key-metrics-statement-analysis
+   * @param symbol - The stock symbol to get the key metrics for
+   * @param period - The period to get the key metrics for (annual or quarter)
+   * @param limit - The number of periods to get
+   * @returns Get key financial metrics for a company, including revenue, net income, and price-to-earnings ratio (P/E ratio). Assess a company's financial performance and compare it to its competitors.
    */
   async getKeyMetrics({
     symbol,
     period = 'annual',
     limit = 5,
-  }: KeyMetricsParams): Promise<UnwrappedAPIResponse<KeyMetrics[]>> {
+  }: FinancialStatementsParams): Promise<UnwrappedAPIResponse<KeyMetrics[]>> {
     return this.client.get(`/key-metrics/${symbol}?period=${period}&limit=${limit}`, 'v3');
   }
 
   /**
    * Get financial ratios
+   * https://site.financialmodelingprep.com/developer/docs#ratios-statement-analysis
+   * @param symbol - The stock symbol to get the financial ratios for
+   * @param period - The period to get the financial ratios for (annual or quarter)
+   * @param limit - The number of periods to get
+   * @returns Get financial ratios for a company, such as the P/B ratio and the ROE. Assess a company's financial health and compare it to its competitors.
    */
   async getFinancialRatios({
     symbol,
     period = 'annual',
     limit = 5,
-  }: FinancialRatiosParams): Promise<UnwrappedAPIResponse<FinancialRatios[]>> {
+  }: FinancialStatementsParams): Promise<UnwrappedAPIResponse<FinancialRatios[]>> {
     return this.client.get(`/ratios/${symbol}?period=${period}&limit=${limit}`, 'v3');
   }
 
   /**
    * Get enterprise value
+   * https://site.financialmodelingprep.com/developer/docs#enterprise-values-statement-analysis
+   * @param symbol - The stock symbol to get the enterprise value for
+   * @param period - The period to get the enterprise value for (annual or quarter)
+   * @param limit - The number of periods to get
+   * @returns Get the enterprise value of a company, which is the total value of a company, including its equity and debt. Assess a company's overall value and compare it to its peers.
    */
   async getEnterpriseValue({
     symbol,
     period = 'annual',
     limit = 5,
-  }: EnterpriseValueParams): Promise<UnwrappedAPIResponse<EnterpriseValue[]>> {
+  }: FinancialStatementsParams): Promise<UnwrappedAPIResponse<EnterpriseValue[]>> {
     return this.client.get(`/enterprise-value/${symbol}?period=${period}&limit=${limit}`, 'v3');
   }
 
   /**
    * Get cashflow growth
+   * https://site.financialmodelingprep.com/developer/docs#cashflow-growth-statement-analysis
+   * @param symbol - The stock symbol to get the cashflow growth for
+   * @param period - The period to get the cashflow growth for (annual or quarter)
+   * @param limit - The number of periods to get
+   * @returns Get the cash flow growth rate for a company. Measure how quickly a company's cash flow is growing.
    */
   async getCashflowGrowth({
     symbol,
     period = 'annual',
     limit = 5,
-  }: CashflowGrowthParams): Promise<UnwrappedAPIResponse<CashflowGrowth[]>> {
+  }: FinancialStatementsParams): Promise<UnwrappedAPIResponse<CashflowGrowth[]>> {
     return this.client.get(
       `/cash-flow-statement-growth/${symbol}?period=${period}&limit=${limit}`,
       'v3',
@@ -107,12 +137,17 @@ export class FinancialEndpoints {
 
   /**
    *  Get income growth
+   * https://site.financialmodelingprep.com/developer/docs#income-growth-statement-analysis
+   * @param symbol - The stock symbol to get the income growth for
+   * @param period - The period to get the income growth for (annual or quarter)
+   * @param limit - The number of periods to get
+   * @returns Get the income growth rate for a company. Measure how quickly a company's income is growing.
    */
   async getIncomeGrowth({
     symbol,
     period = 'annual',
     limit = 5,
-  }: IncomeGrowthParams): Promise<UnwrappedAPIResponse<IncomeGrowth[]>> {
+  }: FinancialStatementsParams): Promise<UnwrappedAPIResponse<IncomeGrowth[]>> {
     return this.client.get(
       `/income-statement-growth/${symbol}?period=${period}&limit=${limit}`,
       'v3',
@@ -121,12 +156,17 @@ export class FinancialEndpoints {
 
   /**
    * Get balance sheet growth
+   * https://site.financialmodelingprep.com/developer/docs#balance-sheet-growth-statement-analysis
+   * @param symbol - The stock symbol to get the balance sheet growth for
+   * @param period - The period to get the balance sheet growth for (annual or quarter)
+   * @param limit - The number of periods to get
+   * @returns Get the balance sheet growth rate for a company. Measure how quickly a company's assets and liabilities are growing.
    */
   async getBalanceSheetGrowth({
     symbol,
     period = 'annual',
     limit = 5,
-  }: BalanceSheetGrowthParams): Promise<UnwrappedAPIResponse<BalanceSheetGrowth[]>> {
+  }: FinancialStatementsParams): Promise<UnwrappedAPIResponse<BalanceSheetGrowth[]>> {
     return this.client.get(
       `/balance-sheet-statement-growth/${symbol}?period=${period}&limit=${limit}`,
       'v3',
@@ -135,12 +175,17 @@ export class FinancialEndpoints {
 
   /**
    * Get financial growth
+   * https://site.financialmodelingprep.com/developer/docs#financial-growth-statement-analysis
+   * @param symbol - The stock symbol to get the financial growth for
+   * @param period - The period to get the financial growth for (annual or quarter)
+   * @param limit - The number of periods to get
+   * @returns Financial Growth Get the financial growth rate for a company. Measure how quickly a company's overall financial performance is improving.
    */
   async getFinancialGrowth({
     symbol,
     period = 'annual',
     limit = 5,
-  }: FinancialGrowthParams): Promise<UnwrappedAPIResponse<FinancialGrowth[]>> {
+  }: FinancialStatementsParams): Promise<UnwrappedAPIResponse<FinancialGrowth[]>> {
     return this.client.get(`/financial-growth/${symbol}?period=${period}&limit=${limit}`, 'v3');
   }
 }

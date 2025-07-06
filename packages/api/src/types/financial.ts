@@ -2,37 +2,13 @@
 
 import { SymbolParams, PeriodParams } from './common';
 
-// Financial statement parameter interfaces
+// Base parameter interface for all financial endpoints
 export interface FinancialStatementsParams extends SymbolParams, PeriodParams {
   limit?: number;
 }
 
-export interface IncomeStatementParams extends FinancialStatementsParams {}
-
-export interface BalanceSheetParams extends FinancialStatementsParams {}
-
-export interface CashFlowParams extends FinancialStatementsParams {}
-
-export interface FinancialGrowthParams extends FinancialStatementsParams {}
-
-export interface KeyMetricsParams extends FinancialStatementsParams {}
-
-export interface FinancialRatiosParams extends FinancialStatementsParams {}
-
-export interface EnterpriseValueParams extends FinancialStatementsParams {}
-
-export interface CompanyValuationParams extends FinancialStatementsParams {}
-
-export interface CashflowGrowthParams extends FinancialStatementsParams {}
-
-export interface IncomeGrowthParams extends FinancialStatementsParams {}
-
-export interface BalanceSheetGrowthParams extends FinancialStatementsParams {}
-
-export interface FinancialGrowthParams extends FinancialStatementsParams {}
-
-// Base financial statement interface
-export interface FinancialStatement {
+// Base interface for common fields across all financial statements
+export interface FinancialStatementBase {
   date: string;
   symbol: string;
   reportedCurrency: string;
@@ -43,11 +19,18 @@ export interface FinancialStatement {
   period: string;
   link: string;
   finalLink: string;
-  [key: string]: string | number | boolean; // More specific than any for dynamic financial metrics
+}
+
+// Base interface for growth statements
+export interface GrowthStatementBase {
+  date: string;
+  symbol: string;
+  calendarYear: string;
+  period: string;
 }
 
 // Income Statement
-export interface IncomeStatement extends FinancialStatement {
+export interface IncomeStatement extends FinancialStatementBase {
   revenue: number;
   costOfRevenue: number;
   grossProfit: number;
@@ -59,6 +42,7 @@ export interface IncomeStatement extends FinancialStatement {
   otherExpenses: number;
   operatingExpenses: number;
   costAndExpenses: number;
+  interestIncome: number;
   interestExpense: number;
   depreciationAndAmortization: number;
   ebitda: number;
@@ -72,18 +56,19 @@ export interface IncomeStatement extends FinancialStatement {
   netIncome: number;
   netIncomeRatio: number;
   eps: number;
-  epsDiluted: number;
-  ebit: number;
-  ebitRatio: number;
+  epsdiluted: number;
+  weightedAverageShsOut: number;
+  weightedAverageShsOutDil: number;
 }
 
 // Balance Sheet
-export interface BalanceSheet extends FinancialStatement {
+export interface BalanceSheet extends FinancialStatementBase {
   cashAndCashEquivalents: number;
   shortTermInvestments: number;
   cashAndShortTermInvestments: number;
   netReceivables: number;
   inventory: number;
+  otherCurrentAssets: number;
   totalCurrentAssets: number;
   propertyPlantEquipmentNet: number;
   goodwill: number;
@@ -125,10 +110,11 @@ export interface BalanceSheet extends FinancialStatement {
 }
 
 // Cash Flow Statement
-export interface CashFlowStatement extends FinancialStatement {
+export interface CashFlowStatement extends FinancialStatementBase {
   netIncome: number;
   depreciationAndAmortization: number;
   deferredIncomeTax: number;
+  stockBasedCompensation: number;
   changeInWorkingCapital: number;
   accountsReceivables: number;
   inventory: number;
@@ -295,11 +281,7 @@ export interface EnterpriseValue {
 }
 
 // Cashflow Growth
-export interface CashflowGrowth {
-  date: string;
-  symbol: string;
-  calendarYear: string;
-  period: string;
+export interface CashflowGrowth extends GrowthStatementBase {
   growthNetIncome: number;
   growthDepreciationAndAmortization: number;
   growthDeferredIncomeTax: number;
@@ -333,11 +315,7 @@ export interface CashflowGrowth {
 }
 
 // Income Growth
-export interface IncomeGrowth {
-  date: string;
-  symbol: string;
-  calendarYear: string;
-  period: string;
+export interface IncomeGrowth extends GrowthStatementBase {
   growthRevenue: number;
   growthCostOfRevenue: number;
   growthGrossProfit: number;
@@ -367,11 +345,7 @@ export interface IncomeGrowth {
 }
 
 // Balance Sheet Growth
-export interface BalanceSheetGrowth {
-  date: string;
-  symbol: string;
-  calendarYear: string;
-  period: string;
+export interface BalanceSheetGrowth extends GrowthStatementBase {
   growthCashAndCashEquivalents: number;
   growthShortTermInvestments: number;
   growthCashAndShortTermInvestments: number;
@@ -414,11 +388,7 @@ export interface BalanceSheetGrowth {
 }
 
 // Financial Growth
-export interface FinancialGrowth {
-  date: string;
-  symbol: string;
-  calendarYear: string;
-  period: string;
+export interface FinancialGrowth extends GrowthStatementBase {
   revenueGrowth: number;
   grossProfitGrowth: number;
   ebitgrowth: number;
