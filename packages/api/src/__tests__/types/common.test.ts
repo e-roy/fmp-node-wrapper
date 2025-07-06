@@ -11,9 +11,6 @@ import {
   CompanyProfile,
   Period,
   Exchange,
-  FMP_BASE_URL,
-  FMP_BASE_URL_V4,
-  FMP_STABLE_URL,
 } from '../../types/common';
 
 describe('Common Types', () => {
@@ -173,7 +170,7 @@ describe('Common Types', () => {
         price: 150.25,
         beta: 1.25,
         volAvg: 45000000,
-        marketCap: 2500000000000,
+        mktCap: 2500000000000,
         lastDiv: 0.24,
         range: '120.00-180.00',
         changes: 2.15,
@@ -225,14 +222,6 @@ describe('Common Types', () => {
       expect(Exchange.NASDAQ).toBe('NASDAQ');
       expect(Exchange.AMEX).toBe('AMEX');
       expect(Exchange.LSE).toBe('LSE');
-    });
-  });
-
-  describe('Constants', () => {
-    it('should validate API URLs', () => {
-      expect(FMP_BASE_URL).toBe('https://financialmodelingprep.com/api/v3');
-      expect(FMP_BASE_URL_V4).toBe('https://financialmodelingprep.com/api/v4');
-      expect(FMP_STABLE_URL).toBe('https://financialmodelingprep.com/stable');
     });
   });
 });

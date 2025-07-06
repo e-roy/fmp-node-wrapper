@@ -17,42 +17,42 @@ export class MarketEndpoints {
    * Get market hours
    */
   async getMarketHours(): Promise<UnwrappedAPIResponse<MarketHours>> {
-    return this.client.get('/market-hours');
+    return this.client.get('/market-hours', 'v3');
   }
 
   /**
    * Get market performance
    */
   async getMarketPerformance(): Promise<UnwrappedAPIResponse<MarketPerformance[]>> {
-    return this.client.get('/market-performance');
+    return this.client.get('/market-performance', 'v3');
   }
 
   /**
    * Get top gainers
    */
   async getGainers(): Promise<UnwrappedAPIResponse<MarketPerformance[]>> {
-    return this.client.get('/gainers');
+    return this.client.get('/gainers', 'v3');
   }
 
   /**
    * Get top losers
    */
   async getLosers(): Promise<UnwrappedAPIResponse<MarketPerformance[]>> {
-    return this.client.get('/losers');
+    return this.client.get('/losers', 'v3');
   }
 
   /**
    * Get most active stocks
    */
   async getMostActive(): Promise<UnwrappedAPIResponse<MarketPerformance[]>> {
-    return this.client.get('/most-active');
+    return this.client.get('/most-active', 'v3');
   }
 
   /**
    * Get sector performance
    */
   async getSectorPerformance(): Promise<UnwrappedAPIResponse<MarketSectorPerformance[]>> {
-    return this.client.get('/sector-performance');
+    return this.client.get('/sector-performance', 'v3');
   }
 
   /**
@@ -61,6 +61,6 @@ export class MarketEndpoints {
   async getMarketIndex(
     params: MarketIndexParams = {},
   ): Promise<UnwrappedAPIResponse<MarketIndex[]>> {
-    return this.client.get('/market-index', params);
+    return this.client.get('/market-index', 'v3', params);
   }
 }

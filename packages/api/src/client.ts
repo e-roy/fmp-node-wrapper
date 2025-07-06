@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import { FMPConfig, UnwrappedAPIResponse } from './types';
 
 /**
@@ -14,41 +14,48 @@ function unwrapSingleObject<T>(data: T): T {
 }
 
 export class FMPClient {
-  private client: AxiosInstance;
+  private v3Client: AxiosInstance;
+  private v4Client: AxiosInstance;
+  private stableClient: AxiosInstance;
   private apiKey: string;
-  private baseURL: string;
 
   constructor(config: FMPConfig) {
     this.apiKey = config.apiKey;
-    this.baseURL = config.baseURL || 'https://financialmodelingprep.com/api/v3';
 
-    this.client = axios.create({
-      baseURL: this.baseURL,
-      timeout: config.timeout || 10000,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    // Create separate clients for each version
+    this.v3Client = this.createClient('https://financialmodelingprep.com/api/v3', config.timeout);
+    this.v4Client = this.createClient('https://financialmodelingprep.com/api/v4', config.timeout);
+    this.stableClient = this.createClient(
+      'https://financialmodelingprep.com/api/stable',
+      config.timeout,
+    );
+  }
+
+  private createClient(baseURL: string, timeout?: number): AxiosInstance {
+    const client = axios.create({
+      baseURL,
+      timeout: timeout || 10000,
+      headers: { 'Content-Type': 'application/json' },
     });
 
-    // Add API key to all requests
-    this.client.interceptors.request.use(config => {
-      config.params = {
-        ...config.params,
-        apikey: this.apiKey,
-      };
+    client.interceptors.request.use(config => {
+      config.params = { ...config.params, apikey: this.apiKey };
       return config;
     });
+
+    return client;
   }
 
-  /**
-   * Make a GET request to the API
-   */
-  async get<T = any>(
+  // Smart routing method
+  async get<T>(
     endpoint: string,
+    version: 'v3' | 'v4' | 'stable' = 'v3',
     params?: Record<string, any>,
   ): Promise<UnwrappedAPIResponse<T>> {
+    const client = this.getClientForVersion(version);
+
     try {
-      const response = await this.client.get(endpoint, { params });
+      const response = await client.get(endpoint, { params });
       return {
         success: true,
         data: unwrapSingleObject(response.data),
@@ -63,34 +70,16 @@ export class FMPClient {
     }
   }
 
-  /**
-   * Make a POST request to the API
-   */
-  async post<T = any>(
-    endpoint: string,
-    data?: any,
-    config?: AxiosRequestConfig,
-  ): Promise<UnwrappedAPIResponse<T>> {
-    try {
-      const response = await this.client.post(endpoint, data, config);
-      return {
-        success: true,
-        data: unwrapSingleObject(response.data),
-        status: response.status,
-      };
-    } catch (error: any) {
-      return {
-        success: false,
-        error: error.message || 'Unknown error occurred',
-        status: error.response?.status || 500,
-      };
+  private getClientForVersion(version: 'v3' | 'v4' | 'stable'): AxiosInstance {
+    switch (version) {
+      case 'v3':
+        return this.v3Client;
+      case 'v4':
+        return this.v4Client;
+      case 'stable':
+        return this.stableClient;
+      default:
+        return this.v3Client; // Default to v3
     }
-  }
-
-  /**
-   * Get the underlying axios instance for advanced usage
-   */
-  getAxiosInstance(): AxiosInstance {
-    return this.client;
   }
 }

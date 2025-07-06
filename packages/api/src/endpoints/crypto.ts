@@ -11,7 +11,7 @@ export class CryptoEndpoints {
    * Get crypto quote
    */
   async getQuote(params: CryptoQuoteParams): Promise<UnwrappedAPIResponse<CryptoQuote[]>> {
-    return this.client.get('/quote', params);
+    return this.client.get('/quote', 'v3', params);
   }
 
   /**
@@ -30,6 +30,6 @@ export class CryptoEndpoints {
     if (from) params.from = from;
     if (to) params.to = to;
 
-    return this.client.get(`/historical-price-full/${symbol}`, params);
+    return this.client.get(`/historical-price-full/${symbol}`, 'v3', params);
   }
 }

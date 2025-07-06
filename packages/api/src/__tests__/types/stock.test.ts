@@ -1,47 +1,21 @@
-import { StockList } from '@/types/list';
 import {
   StockQuote,
   StockSplit,
   StockDividend,
-  InsiderTrading,
-  InstitutionalHolder,
-  MutualFundHolder,
-  MajorHolder,
-  AnalystEstimate,
-  PriceTarget,
-  StockRating,
-  StockGrade,
-  SectorPerformance,
   MarketCap,
-  StockQuoteParams,
-  StockProfileParams,
-  StockHistoricalPriceParams,
-  StockMarketCapParams,
-  StockEarningsCalendarParams,
-  StockSplitsParams,
-  StockDividendParams,
-  StockInsiderTradingParams,
-  StockInstitutionalHoldersParams,
-  StockMutualFundHoldersParams,
-  StockMajorHoldersParams,
-  StockAnalystEstimatesParams,
-  StockPriceTargetParams,
-  StockRatingParams,
-  StockGradeParams,
-  StockSectorPerformanceParams,
-  StockLosersParams,
-  StockGainersParams,
-  StockMostActiveParams,
-} from '../../types/stock';
+  StockHistoricalPriceData,
+  StockHistoricalPriceResponse,
+} from '@/types/stock';
 
 describe('Stock Types', () => {
   describe('StockQuote Interface', () => {
     it('should validate stock quote structure', () => {
       const quote: StockQuote = {
         symbol: 'AAPL',
+        name: 'Apple Inc.',
         price: 150.25,
         change: 2.15,
-        changePercent: 1.45,
+        changesPercentage: 1.45,
         dayLow: 148.5,
         dayHigh: 152.0,
         yearLow: 120.0,
@@ -101,201 +75,6 @@ describe('Stock Types', () => {
     });
   });
 
-  describe('InsiderTrading Interface', () => {
-    it('should validate insider trading structure', () => {
-      const insiderTrading: InsiderTrading = {
-        symbol: 'AAPL',
-        companyName: 'Apple Inc.',
-        cik: '0000320193',
-        ownerName: 'Tim Cook',
-        ownerCik: '0001234567',
-        ownerTitle: 'CEO',
-        transactionDate: '2024-01-15',
-        transactionCode: 'P',
-        transactionAmount: 1000,
-        transactionPrice: 150.25,
-        transactionAcquiredDisposed: 'A',
-        postTransactionAmount: 5000,
-        secLink: 'https://www.sec.gov/Archives/edgar/data/...',
-      };
-
-      expect(insiderTrading.symbol).toBe('AAPL');
-      expect(insiderTrading.companyName).toBe('Apple Inc.');
-      expect(insiderTrading.transactionAmount).toBe(1000);
-    });
-  });
-
-  describe('InstitutionalHolder Interface', () => {
-    it('should validate institutional holder structure', () => {
-      const holder: InstitutionalHolder = {
-        holder: 'Vanguard Group Inc',
-        shares: 1000000000,
-        dateReported: '2024-01-15',
-        change: 50000000,
-        weightPercent: 6.37,
-      };
-
-      expect(holder.holder).toBe('Vanguard Group Inc');
-      expect(holder.shares).toBe(1000000000);
-      expect(holder.weightPercent).toBe(6.37);
-    });
-  });
-
-  describe('MutualFundHolder Interface', () => {
-    it('should validate mutual fund holder structure', () => {
-      const holder: MutualFundHolder = {
-        holder: 'Fidelity Contrafund',
-        shares: 500000000,
-        dateReported: '2024-01-15',
-        change: 25000000,
-        weightPercent: 3.18,
-      };
-
-      expect(holder.holder).toBe('Fidelity Contrafund');
-      expect(holder.shares).toBe(500000000);
-      expect(holder.weightPercent).toBe(3.18);
-    });
-  });
-
-  describe('MajorHolder Interface', () => {
-    it('should validate major holder structure', () => {
-      const holder: MajorHolder = {
-        holder: 'BlackRock Inc',
-        shares: 800000000,
-        dateReported: '2024-01-15',
-        change: 40000000,
-        weightPercent: 5.1,
-      };
-
-      expect(holder.holder).toBe('BlackRock Inc');
-      expect(holder.shares).toBe(800000000);
-      expect(holder.weightPercent).toBe(5.1);
-    });
-  });
-
-  describe('AnalystEstimate Interface', () => {
-    it('should validate analyst estimate structure', () => {
-      const estimate: AnalystEstimate = {
-        symbol: 'AAPL',
-        date: '2024-01-25',
-        estimatedRevenueLow: 115000000000,
-        estimatedRevenueHigh: 125000000000,
-        estimatedRevenueAvg: 120000000000,
-        estimatedEbitdaLow: 35000000000,
-        estimatedEbitdaHigh: 40000000000,
-        estimatedEbitdaAvg: 37500000000,
-        estimatedEbitLow: 32000000000,
-        estimatedEbitHigh: 37000000000,
-        estimatedEbitAvg: 34500000000,
-        estimatedNetIncomeLow: 28000000000,
-        estimatedNetIncomeHigh: 32000000000,
-        estimatedNetIncomeAvg: 30000000000,
-        estimatedSgaExpenseLow: 8000000000,
-        estimatedSgaExpenseHigh: 9000000000,
-        estimatedSgaExpenseAvg: 8500000000,
-        estimatedEpsAvg: 2.1,
-        estimatedEpsHigh: 2.25,
-        estimatedEpsLow: 1.95,
-        numberAnalystEstimatedRevenue: 25,
-        numberAnalystsEstimatedEps: 30,
-      };
-
-      expect(estimate.symbol).toBe('AAPL');
-      expect(estimate.estimatedRevenueAvg).toBe(120000000000);
-      expect(estimate.estimatedEpsAvg).toBe(2.1);
-    });
-  });
-
-  describe('PriceTarget Interface', () => {
-    it('should validate price target structure', () => {
-      const priceTarget: PriceTarget = {
-        symbol: 'AAPL',
-        targetMean: 175.5,
-        targetMedian: 175.0,
-        targetHigh: 200.0,
-        targetLow: 150.0,
-        targetCount: 25,
-      };
-
-      expect(priceTarget.symbol).toBe('AAPL');
-      expect(priceTarget.targetMean).toBe(175.5);
-      expect(priceTarget.targetCount).toBe(25);
-    });
-  });
-
-  describe('StockRating Interface', () => {
-    it('should validate stock rating structure', () => {
-      const rating: StockRating = {
-        symbol: 'AAPL',
-        date: '2024-01-15',
-        rating: 'Buy',
-        ratingScore: 85,
-        ratingRecommendation: 'Strong Buy',
-        ratingDetailsDCFScore: 80,
-        ratingDetailsDCFRecommendation: 'Buy',
-        ratingDetailsROEScore: 90,
-        ratingDetailsROERecommendation: 'Strong Buy',
-        ratingDetailsROAScore: 85,
-        ratingDetailsROARecommendation: 'Buy',
-        ratingDetailsDEScore: 95,
-        ratingDetailsDERecommendation: 'Strong Buy',
-        ratingDetailsPEScore: 75,
-        ratingDetailsPERecommendation: 'Hold',
-        ratingDetailsPBScore: 80,
-        ratingDetailsPBRecommendation: 'Buy',
-      };
-
-      expect(rating.symbol).toBe('AAPL');
-      expect(rating.rating).toBe('Buy');
-      expect(rating.ratingScore).toBe(85);
-    });
-  });
-
-  describe('StockGrade Interface', () => {
-    it('should validate stock grade structure', () => {
-      const grade: StockGrade = {
-        symbol: 'AAPL',
-        date: '2024-01-15',
-        gradingCompany: 'S&P Global',
-        previousGrade: 'A+',
-        newGrade: 'A+',
-        grade: 'A+',
-      };
-
-      expect(grade.symbol).toBe('AAPL');
-      expect(grade.gradingCompany).toBe('S&P Global');
-      expect(grade.grade).toBe('A+');
-    });
-  });
-
-  describe('SectorPerformance Interface', () => {
-    it('should validate sector performance structure', () => {
-      const performance: SectorPerformance = {
-        sector: 'Technology',
-        changesPercentage: 2.5,
-      };
-
-      expect(performance.sector).toBe('Technology');
-      expect(performance.changesPercentage).toBe(2.5);
-    });
-  });
-
-  describe('StockList Interface', () => {
-    it('should validate stock list structure', () => {
-      const stock: StockList = {
-        symbol: 'AAPL',
-        name: 'Apple Inc.',
-        currency: 'USD',
-        stockExchange: 'NASDAQ',
-        exchangeShortName: 'NASDAQ',
-      };
-
-      expect(stock.symbol).toBe('AAPL');
-      expect(stock.name).toBe('Apple Inc.');
-      expect(stock.currency).toBe('USD');
-    });
-  });
-
   describe('MarketCap Interface', () => {
     it('should validate market cap structure', () => {
       const marketCap: MarketCap = {
@@ -309,161 +88,57 @@ describe('Stock Types', () => {
     });
   });
 
-  describe('Parameter Interfaces', () => {
-    it('should validate StockQuoteParams', () => {
-      const params: StockQuoteParams = {
+  describe('StockHistoricalPriceData Interface', () => {
+    it('should validate historical price data structure', () => {
+      const historicalData: StockHistoricalPriceData = {
+        date: '2024-01-15',
+        open: 150.0,
+        high: 152.5,
+        low: 149.5,
+        close: 151.25,
+        adjClose: 151.25,
+        volume: 50000000,
+        unadjustedVolume: 50000000,
+        change: 1.25,
+        changePercent: 0.83,
+        vwap: 150.75,
+        label: 'Jan 15, 24',
+        changeOverTime: 0.0083,
+      };
+
+      expect(historicalData.date).toBe('2024-01-15');
+      expect(historicalData.open).toBe(150.0);
+      expect(historicalData.close).toBe(151.25);
+      expect(historicalData.volume).toBe(50000000);
+    });
+  });
+
+  describe('StockHistoricalPriceResponse Interface', () => {
+    it('should validate historical price response structure', () => {
+      const response: StockHistoricalPriceResponse = {
         symbol: 'AAPL',
+        historical: [
+          {
+            date: '2024-01-15',
+            open: 150.0,
+            high: 152.5,
+            low: 149.5,
+            close: 151.25,
+            adjClose: 151.25,
+            volume: 50000000,
+            unadjustedVolume: 50000000,
+            change: 1.25,
+            changePercent: 0.83,
+            vwap: 150.75,
+            label: 'Jan 15, 24',
+            changeOverTime: 0.0083,
+          },
+        ],
       };
 
-      expect(params.symbol).toBe('AAPL');
-    });
-
-    it('should validate StockProfileParams', () => {
-      const params: StockProfileParams = {
-        symbol: 'AAPL',
-      };
-
-      expect(params.symbol).toBe('AAPL');
-    });
-
-    it('should validate StockHistoricalPriceParams', () => {
-      const params: StockHistoricalPriceParams = {
-        symbol: 'AAPL',
-        from: '2024-01-01',
-        to: '2024-12-31',
-        timeseries: 1,
-      };
-
-      expect(params.symbol).toBe('AAPL');
-      expect(params.from).toBe('2024-01-01');
-      expect(params.to).toBe('2024-12-31');
-      expect(params.timeseries).toBe(1);
-    });
-
-    it('should validate StockMarketCapParams', () => {
-      const params: StockMarketCapParams = {
-        symbol: 'AAPL',
-      };
-
-      expect(params.symbol).toBe('AAPL');
-    });
-
-    it('should validate StockEarningsCalendarParams', () => {
-      const params: StockEarningsCalendarParams = {
-        from: '2024-01-01',
-        to: '2024-12-31',
-      };
-
-      expect(params.from).toBe('2024-01-01');
-      expect(params.to).toBe('2024-12-31');
-    });
-
-    it('should validate StockSplitsParams', () => {
-      const params: StockSplitsParams = {
-        symbol: 'AAPL',
-      };
-
-      expect(params.symbol).toBe('AAPL');
-    });
-
-    it('should validate StockDividendParams', () => {
-      const params: StockDividendParams = {
-        symbol: 'AAPL',
-      };
-
-      expect(params.symbol).toBe('AAPL');
-    });
-
-    it('should validate StockInsiderTradingParams', () => {
-      const params: StockInsiderTradingParams = {
-        symbol: 'AAPL',
-        limit: 10,
-      };
-
-      expect(params.symbol).toBe('AAPL');
-      expect(params.limit).toBe(10);
-    });
-
-    it('should validate StockInstitutionalHoldersParams', () => {
-      const params: StockInstitutionalHoldersParams = {
-        symbol: 'AAPL',
-      };
-
-      expect(params.symbol).toBe('AAPL');
-    });
-
-    it('should validate StockMutualFundHoldersParams', () => {
-      const params: StockMutualFundHoldersParams = {
-        symbol: 'AAPL',
-      };
-
-      expect(params.symbol).toBe('AAPL');
-    });
-
-    it('should validate StockMajorHoldersParams', () => {
-      const params: StockMajorHoldersParams = {
-        symbol: 'AAPL',
-      };
-
-      expect(params.symbol).toBe('AAPL');
-    });
-
-    it('should validate StockAnalystEstimatesParams', () => {
-      const params: StockAnalystEstimatesParams = {
-        symbol: 'AAPL',
-        limit: 10,
-      };
-
-      expect(params.symbol).toBe('AAPL');
-      expect(params.limit).toBe(10);
-    });
-
-    it('should validate StockPriceTargetParams', () => {
-      const params: StockPriceTargetParams = {
-        symbol: 'AAPL',
-      };
-
-      expect(params.symbol).toBe('AAPL');
-    });
-
-    it('should validate StockRatingParams', () => {
-      const params: StockRatingParams = {
-        symbol: 'AAPL',
-      };
-
-      expect(params.symbol).toBe('AAPL');
-    });
-
-    it('should validate StockGradeParams', () => {
-      const params: StockGradeParams = {
-        symbol: 'AAPL',
-      };
-
-      expect(params.symbol).toBe('AAPL');
-    });
-
-    it('should validate StockSectorPerformanceParams', () => {
-      const params: StockSectorPerformanceParams = {};
-
-      expect(params).toEqual({});
-    });
-
-    it('should validate StockLosersParams', () => {
-      const params: StockLosersParams = {};
-
-      expect(params).toEqual({});
-    });
-
-    it('should validate StockGainersParams', () => {
-      const params: StockGainersParams = {};
-
-      expect(params).toEqual({});
-    });
-
-    it('should validate StockMostActiveParams', () => {
-      const params: StockMostActiveParams = {};
-
-      expect(params).toEqual({});
+      expect(response.symbol).toBe('AAPL');
+      expect(response.historical).toHaveLength(1);
+      expect(response.historical[0].date).toBe('2024-01-15');
     });
   });
 });

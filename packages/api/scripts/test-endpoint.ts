@@ -68,12 +68,6 @@ async function testEndpoint() {
       case 'market-cap':
         result = await fmp.stock.getMarketCap({ symbol: 'AAPL' });
         break;
-      case 'earnings-calendar':
-        result = await fmp.stock.getEarningsCalendar({
-          from: '2024-01-01',
-          to: '2024-01-31',
-        });
-        break;
       case 'stock-splits':
         result = await fmp.stock.getStockSplits({ symbol: 'AAPL' });
         break;
@@ -121,6 +115,50 @@ async function testEndpoint() {
       // List endpoints
       case 'stock-list':
         result = await fmp.list.getStockList();
+        break;
+      case 'etf-list':
+        result = await fmp.list.getETFList();
+        break;
+      case 'crypto-list':
+        result = await fmp.list.getCryptoList();
+        break;
+      case 'forex-list':
+        result = await fmp.list.getForexList();
+        break;
+      case 'available-indexes':
+        result = await fmp.list.getAvailableIndexes();
+        break;
+
+      // Calendar endpoints
+      case 'earnings-calendar':
+        result = await fmp.calendar.getEarningsCalendar({
+          from: '2024-01-01',
+          to: '2024-01-31',
+        });
+        break;
+      case 'dividends-calendar':
+        result = await fmp.calendar.getDividendsCalendar({
+          from: '2024-01-01',
+          to: '2024-01-31',
+        });
+        break;
+      case 'economics-calendar':
+        result = await fmp.calendar.getEconomicsCalendar({
+          from: '2024-01-01',
+          to: '2024-01-31',
+        });
+        break;
+      case 'ipo-calendar':
+        result = await fmp.calendar.getIPOCalendar({
+          from: '2024-01-01',
+          to: '2024-01-31',
+        });
+        break;
+      case 'splits-calendar':
+        result = await fmp.calendar.getSplitsCalendar({
+          from: '2024-01-01',
+          to: '2024-01-31',
+        });
         break;
 
       case 'forex-quote':

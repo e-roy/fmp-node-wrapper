@@ -30,7 +30,7 @@ export class FinancialEndpoints {
     period = 'annual',
     limit = 5,
   }: FinancialStatementsParams): Promise<UnwrappedAPIResponse<FinancialStatement[]>> {
-    return this.client.get(`/income-statement/${symbol}?period=${period}&limit=${limit}`);
+    return this.client.get(`/income-statement/${symbol}?period=${period}&limit=${limit}`, 'v3');
   }
 
   /**
@@ -41,7 +41,10 @@ export class FinancialEndpoints {
     period = 'annual',
     limit = 5,
   }: FinancialStatementsParams): Promise<UnwrappedAPIResponse<FinancialStatement[]>> {
-    return this.client.get(`/balance-sheet-statement/${symbol}?period=${period}&limit=${limit}`);
+    return this.client.get(
+      `/balance-sheet-statement/${symbol}?period=${period}&limit=${limit}`,
+      'v3',
+    );
   }
 
   /**
@@ -52,7 +55,7 @@ export class FinancialEndpoints {
     period = 'annual',
     limit = 5,
   }: FinancialStatementsParams): Promise<UnwrappedAPIResponse<FinancialStatement[]>> {
-    return this.client.get(`/cash-flow-statement/${symbol}?period=${period}&limit=${limit}`);
+    return this.client.get(`/cash-flow-statement/${symbol}?period=${period}&limit=${limit}`, 'v3');
   }
 
   /**
@@ -63,7 +66,7 @@ export class FinancialEndpoints {
     period = 'annual',
     limit = 5,
   }: KeyMetricsParams): Promise<UnwrappedAPIResponse<KeyMetrics[]>> {
-    return this.client.get(`/key-metrics/${symbol}?period=${period}&limit=${limit}`);
+    return this.client.get(`/key-metrics/${symbol}?period=${period}&limit=${limit}`, 'v3');
   }
 
   /**
@@ -74,7 +77,7 @@ export class FinancialEndpoints {
     period = 'annual',
     limit = 5,
   }: FinancialRatiosParams): Promise<UnwrappedAPIResponse<FinancialRatios[]>> {
-    return this.client.get(`/ratios/${symbol}?period=${period}&limit=${limit}`);
+    return this.client.get(`/ratios/${symbol}?period=${period}&limit=${limit}`, 'v3');
   }
 
   /**
@@ -85,7 +88,7 @@ export class FinancialEndpoints {
     period = 'annual',
     limit = 5,
   }: EnterpriseValueParams): Promise<UnwrappedAPIResponse<EnterpriseValue[]>> {
-    return this.client.get(`/enterprise-value/${symbol}?period=${period}&limit=${limit}`);
+    return this.client.get(`/enterprise-value/${symbol}?period=${period}&limit=${limit}`, 'v3');
   }
 
   /**
@@ -96,7 +99,10 @@ export class FinancialEndpoints {
     period = 'annual',
     limit = 5,
   }: CashflowGrowthParams): Promise<UnwrappedAPIResponse<CashflowGrowth[]>> {
-    return this.client.get(`/cash-flow-statement-growth/${symbol}?period=${period}&limit=${limit}`);
+    return this.client.get(
+      `/cash-flow-statement-growth/${symbol}?period=${period}&limit=${limit}`,
+      'v3',
+    );
   }
 
   /**
@@ -107,7 +113,10 @@ export class FinancialEndpoints {
     period = 'annual',
     limit = 5,
   }: IncomeGrowthParams): Promise<UnwrappedAPIResponse<IncomeGrowth[]>> {
-    return this.client.get(`/income-statement-growth/${symbol}?period=${period}&limit=${limit}`);
+    return this.client.get(
+      `/income-statement-growth/${symbol}?period=${period}&limit=${limit}`,
+      'v3',
+    );
   }
 
   /**
@@ -120,6 +129,7 @@ export class FinancialEndpoints {
   }: BalanceSheetGrowthParams): Promise<UnwrappedAPIResponse<BalanceSheetGrowth[]>> {
     return this.client.get(
       `/balance-sheet-statement-growth/${symbol}?period=${period}&limit=${limit}`,
+      'v3',
     );
   }
 
@@ -131,6 +141,6 @@ export class FinancialEndpoints {
     period = 'annual',
     limit = 5,
   }: FinancialGrowthParams): Promise<UnwrappedAPIResponse<FinancialGrowth[]>> {
-    return this.client.get(`/financial-growth/${symbol}?period=${period}&limit=${limit}`);
+    return this.client.get(`/financial-growth/${symbol}?period=${period}&limit=${limit}`, 'v3');
   }
 }

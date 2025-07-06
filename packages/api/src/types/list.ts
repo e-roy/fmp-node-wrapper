@@ -1,25 +1,17 @@
 export interface StockList {
   symbol: string;
-  name: string;
-  currency: string;
-  stockExchange: string;
+  exchange: string;
   exchangeShortName: string;
+  price: string;
+  name: string;
 }
 
 export interface ETFList {
   symbol: string;
-  name: string;
-  currency: string;
-  stockExchange: string;
+  exchange: string;
   exchangeShortName: string;
-}
-
-export interface MutualFundList {
-  symbol: string;
+  price: number;
   name: string;
-  currency: string;
-  stockExchange: string;
-  exchangeShortName: string;
 }
 
 export interface CryptoList {
@@ -38,7 +30,7 @@ export interface ForexList {
   exchangeShortName: string;
 }
 
-export interface BondList {
+export interface AvailableIndexesList {
   symbol: string;
   name: string;
   currency: string;

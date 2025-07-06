@@ -11,7 +11,7 @@ export class BondEndpoints {
    * Get bond quote
    */
   async getQuote(params: BondQuoteParams): Promise<UnwrappedAPIResponse<BondQuote[]>> {
-    return this.client.get('/quote', params);
+    return this.client.get('/quote', 'v3', params);
   }
 
   /**
@@ -30,6 +30,6 @@ export class BondEndpoints {
     if (from) params.from = from;
     if (to) params.to = to;
 
-    return this.client.get(`/historical-price-full/${symbol}`, params);
+    return this.client.get(`/historical-price-full/${symbol}`, 'v3', params);
   }
 }

@@ -18,7 +18,7 @@ export class MutualFundEndpoints {
    * Get mutual fund quote
    */
   async getQuote(params: MutualFundQuoteParams): Promise<UnwrappedAPIResponse<MutualFundQuote[]>> {
-    return this.client.get('/quote', params);
+    return this.client.get('/quote', 'v3', params);
   }
 
   /**
@@ -27,7 +27,7 @@ export class MutualFundEndpoints {
   async getProfile(
     params: MutualFundProfileParams,
   ): Promise<UnwrappedAPIResponse<MutualFundProfile[]>> {
-    return this.client.get('/profile', params);
+    return this.client.get('/profile', 'v3', params);
   }
 
   /**
@@ -36,6 +36,6 @@ export class MutualFundEndpoints {
   async getHoldings(
     params: MutualFundHoldersParams,
   ): Promise<UnwrappedAPIResponse<MutualFundHolding[]>> {
-    return this.client.get('/holdings', params);
+    return this.client.get('/holdings', 'v3', params);
   }
 }

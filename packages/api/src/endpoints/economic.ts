@@ -24,7 +24,7 @@ export class EconomicEndpoints {
   async getTreasuryRates(
     params: TreasuryRateParams = {},
   ): Promise<UnwrappedAPIResponse<TreasuryRate[]>> {
-    return this.client.get('/treasury-rates', params);
+    return this.client.get('/treasury-rates', 'v3', params);
   }
 
   /**
@@ -33,21 +33,21 @@ export class EconomicEndpoints {
   async getFederalFundsRate(
     params: FederalFundsRateParams = {},
   ): Promise<UnwrappedAPIResponse<FederalFundsRate[]>> {
-    return this.client.get('/federal-funds-rate', params);
+    return this.client.get('/federal-funds-rate', 'v3', params);
   }
 
   /**
    * Get CPI data
    */
   async getCPI(params: CPIParams = {}): Promise<UnwrappedAPIResponse<CPI[]>> {
-    return this.client.get('/economic/cpi', params);
+    return this.client.get('/economic/cpi', 'v3', params);
   }
 
   /**
    * Get GDP data
    */
   async getGDP(params: GDPParams = {}): Promise<UnwrappedAPIResponse<GDP[]>> {
-    return this.client.get('/economic/gdp', params);
+    return this.client.get('/economic/gdp', 'v3', params);
   }
 
   /**
@@ -56,6 +56,6 @@ export class EconomicEndpoints {
   async getUnemployment(
     params: UnemploymentParams = {},
   ): Promise<UnwrappedAPIResponse<Unemployment[]>> {
-    return this.client.get('/economic/unemployment', params);
+    return this.client.get('/economic/unemployment', 'v3', params);
   }
 }

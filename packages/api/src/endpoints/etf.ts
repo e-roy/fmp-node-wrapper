@@ -18,20 +18,20 @@ export class ETFEndpoints {
    * Get ETF quote
    */
   async getQuote(params: ETFQuoteParams): Promise<UnwrappedAPIResponse<ETFQuote[]>> {
-    return this.client.get('/quote', params);
+    return this.client.get('/quote', 'v3', params);
   }
 
   /**
    * Get ETF profile
    */
   async getProfile(params: ETFProfileParams): Promise<UnwrappedAPIResponse<ETFProfile[]>> {
-    return this.client.get('/profile', params);
+    return this.client.get('/profile', 'v3', params);
   }
 
   /**
    * Get ETF holdings
    */
   async getHoldings(params: ETFHoldersParams): Promise<UnwrappedAPIResponse<ETFHolding[]>> {
-    return this.client.get('/holdings', params);
+    return this.client.get('/holdings', 'v3', params);
   }
 }

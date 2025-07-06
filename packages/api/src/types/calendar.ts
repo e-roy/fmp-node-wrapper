@@ -18,7 +18,7 @@ export interface DividendsCalendar {
   adjDividend: number;
   symbol: string;
   dividend: number;
-  recordDate: any; // Can be object or string
+  recordDate: string;
   paymentDate: string;
   declarationDate: string;
 }
@@ -31,7 +31,7 @@ export interface EconomicsCalendar {
   currency: string;
   previous: number;
   estimate: number | null;
-  actual: number;
+  actual: number | null;
   change: number;
   impact: string;
   changePercentage: number;
@@ -46,7 +46,7 @@ export interface IPOCalendar {
   exchange: string;
   actions: string;
   shares: number | null;
-  priceRange: any; // Can be object or string
+  priceRange: string | null;
   marketCap: number | null;
 }
 

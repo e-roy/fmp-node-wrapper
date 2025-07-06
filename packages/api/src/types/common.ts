@@ -118,7 +118,7 @@ export interface CompanyProfile {
   price: number;
   beta: number;
   volAvg: number;
-  marketCap: number;
+  mktCap: number;
   lastDiv: number;
   range: string;
   changes: number;
@@ -168,8 +168,3 @@ export enum Exchange {
   NSE = 'NSE',
   BSE = 'BSE',
 }
-
-// API constants
-export const FMP_BASE_URL = 'https://financialmodelingprep.com/api/v3';
-export const FMP_BASE_URL_V4 = 'https://financialmodelingprep.com/api/v4';
-export const FMP_STABLE_URL = 'https://financialmodelingprep.com/stable';

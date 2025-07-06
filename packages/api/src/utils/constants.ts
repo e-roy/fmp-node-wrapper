@@ -1,9 +1,5 @@
 // Constants for FMP API
 
-// API Base URLs
-export const FMP_BASE_URL = 'https://financialmodelingprep.com/api/v3';
-export const FMP_BASE_URL_V4 = 'https://financialmodelingprep.com/api/v4';
-
 // Default configuration
 export const DEFAULT_TIMEOUT = 10000;
 export const DEFAULT_LIMIT = 100;

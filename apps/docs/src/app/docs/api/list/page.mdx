@@ -1,6 +1,6 @@
 # List Endpoints
 
-The List Endpoints provide access to comprehensive lists of various financial instruments including stocks, ETFs, mutual funds, cryptocurrencies, forex pairs, and bonds. These endpoints are useful for discovering available symbols and building comprehensive financial applications.
+The List Endpoints provide access to comprehensive lists of various financial instruments including stocks, ETFs, cryptocurrencies, forex pairs, and available indexes. These endpoints are useful for discovering available symbols and building comprehensive financial applications.
 
 ## Available Methods
 
@@ -18,23 +18,18 @@ The List Endpoints provide access to comprehensive lists of various financial in
     },
     {
       method: 'GET',
-      path: '/mutual-fund/list',
-      description: 'Get list of all mutual funds',
-    },
-    {
-      method: 'GET',
-      path: '/cryptocurrency',
+      path: '/symbol/available-cryptocurrencies',
       description: 'Get list of all cryptocurrencies',
     },
     {
       method: 'GET',
-      path: '/forex-list',
+      path: '/symbol/available-forex-currency-pairs',
       description: 'Get list of all forex pairs',
     },
     {
       method: 'GET',
-      path: '/bond/list',
-      description: 'Get list of all bonds',
+      path: '/symbol/available-indexes',
+      description: 'Get list of all available indexes',
     },
   ]}
 />
@@ -54,30 +49,30 @@ Retrieve a comprehensive list of all available stocks with their basic informati
       {
         symbol: 'AAPL',
         name: 'Apple Inc.',
-        currency: 'USD',
-        stockExchange: 'NASDAQ',
-        exchangeShortName: 'NASDAQ'
+        exchange: 'NASDAQ',
+        exchangeShortName: 'NASDAQ',
+        price: '150.25'
       },
       {
         symbol: 'MSFT',
         name: 'Microsoft Corporation',
-        currency: 'USD',
-        stockExchange: 'NASDAQ',
-        exchangeShortName: 'NASDAQ'
+        exchange: 'NASDAQ',
+        exchangeShortName: 'NASDAQ',
+        price: '320.50'
       },
       {
         symbol: 'GOOGL',
         name: 'Alphabet Inc.',
-        currency: 'USD',
-        stockExchange: 'NASDAQ',
-        exchangeShortName: 'NASDAQ'
+        exchange: 'NASDAQ',
+        exchangeShortName: 'NASDAQ',
+        price: '2750.00'
       },
       {
         symbol: 'TSLA',
         name: 'Tesla, Inc.',
-        currency: 'USD',
-        stockExchange: 'NASDAQ',
-        exchangeShortName: 'NASDAQ'
+        exchange: 'NASDAQ',
+        exchangeShortName: 'NASDAQ',
+        price: '850.75'
       }
     ]
 }`}
@@ -98,69 +93,30 @@ Retrieve a list of all available Exchange-Traded Funds (ETFs).
       {
         symbol: 'SPY',
         name: 'SPDR S&P 500 ETF Trust',
-        currency: 'USD',
-        stockExchange: 'NYSE ARCA',
-        exchangeShortName: 'ARCA'
+        exchange: 'NYSE ARCA',
+        exchangeShortName: 'ARCA',
+        price: 450.25
       },
       {
         symbol: 'QQQ',
         name: 'Invesco QQQ Trust',
-        currency: 'USD',
-        stockExchange: 'NASDAQ',
-        exchangeShortName: 'NASDAQ'
+        exchange: 'NASDAQ',
+        exchangeShortName: 'NASDAQ',
+        price: 380.50
       },
       {
         symbol: 'IWM',
         name: 'iShares Russell 2000 ETF',
-        currency: 'USD',
-        stockExchange: 'NYSE ARCA',
-        exchangeShortName: 'ARCA'
+        exchange: 'NYSE ARCA',
+        exchangeShortName: 'ARCA',
+        price: 185.75
       },
       {
         symbol: 'VTI',
         name: 'Vanguard Total Stock Market ETF',
-        currency: 'USD',
-        stockExchange: 'NYSE ARCA',
-        exchangeShortName: 'ARCA'
-      }
-    ]
-}`}
-</CodeBlock>
-
-## Get Mutual Fund List
-
-Retrieve a list of all available mutual funds.
-
-<CodeBlock language="typescript">
-  {`const mutualFundList = await fmp.list.getMutualFundList();`}
-</CodeBlock>
-
-### Example Response
-
-<CodeBlock language="typescript">
-  {`{
-    success: true,
-    data: [
-      {
-        symbol: 'VFINX',
-        name: 'Vanguard 500 Index Fund',
-        currency: 'USD',
-        stockExchange: 'NASDAQ',
-        exchangeShortName: 'NASDAQ'
-      },
-      {
-        symbol: 'FAGIX',
-        name: 'Fidelity Capital & Income Fund',
-        currency: 'USD',
-        stockExchange: 'NASDAQ',
-        exchangeShortName: 'NASDAQ'
-      },
-      {
-        symbol: 'AGTHX',
-        name: 'American Funds Growth Fund of America',
-        currency: 'USD',
-        stockExchange: 'NASDAQ',
-        exchangeShortName: 'NASDAQ'
+        exchange: 'NYSE ARCA',
+        exchangeShortName: 'ARCA',
+        price: 225.00
       }
     ]
 }`}
@@ -254,11 +210,11 @@ Retrieve a list of all available forex currency pairs.
 }`}
 </CodeBlock>
 
-## Get Bond List
+## Get Available Indexes
 
-Retrieve a list of all available bonds.
+Retrieve a list of all available market indexes.
 
-<CodeBlock language="typescript">{`const bondList = await fmp.list.getBondList();`}</CodeBlock>
+<CodeBlock language="typescript">{`const indexesList = await fmp.list.getAvailableIndexes();`}</CodeBlock>
 
 ### Example Response
 
@@ -267,25 +223,32 @@ Retrieve a list of all available bonds.
     success: true,
     data: [
       {
-        symbol: 'US10Y',
-        name: 'US 10 Year Treasury',
+        symbol: '^GSPC',
+        name: 'S&P 500',
         currency: 'USD',
-        stockExchange: 'BOND',
-        exchangeShortName: 'BOND'
+        stockExchange: 'INDEX',
+        exchangeShortName: 'INDEX'
       },
       {
-        symbol: 'US30Y',
-        name: 'US 30 Year Treasury',
+        symbol: '^DJI',
+        name: 'Dow Jones Industrial Average',
         currency: 'USD',
-        stockExchange: 'BOND',
-        exchangeShortName: 'BOND'
+        stockExchange: 'INDEX',
+        exchangeShortName: 'INDEX'
       },
       {
-        symbol: 'US2Y',
-        name: 'US 2 Year Treasury',
+        symbol: '^IXIC',
+        name: 'NASDAQ Composite',
         currency: 'USD',
-        stockExchange: 'BOND',
-        exchangeShortName: 'BOND'
+        stockExchange: 'INDEX',
+        exchangeShortName: 'INDEX'
+      },
+      {
+        symbol: '^RUT',
+        name: 'Russell 2000',
+        currency: 'USD',
+        stockExchange: 'INDEX',
+        exchangeShortName: 'INDEX'
       }
     ]
 }`}
@@ -299,12 +262,12 @@ List endpoints return comprehensive data that you can filter and search through:
 
 <CodeBlock language="typescript">
 {`// Get all lists
-const [stocks, etfs, cryptos, forex, bonds] = await Promise.all([
+const [stocks, etfs, cryptos, forex, indexes] = await Promise.all([
     fmp.list.getStockList(),
     fmp.list.getETFList(),
     fmp.list.getCryptoList(),
     fmp.list.getForexList(),
-    fmp.list.getBondList()
+    fmp.list.getAvailableIndexes()
 ]);
 
 // Filter stocks by exchange
@@ -333,12 +296,12 @@ Create efficient symbol lookups for your applications:
 <CodeBlock language="typescript">
 {`// Create a comprehensive symbol lookup
 const createSymbolLookup = async () => {
-    const [stocks, etfs, cryptos, forex, bonds] = await Promise.all([
+    const [stocks, etfs, cryptos, forex, indexes] = await Promise.all([
         fmp.list.getStockList(),
         fmp.list.getETFList(),
         fmp.list.getCryptoList(),
         fmp.list.getForexList(),
-        fmp.list.getBondList()
+        fmp.list.getAvailableIndexes()
     ]);
 
     const symbolLookup = new Map();
@@ -375,11 +338,11 @@ const createSymbolLookup = async () => {
         });
     });
 
-    // Add bonds
-    bonds.data.forEach(bond => {
-        symbolLookup.set(bond.symbol, {
-        ...bond,
-        type: 'bond'
+    // Add indexes
+    indexes.data.forEach(index => {
+        symbolLookup.set(index.symbol, {
+        ...index,
+        type: 'index'
         });
     });
 
@@ -401,12 +364,12 @@ Filter instruments by specific exchanges:
 <CodeBlock language="typescript">
 {`// Get all instruments by exchange
 const getInstrumentsByExchange = async (exchange: string) => {
-    const [stocks, etfs, cryptos, forex, bonds] = await Promise.all([
+    const [stocks, etfs, cryptos, forex, indexes] = await Promise.all([
         fmp.list.getStockList(),
         fmp.list.getETFList(),
         fmp.list.getCryptoList(),
         fmp.list.getForexList(),
-        fmp.list.getBondList()
+        fmp.list.getAvailableIndexes()
     ]);
 
     const allInstruments = [
@@ -414,7 +377,7 @@ const getInstrumentsByExchange = async (exchange: string) => {
         ...etfs.data.map(item => ({ ...item, type: 'etf' })),
         ...cryptos.data.map(item => ({ ...item, type: 'crypto' })),
         ...forex.data.map(item => ({ ...item, type: 'forex' })),
-        ...bonds.data.map(item => ({ ...item, type: 'bond' }))
+        ...indexes.data.map(item => ({ ...item, type: 'index' }))
     ];
 
     return allInstruments.filter(instrument =>

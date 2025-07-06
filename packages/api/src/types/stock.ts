@@ -1,61 +1,33 @@
 // Stock-related types for FMP API
 
-import {
-  SymbolParams,
-  DateRangeParams,
-  PaginationParams,
-  HistoricalPriceData,
-  HistoricalPriceResponse,
-} from './common';
-
-// Stock quote (alias for common Quote)
-export type StockQuote = import('./common').Quote;
-
-// Stock-specific parameter interfaces
-export interface StockQuoteParams extends SymbolParams {}
-
-export interface StockProfileParams extends SymbolParams {}
-
-export interface StockHistoricalPriceParams extends SymbolParams, DateRangeParams {
-  timeseries?: number;
-}
-
-export interface StockMarketCapParams extends SymbolParams {}
-
-export interface StockEarningsCalendarParams {
-  from?: string;
-  to?: string;
-}
-
-export interface StockSplitsParams extends SymbolParams {}
-
-export interface StockDividendParams extends SymbolParams {}
-
-export interface StockInsiderTradingParams extends SymbolParams, PaginationParams {}
-
-export interface StockInstitutionalHoldersParams extends SymbolParams {}
-
-export interface StockMutualFundHoldersParams extends SymbolParams {}
-
-export interface StockMajorHoldersParams extends SymbolParams {}
-
-export interface StockAnalystEstimatesParams extends SymbolParams, PaginationParams {}
-
-export interface StockPriceTargetParams extends SymbolParams {}
-
-export interface StockRatingParams extends SymbolParams {}
-
-export interface StockGradeParams extends SymbolParams {}
-
-export interface StockSectorPerformanceParams {}
-
-export interface StockLosersParams {}
-
-export interface StockGainersParams {}
-
-export interface StockMostActiveParams {}
+import { HistoricalPriceData, HistoricalPriceResponse } from './common';
 
 // Stock data interfaces
+export interface StockQuote {
+  symbol: string;
+  name: string;
+  price: number;
+  changesPercentage: number;
+  change: number;
+  dayLow: number;
+  dayHigh: number;
+  yearHigh: number;
+  yearLow: number;
+  marketCap: number;
+  priceAvg50: number;
+  priceAvg200: number;
+  exchange: string;
+  volume: number;
+  avgVolume: number;
+  open: number;
+  previousClose: number;
+  eps: number;
+  pe: number;
+  earningsAnnouncement: string;
+  sharesOutstanding: number;
+  timestamp: number;
+}
+
 export interface StockSplit {
   date: string;
   label: string;
@@ -71,114 +43,6 @@ export interface StockDividend {
   recordDate: string;
   paymentDate: string;
   declarationDate: string;
-}
-
-export interface InsiderTrading {
-  symbol: string;
-  companyName: string;
-  cik: string;
-  ownerName: string;
-  ownerCik: string;
-  ownerTitle: string;
-  transactionDate: string;
-  transactionCode: string;
-  transactionAmount: number;
-  transactionPrice: number;
-  transactionAcquiredDisposed: string;
-  postTransactionAmount: number;
-  secLink: string;
-}
-
-export interface InstitutionalHolder {
-  holder: string;
-  shares: number;
-  dateReported: string;
-  change: number;
-  weightPercent: number;
-}
-
-export interface MutualFundHolder {
-  holder: string;
-  shares: number;
-  dateReported: string;
-  change: number;
-  weightPercent: number;
-}
-
-export interface MajorHolder {
-  holder: string;
-  shares: number;
-  dateReported: string;
-  change: number;
-  weightPercent: number;
-}
-
-export interface AnalystEstimate {
-  symbol: string;
-  date: string;
-  estimatedRevenueLow: number;
-  estimatedRevenueHigh: number;
-  estimatedRevenueAvg: number;
-  estimatedEbitdaLow: number;
-  estimatedEbitdaHigh: number;
-  estimatedEbitdaAvg: number;
-  estimatedEbitLow: number;
-  estimatedEbitHigh: number;
-  estimatedEbitAvg: number;
-  estimatedNetIncomeLow: number;
-  estimatedNetIncomeHigh: number;
-  estimatedNetIncomeAvg: number;
-  estimatedSgaExpenseLow: number;
-  estimatedSgaExpenseHigh: number;
-  estimatedSgaExpenseAvg: number;
-  estimatedEpsAvg: number;
-  estimatedEpsHigh: number;
-  estimatedEpsLow: number;
-  numberAnalystEstimatedRevenue: number;
-  numberAnalystsEstimatedEps: number;
-}
-
-export interface PriceTarget {
-  symbol: string;
-  targetMean: number;
-  targetMedian: number;
-  targetHigh: number;
-  targetLow: number;
-  targetCount: number;
-}
-
-export interface StockRating {
-  symbol: string;
-  date: string;
-  rating: string;
-  ratingScore: number;
-  ratingRecommendation: string;
-  ratingDetailsDCFScore: number;
-  ratingDetailsDCFRecommendation: string;
-  ratingDetailsROEScore: number;
-  ratingDetailsROERecommendation: string;
-  ratingDetailsROAScore: number;
-  ratingDetailsROARecommendation: string;
-  ratingDetailsDEScore: number;
-  ratingDetailsDERecommendation: string;
-  ratingDetailsPEScore: number;
-  ratingDetailsPERecommendation: string;
-  ratingDetailsPBScore: number;
-  ratingDetailsPBRecommendation: string;
-}
-
-export interface StockGrade {
-  symbol: string;
-  date: string;
-  gradingCompany: string;
-  previousGrade: string;
-  newGrade: string;
-  grade: string;
-}
-
-export interface SectorPerformance {
-  sector: string;
-  changesPercentage: number;
 }
 
 export interface MarketCap {

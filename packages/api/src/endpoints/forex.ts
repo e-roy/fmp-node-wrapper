@@ -11,7 +11,7 @@ export class ForexEndpoints {
    * Get forex quote
    */
   async getQuote(params: ForexQuoteParams): Promise<UnwrappedAPIResponse<ForexQuote[]>> {
-    return this.client.get('/quote', params);
+    return this.client.get('/quote', 'v3', params);
   }
 
   /**
@@ -30,7 +30,7 @@ export class ForexEndpoints {
     if (from) params.from = from;
     if (to) params.to = to;
 
-    return this.client.get(`/historical-price-full/${symbol}`, params);
+    return this.client.get(`/historical-price-full/${symbol}`, 'v3', params);
   }
 
   /**
@@ -39,13 +39,13 @@ export class ForexEndpoints {
   async getForexRates(
     baseCurrency: string = 'USD',
   ): Promise<UnwrappedAPIResponse<Record<string, number>>> {
-    return this.client.get(`/forex/${baseCurrency}`);
+    return this.client.get(`/forex/${baseCurrency}`, 'v3');
   }
 
   /**
    * Get all forex rates
    */
   async getAllForexRates(): Promise<UnwrappedAPIResponse<Record<string, Record<string, number>>>> {
-    return this.client.get('/forex');
+    return this.client.get('/forex', 'v3');
   }
 }
