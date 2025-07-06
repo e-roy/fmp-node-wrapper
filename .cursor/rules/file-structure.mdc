@@ -1,11 +1,6 @@
 ---
-description: 
-globs: 
-alwaysApply: true
----
----
 description: File structure of entire project
-globs: 
+globs:
 alwaysApply: true
 ---
 
@@ -80,6 +75,7 @@ fmp-node-wrapper/
 **All commands must be run from the root directory using pnpm:**
 
 ### Development & Build
+
 - `pnpm dev`: Start development mode for all packages
 - `pnpm docs:dev`: Start docs development server
 - `pnpm api:dev`: Start API package development mode
@@ -88,10 +84,12 @@ fmp-node-wrapper/
 - `pnpm clean:install`: Clean all node_modules and reinstall
 
 ### Testing Commands
+
 - `pnpm test`: Run all tests across packages
 - `pnpm test:watch`: Run tests in watch mode
 - `pnpm test:coverage`: Run tests with coverage report
 - `pnpm test:api`: Run manual API tests
+- `pnpm test:endpoint`: Run specific endpoint test (requires cd to packages/api)
 - `pnpm test:unit`: Run unit tests for API package
 - `pnpm test:integration`: Run integration tests for API package
 - `pnpm test:endpoints`: Run all endpoint tests
@@ -100,8 +98,12 @@ fmp-node-wrapper/
 - `pnpm test:market`: Run market endpoint tests
 - `pnpm test:forex`: Run forex endpoint tests
 - `pnpm test:economic`: Run economic endpoint tests
+- `pnpm test:list`: Run list endpoint tests
+- `pnpm test:calendar`: Run calendar endpoint tests
+- `pnpm test:company`: Run company endpoint tests
 
 ### Code Quality
+
 - `pnpm lint`: Lint all TypeScript files
 - `pnpm lint:fix`: Fix linting issues automatically
 - `pnpm type-check`: Run TypeScript type checking
@@ -109,11 +111,13 @@ fmp-node-wrapper/
 - `pnpm format:check`: Check code formatting
 
 ### Package Management
+
 - `pnpm install`: Install all workspace dependencies
 - `pnpm add <package>`: Add package to root (use `--filter` for specific workspaces)
 - `pnpm remove <package>`: Remove package from root (use `--filter` for specific workspaces)
 
 ### Publishing
+
 - `pnpm publish-packages`: Build, lint, test, version, and publish packages
 
 ## Development Workflow
@@ -137,4 +141,3 @@ fmp-node-wrapper/
 - External dependencies are managed at the package level
 - All types are included in the main API package
 - API client is imported from `fmp-node-api`
-

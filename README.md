@@ -136,6 +136,19 @@ const treasury = await fmp.economic.getTreasuryRates({
   from: '2024-01-01',
   to: '2024-12-31',
 });
+
+// Stock lists and indices
+const sp500 = await fmp.list.getSP500();
+const nasdaq = await fmp.list.getNasdaq100();
+
+// Earnings calendar
+const earnings = await fmp.calendar.getEarningsCalendar({
+  from: '2024-01-01',
+  to: '2024-12-31',
+});
+
+// Company search
+const companies = await fmp.company.searchCompany({ query: 'Apple' });
 ```
 
 ## Response Format
@@ -197,6 +210,9 @@ try {
 - **`fmp.bond`** - Bond market data
 - **`fmp.economic`** - Economic indicators
 - **`fmp.market`** - Market-wide data and performance
+- **`fmp.list`** - Stock lists and indices
+- **`fmp.calendar`** - Earnings and economic calendar
+- **`fmp.company`** - Company information and search
 
 ## Documentation
 
@@ -265,25 +281,41 @@ pnpm test
 ### Available Scripts
 
 ```bash
-# Development
+# Development & Build
 pnpm dev              # All packages
 pnpm docs:dev         # Just docs
 pnpm api:dev          # Just API
+pnpm build            # Build all packages
+pnpm clean            # Clean build artifacts
+pnpm clean:install    # Clean all node_modules and reinstall
 
 # Testing
 pnpm test             # All tests
 pnpm test:watch       # Watch mode
+pnpm test:coverage    # Run tests with coverage report
 pnpm test:api         # Manual API tests
+pnpm test:endpoint    # Run specific endpoint test (requires cd to packages/api)
+pnpm test:unit        # Run unit tests for API package
+pnpm test:integration # Run integration tests for API package
+pnpm test:endpoints   # Run all endpoint tests
+pnpm test:stock       # Run stock endpoint tests
+pnpm test:financial   # Run financial endpoint tests
+pnpm test:market      # Run market endpoint tests
+pnpm test:forex       # Run forex endpoint tests
+pnpm test:economic    # Run economic endpoint tests
+pnpm test:list        # Run list endpoint tests
+pnpm test:calendar    # Run calendar endpoint tests
+pnpm test:company     # Run company endpoint tests
 
 # Code Quality
 pnpm lint             # Check linting
 pnpm lint:fix         # Auto-fix
 pnpm format           # Format code
+pnpm format:check     # Check code formatting
 pnpm type-check       # Type checking
 
-# Build
-pnpm build            # Build all packages
-pnpm clean            # Clean build artifacts
+# Publishing
+pnpm publish-packages # Build, lint, test, version, and publish packages
 ```
 
 ### Tech Stack

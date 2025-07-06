@@ -56,7 +56,6 @@ import { FMP } from 'fmp-node-api';
 
 const fmp = new FMP({
   apiKey: 'your-api-key',
-  baseURL: 'https://financialmodelingprep.com/stable', // optional
   timeout: 10000, // optional
 });
 ```
@@ -72,6 +71,9 @@ const fmp = new FMP({
 - **`fmp.bond`** - Bond market data
 - **`fmp.economic`** - Economic indicators
 - **`fmp.market`** - Market-wide data and performance
+- **`fmp.list`** - Stock lists and indices
+- **`fmp.calendar`** - Earnings and economic calendar
+- **`fmp.company`** - Company information and search
 
 ## Usage Examples
 
@@ -171,7 +173,7 @@ const unemployment = await fmp.economic.getUnemployment();
 
 ### Other Asset Classes
 
-```typescript
+````typescript
 // Forex
 const forexQuote = await fmp.forex.getQuote({ symbol: 'EURUSD' });
 const forexList = await fmp.forex.getForexList();
@@ -179,7 +181,29 @@ const forexList = await fmp.forex.getForexList();
 // Cryptocurrency
 const cryptoQuote = await fmp.crypto.getQuote({ symbol: 'BTCUSD' });
 const cryptoList = await fmp.crypto.getCryptoList();
-```
+
+// Stock lists and indices
+const sp500 = await fmp.list.getSP500();
+const nasdaq = await fmp.list.getNasdaq100();
+const dowJones = await fmp.list.getDowJones();
+
+// Earnings calendar
+const earnings = await fmp.calendar.getEarningsCalendar({
+  from: '2024-01-01',
+  to: '2024-12-31',
+});
+
+// Economic calendar
+const economic = await fmp.calendar.getEconomicCalendar({
+  from: '2024-01-01',
+  to: '2024-12-31',
+});
+
+// Company search
+const companies = await fmp.company.searchCompany({ query: 'Apple' });
+
+// Company profile
+const companyProfile = await fmp.company.getCompanyProfile({ symbol: 'AAPL' });
 
 ## Testing
 
@@ -189,7 +213,7 @@ This package includes comprehensive tests for all endpoints. There are two test 
 
 ```bash
 pnpm test
-```
+````
 
 - Uses Jest to run all tests
 - Automatically loads API key from `.env` file
@@ -204,13 +228,6 @@ pnpm test:ci
 - Uses Jest with explicit environment variable passing
 - Requires `FMP_API_KEY` environment variable to be set
 - Used by CI/CD pipelines
-
-### Test Structure
-
-- **Unit Tests**: Test individual functions and utilities
-- **Integration Tests**: Test actual API calls with real data
-- **Type Tests**: Ensure TypeScript types are correct
-- **Endpoint Tests**: Comprehensive coverage of all API endpoints
 
 ### Running Specific Tests
 
@@ -227,21 +244,19 @@ pnpm test:financial
 pnpm test:market
 pnpm test:forex
 pnpm test:economic
+pnpm test:list
+pnpm test:calendar
+pnpm test:company
+
+# Run all endpoint tests
+pnpm test:endpoints
+
+# Manual testing with real API calls
+pnpm test:manual
+
+# Run specific endpoint test
+pnpm test:endpoint
 ```
-
-// ETFs
-const etfQuote = await fmp.etf.getQuote({ symbol: 'SPY' });
-const etfHoldings = await fmp.etf.getHoldings({ symbol: 'SPY' });
-
-// Mutual Funds
-const mfQuote = await fmp.mutualFund.getQuote({ symbol: 'VFINX' });
-const mfHoldings = await fmp.mutualFund.getHoldings({ symbol: 'VFINX' });
-
-// Bonds
-const bondQuote = await fmp.bond.getQuote({ symbol: 'US10Y' });
-const bondList = await fmp.bond.getBondList();
-
-````
 
 ## Response Format
 
@@ -254,7 +269,7 @@ interface APIResponse<T> {
   error?: string;
   status?: number;
 }
-````
+```
 
 ### Example Response
 
@@ -344,8 +359,7 @@ import { FMPClient } from 'fmp-node-api';
 
 const client = new FMPClient({
   apiKey: 'your-api-key',
-  baseURL: 'https://financialmodelingprep.com/stable',
-  timeout: 15000,
+  timeout: 15000, // optional
 });
 
 // Use individual endpoint classes
@@ -379,9 +393,13 @@ pnpm test:financial     # Financial endpoint tests only
 pnpm test:market        # Market endpoint tests only
 pnpm test:forex         # Forex endpoint tests only
 pnpm test:economic      # Economic endpoint tests only
+pnpm test:list          # List endpoint tests only
+pnpm test:calendar      # Calendar endpoint tests only
+pnpm test:company       # Company endpoint tests only
 
 # Manual testing with real API calls
 pnpm test:manual        # Test real API integration
+pnpm test:endpoint      # Run specific endpoint test
 
 # Development
 pnpm test:watch         # Watch mode for development
@@ -389,33 +407,6 @@ pnpm test:coverage      # Generate coverage report
 ```
 
 **Note**: Additional endpoint-specific test scripts (crypto, etf, mutual-fund, bond) are available in the package-level scripts but not exposed at the root level.
-
-### Test Structure
-
-```
-src/__tests__/
-├── client.test.ts           # HTTP client tests
-├── fmp.test.ts             # Main FMP class tests
-├── integration.test.ts      # Integration tests
-├── endpoints/              # Endpoint-specific tests
-│   ├── stock.test.ts
-│   ├── financial.test.ts
-│   ├── market.test.ts
-│   ├── forex.test.ts
-│   ├── economic.test.ts
-│   ├── crypto.test.ts
-│   ├── etf.test.ts
-│   ├── mutual-fund.test.ts
-│   └── bond.test.ts
-├── types/                  # Type definition tests
-│   ├── common.test.ts
-│   ├── stock.test.ts
-│   └── financial.test.ts
-└── utils/                  # Utility function tests
-    ├── formatting.test.ts
-    ├── validation.test.ts
-    └── test-setup.ts       # Test utilities and setup
-```
 
 ## Development
 
@@ -458,11 +449,24 @@ pnpm test               # Run all tests
 pnpm test:watch         # Watch mode
 pnpm test:coverage      # Coverage report
 pnpm test:manual        # Manual API testing
+pnpm test:endpoint      # Run specific endpoint test
+pnpm test:unit          # Run unit tests
+pnpm test:integration   # Run integration tests
+pnpm test:endpoints     # Run all endpoint tests
+pnpm test:stock         # Run stock endpoint tests
+pnpm test:financial     # Run financial endpoint tests
+pnpm test:market        # Run market endpoint tests
+pnpm test:forex         # Run forex endpoint tests
+pnpm test:economic      # Run economic endpoint tests
+pnpm test:list          # Run list endpoint tests
+pnpm test:calendar      # Run calendar endpoint tests
+pnpm test:company       # Run company endpoint tests
 
 # Code Quality
 pnpm lint               # Run ESLint
 pnpm lint:fix           # Fix linting issues
 pnpm format             # Format code with Prettier
+pnpm format:check       # Check code formatting
 pnpm type-check         # TypeScript type checking
 
 # Utilities
@@ -488,7 +492,10 @@ src/
 │   ├── mutual-fund.ts     # Mutual fund types
 │   ├── bond.ts            # Bond types
 │   ├── economic.ts        # Economic types
-│   └── market.ts          # Market types
+│   ├── market.ts          # Market types
+│   ├── list.ts            # List types
+│   ├── calendar.ts        # Calendar types
+│   └── company.ts         # Company types
 ├── endpoints/             # API endpoint classes
 │   ├── index.ts
 │   ├── stock.ts
@@ -499,7 +506,10 @@ src/
 │   ├── mutual-fund.ts
 │   ├── bond.ts
 │   ├── economic.ts
-│   └── market.ts
+│   ├── market.ts
+│   ├── list.ts
+│   ├── calendar.ts
+│   └── company.ts
 ├── utils/                 # Utility functions
 │   ├── index.ts
 │   ├── validation.ts      # Input validation
@@ -518,7 +528,10 @@ src/
 │   │   ├── crypto.test.ts
 │   │   ├── etf.test.ts
 │   │   ├── mutual-fund.test.ts
-│   │   └── bond.test.ts
+│   │   ├── bond.test.ts
+│   │   ├── list.test.ts
+│   │   ├── calendar.test.ts
+│   │   └── company.test.ts
 │   ├── types/             # Type definition tests
 │   │   ├── common.test.ts
 │   │   ├── stock.test.ts

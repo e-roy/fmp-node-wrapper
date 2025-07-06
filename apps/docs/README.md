@@ -20,7 +20,10 @@ src/
 │   │   │   ├── market/         # Market data endpoints
 │   │   │   ├── economic/       # Economic indicators
 │   │   │   ├── bond/           # Bond and treasury endpoints
-│   │   │   └── mutual-fund/    # Mutual fund endpoints
+│   │   │   ├── mutual-fund/    # Mutual fund endpoints
+│   │   │   ├── list/           # List and screening endpoints
+│   │   │   ├── calendar/       # Calendar and events endpoints
+│   │   │   └── company/        # Company information endpoints
 │   │   ├── examples/           # Code examples
 │   │   ├── layout.tsx          # Documentation layout
 │   │   └── page.mdx            # Main docs page
@@ -121,6 +124,12 @@ The documentation uses a grouped sidebar navigation system defined in `src/app/d
 - Market Endpoints
 - Economic Endpoints
 
+### Information
+
+- List Endpoints
+- Calendar Endpoints
+- Company Endpoints
+
 ### Resources
 
 - Examples
@@ -177,6 +186,12 @@ The documentation covers comprehensive financial data across multiple asset clas
 
 - **Market Endpoints**: Market performance, trading hours, sector data, gainers/losers
 - **Economic Endpoints**: Economic indicators, calendar, treasury rates, inflation data
+
+### Information
+
+- **List Endpoints**: Stock listings, screening, and filtering capabilities
+- **Calendar Endpoints**: Earnings calendar, economic calendar, and event scheduling
+- **Company Endpoints**: Company profiles, executive information, and corporate data
 
 ## Development
 
