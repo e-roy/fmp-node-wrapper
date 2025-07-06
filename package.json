@@ -20,6 +20,8 @@
     "test:market": "turbo run test:market --filter=fmp-node-api",
     "test:forex": "turbo run test:forex --filter=fmp-node-api",
     "test:economic": "turbo run test:economic --filter=fmp-node-api",
+    "test:list": "turbo run test:list --filter=fmp-node-api",
+    "test:calendar": "turbo run test:calendar --filter=fmp-node-api",
     "lint": "pnpm exec eslint packages/api/src/**/*.ts apps/docs/src/**/*.ts",
     "lint:fix": "turbo run lint:fix",
     "clean": "turbo run clean",

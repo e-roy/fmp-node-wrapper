@@ -1,13 +1,6 @@
-import { FMPClient } from '../client';
-import { APIResponse, StockQuote, CompanyProfile } from '../types';
-import {
-  StockHistoricalPriceResponse,
-  EarningsCalendar,
-  MarketCap,
-  StockSplit,
-  StockDividend,
-} from '../types/stock';
-import { QueryParams } from '../types/common';
+import { FMPClient } from '@/client';
+import { APIResponse, StockQuote, CompanyProfile } from '@/types';
+import { StockHistoricalPriceResponse, MarketCap, StockSplit, StockDividend } from '@/types/stock';
 
 export class StockEndpoints {
   constructor(private client: FMPClient) {}
@@ -69,19 +62,6 @@ export class StockEndpoints {
       ...response,
       data: response.success && response.data && response.data.length > 0 ? response.data[0] : null,
     };
-  }
-
-  /**
-   * Get earnings calendar
-   */
-  async getEarningsCalendar(params: {
-    from?: string;
-    to?: string;
-  }): Promise<APIResponse<EarningsCalendar[]>> {
-    const queryParams: QueryParams = {};
-    if (params.from) queryParams.from = params.from;
-    if (params.to) queryParams.to = params.to;
-    return this.client.get('/earning_calendar', queryParams);
   }
 
   /**

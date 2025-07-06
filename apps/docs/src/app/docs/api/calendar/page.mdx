@@ -1,0 +1,414 @@
+# Calendar Endpoints
+
+The Calendar Endpoints provide access to various financial calendars including earnings, dividends, economic events, IPOs, and stock splits. These endpoints help you track important financial events and announcements.
+
+## Available Methods
+
+<ApiTable
+  endpoints={[
+    {
+      method: 'GET',
+      path: '/earning_calendar',
+      description: 'Get earnings calendar data',
+    },
+    {
+      method: 'GET',
+      path: '/stock_dividend_calendar',
+      description: 'Get dividends calendar data',
+    },
+    {
+      method: 'GET',
+      path: '/economic_calendar',
+      description: 'Get economic calendar data',
+    },
+    {
+      method: 'GET',
+      path: '/ipo_calendar',
+      description: 'Get IPO calendar data',
+    },
+    {
+      method: 'GET',
+      path: '/stock_split_calendar',
+      description: 'Get stock splits calendar data',
+    },
+  ]}
+/>
+
+## Get Earnings Calendar
+
+Retrieve upcoming earnings announcements with estimated and actual earnings per share (EPS) and revenue data.
+
+<CodeBlock language="typescript">
+  {`const earningsCalendar = await fmp.calendar.getEarningsCalendar({
+    from: '2024-01-01',
+    to: '2024-01-31'
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'from',
+      type: 'string',
+      required: false,
+      description: 'Start date (YYYY-MM-DD format)',
+    },
+    {
+      name: 'to',
+      type: 'string',
+      required: false,
+      description: 'End date (YYYY-MM-DD format)',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        date: '2024-01-25',
+        symbol: 'AAPL',
+        eps: 2.18,
+        estimatedEps: 2.10,
+        time: 'AMC',
+        revenue: 119575000000,
+        estimatedRevenue: 117000000000,
+        fiscalDateEnding: '2023-12-31',
+        updatedFromDate: '2024-01-15'
+      },
+      {
+        date: '2024-01-26',
+        symbol: 'MSFT',
+        eps: 2.93,
+        estimatedEps: 2.78,
+        time: 'AMC',
+        revenue: 62020000000,
+        estimatedRevenue: 61100000000,
+        fiscalDateEnding: '2023-12-31',
+        updatedFromDate: '2024-01-16'
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Dividends Calendar
+
+Retrieve upcoming dividend payments and declarations with payment dates and amounts.
+
+<CodeBlock language="typescript">
+  {`const dividendsCalendar = await fmp.calendar.getDividendsCalendar({
+    from: '2024-01-01',
+    to: '2024-01-31'
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'from',
+      type: 'string',
+      required: false,
+      description: 'Start date (YYYY-MM-DD format)',
+    },
+    {
+      name: 'to',
+      type: 'string',
+      required: false,
+      description: 'End date (YYYY-MM-DD format)',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        date: '2024-01-15',
+        label: 'Jan 15, 24',
+        adjDividend: 0.24,
+        symbol: 'AAPL',
+        dividend: 0.24,
+        recordDate: '2024-01-08',
+        paymentDate: '2024-01-15',
+        declarationDate: '2023-11-02'
+      },
+      {
+        date: '2024-01-25',
+        label: 'Jan 25, 24',
+        adjDividend: 0.75,
+        symbol: 'JNJ',
+        dividend: 0.75,
+        recordDate: '2024-01-18',
+        paymentDate: '2024-01-25',
+        declarationDate: '2023-12-15'
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Economic Calendar
+
+Retrieve economic events and indicators from various countries with estimates and actual values.
+
+<CodeBlock language="typescript">
+  {`const economicCalendar = await fmp.calendar.getEconomicsCalendar({
+    from: '2024-01-01',
+    to: '2024-01-31'
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'from',
+      type: 'string',
+      required: false,
+      description: 'Start date (YYYY-MM-DD format)',
+    },
+    {
+      name: 'to',
+      type: 'string',
+      required: false,
+      description: 'End date (YYYY-MM-DD format)',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        date: '2024-01-05',
+        country: 'US',
+        event: 'Non-Farm Payrolls',
+        currency: 'USD',
+        previous: 173000,
+        estimate: 175000,
+        actual: 216000,
+        change: 43000,
+        impact: 'High',
+        changePercent: 24.86,
+        unit: 'K'
+      },
+      {
+        date: '2024-01-12',
+        country: 'US',
+        event: 'CPI m/m',
+        currency: 'USD',
+        previous: 0.1,
+        estimate: 0.2,
+        actual: 0.3,
+        change: 0.2,
+        impact: 'High',
+        changePercent: 200.00,
+        unit: '%'
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get IPO Calendar
+
+Retrieve upcoming initial public offerings (IPOs) with company details and offering information.
+
+<CodeBlock language="typescript">
+  {`const ipoCalendar = await fmp.calendar.getIPOCalendar({
+    from: '2024-01-01',
+    to: '2024-01-31'
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'from',
+      type: 'string',
+      required: false,
+      description: 'Start date (YYYY-MM-DD format)',
+    },
+    {
+      name: 'to',
+      type: 'string',
+      required: false,
+      description: 'End date (YYYY-MM-DD format)',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        date: '2024-01-15',
+        company: 'TechStart Inc.',
+        symbol: 'TECH',
+        exchange: 'NASDAQ',
+        actions: 'Pricing',
+        shares: 10000000,
+        priceRange: '$18-$20',
+        marketCap: 190000000
+      },
+      {
+        date: '2024-01-22',
+        company: 'GreenEnergy Corp.',
+        symbol: 'GREEN',
+        exchange: 'NYSE',
+        actions: 'Pricing',
+        shares: 15000000,
+        priceRange: '$25-$28',
+        marketCap: 397500000
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Stock Splits Calendar
+
+Retrieve upcoming stock splits with ratio information.
+
+<CodeBlock language="typescript">
+  {`const splitsCalendar = await fmp.calendar.getSplitsCalendar({
+    from: '2024-01-01',
+    to: '2024-01-31'
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'from',
+      type: 'string',
+      required: false,
+      description: 'Start date (YYYY-MM-DD format)',
+    },
+    {
+      name: 'to',
+      type: 'string',
+      required: false,
+      description: 'End date (YYYY-MM-DD format)',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        date: '2024-01-20',
+        label: 'Jan 20, 24',
+        symbol: 'TSLA',
+        numerator: 3,
+        denominator: 1
+      },
+      {
+        date: '2024-01-25',
+        label: 'Jan 25, 24',
+        symbol: 'NVDA',
+        numerator: 4,
+        denominator: 1
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Working with Calendar Data
+
+### Filtering by Date Range
+
+All calendar endpoints support optional date filtering. When no dates are provided, the API returns the most recent data:
+
+<CodeBlock language="typescript">
+{`// Get all upcoming earnings (no date filter)
+const allEarnings = await fmp.calendar.getEarningsCalendar({});
+
+// Get earnings for specific month
+const janEarnings = await fmp.calendar.getEarningsCalendar({
+from: '2024-01-01',
+to: '2024-01-31'
+});
+
+// Get earnings for next quarter
+const nextQuarter = await fmp.calendar.getEarningsCalendar({
+from: '2024-01-01',
+to: '2024-03-31'
+});`}
+
+</CodeBlock>
+
+### Processing Calendar Events
+
+Calendar data is particularly useful for building financial dashboards and tracking important events:
+
+<CodeBlock language="typescript">
+{`// Get all calendar events for a specific date
+const targetDate = '2024-01-25';
+
+const [earnings, dividends, economic, ipos, splits] = await Promise.all([
+fmp.calendar.getEarningsCalendar({ from: targetDate, to: targetDate }),
+fmp.calendar.getDividendsCalendar({ from: targetDate, to: targetDate }),
+fmp.calendar.getEconomicsCalendar({ from: targetDate, to: targetDate }),
+fmp.calendar.getIPOCalendar({ from: targetDate, to: targetDate }),
+fmp.calendar.getSplitsCalendar({ from: targetDate, to: targetDate })
+]);
+
+console.log('Earnings:', earnings.data.length);
+console.log('Dividends:', dividends.data.length);
+console.log('Economic Events:', economic.data.length);
+console.log('IPOs:', ipos.data.length);
+console.log('Splits:', splits.data.length);`}
+
+</CodeBlock>
+
+## Error Handling
+
+Always check the success property before accessing data:
+
+<CodeBlock language="typescript">
+{`const earnings = await fmp.calendar.getEarningsCalendar({
+    from: '2024-01-01',
+    to: '2024-01-31'
+});
+
+if (earnings.success) {
+console.log('Earnings events:', earnings.data.length);
+earnings.data.forEach(event => {
+console.log(\`\${event.symbol}: \${event.estimatedEps} EPS\`);
+});
+} else {
+console.error('Error:', earnings.error);
+console.error('Status:', earnings.status);
+}`}
+
+</CodeBlock>
+
+## Rate Limiting
+
+Calendar endpoints are subject to FMP's rate limits. For production applications, implement appropriate rate limiting and caching strategies, especially when fetching data for extended date ranges.
+
+## Next Steps
+
+Explore other endpoint categories:
+
+- [Stock Endpoints](/docs/api/stock) - Real-time stock data and quotes
+- [Financial Endpoints](/docs/api/financial) - Financial statements and ratios
+- [Market Endpoints](/docs/api/market) - Market indices and sector data
+- [Examples](/docs/examples) - Practical code samples
+
+---
+
+**Ready to explore market data?** Check out the [Market Endpoints](/docs/api/market) for indices, sector performance, and market statistics.

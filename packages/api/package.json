@@ -32,6 +32,8 @@
     "test:market": "jest --testPathPattern=\"src/__tests__/endpoints/market\\.test\\.ts\"",
     "test:forex": "jest --testPathPattern=\"src/__tests__/endpoints/forex\\.test\\.ts\"",
     "test:economic": "jest --testPathPattern=\"src/__tests__/endpoints/economic\\.test\\.ts\"",
+    "test:list": "jest --testPathPattern=\"src/__tests__/endpoints/list\\.test\\.ts\"",
+    "test:calendar": "jest --testPathPattern=\"src/__tests__/endpoints/calendar\\.test\\.ts\"",
     "test:manual": "tsx scripts/test-manual.ts",
     "test:endpoint": "tsx scripts/test-endpoint.ts",
     "type-check": "tsc --noEmit",

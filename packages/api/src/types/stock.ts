@@ -187,19 +187,6 @@ export interface MarketCap {
   marketCap: number;
 }
 
-// Earnings calendar data
-export interface EarningsCalendar {
-  date: string;
-  symbol: string;
-  eps: number;
-  estimatedEps: number;
-  time: string;
-  revenue: number;
-  estimatedRevenue: number;
-  fiscalDateEnding: string;
-  updatedFromDate: string;
-}
-
 // Historical price data for stocks (extends common historical price data)
 export interface StockHistoricalPriceData extends HistoricalPriceData {}
 

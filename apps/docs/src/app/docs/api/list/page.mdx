@@ -1,0 +1,519 @@
+# List Endpoints
+
+The List Endpoints provide access to comprehensive lists of various financial instruments including stocks, ETFs, mutual funds, cryptocurrencies, forex pairs, and bonds. These endpoints are useful for discovering available symbols and building comprehensive financial applications.
+
+## Available Methods
+
+<ApiTable
+  endpoints={[
+    {
+      method: 'GET',
+      path: '/stock/list',
+      description: 'Get list of all stocks',
+    },
+    {
+      method: 'GET',
+      path: '/etf/list',
+      description: 'Get list of all ETFs',
+    },
+    {
+      method: 'GET',
+      path: '/mutual-fund/list',
+      description: 'Get list of all mutual funds',
+    },
+    {
+      method: 'GET',
+      path: '/cryptocurrency',
+      description: 'Get list of all cryptocurrencies',
+    },
+    {
+      method: 'GET',
+      path: '/forex-list',
+      description: 'Get list of all forex pairs',
+    },
+    {
+      method: 'GET',
+      path: '/bond/list',
+      description: 'Get list of all bonds',
+    },
+  ]}
+/>
+
+## Get Stock List
+
+Retrieve a comprehensive list of all available stocks with their basic information.
+
+<CodeBlock language="typescript">{`const stockList = await fmp.list.getStockList();`}</CodeBlock>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        symbol: 'AAPL',
+        name: 'Apple Inc.',
+        currency: 'USD',
+        stockExchange: 'NASDAQ',
+        exchangeShortName: 'NASDAQ'
+      },
+      {
+        symbol: 'MSFT',
+        name: 'Microsoft Corporation',
+        currency: 'USD',
+        stockExchange: 'NASDAQ',
+        exchangeShortName: 'NASDAQ'
+      },
+      {
+        symbol: 'GOOGL',
+        name: 'Alphabet Inc.',
+        currency: 'USD',
+        stockExchange: 'NASDAQ',
+        exchangeShortName: 'NASDAQ'
+      },
+      {
+        symbol: 'TSLA',
+        name: 'Tesla, Inc.',
+        currency: 'USD',
+        stockExchange: 'NASDAQ',
+        exchangeShortName: 'NASDAQ'
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get ETF List
+
+Retrieve a list of all available Exchange-Traded Funds (ETFs).
+
+<CodeBlock language="typescript">{`const etfList = await fmp.list.getETFList();`}</CodeBlock>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        symbol: 'SPY',
+        name: 'SPDR S&P 500 ETF Trust',
+        currency: 'USD',
+        stockExchange: 'NYSE ARCA',
+        exchangeShortName: 'ARCA'
+      },
+      {
+        symbol: 'QQQ',
+        name: 'Invesco QQQ Trust',
+        currency: 'USD',
+        stockExchange: 'NASDAQ',
+        exchangeShortName: 'NASDAQ'
+      },
+      {
+        symbol: 'IWM',
+        name: 'iShares Russell 2000 ETF',
+        currency: 'USD',
+        stockExchange: 'NYSE ARCA',
+        exchangeShortName: 'ARCA'
+      },
+      {
+        symbol: 'VTI',
+        name: 'Vanguard Total Stock Market ETF',
+        currency: 'USD',
+        stockExchange: 'NYSE ARCA',
+        exchangeShortName: 'ARCA'
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Mutual Fund List
+
+Retrieve a list of all available mutual funds.
+
+<CodeBlock language="typescript">
+  {`const mutualFundList = await fmp.list.getMutualFundList();`}
+</CodeBlock>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        symbol: 'VFINX',
+        name: 'Vanguard 500 Index Fund',
+        currency: 'USD',
+        stockExchange: 'NASDAQ',
+        exchangeShortName: 'NASDAQ'
+      },
+      {
+        symbol: 'FAGIX',
+        name: 'Fidelity Capital & Income Fund',
+        currency: 'USD',
+        stockExchange: 'NASDAQ',
+        exchangeShortName: 'NASDAQ'
+      },
+      {
+        symbol: 'AGTHX',
+        name: 'American Funds Growth Fund of America',
+        currency: 'USD',
+        stockExchange: 'NASDAQ',
+        exchangeShortName: 'NASDAQ'
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Cryptocurrency List
+
+Retrieve a list of all available cryptocurrencies.
+
+<CodeBlock language="typescript">{`const cryptoList = await fmp.list.getCryptoList();`}</CodeBlock>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        symbol: 'BTCUSD',
+        name: 'Bitcoin',
+        currency: 'USD',
+        stockExchange: 'CRYPTO',
+        exchangeShortName: 'CRYPTO'
+      },
+      {
+        symbol: 'ETHUSD',
+        name: 'Ethereum',
+        currency: 'USD',
+        stockExchange: 'CRYPTO',
+        exchangeShortName: 'CRYPTO'
+      },
+      {
+        symbol: 'ADAUSD',
+        name: 'Cardano',
+        currency: 'USD',
+        stockExchange: 'CRYPTO',
+        exchangeShortName: 'CRYPTO'
+      },
+      {
+        symbol: 'DOTUSD',
+        name: 'Polkadot',
+        currency: 'USD',
+        stockExchange: 'CRYPTO',
+        exchangeShortName: 'CRYPTO'
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Forex List
+
+Retrieve a list of all available forex currency pairs.
+
+<CodeBlock language="typescript">{`const forexList = await fmp.list.getForexList();`}</CodeBlock>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        symbol: 'EURUSD',
+        name: 'Euro / US Dollar',
+        currency: 'USD',
+        stockExchange: 'FOREX',
+        exchangeShortName: 'FOREX'
+      },
+      {
+        symbol: 'GBPUSD',
+        name: 'British Pound / US Dollar',
+        currency: 'USD',
+        stockExchange: 'FOREX',
+        exchangeShortName: 'FOREX'
+      },
+      {
+        symbol: 'USDJPY',
+        name: 'US Dollar / Japanese Yen',
+        currency: 'JPY',
+        stockExchange: 'FOREX',
+        exchangeShortName: 'FOREX'
+      },
+      {
+        symbol: 'AUDUSD',
+        name: 'Australian Dollar / US Dollar',
+        currency: 'USD',
+        stockExchange: 'FOREX',
+        exchangeShortName: 'FOREX'
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Bond List
+
+Retrieve a list of all available bonds.
+
+<CodeBlock language="typescript">{`const bondList = await fmp.list.getBondList();`}</CodeBlock>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        symbol: 'US10Y',
+        name: 'US 10 Year Treasury',
+        currency: 'USD',
+        stockExchange: 'BOND',
+        exchangeShortName: 'BOND'
+      },
+      {
+        symbol: 'US30Y',
+        name: 'US 30 Year Treasury',
+        currency: 'USD',
+        stockExchange: 'BOND',
+        exchangeShortName: 'BOND'
+      },
+      {
+        symbol: 'US2Y',
+        name: 'US 2 Year Treasury',
+        currency: 'USD',
+        stockExchange: 'BOND',
+        exchangeShortName: 'BOND'
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Working with List Data
+
+### Filtering and Searching
+
+List endpoints return comprehensive data that you can filter and search through:
+
+<CodeBlock language="typescript">
+{`// Get all lists
+const [stocks, etfs, cryptos, forex, bonds] = await Promise.all([
+    fmp.list.getStockList(),
+    fmp.list.getETFList(),
+    fmp.list.getCryptoList(),
+    fmp.list.getForexList(),
+    fmp.list.getBondList()
+]);
+
+// Filter stocks by exchange
+const nasdaqStocks = stocks.data.filter(stock =>
+stock.exchangeShortName === 'NASDAQ'
+);
+
+// Search for specific symbols
+const searchSymbol = (lists: any[], symbol: string) => {
+return lists.flatMap(list =>
+list.data.filter((item: any) =>
+item.symbol.toLowerCase().includes(symbol.toLowerCase())
+)
+);
+};
+
+const appleResults = searchSymbol([stocks, etfs], 'AAPL');
+console.log('Apple-related symbols:', appleResults);`}
+
+</CodeBlock>
+
+### Building Symbol Lookups
+
+Create efficient symbol lookups for your applications:
+
+<CodeBlock language="typescript">
+{`// Create a comprehensive symbol lookup
+const createSymbolLookup = async () => {
+    const [stocks, etfs, cryptos, forex, bonds] = await Promise.all([
+        fmp.list.getStockList(),
+        fmp.list.getETFList(),
+        fmp.list.getCryptoList(),
+        fmp.list.getForexList(),
+        fmp.list.getBondList()
+    ]);
+
+    const symbolLookup = new Map();
+
+    // Add stocks
+    stocks.data.forEach(stock => {
+        symbolLookup.set(stock.symbol, {
+        ...stock,
+        type: 'stock'
+        });
+    });
+
+    // Add ETFs
+    etfs.data.forEach(etf => {
+        symbolLookup.set(etf.symbol, {
+        ...etf,
+        type: 'etf'
+        });
+    });
+
+    // Add cryptocurrencies
+    cryptos.data.forEach(crypto => {
+        symbolLookup.set(crypto.symbol, {
+        ...crypto,
+        type: 'crypto'
+        });
+    });
+
+    // Add forex pairs
+    forex.data.forEach(pair => {
+        symbolLookup.set(pair.symbol, {
+        ...pair,
+        type: 'forex'
+        });
+    });
+
+    // Add bonds
+    bonds.data.forEach(bond => {
+        symbolLookup.set(bond.symbol, {
+        ...bond,
+        type: 'bond'
+        });
+    });
+
+    return symbolLookup;
+
+};
+
+// Usage
+const lookup = await createSymbolLookup();
+const aaplInfo = lookup.get('AAPL');
+console.log('AAPL info:', aaplInfo); // { symbol: 'AAPL', name: 'Apple Inc.', type: 'stock', ... }`}
+
+</CodeBlock>
+
+### Exchange-Based Filtering
+
+Filter instruments by specific exchanges:
+
+<CodeBlock language="typescript">
+{`// Get all instruments by exchange
+const getInstrumentsByExchange = async (exchange: string) => {
+    const [stocks, etfs, cryptos, forex, bonds] = await Promise.all([
+        fmp.list.getStockList(),
+        fmp.list.getETFList(),
+        fmp.list.getCryptoList(),
+        fmp.list.getForexList(),
+        fmp.list.getBondList()
+    ]);
+
+    const allInstruments = [
+        ...stocks.data.map(item => ({ ...item, type: 'stock' })),
+        ...etfs.data.map(item => ({ ...item, type: 'etf' })),
+        ...cryptos.data.map(item => ({ ...item, type: 'crypto' })),
+        ...forex.data.map(item => ({ ...item, type: 'forex' })),
+        ...bonds.data.map(item => ({ ...item, type: 'bond' }))
+    ];
+
+    return allInstruments.filter(instrument =>
+        instrument.exchangeShortName === exchange
+    );
+
+};
+
+// Get all NASDAQ instruments
+const nasdaqInstruments = await getInstrumentsByExchange('NASDAQ');
+console.log('NASDAQ instruments:', nasdaqInstruments.length);`}
+
+</CodeBlock>
+
+## Error Handling
+
+Always check the success property before accessing data:
+
+<CodeBlock language="typescript">
+{`const stockList = await fmp.list.getStockList();
+
+if (stockList.success) {
+console.log('Total stocks:', stockList.data.length);
+
+    // Process the data
+    stockList.data.forEach(stock => {
+        console.log(\`\${stock.symbol}: \${stock.name}\`);
+    });
+
+} else {
+console.error('Error fetching stock list:', stockList.error);
+console.error('Status:', stockList.status);
+}`}
+
+</CodeBlock>
+
+## Performance Considerations
+
+### Caching List Data
+
+Since list data doesn't change frequently, consider caching the results:
+
+<CodeBlock language="typescript">
+{`class CachedListManager {
+    private cache = new Map();
+    private cacheExpiry = new Map();
+    private readonly CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
+
+    private isCacheValid(key: string): boolean {
+        const expiry = this.cacheExpiry.get(key);
+        return expiry && Date.now() < expiry;
+    }
+
+    async getStockList() {
+        const cacheKey = 'stockList';
+
+        if (this.isCacheValid(cacheKey)) {
+        return this.cache.get(cacheKey);
+        }
+
+        const result = await fmp.list.getStockList();
+
+        if (result.success) {
+        this.cache.set(cacheKey, result);
+        this.cacheExpiry.set(cacheKey, Date.now() + this.CACHE_DURATION);
+        }
+
+        return result;
+    }
+
+    // Similar methods for other list types...
+
+}
+
+// Usage
+const listManager = new CachedListManager();
+const stocks = await listManager.getStockList(); // Cached after first call`}
+
+</CodeBlock>
+
+## Rate Limiting
+
+List endpoints are subject to FMP's rate limits. For production applications:
+
+- Cache list data when possible
+- Implement appropriate rate limiting
+- Consider pagination for large datasets
+- Use bulk operations when available
+
+## Next Steps
+
+Explore other endpoint categories:
+
+- [Stock Endpoints](/docs/api/stock) - Real-time stock data and quotes
+- [Financial Endpoints](/docs/api/financial) - Financial statements and ratios
+- [Market Endpoints](/docs/api/market) - Market indices and sector data
+- [Calendar Endpoints](/docs/api/calendar) - Earnings, dividends, and economic calendars
+- [Examples](/docs/examples) - Practical code samples
+
+---
+
+**Ready to explore market data?** Check out the [Market Endpoints](/docs/api/market) for indices, sector performance, and market statistics.

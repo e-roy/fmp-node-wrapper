@@ -31,6 +31,13 @@ const navigationGroups = [
     ],
   },
   {
+    title: 'Information',
+    items: [
+      { name: 'List Endpoints', href: '/docs/api/list' },
+      { name: 'Calendar Endpoints', href: '/docs/api/calendar' },
+    ],
+  },
+  {
     title: 'Resources',
     items: [{ name: 'Examples', href: '/docs/examples' }],
   },

@@ -137,27 +137,6 @@ describe('Stock Endpoints', () => {
     );
   });
 
-  describe('getEarningsCalendar', () => {
-    it(
-      'should fetch earnings calendar',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping earnings calendar test - no API key available');
-          return;
-        }
-        const result = await fmp.stock.getEarningsCalendar({
-          from: '2024-01-01',
-          to: '2024-12-31',
-        });
-
-        expect(result.success).toBe(true);
-        expect(result.data).toBeDefined();
-        expect(Array.isArray(result.data)).toBe(true);
-      },
-      FAST_TIMEOUT,
-    );
-  });
-
   describe('getStockSplits', () => {
     it(
       'should fetch stock splits for AAPL',

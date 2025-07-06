@@ -77,6 +77,16 @@
       "outputs": ["coverage/**"],
       "env": ["FMP_API_KEY", "NODE_ENV"]
     },
+    "test:list": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"],
+      "env": ["FMP_API_KEY", "NODE_ENV"]
+    },
+    "test:calendar": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"],
+      "env": ["FMP_API_KEY", "NODE_ENV"]
+    },
     "type-check": {
       "dependsOn": ["^build"]
     },

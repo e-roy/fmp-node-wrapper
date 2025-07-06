@@ -1,7 +1,6 @@
 # Stock Endpoints
 
-The Stock Endpoints provide access to real-time and historical stock
-data, quotes, and market information.
+The Stock Endpoints provide access to real-time and historical stock data, quotes, company profiles, market capitalization, stock splits, and dividend history.
 
 ## Available Methods
 
@@ -14,26 +13,35 @@ data, quotes, and market information.
     },
     {
       method: 'GET',
-      path: '/historical-price-full/{symbol}',
-      description: 'Get historical price data',
+      path: '/profile/{symbol}',
+      description: 'Get company profile information',
     },
     {
       method: 'GET',
-      path: '/company/profile/{symbol}',
-      description: 'Get company profile information',
+      path: '/historical-price-full/{symbol}',
+      description: 'Get historical price data',
     },
     {
       method: 'GET',
       path: '/market-capitalization/{symbol}',
       description: 'Get market capitalization data',
     },
+    {
+      method: 'GET',
+      path: '/stock_split_calendar/{symbol}',
+      description: 'Get stock splits history',
+    },
+    {
+      method: 'GET',
+      path: '/historical-price-full/stock_dividend/{symbol}',
+      description: 'Get dividend history',
+    },
   ]}
 />
 
 ## Get Stock Quote
 
-Retrieve real-time stock quote data including price, change, volume, and
-market cap.
+Retrieve real-time stock quote data including price, change, volume, and market cap.
 
 <CodeBlock language="typescript">
   {`const quote = await fmp.stock.getQuote({ symbol: 'AAPL' });`}
@@ -78,78 +86,6 @@ market cap.
       earningsAnnouncement: '2024-01-25T21:30:00.000+00:00',
       sharesOutstanding: 15800000000,
       timestamp: 1703123456
-    }
-}`}
-</CodeBlock>
-
-## Get Historical Data
-
-Retrieve historical price data with flexible date ranges and intervals.
-
-<CodeBlock language="typescript">
-  {`const historicalData = await fmp.stock.getHistoricalPrice({
-    symbol: 'AAPL',
-    from: '2023-01-01',
-    to: '2023-12-31',
-    timeseries: 'daily'
-});`}
-</CodeBlock>
-
-<ParameterTable
-  parameters={[
-    {
-      name: 'symbol',
-      type: 'string',
-      required: true,
-      description: 'Stock symbol',
-    },
-    {
-      name: 'from',
-      type: 'string',
-      required: true,
-      description: 'Start date (YYYY-MM-DD format)',
-    },
-    {
-      name: 'to',
-      type: 'string',
-      required: true,
-      description: 'End date (YYYY-MM-DD format)',
-    },
-    {
-      name: 'timeseries',
-      type: 'string',
-      required: false,
-      description:
-        'Time interval: "1min", "5min", "15min", "30min", "1hour", "4hour", "daily" (default: "daily")',
-    },
-  ]}
-/>
-
-### Example Response
-
-<CodeBlock language="typescript">
-  {`{
-    success: true,
-    data: {
-      symbol: 'AAPL',
-      historical: [
-        {
-          date: '2023-12-29',
-          open: 193.58,
-          high: 194.66,
-          low: 192.73,
-          close: 193.58,
-          adjClose: 193.58,
-          volume: 45678900,
-          unadjustedVolume: 45678900,
-          change: 0.00,
-          changePercent: 0.00,
-          vwap: 193.58,
-          label: 'Dec 29, 23',
-          changeOverTime: 0.00
-        },
-        // ... more historical data points
-      ]
     }
 }`}
 </CodeBlock>
@@ -213,6 +149,84 @@ Retrieve detailed company information and profile data.
 }`}
 </CodeBlock>
 
+## Get Historical Data
+
+Retrieve historical price data with flexible date ranges.
+
+<CodeBlock language="typescript">
+  {`const historicalData = await fmp.stock.getHistoricalPrice({
+    symbol: 'AAPL',
+    from: '2023-01-01',
+    to: '2023-12-31'
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+    {
+      name: 'from',
+      type: 'string',
+      required: false,
+      description: 'Start date (YYYY-MM-DD format)',
+    },
+    {
+      name: 'to',
+      type: 'string',
+      required: false,
+      description: 'End date (YYYY-MM-DD format)',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: {
+      symbol: 'AAPL',
+      historical: [
+        {
+          date: '2023-12-29',
+          open: 193.58,
+          high: 194.66,
+          low: 192.73,
+          close: 193.58,
+          adjClose: 193.58,
+          volume: 45678900,
+          unadjustedVolume: 45678900,
+          change: 0.00,
+          changePercent: 0.00,
+          vwap: 193.58,
+          label: 'Dec 29, 23',
+          changeOverTime: 0.00
+        },
+        {
+          date: '2023-12-28',
+          open: 192.50,
+          high: 194.20,
+          low: 191.80,
+          close: 193.58,
+          adjClose: 193.58,
+          volume: 42345600,
+          unadjustedVolume: 42345600,
+          change: 1.08,
+          changePercent: 0.56,
+          vwap: 193.15,
+          label: 'Dec 28, 23',
+          changeOverTime: 0.56
+        }
+      ]
+    }
+}`}
+</CodeBlock>
+
 ## Get Market Capitalization
 
 Retrieve market capitalization data for a specific stock.
@@ -245,15 +259,103 @@ Retrieve market capitalization data for a specific stock.
 }`}
 </CodeBlock>
 
+## Get Stock Splits
+
+Retrieve historical stock splits for a specific stock.
+
+<CodeBlock language="typescript">
+  {`const stockSplits = await fmp.stock.getStockSplits({ symbol: 'AAPL' });`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        date: '2020-08-31',
+        label: 'Aug 31, 20',
+        numerator: 4,
+        denominator: 1
+      },
+      {
+        date: '2014-06-09',
+        label: 'Jun 09, 14',
+        numerator: 7,
+        denominator: 1
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Dividend History
+
+Retrieve historical dividend payments for a specific stock.
+
+<CodeBlock language="typescript">
+  {`const dividendHistory = await fmp.stock.getDividendHistory({ symbol: 'AAPL' });`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        date: '2023-11-16',
+        label: 'Nov 16, 23',
+        adjDividend: 0.24,
+        dividend: 0.24,
+        recordDate: '2023-11-13',
+        paymentDate: '2023-11-16',
+        declarationDate: '2023-08-17'
+      },
+      {
+        date: '2023-08-17',
+        label: 'Aug 17, 23',
+        adjDividend: 0.24,
+        dividend: 0.24,
+        recordDate: '2023-08-14',
+        paymentDate: '2023-08-17',
+        declarationDate: '2023-05-18'
+      }
+    ]
+}`}
+</CodeBlock>
+
 ## Error Handling
 
 Always check the success property before accessing data:
 
 <CodeBlock language="typescript">
-{`const quote = await fmp.getQuote({ symbol: 'INVALID' });
+{`const quote = await fmp.stock.getQuote({ symbol: 'INVALID' });
 
-if (quote.success) {
-console.log('Stock Price:', quote.data[0].price);
+if (quote.success && quote.data) {
+console.log('Stock Price:', quote.data.price);
 } else {
 console.error('Error:', quote.error);
 console.error('Status:', quote.status);
@@ -263,18 +365,18 @@ console.error('Status:', quote.status);
 
 ## Rate Limiting
 
-Stock endpoints are subject to FMP's rate limits. For production
-applications, implement appropriate rate limiting and caching
-strategies.
+Stock endpoints are subject to FMP's rate limits. For production applications, implement appropriate rate limiting and caching strategies.
 
 ## Next Steps
 
 Explore other endpoint categories:
 
 - [Financial Endpoints](/docs/api/financial) - Financial statements and ratios
+- [Market Endpoints](/docs/api/market) - Market indices and sector data
+- [Calendar Endpoints](/docs/api/calendar) - Earnings, dividends, and economic calendars
+- [List Endpoints](/docs/api/list) - Available symbols and instruments
 - [Examples](/docs/examples) - Practical code samples
 
 ---
 
-**Ready to explore financial data?** Check out the [Financial Endpoints](/docs/api/financial) for income
-statements, balance sheets, and more.
+**Ready to explore financial data?** Check out the [Financial Endpoints](/docs/api/financial) for income statements, balance sheets, and more.
