@@ -112,24 +112,6 @@ export default function Home() {
             </Card>
           </Link>
 
-          <Link href="/docs/api/forex" className="block">
-            <Card className="h-full hover:shadow-md transition-shadow">
-              <CardHeader>
-                <CardTitle className="text-2xl text-neutral-900 dark:text-white">
-                  💱 Forex Data
-                </CardTitle>
-                <CardDescription className="text-neutral-600 dark:text-neutral-300">
-                  Foreign exchange rates and currency data.
-                </CardDescription>
-              </CardHeader>
-              <CardFooter>
-                <div className="text-blue-600 dark:text-blue-400 hover:underline">
-                  Forex Endpoints →
-                </div>
-              </CardFooter>
-            </Card>
-          </Link>
-
           <Link href="/docs/api/crypto" className="block">
             <Card className="h-full hover:shadow-md transition-shadow">
               <CardHeader>
@@ -239,22 +221,6 @@ export default function Home() {
                 </h3>
                 <p className="text-neutral-600 dark:text-neutral-300">
                   Optimized for high-performance applications
-                </p>
-              </div>
-              <div>
-                <h3 className="font-semibold mb-2 text-neutral-900 dark:text-white">
-                  🌐 Multi-Asset Support
-                </h3>
-                <p className="text-neutral-600 dark:text-neutral-300">
-                  Stocks, forex, crypto, ETFs, bonds, and more
-                </p>
-              </div>
-              <div>
-                <h3 className="font-semibold mb-2 text-neutral-900 dark:text-white">
-                  📊 Market Data
-                </h3>
-                <p className="text-neutral-600 dark:text-neutral-300">
-                  Real-time market performance and sector data
                 </p>
               </div>
             </div>

@@ -16,18 +16,18 @@ const navigationGroups = [
     items: [
       { name: 'Stock Endpoints', href: '/docs/api/stock' },
       { name: 'Financial Endpoints', href: '/docs/api/financial' },
-      { name: 'Forex Endpoints', href: '/docs/api/forex' },
+      // { name: 'Forex Endpoints', href: '/docs/api/forex' },
       { name: 'Crypto Endpoints', href: '/docs/api/crypto' },
       { name: 'ETF Endpoints', href: '/docs/api/etf' },
-      { name: 'Mutual Fund Endpoints', href: '/docs/api/mutual-fund' },
-      { name: 'Bond Endpoints', href: '/docs/api/bond' },
+      // { name: 'Mutual Fund Endpoints', href: '/docs/api/mutual-fund' },
+      // { name: 'Bond Endpoints', href: '/docs/api/bond' },
     ],
   },
   {
     title: 'Market Data',
     items: [
       { name: 'Market Endpoints', href: '/docs/api/market' },
-      { name: 'Economic Endpoints', href: '/docs/api/economic' },
+      // { name: 'Economic Endpoints', href: '/docs/api/economic' },
     ],
   },
   {

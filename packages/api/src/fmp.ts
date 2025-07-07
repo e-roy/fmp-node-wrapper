@@ -60,16 +60,17 @@ export class FMP {
 
     this.stock = new StockEndpoints(client);
     this.financial = new FinancialEndpoints(client);
-    this.forex = new ForexEndpoints(client);
     this.crypto = new CryptoEndpoints(client);
     this.etf = new ETFEndpoints(client);
-    this.mutualFund = new MutualFundEndpoints(client);
-    this.bond = new BondEndpoints(client);
-    this.economic = new EconomicEndpoints(client);
     this.market = new MarketEndpoints(client);
     this.list = new ListEndpoints(client);
     this.calendar = new CalendarEndpoints(client);
     this.company = new CompanyEndpoints(client);
+
+    this.forex = new ForexEndpoints(client);
+    this.economic = new EconomicEndpoints(client);
+    this.bond = new BondEndpoints(client);
+    this.mutualFund = new MutualFundEndpoints(client);
   }
 
   /**

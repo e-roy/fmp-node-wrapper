@@ -16,11 +16,6 @@ Access cryptocurrency data including real-time quotes, historical data, and cryp
       path: '/historical-price-full/{symbol}',
       description: 'Get historical crypto data',
     },
-    {
-      method: 'GET',
-      path: '/cryptocurrency',
-      description: 'Get list of all cryptocurrencies',
-    },
   ]}
 />
 
@@ -158,95 +153,6 @@ Retrieve historical cryptocurrency price data with flexible date ranges.
       }
     ]
   }
-}`}
-</CodeBlock>
-
-## Get Crypto List
-
-Retrieve a list of all available cryptocurrencies.
-
-<CodeBlock language="typescript">
-  {`const cryptoList = await fmp.crypto.getCryptoList();`}
-</CodeBlock>
-
-### Example Response
-
-<CodeBlock language="typescript">
-  {`{
-  success: true,
-  data: [
-    {
-      symbol: 'BTCUSD',
-      name: 'Bitcoin USD',
-      currency: 'USD',
-      stockExchange: 'Crypto',
-      exchangeShortName: 'CRYPTO'
-    },
-    {
-      symbol: 'ETHUSD',
-      name: 'Ethereum USD',
-      currency: 'USD',
-      stockExchange: 'Crypto',
-      exchangeShortName: 'CRYPTO'
-    },
-    {
-      symbol: 'ADAUSD',
-      name: 'Cardano USD',
-      currency: 'USD',
-      stockExchange: 'Crypto',
-      exchangeShortName: 'CRYPTO'
-    },
-    {
-      symbol: 'DOTUSD',
-      name: 'Polkadot USD',
-      currency: 'USD',
-      stockExchange: 'Crypto',
-      exchangeShortName: 'CRYPTO'
-    }
-  ]
-}`}
-</CodeBlock>
-
-## Response Types
-
-### CryptoQuote
-
-<CodeBlock language="typescript">
-  {`interface CryptoQuote {
-  symbol: string;
-  name: string;
-  price: number;
-  changesPercentage: number;
-  change: number;
-  dayLow: number;
-  dayHigh: number;
-  yearHigh: number;
-  yearLow: number;
-  marketCap: number;
-  priceAvg50: number;
-  priceAvg200: number;
-  volume: number;
-  avgVolume: number;
-  exchange: string;
-  open: number;
-  previousClose: number;
-  eps: number | null;
-  pe: number | null;
-  earningsAnnouncement: string | null;
-  sharesOutstanding: number | null;
-  timestamp: number;
-}`}
-</CodeBlock>
-
-### CryptoCurrency
-
-<CodeBlock language="typescript">
-  {`interface CryptoCurrency {
-  symbol: string;
-  name: string;
-  currency: string;
-  stockExchange: string;
-  exchangeShortName: string;
 }`}
 </CodeBlock>
 
