@@ -2,8 +2,9 @@ export interface StockList {
   symbol: string;
   exchange: string;
   exchangeShortName: string;
-  price: string;
+  price: number;
   name: string;
+  type: string;
 }
 
 export interface ETFList {
