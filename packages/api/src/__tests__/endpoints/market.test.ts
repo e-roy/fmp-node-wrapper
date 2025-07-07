@@ -46,9 +46,11 @@ describe('Market Endpoints', () => {
 
       if (result.data && Array.isArray(result.data) && result.data.length > 0) {
         const performance = getFirstItem(result.data);
-        expect(performance.ticker).toBeDefined();
-        expect(performance.companyName).toBeDefined();
+        expect(performance.symbol).toBeDefined();
+        expect(performance.name).toBeDefined();
         expect(Number(performance.price)).toBeGreaterThan(0);
+        expect(typeof performance.change).toBe('number');
+        expect(typeof performance.changesPercentage).toBe('number');
       }
     }, 10000);
   });
@@ -62,10 +64,11 @@ describe('Market Endpoints', () => {
 
       if (result.data && Array.isArray(result.data) && result.data.length > 0) {
         const gainer = getFirstItem(result.data);
-        expect(gainer.ticker).toBeDefined();
-        expect(gainer.companyName).toBeDefined();
+        expect(gainer.symbol).toBeDefined();
+        expect(gainer.name).toBeDefined();
         expect(Number(gainer.price)).toBeGreaterThan(0);
         expect(Number(gainer.changesPercentage)).toBeGreaterThan(0);
+        expect(typeof gainer.change).toBe('number');
       }
     }, 10000);
   });
@@ -79,10 +82,11 @@ describe('Market Endpoints', () => {
 
       if (result.data && Array.isArray(result.data) && result.data.length > 0) {
         const loser = getFirstItem(result.data);
-        expect(loser.ticker).toBeDefined();
-        expect(loser.companyName).toBeDefined();
+        expect(loser.symbol).toBeDefined();
+        expect(loser.name).toBeDefined();
         expect(Number(loser.price)).toBeGreaterThan(0);
         expect(Number(loser.changesPercentage)).toBeLessThan(0);
+        expect(typeof loser.change).toBe('number');
       }
     }, 10000);
   });
@@ -97,10 +101,11 @@ describe('Market Endpoints', () => {
 
       if (result.data && Array.isArray(result.data) && result.data.length > 0) {
         const active = getFirstItem(result.data);
-        expect(active.ticker).toBeDefined();
-        expect(active.companyName).toBeDefined();
+        expect(active.symbol).toBeDefined();
+        expect(active.name).toBeDefined();
         expect(Number(active.price)).toBeGreaterThan(0);
-        expect(Number(active.volume)).toBeGreaterThan(0);
+        expect(typeof active.change).toBe('number');
+        expect(typeof active.changesPercentage).toBe('number');
       }
     }, 10000);
   });
@@ -117,20 +122,33 @@ describe('Market Endpoints', () => {
         const sector = getFirstItem(result.data);
         expect(sector.sector).toBeDefined();
         expect(sector.changesPercentage).toBeDefined();
+        // changesPercentage can be a string or number from the API
+        expect(['string', 'number']).toContain(typeof sector.changesPercentage);
       }
     }, 10000);
   });
 
   describe('getMarketIndex', () => {
     it('should fetch market index data', async () => {
-      const result = await fmp.market.getMarketIndex({
-        from: '2024-01-01',
-        to: '2024-01-31',
-      });
+      const result = await fmp.market.getMarketIndex();
 
       expect(result.success).toBe(true);
       expect(result.data).toBeDefined();
       expect(Array.isArray(result.data)).toBe(true);
+
+      if (result.data && Array.isArray(result.data) && result.data.length > 0) {
+        const index = getFirstItem(result.data);
+        expect(index.symbol).toBeDefined();
+        expect(index.name).toBeDefined();
+        expect(Number(index.price)).toBeGreaterThan(0);
+        // Check for optional properties that may or may not be present
+        if (index.type !== undefined) {
+          expect(typeof index.type).toBe('string');
+        }
+        if (index.volume !== undefined) {
+          expect(typeof index.volume).toBe('number');
+        }
+      }
     }, 15000);
   });
 });

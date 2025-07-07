@@ -121,6 +121,6 @@ export class CompanyEndpoints {
     quarter: number;
   }): Promise<APIResponse<EarningsCallTranscript[] | null>> {
     const params: { year: number; quarter: number } = { year, quarter };
-    return this.client.get(`/earning_call_transcript/${symbol}`, 'v3', params);
+    return this.client.getSingle(`/earning_call_transcript/${symbol}`, 'v3', params);
   }
 }

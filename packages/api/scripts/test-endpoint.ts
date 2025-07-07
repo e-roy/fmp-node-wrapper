@@ -192,8 +192,14 @@ async function testEndpoint() {
       case 'losers':
         result = await fmp.market.getLosers();
         break;
-      case 'most-active':
+      case 'active':
         result = await fmp.market.getMostActive();
+        break;
+      case 'sector-performance':
+        result = await fmp.market.getSectorPerformance();
+        break;
+      case 'market-index':
+        result = await fmp.market.getMarketIndex();
         break;
 
       // List endpoints

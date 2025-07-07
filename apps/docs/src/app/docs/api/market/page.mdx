@@ -84,7 +84,7 @@ Get top gaining stocks for the day.
   endpoints={[
     {
       method: 'GET',
-      path: '/gainers',
+      path: '/stock_market/gainers',
       description: 'Get top gaining stocks',
     },
   ]}
@@ -109,7 +109,7 @@ Get top losing stocks for the day.
   endpoints={[
     {
       method: 'GET',
-      path: '/losers',
+      path: '/stock_market/losers',
       description: 'Get top losing stocks',
     },
   ]}
@@ -134,7 +134,7 @@ Get most actively traded stocks.
   endpoints={[
     {
       method: 'GET',
-      path: '/most-active',
+      path: '/stock_market/actives',
       description: 'Get most active stocks',
     },
   ]}
@@ -178,32 +178,22 @@ console.log('Sector Performance:', sectors.data);
 
 ### getMarketIndex
 
-Get market index data with optional date range.
+Get market index data.
 
 <ApiTable
   endpoints={[
     {
       method: 'GET',
-      path: '/market-index',
+      path: '/quotes/index',
       description: 'Get market index data',
     },
   ]}
 />
 
-**Parameters:**
-
-| Parameter | Type     | Required | Description             |
-| --------- | -------- | -------- | ----------------------- |
-| `from`    | `string` | No       | Start date (YYYY-MM-DD) |
-| `to`      | `string` | No       | End date (YYYY-MM-DD)   |
-
 **Example:**
 
 <CodeBlock language="typescript">
-{`const index = await fmp.market.getMarketIndex({
-  from: '2024-01-01',
-  to: '2024-01-31'
-});
+{`const index = await fmp.market.getMarketIndex();
 
 if (index.success) {
 console.log('Market Index:', index.data);
@@ -216,12 +206,32 @@ console.log('Market Index:', index.data);
 ### MarketHours
 
 <CodeBlock language="typescript">
-  {`interface MarketHours {
-  stockMarket: string;
-  bonds: string;
-  forex: string;
-  crypto: string;
+{`interface MarketHours {
+  stockExchangeName: string;
+  stockMarketHours: {
+    openingHour: string;
+    closingHour: string;
+  };
+  stockMarketHolidays: MarketHoliday[];
+  isTheStockMarketOpen: boolean;
+  isTheEuronextMarketOpen: boolean;
+  isTheForexMarketOpen: boolean;
+  isTheCryptoMarketOpen: boolean;
+}
+
+interface MarketHoliday {
+year: number;
+'Martin Luther King, Jr. Day': string;
+"Presidents' Day": string;
+'Good Friday': string;
+'Memorial Day': string;
+Juneteenth: string;
+'Independence Day': string;
+'Labor Day': string;
+'Thanksgiving Day': string;
+Christmas: string;
 }`}
+
 </CodeBlock>
 
 ### MarketPerformance
@@ -241,7 +251,7 @@ console.log('Market Index:', index.data);
 <CodeBlock language="typescript">
   {`interface MarketSectorPerformance {
   sector: string;
-  changesPercentage: number;
+  changesPercentage: number | string; // Note: API may return this as a string
 }`}
 </CodeBlock>
 
@@ -250,29 +260,31 @@ console.log('Market Index:', index.data);
 <CodeBlock language="typescript">
   {`interface MarketIndex {
   symbol: string;
-  name: string;
   price: number;
-  changesPercentage: number;
+  extendedPrice: number | null;
   change: number;
-  dayLow: number;
   dayHigh: number;
+  dayLow: number;
+  previousClose: number;
+  volume: number | null;
+  open: number;
+  close: number | null;
+  lastTradeTime: string;
+  lastExtendedTradeTime: string | null;
+  updatedAt: string;
+  createdAt: string;
+  type: string;
+  name: string;
+  range: string;
   yearHigh: number;
   yearLow: number;
-  marketCap: number;
-  priceAvg50: number;
-  priceAvg200: number;
-  volume: number;
-  avgVolume: number;
-  exchange: string;
-  open: number;
-  previousClose: number;
-  eps: number;
-  pe: number;
-  earningsAnnouncement: string;
-  sharesOutstanding: number;
-  timestamp: number;
+  priceAvg50: number | null;
+  priceAvg200: number | null;
+  changesPercentage: number;
 }`}
 </CodeBlock>
+
+> **Note:** Some numeric fields may be returned as strings by the FMP API. Always check the type at runtime if you need strict type safety.
 
 ## Market Data Insights
 
