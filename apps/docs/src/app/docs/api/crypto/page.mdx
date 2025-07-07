@@ -2,34 +2,7 @@
 
 Access cryptocurrency data including real-time quotes, historical data, and crypto information.
 
-## Overview
-
-The crypto endpoints provide access to cryptocurrency market data, including real-time crypto quotes, historical performance data, and cryptocurrency information.
-
-## Quick Start
-
-<CodeBlock language="typescript">
-{`import { FMP } from 'fmp-node-api';
-
-const fmp = new FMP({ apiKey: 'your-api-key' });
-
-// Get crypto quote
-const quote = await fmp.crypto.getQuote({ symbol: 'BTCUSD' });
-
-// Get historical crypto data
-const historical = await fmp.crypto.getHistoricalPrice({
-symbol: 'BTCUSD',
-from: '2024-01-01',
-to: '2024-01-31'
-});`}
-
-</CodeBlock>
-
 ## Available Methods
-
-### getQuote
-
-Get real-time cryptocurrency quote.
 
 <ApiTable
   endpoints={[
@@ -38,72 +11,11 @@ Get real-time cryptocurrency quote.
       path: '/quote/{symbol}',
       description: 'Get real-time crypto quote',
     },
-  ]}
-/>
-
-**Parameters:**
-
-| Parameter | Type     | Required | Description                    |
-| --------- | -------- | -------- | ------------------------------ |
-| `symbol`  | `string` | Yes      | Crypto symbol (e.g., 'BTCUSD') |
-
-**Example:**
-
-<CodeBlock language="typescript">
-{`const quote = await fmp.crypto.getQuote({ symbol: 'BTCUSD' });
-
-if (quote.success) {
-console.log('Price:', quote.data[0].price);
-console.log('Change:', quote.data[0].change);
-console.log('Market Cap:', quote.data[0].marketCap);
-}`}
-
-</CodeBlock>
-
-### getHistoricalPrice
-
-Get historical cryptocurrency data.
-
-<ApiTable
-  endpoints={[
     {
       method: 'GET',
       path: '/historical-price-full/{symbol}',
       description: 'Get historical crypto data',
     },
-  ]}
-/>
-
-**Parameters:**
-
-| Parameter    | Type     | Required | Description                    |
-| ------------ | -------- | -------- | ------------------------------ |
-| `symbol`     | `string` | Yes      | Crypto symbol (e.g., 'BTCUSD') |
-| `from`       | `string` | No       | Start date (YYYY-MM-DD)        |
-| `to`         | `string` | No       | End date (YYYY-MM-DD)          |
-| `timeseries` | `number` | No       | Number of days for timeseries  |
-
-**Example:**
-
-<CodeBlock language="typescript">
-{`const historical = await fmp.crypto.getHistoricalPrice({
-    symbol: 'BTCUSD',
-    from: '2024-01-01',
-    to: '2024-01-31'
-});
-
-if (historical.success) {
-console.log('Historical Data:', historical.data.historical);
-}`}
-
-</CodeBlock>
-
-### getCryptoList
-
-Get list of all available cryptocurrencies.
-
-<ApiTable
-  endpoints={[
     {
       method: 'GET',
       path: '/cryptocurrency',
@@ -112,15 +24,187 @@ Get list of all available cryptocurrencies.
   ]}
 />
 
-**Example:**
+## Get Crypto Quote
+
+Retrieve real-time cryptocurrency quote data including price, change, volume, and market cap.
 
 <CodeBlock language="typescript">
-{`const cryptoList = await fmp.crypto.getCryptoList();
+  {`const quote = await fmp.crypto.getQuote({ symbol: 'BTCUSD' });`}
+</CodeBlock>
 
-if (cryptoList.success) {
-console.log('Available Cryptocurrencies:', cryptoList.data);
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Crypto symbol (e.g., "BTCUSD", "ETHUSD")',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+  success: true,
+  data: [
+    {
+      symbol: 'BTCUSD',
+      name: 'Bitcoin USD',
+      price: 43250.75,
+      changesPercentage: 2.15,
+      change: 910.25,
+      dayLow: 42340.50,
+      dayHigh: 43500.00,
+      yearHigh: 69000.00,
+      yearLow: 15476.00,
+      marketCap: 847000000000,
+      priceAvg50: 42850.67,
+      priceAvg200: 41200.89,
+      volume: 234567890,
+      avgVolume: 245678900,
+      exchange: 'CRYPTO',
+      open: 42340.50,
+      previousClose: 42340.50,
+      eps: null,
+      pe: null,
+      earningsAnnouncement: null,
+      sharesOutstanding: null,
+      timestamp: 1703123456
+    }
+  ]
 }`}
+</CodeBlock>
 
+## Get Historical Data
+
+Retrieve historical cryptocurrency price data with flexible date ranges.
+
+<CodeBlock language="typescript">
+  {`const historicalData = await fmp.crypto.getHistoricalPrice({
+  symbol: 'BTCUSD',
+  from: '2024-01-01',
+  to: '2024-01-31'
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Crypto symbol',
+    },
+    {
+      name: 'from',
+      type: 'string',
+      required: false,
+      description: 'Start date (YYYY-MM-DD format)',
+    },
+    {
+      name: 'to',
+      type: 'string',
+      required: false,
+      description: 'End date (YYYY-MM-DD format)',
+    },
+    {
+      name: 'timeseries',
+      type: 'number',
+      required: false,
+      description: 'Number of days for timeseries',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+  success: true,
+  data: {
+    symbol: 'BTCUSD',
+    historical: [
+      {
+        date: '2024-01-31',
+        open: 43000.00,
+        high: 43500.00,
+        low: 42800.00,
+        close: 43250.75,
+        adjClose: 43250.75,
+        volume: 234567890,
+        unadjustedVolume: 234567890,
+        change: 250.75,
+        changePercent: 0.58,
+        vwap: 43150.25,
+        label: 'Jan 31, 24',
+        changeOverTime: 0.58
+      },
+      {
+        date: '2024-01-30',
+        open: 42800.00,
+        high: 43200.00,
+        low: 42500.00,
+        close: 43000.00,
+        adjClose: 43000.00,
+        volume: 223456700,
+        unadjustedVolume: 223456700,
+        change: 200.00,
+        changePercent: 0.47,
+        vwap: 42850.00,
+        label: 'Jan 30, 24',
+        changeOverTime: 1.05
+      }
+    ]
+  }
+}`}
+</CodeBlock>
+
+## Get Crypto List
+
+Retrieve a list of all available cryptocurrencies.
+
+<CodeBlock language="typescript">
+  {`const cryptoList = await fmp.crypto.getCryptoList();`}
+</CodeBlock>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+  success: true,
+  data: [
+    {
+      symbol: 'BTCUSD',
+      name: 'Bitcoin USD',
+      currency: 'USD',
+      stockExchange: 'Crypto',
+      exchangeShortName: 'CRYPTO'
+    },
+    {
+      symbol: 'ETHUSD',
+      name: 'Ethereum USD',
+      currency: 'USD',
+      stockExchange: 'Crypto',
+      exchangeShortName: 'CRYPTO'
+    },
+    {
+      symbol: 'ADAUSD',
+      name: 'Cardano USD',
+      currency: 'USD',
+      stockExchange: 'Crypto',
+      exchangeShortName: 'CRYPTO'
+    },
+    {
+      symbol: 'DOTUSD',
+      name: 'Polkadot USD',
+      currency: 'USD',
+      stockExchange: 'Crypto',
+      exchangeShortName: 'CRYPTO'
+    }
+  ]
+}`}
 </CodeBlock>
 
 ## Response Types
@@ -129,28 +213,28 @@ console.log('Available Cryptocurrencies:', cryptoList.data);
 
 <CodeBlock language="typescript">
   {`interface CryptoQuote {
-    symbol: string;
-    name: string;
-    price: number;
-    changesPercentage: number;
-    change: number;
-    dayLow: number;
-    dayHigh: number;
-    yearHigh: number;
-    yearLow: number;
-    marketCap: number;
-    priceAvg50: number;
-    priceAvg200: number;
-    volume: number;
-    avgVolume: number;
-    exchange: string;
-    open: number;
-    previousClose: number;
-    eps: number;
-    pe: number;
-    earningsAnnouncement: string;
-    sharesOutstanding: number;
-    timestamp: number;
+  symbol: string;
+  name: string;
+  price: number;
+  changesPercentage: number;
+  change: number;
+  dayLow: number;
+  dayHigh: number;
+  yearHigh: number;
+  yearLow: number;
+  marketCap: number;
+  priceAvg50: number;
+  priceAvg200: number;
+  volume: number;
+  avgVolume: number;
+  exchange: string;
+  open: number;
+  previousClose: number;
+  eps: number | null;
+  pe: number | null;
+  earningsAnnouncement: string | null;
+  sharesOutstanding: number | null;
+  timestamp: number;
 }`}
 </CodeBlock>
 
@@ -158,11 +242,11 @@ console.log('Available Cryptocurrencies:', cryptoList.data);
 
 <CodeBlock language="typescript">
   {`interface CryptoCurrency {
-    symbol: string;
-    name: string;
-    currency: string;
-    stockExchange: string;
-    exchangeShortName: string;
+  symbol: string;
+  name: string;
+  currency: string;
+  stockExchange: string;
+  exchangeShortName: string;
 }`}
 </CodeBlock>
 
@@ -181,28 +265,40 @@ Here are some popular cryptocurrency symbols you can use:
 
 ## Error Handling
 
-<CodeBlock language="typescript">
-{`const response = await fmp.crypto.getQuote({ symbol: 'INVALID' });
+Always check the success property before accessing data:
 
-if (response.success) {
-// Handle successful response
-console.log(response.data);
+<CodeBlock language="typescript">
+{`const quote = await fmp.crypto.getQuote({ symbol: 'INVALID' });
+
+if (quote.success && quote.data) {
+console.log('Crypto Price:', quote.data[0].price);
 } else {
-// Handle error
-console.error('Error:', response.error);
-console.error('Status:', response.status);
+console.error('Error:', quote.error);
+console.error('Status:', quote.status);
 }`}
 
 </CodeBlock>
 
 ## Rate Limiting
 
-Cryptocurrency endpoints are subject to FMP's rate limits. For production applications, consider implementing appropriate rate limiting strategies.
+Cryptocurrency endpoints are subject to FMP's rate limits. For production applications, implement appropriate rate limiting and caching strategies.
 
 ## Market Data
 
 Cryptocurrency markets operate 24/7, unlike traditional stock markets. This means you can get real-time data at any time of day.
 
+## Next Steps
+
+Explore other endpoint categories:
+
+- [Stock Endpoints](/docs/api/stock) - Real-time quotes and historical data
+- [Forex Endpoints](/docs/api/forex) - Foreign exchange rates and data
+- [Market Endpoints](/docs/api/market) - Market indices and sector data
+- [Economic Endpoints](/docs/api/economic) - Economic indicators and data
+- [Calendar Endpoints](/docs/api/calendar) - Earnings and dividend calendars
+- [List Endpoints](/docs/api/list) - Available symbols and instruments
+- [Examples](/docs/examples) - Practical code samples
+
 ---
 
-**Next:** Explore other endpoint categories like [Forex Data](/docs/api/forex) or [Stock Data](/docs/api/stock).
+**Ready to explore forex data?** Check out the [Forex Endpoints](/docs/api/forex) for currency exchange rates and data.

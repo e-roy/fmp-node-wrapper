@@ -1,34 +1,8 @@
 # Market Endpoints
 
-Access market-wide data including performance metrics, trading hours, and sector information.
-
-## Overview
-
-The market endpoints provide access to broad market data, including overall market performance, trading hours, sector performance, and market indices.
-
-## Quick Start
-
-<CodeBlock language="typescript">
-{`import { FMP } from 'fmp-node-api';
-
-const fmp = new FMP({ apiKey: 'your-api-key' });
-
-// Get market performance
-const performance = await fmp.market.getMarketPerformance();
-
-// Get market hours
-const hours = await fmp.market.getMarketHours();
-
-// Get sector performance
-const sectors = await fmp.market.getSectorPerformance();`}
-
-</CodeBlock>
+Access market-wide data including performance metrics, trading hours, sector information, and market indices.
 
 ## Available Methods
-
-### getMarketPerformance
-
-Get overall market performance data.
 
 <ApiTable
   endpoints={[
@@ -37,151 +11,31 @@ Get overall market performance data.
       path: '/market-performance',
       description: 'Get market performance data',
     },
-  ]}
-/>
-
-**Example:**
-
-<CodeBlock language="typescript">
-{`const performance = await fmp.market.getMarketPerformance();
-
-if (performance.success) {
-console.log('Market Performance:', performance.data);
-}`}
-
-</CodeBlock>
-
-### getMarketHours
-
-Get current market trading hours and status.
-
-<ApiTable
-  endpoints={[
     {
       method: 'GET',
       path: '/market-hours',
       description: 'Get market hours and status',
     },
-  ]}
-/>
-
-**Example:**
-
-<CodeBlock language="typescript">
-{`const hours = await fmp.market.getMarketHours();
-
-if (hours.success) {
-console.log('Market Status:', hours.data);
-}`}
-
-</CodeBlock>
-
-### getGainers
-
-Get top gaining stocks for the day.
-
-<ApiTable
-  endpoints={[
     {
       method: 'GET',
       path: '/stock_market/gainers',
       description: 'Get top gaining stocks',
     },
-  ]}
-/>
-
-**Example:**
-
-<CodeBlock language="typescript">
-{`const gainers = await fmp.market.getGainers();
-
-if (gainers.success) {
-console.log('Top Gainers:', gainers.data);
-}`}
-
-</CodeBlock>
-
-### getLosers
-
-Get top losing stocks for the day.
-
-<ApiTable
-  endpoints={[
     {
       method: 'GET',
       path: '/stock_market/losers',
       description: 'Get top losing stocks',
     },
-  ]}
-/>
-
-**Example:**
-
-<CodeBlock language="typescript">
-{`const losers = await fmp.market.getLosers();
-
-if (losers.success) {
-console.log('Top Losers:', losers.data);
-}`}
-
-</CodeBlock>
-
-### getMostActive
-
-Get most actively traded stocks.
-
-<ApiTable
-  endpoints={[
     {
       method: 'GET',
       path: '/stock_market/actives',
       description: 'Get most active stocks',
     },
-  ]}
-/>
-
-**Example:**
-
-<CodeBlock language="typescript">
-{`const active = await fmp.market.getMostActive();
-
-if (active.success) {
-console.log('Most Active:', active.data);
-}`}
-
-</CodeBlock>
-
-### getSectorPerformance
-
-Get performance data by sector.
-
-<ApiTable
-  endpoints={[
     {
       method: 'GET',
       path: '/sector-performance',
       description: 'Get sector performance data',
     },
-  ]}
-/>
-
-**Example:**
-
-<CodeBlock language="typescript">
-{`const sectors = await fmp.market.getSectorPerformance();
-
-if (sectors.success) {
-console.log('Sector Performance:', sectors.data);
-}`}
-
-</CodeBlock>
-
-### getMarketIndex
-
-Get market index data.
-
-<ApiTable
-  endpoints={[
     {
       method: 'GET',
       path: '/quotes/index',
@@ -190,18 +44,295 @@ Get market index data.
   ]}
 />
 
-**Example:**
+## Get Market Performance
+
+Retrieve overall market performance data including major indices.
 
 <CodeBlock language="typescript">
-{`const index = await fmp.market.getMarketIndex();
+  {`const performance = await fmp.market.getMarketPerformance();`}
+</CodeBlock>
 
-if (index.success) {
-console.log('Market Index:', index.data);
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+  success: true,
+  data: [
+    {
+      symbol: '^DJI',
+      name: 'Dow Jones Industrial Average',
+      change: 125.45,
+      price: 37592.98,
+      changesPercentage: 0.34
+    },
+    {
+      symbol: '^GSPC',
+      name: 'S&P 500',
+      change: 18.76,
+      price: 4783.83,
+      changesPercentage: 0.39
+    },
+    {
+      symbol: '^IXIC',
+      name: 'NASDAQ Composite',
+      change: 78.23,
+      price: 15011.35,
+      changesPercentage: 0.52
+    }
+  ]
 }`}
+</CodeBlock>
 
+## Get Market Hours
+
+Retrieve current market trading hours and status information.
+
+<CodeBlock language="typescript">{`const hours = await fmp.market.getMarketHours();`}</CodeBlock>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+  success: true,
+  data: {
+    stockExchangeName: 'NASDAQ',
+    stockMarketHours: {
+      openingHour: '09:30',
+      closingHour: '16:00'
+    },
+    stockMarketHolidays: [
+      {
+        year: 2024,
+        'Martin Luther King, Jr. Day': '2024-01-15',
+        "Presidents' Day": '2024-02-19',
+        'Good Friday': '2024-03-29',
+        'Memorial Day': '2024-05-27',
+        Juneteenth: '2024-06-19',
+        'Independence Day': '2024-07-04',
+        'Labor Day': '2024-09-02',
+        'Thanksgiving Day': '2024-11-28',
+        Christmas: '2024-12-25'
+      }
+    ],
+    isTheStockMarketOpen: true,
+    isTheEuronextMarketOpen: false,
+    isTheForexMarketOpen: true,
+    isTheCryptoMarketOpen: true
+  }
+}`}
+</CodeBlock>
+
+## Get Top Gainers
+
+Retrieve the top gaining stocks for the current trading day.
+
+<CodeBlock language="typescript">{`const gainers = await fmp.market.getGainers();`}</CodeBlock>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+  success: true,
+  data: [
+    {
+      symbol: 'TSLA',
+      name: 'Tesla, Inc.',
+      change: 12.45,
+      price: 248.50,
+      changesPercentage: 5.28,
+      dayLow: 235.20,
+      dayHigh: 250.10,
+      yearHigh: 299.29,
+      yearLow: 138.80,
+      marketCap: 789000000000,
+      priceAvg50: 245.67,
+      priceAvg200: 242.89,
+      volume: 45678900,
+      avgVolume: 52345600,
+      exchange: 'NASDAQ',
+      open: 236.50,
+      previousClose: 236.05,
+      eps: 3.12,
+      pe: 79.65,
+      earningsAnnouncement: '2024-01-24T21:30:00.000+00:00',
+      sharesOutstanding: 3180000000,
+      timestamp: 1703123456
+    }
+  ]
+}`}
+</CodeBlock>
+
+## Get Top Losers
+
+Retrieve the top losing stocks for the current trading day.
+
+<CodeBlock language="typescript">{`const losers = await fmp.market.getLosers();`}</CodeBlock>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+  success: true,
+  data: [
+    {
+      symbol: 'NFLX',
+      name: 'Netflix, Inc.',
+      change: -8.75,
+      price: 485.25,
+      changesPercentage: -1.77,
+      dayLow: 480.10,
+      dayHigh: 495.30,
+      yearHigh: 639.00,
+      yearLow: 285.33,
+      marketCap: 215000000000,
+      priceAvg50: 492.45,
+      priceAvg200: 478.12,
+      volume: 23456700,
+      avgVolume: 25678900,
+      exchange: 'NASDAQ',
+      open: 494.00,
+      previousClose: 494.00,
+      eps: 12.03,
+      pe: 40.34,
+      earningsAnnouncement: '2024-01-23T21:30:00.000+00:00',
+      sharesOutstanding: 443000000,
+      timestamp: 1703123456
+    }
+  ]
+}`}
+</CodeBlock>
+
+## Get Most Active
+
+Retrieve the most actively traded stocks by volume.
+
+<CodeBlock language="typescript">{`const active = await fmp.market.getMostActive();`}</CodeBlock>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+  success: true,
+  data: [
+    {
+      symbol: 'AAPL',
+      name: 'Apple Inc.',
+      change: 2.15,
+      price: 150.25,
+      changesPercentage: 1.45,
+      dayLow: 147.50,
+      dayHigh: 151.75,
+      yearHigh: 198.23,
+      yearLow: 124.17,
+      marketCap: 2375000000000,
+      priceAvg50: 145.67,
+      priceAvg200: 142.89,
+      volume: 78901200,
+      avgVolume: 52345600,
+      exchange: 'NASDAQ',
+      open: 148.50,
+      previousClose: 148.10,
+      eps: 6.16,
+      pe: 24.39,
+      earningsAnnouncement: '2024-01-25T21:30:00.000+00:00',
+      sharesOutstanding: 15800000000,
+      timestamp: 1703123456
+    }
+  ]
+}`}
+</CodeBlock>
+
+## Get Sector Performance
+
+Retrieve performance data organized by market sectors.
+
+<CodeBlock language="typescript">
+  {`const sectors = await fmp.market.getSectorPerformance();`}
+</CodeBlock>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+  success: true,
+  data: [
+    {
+      sector: 'Technology',
+      changesPercentage: 1.25
+    },
+    {
+      sector: 'Healthcare',
+      changesPercentage: 0.87
+    },
+    {
+      sector: 'Financial Services',
+      changesPercentage: 0.45
+    },
+    {
+      sector: 'Consumer Cyclical',
+      changesPercentage: 0.32
+    },
+    {
+      sector: 'Communication Services',
+      changesPercentage: 0.18
+    }
+  ]
+}`}
+</CodeBlock>
+
+## Get Market Index
+
+Retrieve detailed market index data.
+
+<CodeBlock language="typescript">{`const index = await fmp.market.getMarketIndex();`}</CodeBlock>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+  success: true,
+  data: [
+    {
+      symbol: '^DJI',
+      price: 37592.98,
+      extendedPrice: null,
+      change: 125.45,
+      dayHigh: 37650.25,
+      dayLow: 37450.75,
+      previousClose: 37467.53,
+      volume: null,
+      open: 37500.00,
+      close: null,
+      lastTradeTime: '2024-01-15T21:00:00.000+00:00',
+      lastExtendedTradeTime: null,
+      updatedAt: '2024-01-15T21:00:00.000+00:00',
+      createdAt: '2024-01-15T21:00:00.000+00:00',
+      type: 'index',
+      name: 'Dow Jones Industrial Average',
+      range: '37450.75-37650.25',
+      yearHigh: 37850.00,
+      yearLow: 31429.82,
+      priceAvg50: 37250.45,
+      priceAvg200: 36890.12,
+      changesPercentage: 0.34
+    }
+  ]
+}`}
 </CodeBlock>
 
 ## Response Types
+
+### MarketPerformance
+
+<CodeBlock language="typescript">
+  {`interface MarketPerformance {
+  symbol: string;
+  name: string;
+  change: number;
+  price: number;
+  changesPercentage: number;
+}`}
+</CodeBlock>
 
 ### MarketHours
 
@@ -232,18 +363,6 @@ Juneteenth: string;
 Christmas: string;
 }`}
 
-</CodeBlock>
-
-### MarketPerformance
-
-<CodeBlock language="typescript">
-  {`interface MarketPerformance {
-  symbol: string;
-  name: string;
-  change: number;
-  price: number;
-  changesPercentage: number;
-}`}
 </CodeBlock>
 
 ### MarketSectorPerformance
@@ -286,69 +405,25 @@ Christmas: string;
 
 > **Note:** Some numeric fields may be returned as strings by the FMP API. Always check the type at runtime if you need strict type safety.
 
-## Market Data Insights
-
-Market endpoints provide valuable insights for:
-
-- **Market Sentiment** - Understanding overall market direction
-- **Sector Rotation** - Identifying which sectors are performing well
-- **Trading Activity** - Monitoring volume and activity levels
-- **Market Timing** - Understanding when markets are open/closed
-
-## Common Use Cases
-
-### Market Dashboard
-
-<CodeBlock language="typescript">
-{`// Create a market dashboard
-const [performance, sectors, hours] = await Promise.all([
-  fmp.market.getMarketPerformance(),
-  fmp.market.getSectorPerformance(),
-  fmp.market.getMarketHours()
-]);
-
-console.log('Market Status:', hours.data);
-console.log('Top Performers:', performance.data.slice(0, 5));
-console.log('Sector Leaders:', sectors.data.slice(0, 3));`}
-
-</CodeBlock>
-
-### Market Analysis
-
-<CodeBlock language="typescript">
-{`// Analyze market breadth
-const [gainers, losers] = await Promise.all([
-  fmp.market.getGainers(),
-  fmp.market.getLosers()
-]);
-
-const advancing = gainers.data.length;
-const declining = losers.data.length;
-const breadth = advancing - declining;
-
-console.log('Market Breadth:', breadth);`}
-
-</CodeBlock>
-
 ## Error Handling
 
-<CodeBlock language="typescript">
-{`const response = await fmp.market.getMarketPerformance();
+Always check the success property before accessing data:
 
-if (response.success) {
-// Handle successful response
-console.log(response.data);
+<CodeBlock language="typescript">
+{`const performance = await fmp.market.getMarketPerformance();
+
+if (performance.success && performance.data) {
+console.log('Market Performance:', performance.data);
 } else {
-// Handle error
-console.error('Error:', response.error);
-console.error('Status:', response.status);
+console.error('Error:', performance.error);
+console.error('Status:', performance.status);
 }`}
 
 </CodeBlock>
 
 ## Rate Limiting
 
-Market endpoints are subject to FMP's rate limits. For production applications, consider implementing appropriate rate limiting strategies.
+Market endpoints are subject to FMP's rate limits. For production applications, implement appropriate rate limiting and caching strategies.
 
 ## Market Hours
 
@@ -359,6 +434,18 @@ Market data availability depends on trading hours:
 - **After-Hours** - 4:00 PM - 8:00 PM ET
 - **Weekends/Holidays** - Limited data availability
 
+## Next Steps
+
+Explore other endpoint categories:
+
+- [Stock Endpoints](/docs/api/stock) - Real-time quotes and historical data
+- [Company Endpoints](/docs/api/company) - Company profiles and executive data
+- [Financial Endpoints](/docs/api/financial) - Financial statements and ratios
+- [Economic Endpoints](/docs/api/economic) - Economic indicators and data
+- [Calendar Endpoints](/docs/api/calendar) - Earnings and dividend calendars
+- [List Endpoints](/docs/api/list) - Available symbols and instruments
+- [Examples](/docs/examples) - Practical code samples
+
 ---
 
-**Next:** Explore other endpoint categories like [Stock Data](/docs/api/stock) or [Economic Data](/docs/api/economic).
+**Ready to explore economic data?** Check out the [Economic Endpoints](/docs/api/economic) for indicators and macroeconomic data.
