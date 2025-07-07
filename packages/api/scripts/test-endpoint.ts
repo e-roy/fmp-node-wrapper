@@ -143,6 +143,17 @@ async function testEndpoint() {
           limit: 2,
         });
         break;
+      case 'earnings-historical':
+        result = await fmp.financial.getEarningsHistorical({
+          symbol: 'AAPL',
+          limit: 2,
+        });
+        break;
+      case 'earnings-surprises':
+        result = await fmp.financial.getEarningsSurprises({
+          symbol: 'AAPL',
+        });
+        break;
 
       // Company endpoints
       case 'company-profile':

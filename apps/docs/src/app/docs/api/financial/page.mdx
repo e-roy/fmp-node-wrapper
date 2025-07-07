@@ -57,6 +57,16 @@ and fundamental data for companies.
       path: '/financial-growth/{symbol}',
       description: 'Get general financial growth metrics',
     },
+    {
+      method: 'GET',
+      path: '/historical/earning_calendar/{symbol}',
+      description: 'Get historical earnings calendar',
+    },
+    {
+      method: 'GET',
+      path: '/earnings-surprises/{symbol}',
+      description: 'Get earnings surprises data',
+    },
   ]}
 />
 
@@ -253,7 +263,7 @@ Retrieve cash flow statement data including operating, investing, and
 financing activities.
 
 <CodeBlock language="typescript">
-  {`const cashFlow = await fmp.getCashFlow({
+  {`const cashFlow = await fmp.getCashFlowStatement({
     symbol: 'AAPL',
     period: 'annual',
     limit: 5,
@@ -929,6 +939,115 @@ Retrieve comprehensive financial growth metrics including revenue, earnings, and
         debtGrowth: -0.089,
         rdexpenseGrowth: 0.134,
         sgaexpensesGrowth: 0.134
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Earnings Historical
+
+Retrieve historical and upcoming earnings announcements for a specific company, including estimated and actual earnings per share (EPS) and revenue data.
+
+<CodeBlock language="typescript">
+  {`const earningsHistorical = await fmp.getEarningsHistorical({
+    symbol: 'AAPL',
+    limit: 5,
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+    {
+      name: 'limit',
+      type: 'number',
+      required: false,
+      description: 'Number of earnings announcements to retrieve (default: 5)',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        date: '2024-01-25',
+        symbol: 'AAPL',
+        eps: 2.18,
+        epsEstimated: 2.10,
+        time: 'AMC',
+        revenue: 119575000000,
+        revenueEstimated: 117910000000,
+        updatedFromDate: '2024-01-25',
+        fiscalDateEnding: '2023-12-31'
+      },
+      {
+        date: '2023-10-26',
+        symbol: 'AAPL',
+        eps: 1.46,
+        epsEstimated: 1.39,
+        time: 'AMC',
+        revenue: 89498000000,
+        revenueEstimated: 89280000000,
+        updatedFromDate: '2023-10-26',
+        fiscalDateEnding: '2023-09-30'
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Earnings Surprises
+
+Retrieve earnings surprises data showing the difference between estimated and actual earnings per share (EPS) for companies.
+
+<CodeBlock language="typescript">
+  {`const earningsSurprises = await fmp.getEarningsSurprises({
+    symbol: 'AAPL',
+  });`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        date: '2024-01-25',
+        symbol: 'AAPL',
+        actualEarningResult: 2.18,
+        estimatedEarning: 2.10
+      },
+      {
+        date: '2023-10-26',
+        symbol: 'AAPL',
+        actualEarningResult: 1.46,
+        estimatedEarning: 1.39
+      },
+      {
+        date: '2023-07-27',
+        symbol: 'AAPL',
+        actualEarningResult: 1.26,
+        estimatedEarning: 1.19
       }
     ]
 }`}

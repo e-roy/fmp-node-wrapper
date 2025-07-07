@@ -12,6 +12,8 @@ import {
   IncomeStatement,
   BalanceSheet,
   CashFlowStatement,
+  EarningsSurprises,
+  EarningsHistorical,
 } from '@/types/financial';
 
 export class FinancialEndpoints {
@@ -187,5 +189,32 @@ export class FinancialEndpoints {
     limit = 5,
   }: FinancialStatementsParams): Promise<APIResponse<FinancialGrowth[]>> {
     return this.client.get(`/financial-growth/${symbol}?period=${period}&limit=${limit}`, 'v3');
+  }
+
+  /**
+   * Get earnings historical
+   * https://site.financialmodelingprep.com/developer/docs#earnings-historical-earnings
+   * @param symbol - The stock symbol to get the earnings historical for
+   * @param limit - The number of periods to get
+   * @returns A list of historical & upcoming earnings announcements for a specific company, including the date, estimated EPS, and actual EPS.
+   */
+  async getEarningsHistorical({
+    symbol,
+    limit = 5,
+  }: FinancialStatementsParams): Promise<APIResponse<EarningsHistorical[]>> {
+    return this.client.get(`/historical/earning_calendar/${symbol}?limit=${limit}`, 'v3');
+  }
+
+  /**
+   * Get earnings surprises
+   * https://site.financialmodelingprep.com/developer/docs#earnings-surprises-earnings
+   * @param symbol - The stock symbol to get the earnings surprises for
+   * @param limit - The number of periods to get
+   * @returns A list of earnings announcements for publicly traded companies that were either positive or negative surprises. This endpoint includes the date of the earnings announcement, the estimated EPS, the actual EPS, and the earnings surprise.
+   */
+  async getEarningsSurprises({
+    symbol,
+  }: FinancialStatementsParams): Promise<APIResponse<EarningsSurprises[]>> {
+    return this.client.get(`/earnings-surprises/${symbol}`, 'v3');
   }
 }

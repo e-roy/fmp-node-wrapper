@@ -424,3 +424,24 @@ export interface FinancialGrowth extends GrowthStatementBase {
   rdexpenseGrowth: number;
   sgaexpensesGrowth: number;
 }
+
+// Earnings Historical
+export interface EarningsHistorical {
+  date: string;
+  symbol: string;
+  eps: number;
+  epsEstimated: number;
+  time: string;
+  revenue: number;
+  revenueEstimated: number;
+  updatedFromDate: string;
+  fiscalDateEnding: string;
+}
+
+// Earnings Surprises
+export interface EarningsSurprises {
+  date: string;
+  symbol: string;
+  actualEarningResult: number;
+  estimatedEarning: number;
+}

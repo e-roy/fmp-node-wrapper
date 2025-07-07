@@ -1,5 +1,5 @@
 import { FMPClient } from '@/client';
-import { APIResponse, DateRangeParams, HistoricalPriceResponse } from '@/types';
+import { APIResponse, DateRangeParams, HistoricalPriceResponse } from '@/types/common';
 import { MarketCap, StockSplitResponse, StockQuote, StockDividendResponse } from '@/types/stock';
 
 export class StockEndpoints {
