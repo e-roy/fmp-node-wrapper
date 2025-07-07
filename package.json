@@ -24,6 +24,7 @@
     "test:calendar": "turbo run test:calendar --filter=fmp-node-api",
     "test:company": "turbo run test:company --filter=fmp-node-api",
     "test:crypto": "turbo run test:crypto --filter=fmp-node-api",
+    "test:etf": "turbo run test:etf --filter=fmp-node-api",
     "lint": "pnpm exec eslint packages/api/src/**/*.ts apps/docs/src/**/*.ts",
     "lint:fix": "turbo run lint:fix",
     "clean": "turbo run clean",

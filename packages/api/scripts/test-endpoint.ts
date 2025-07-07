@@ -251,6 +251,29 @@ async function testEndpoint() {
         });
         break;
 
+      // ETF endpoints
+      case 'etf-holding-dates':
+        result = await fmp.etf.getHoldingDates({ symbol: 'SPY' });
+        break;
+      case 'etf-holdings':
+        result = await fmp.etf.getHoldings({ symbol: 'SPY', date: '2023-09-30' });
+        break;
+      case 'etf-holder':
+        result = await fmp.etf.getHolder({ symbol: 'SPY' });
+        break;
+      case 'etf-profile':
+        result = await fmp.etf.getProfile({ symbol: 'SPY' });
+        break;
+      case 'etf-sector-weighting':
+        result = await fmp.etf.getSectorWeighting({ symbol: 'SPY' });
+        break;
+      case 'etf-country-weighting':
+        result = await fmp.etf.getCountryWeighting({ symbol: 'SPY' });
+        break;
+      case 'etf-stock-exposure':
+        result = await fmp.etf.getStockExposure({ symbol: 'SPY' });
+        break;
+
       // crypto endpoints
       case 'crypto-historical':
         result = await fmp.crypto.getHistoricalPrice({

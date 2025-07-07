@@ -1,229 +1,392 @@
 # ETF Endpoints
 
-Access ETF (Exchange-Traded Fund) data including quotes, profiles, and holdings information.
+Access ETF (Exchange-Traded Fund) data including profiles, holdings, sector weightings, and stock exposure information.
 
 ## Overview
 
-The ETF endpoints provide access to ETF market data, including real-time quotes, fund profiles, holdings information, and ETF listings.
-
-## Quick Start
-
-<CodeBlock language="typescript">
-{`import { FMP } from 'fmp-node-api';
-
-const fmp = new FMP({ apiKey: 'your-api-key' });
-
-// Get ETF quote
-const quote = await fmp.etf.getQuote({ symbol: 'SPY' });
-
-// Get ETF profile
-const profile = await fmp.etf.getProfile({ symbol: 'SPY' });
-
-// Get ETF holdings
-const holdings = await fmp.etf.getHoldings({ symbol: 'SPY' });`}
-
-</CodeBlock>
+The ETF endpoints provide access to ETF market data, including fund profiles, holdings information, sector and country weightings, and stock exposure data.
 
 ## Available Methods
 
-### getQuote
-
-Get real-time ETF quote.
-
 <ApiTable
   endpoints={[
     {
       method: 'GET',
-      path: '/quote/{symbol}',
-      description: 'Get real-time ETF quote',
+      path: '/etf-info',
+      description: 'Get ETF profile information',
     },
-  ]}
-/>
-
-**Parameters:**
-
-| Parameter | Type     | Required | Description              |
-| --------- | -------- | -------- | ------------------------ |
-| `symbol`  | `string` | Yes      | ETF symbol (e.g., 'SPY') |
-
-**Example:**
-
-<CodeBlock language="typescript">
-{`const quote = await fmp.etf.getQuote({ symbol: 'SPY' });
-
-if (quote.success) {
-console.log('Price:', quote.data[0].price);
-console.log('Change:', quote.data[0].change);
-console.log('Volume:', quote.data[0].volume);
-}`}
-
-</CodeBlock>
-
-### getProfile
-
-Get ETF profile and information.
-
-<ApiTable
-  endpoints={[
     {
       method: 'GET',
-      path: '/profile/{symbol}',
-      description: 'Get ETF profile',
+      path: '/etf-holdings/portfolio-date',
+      description: 'Get ETF holding dates',
     },
-  ]}
-/>
-
-**Parameters:**
-
-| Parameter | Type     | Required | Description              |
-| --------- | -------- | -------- | ------------------------ |
-| `symbol`  | `string` | Yes      | ETF symbol (e.g., 'SPY') |
-
-**Example:**
-
-<CodeBlock language="typescript">
-{`const profile = await fmp.etf.getProfile({ symbol: 'SPY' });
-
-if (profile.success) {
-console.log('ETF Name:', profile.data[0].companyName);
-console.log('Exchange:', profile.data[0].exchange);
-console.log('Industry:', profile.data[0].industry);
-}`}
-
-</CodeBlock>
-
-### getHoldings
-
-Get ETF holdings and composition data.
-
-<ApiTable
-  endpoints={[
+    {
+      method: 'GET',
+      path: '/etf-holdings',
+      description: 'Get ETF holdings data',
+    },
     {
       method: 'GET',
       path: '/etf-holder/{symbol}',
-      description: 'Get ETF holdings',
+      description: 'Get ETF holder information',
     },
-  ]}
-/>
-
-**Parameters:**
-
-| Parameter | Type     | Required | Description                  |
-| --------- | -------- | -------- | ---------------------------- |
-| `symbol`  | `string` | Yes      | ETF symbol (e.g., 'SPY')     |
-| `limit`   | `number` | No       | Number of holdings to return |
-| `page`    | `number` | No       | Page number for pagination   |
-
-**Example:**
-
-<CodeBlock language="typescript">
-{`const holdings = await fmp.etf.getHoldings({ 
-    symbol: 'SPY',
-    limit: 10 
-});
-
-if (holdings.success) {
-console.log('Holdings:', holdings.data);
-}`}
-
-</CodeBlock>
-
-### getETFList
-
-Get list of all available ETFs.
-
-<ApiTable
-  endpoints={[
     {
       method: 'GET',
-      path: '/etf/list',
-      description: 'Get list of all ETFs',
+      path: '/etf-sector-weightings/{symbol}',
+      description: 'Get ETF sector weightings',
+    },
+    {
+      method: 'GET',
+      path: '/etf-country-weightings/{symbol}',
+      description: 'Get ETF country weightings',
+    },
+    {
+      method: 'GET',
+      path: '/etf-stock-exposure/{symbol}',
+      description: 'Get ETF stock exposure',
     },
   ]}
 />
 
-**Example:**
+## Get ETF Profile
+
+Retrieve ETF profile and basic information including expense ratio, AUM, and fund details.
 
 <CodeBlock language="typescript">
-{`const etfList = await fmp.etf.getETFList();
+  {`const profile = await fmp.etf.getProfile({ symbol: 'SPY' });`}
+</CodeBlock>
 
-if (etfList.success) {
-console.log('Available ETFs:', etfList.data);
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'ETF symbol (e.g., "SPY", "QQQ")',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: {
+      symbol: 'SPY',
+      name: 'SPDR S&P 500 ETF Trust',
+      assetClass: 'Equity',
+      aum: 500000000000,
+      avgVolume: 75000000,
+      cusip: '78462F103',
+      description: 'The SPDR S&P 500 ETF Trust tracks the S&P 500 Index',
+      domicile: 'United States',
+      etfCompany: 'State Street Global Advisors',
+      expenseRatio: 0.0945,
+      inceptionDate: '1993-01-29',
+      isin: 'US78462F1030',
+      nav: 450.25,
+      navCurrency: 'USD',
+      sectorsList: [
+        {
+          exposure: 'Technology',
+          industry: 'Software'
+        }
+      ],
+      website: 'https://www.ssga.com',
+      holdingsCount: 500
+    }
 }`}
+</CodeBlock>
 
+## Get ETF Holding Dates
+
+Retrieve available dates for ETF holdings data.
+
+<CodeBlock language="typescript">
+  {`const holdingDates = await fmp.etf.getHoldingDates({ symbol: 'SPY' });`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'ETF symbol',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        date: '2024-01-15'
+      },
+      {
+        date: '2024-01-08'
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get ETF Holdings
+
+Retrieve detailed holdings data for a specific ETF and date.
+
+<CodeBlock language="typescript">
+  {`const holdings = await fmp.etf.getHoldings({ 
+    symbol: 'SPY',
+    date: '2024-01-15'
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'ETF symbol',
+    },
+    {
+      name: 'date',
+      type: 'string',
+      required: true,
+      description: 'Date for holdings data (YYYY-MM-DD format)',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        cik: '0000320193',
+        acceptanceTime: '2024-01-15T16:30:00.000Z',
+        date: '2024-01-15',
+        symbol: 'AAPL',
+        name: 'Apple Inc.',
+        lei: 'HWUPKR0MPOU8FGXBT394',
+        title: 'Common Stock',
+        cusip: '037833100',
+        isin: 'US0378331005',
+        balance: 1000000,
+        units: 'SHRS',
+        cur_cd: 'USD',
+        valUsd: 150000000,
+        pctVal: 7.5,
+        payoffProfile: 'Long',
+        assetCat: 'Equity',
+        issuerCat: 'Corporate',
+        invCountry: 'US',
+        isRestrictedSec: 'N',
+        fairValLevel: '1',
+        isCashCollateral: 'N',
+        isNonCashCollateral: 'N',
+        isLoanByFund: 'N'
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get ETF Holder
+
+Retrieve all stocks held by a specific ETF with asset details.
+
+<CodeBlock language="typescript">
+  {`const holder = await fmp.etf.getHolder({ symbol: 'SPY' });`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'ETF symbol',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        asset: 'AAPL',
+        name: 'Apple Inc.',
+        isin: 'US0378331005',
+        cusip: '037833100',
+        sharesNumber: 1000000,
+        weightPercentage: 7.5,
+        marketValue: 150000000,
+        updated: '2024-01-15'
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get ETF Sector Weighting
+
+Retrieve sector breakdown of ETF holdings.
+
+<CodeBlock language="typescript">
+  {`const sectorWeighting = await fmp.etf.getSectorWeighting({ symbol: 'SPY' });`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'ETF symbol',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        sector: 'Technology',
+        weightPercentage: '32.62%'
+      },
+      {
+        sector: 'Financial Services',
+        weightPercentage: '12.48%'
+      },
+      {
+        sector: 'Healthcare',
+        weightPercentage: '12.1%'
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get ETF Country Weighting
+
+Retrieve country breakdown of ETF holdings.
+
+<CodeBlock language="typescript">
+  {`const countryWeighting = await fmp.etf.getCountryWeighting({ symbol: 'SPY' });`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'ETF symbol',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        country: 'United States',
+        weightPercentage: '99.37%'
+      },
+      {
+        country: 'Switzerland',
+        weightPercentage: '0.3%'
+      },
+      {
+        country: 'Netherlands',
+        weightPercentage: '0.14%'
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get ETF Stock Exposure
+
+Retrieve which ETFs hold a specific stock.
+
+<CodeBlock language="typescript">
+  {`const stockExposure = await fmp.etf.getStockExposure({ symbol: 'AAPL' });`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol to find ETF exposure',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        etfSymbol: 'SPY',
+        assetExposure: 'AAPL',
+        sharesNumber: 1000000,
+        weightPercentage: 7.5,
+        marketValue: 150000000
+      },
+      {
+        etfSymbol: 'QQQ',
+        assetExposure: 'AAPL',
+        sharesNumber: 500000,
+        weightPercentage: 12.3,
+        marketValue: 75000000
+      }
+    ]
+}`}
 </CodeBlock>
 
 ## Response Types
-
-### ETFQuote
-
-<CodeBlock language="typescript">
-  {`interface ETFQuote {
-    symbol: string;
-    name: string;
-    price: number;
-    changesPercentage: number;
-    change: number;
-    dayLow: number;
-    dayHigh: number;
-    yearHigh: number;
-    yearLow: number;
-    marketCap: number;
-    priceAvg50: number;
-    priceAvg200: number;
-    volume: number;
-    avgVolume: number;
-    exchange: string;
-    open: number;
-    previousClose: number;
-    eps: number;
-    pe: number;
-    earningsAnnouncement: string;
-    sharesOutstanding: number;
-    timestamp: number;
-}`}
-</CodeBlock>
 
 ### ETFProfile
 
 <CodeBlock language="typescript">
   {`interface ETFProfile {
     symbol: string;
-    price: number;
-    beta: number;
-    volumeAvg: number;
-    marketCap: number;
-    lastDiv: number;
-    range: string;
-    changes: number;
-    companyName: string;
-    currency: string;
-    cik: string;
-    isin: string;
+    assetClass: string;
+    aum: number;
+    avgVolume: number;
     cusip: string;
-    exchange: string;
-    exchangeShortName: string;
-    industry: string;
-    website: string;
     description: string;
-    ceo: string;
-    sector: string;
-    country: string;
-    fullTimeEmployees: number;
-    phone: string;
-    address: string;
-    city: string;
-    state: string;
-    zip: string;
-    dcfDiff: number;
-    dcf: number;
-    image: string;
-    ipoDate: string;
-    defaultImage: boolean;
-    isEtf: boolean;
-    isActivelyTrading: boolean;
-    isAdr: boolean;
-    isFund: boolean;
+    domicile: string;
+    etfCompany: string;
+    expenseRatio: number;
+    inceptionDate: string;
+    isin: string;
+    name: string;
+    nav: number;
+    navCurrency: string;
+    sectorsList: {
+      exposure: string;
+      industry: string;
+    }[];
+    website: string;
+    holdingsCount: number;
 }`}
 </CodeBlock>
 
@@ -231,9 +394,73 @@ console.log('Available ETFs:', etfList.data);
 
 <CodeBlock language="typescript">
   {`interface ETFHolding {
+    cik: string;
+    acceptanceTime: string;
+    date: string;
+    symbol: string;
+    name: string;
+    lei: string;
+    title: string;
+    cusip: string;
+    isin: string;
+    balance: number;
+    units: string;
+    cur_cd: string;
+    valUsd: number;
+    pctVal: number;
+    payoffProfile: string;
+    assetCat: string;
+    issuerCat: string;
+    invCountry: string;
+    isRestrictedSec: string;
+    fairValLevel: string;
+    isCashCollateral: string;
+    isNonCashCollateral: string;
+    isLoanByFund: string;
+}`}
+</CodeBlock>
+
+### ETFHolder
+
+<CodeBlock language="typescript">
+  {`interface ETFHolder {
     asset: string;
-    weight: number;
-    shares: number;
+    name: string;
+    isin: string;
+    cusip: string;
+    sharesNumber: number;
+    weightPercentage: number;
+    marketValue: number;
+    updated: string;
+}`}
+</CodeBlock>
+
+### ETFWeighting
+
+<CodeBlock language="typescript">
+  {`interface ETFWeighting {
+    sector: string;
+    weightPercentage: string;
+}`}
+</CodeBlock>
+
+### ETFCountryWeighting
+
+<CodeBlock language="typescript">
+  {`interface ETFCountryWeighting {
+    country: string;
+    weightPercentage: string;
+}`}
+</CodeBlock>
+
+### ETFStockExposure
+
+<CodeBlock language="typescript">
+  {`interface ETFStockExposure {
+    etfSymbol: string;
+    assetExposure: string;
+    sharesNumber: number;
+    weightPercentage: number;
     marketValue: number;
 }`}
 </CodeBlock>
@@ -253,34 +480,37 @@ Here are some popular ETF symbols you can use:
 
 ## Error Handling
 
-<CodeBlock language="typescript">
-{`const response = await fmp.etf.getQuote({ symbol: 'INVALID' });
+Always check the success property before accessing data:
 
-if (response.success) {
-// Handle successful response
-console.log(response.data);
+<CodeBlock language="typescript">
+{`const profile = await fmp.etf.getProfile({ symbol: 'INVALID' });
+
+if (profile.success && profile.data) {
+console.log('ETF Name:', profile.data.name);
+console.log('Expense Ratio:', profile.data.expenseRatio);
 } else {
-// Handle error
-console.error('Error:', response.error);
-console.error('Status:', response.status);
+console.error('Error:', profile.error);
+console.error('Status:', profile.status);
 }`}
 
 </CodeBlock>
 
-## ETF Categories
-
-ETFs can be categorized by their investment focus:
-
-- **Equity ETFs** - Track stock indices or sectors
-- **Bond ETFs** - Track bond indices
-- **Commodity ETFs** - Track commodity prices
-- **International ETFs** - Track foreign markets
-- **Sector ETFs** - Track specific industry sectors
-
 ## Rate Limiting
 
-ETF endpoints are subject to FMP's rate limits. For production applications, consider implementing appropriate rate limiting strategies.
+ETF endpoints are subject to FMP's rate limits. For production applications, implement appropriate rate limiting and caching strategies.
+
+## Next Steps
+
+Explore other endpoint categories:
+
+- [Stock Endpoints](/docs/api/stock) - Real-time quotes and historical data
+- [Company Endpoints](/docs/api/company) - Company profiles and information
+- [Financial Endpoints](/docs/api/financial) - Financial statements and ratios
+- [Market Endpoints](/docs/api/market) - Market indices and sector data
+- [Calendar Endpoints](/docs/api/calendar) - Earnings, dividends, and economic calendars
+- [List Endpoints](/docs/api/list) - Available symbols and instruments
+- [Examples](/docs/examples) - Practical code samples
 
 ---
 
-**Next:** Explore other endpoint categories like [Stock Data](/docs/api/stock) or [Market Data](/docs/api/market).
+**Ready to explore financial data?** Check out the [Financial Endpoints](/docs/api/financial) for income statements, balance sheets, and more.

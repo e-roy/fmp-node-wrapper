@@ -1,83 +1,83 @@
 // ETF-related types for FMP API
 
-import { SymbolParams, PaginationParams } from './common';
+export interface ETFHoldingDates {
+  date: string;
+}
 
-// ETF parameter interfaces
-export interface ETFQuoteParams extends SymbolParams {}
-
-export interface ETFProfileParams extends SymbolParams {}
-
-export interface ETFHoldersParams extends SymbolParams, PaginationParams {}
-
-export interface ETFListParams {}
-
-// ETF data interfaces
-export interface ETFQuote {
+export interface ETFHolding {
+  cik: string;
+  acceptanceTime: string;
+  date: string;
   symbol: string;
-  price: number;
-  changesPercentage: number;
-  change: number;
-  dayLow: number;
-  dayHigh: number;
-  yearLow: number;
-  yearHigh: number;
-  marketCap: number;
-  priceAvg50: number;
-  priceAvg200: number;
-  volume: number;
-  avgVolume: number;
-  exchange: string;
-  open: number;
-  previousClose: number;
-  eps: number;
-  pe: number;
-  earningsAnnouncement: string;
-  sharesOutstanding: number;
-  timestamp: number;
+  name: string;
+  lei: string;
+  title: string;
+  cusip: string;
+  isin: string;
+  balance: number;
+  units: string;
+  cur_cd: string;
+  valUsd: number;
+  pctVal: number;
+  payoffProfile: string;
+  assetCat: string;
+  issuerCat: string;
+  invCountry: string;
+  isRestrictedSec: string;
+  fairValLevel: string;
+  isCashCollateral: string;
+  isNonCashCollateral: string;
+  isLoanByFund: string;
+}
+
+export interface ETFHolder {
+  asset: string;
+  name: string;
+  isin: string;
+  cusip: string;
+  sharesNumber: number;
+  weightPercentage: number;
+  marketValue: number;
+  updated: string;
 }
 
 export interface ETFProfile {
   symbol: string;
-  price: number;
-  beta: number;
-  volAvg: number;
-  marketCap: number;
-  lastDiv: number;
-  range: string;
-  changes: number;
-  companyName: string;
-  currency: string;
-  cik: string;
-  isin: string;
+  assetClass: string;
+  aum: number;
+  avgVolume: number;
   cusip: string;
-  exchange: string;
-  exchangeShortName: string;
-  industry: string;
-  website: string;
   description: string;
-  ceo: string;
-  sector: string;
-  country: string;
-  fullTimeEmployees: string;
-  phone: string;
-  address: string;
-  city: string;
-  state: string;
-  zip: string;
-  dcfDiff: number;
-  dcf: number;
-  image: string;
-  ipoDate: string;
-  defaultImage: boolean;
-  isEtf: boolean;
-  isActivelyTrading: boolean;
-  isAdr: boolean;
-  isFund: boolean;
+  domicile: string;
+  etfCompany: string;
+  expenseRatio: number;
+  inceptionDate: string;
+  isin: string;
+  name: string;
+  nav: number;
+  navCurrency: string;
+  sectorsList: {
+    exposure: string;
+    industry: string;
+  }[];
+  website: string;
+  holdingsCount: number;
 }
 
-export interface ETFHolding {
-  asset: string;
-  weightPercent: number;
-  shares: number;
+export interface ETFWeighting {
+  sector: string;
+  weightPercentage: string;
+}
+
+export interface ETFCountryWeighting {
+  country: string;
+  weightPercentage: string;
+}
+
+export interface ETFStockExposure {
+  etfSymbol: string;
+  assetExposure: string;
+  sharesNumber: number;
+  weightPercentage: number;
   marketValue: number;
 }
