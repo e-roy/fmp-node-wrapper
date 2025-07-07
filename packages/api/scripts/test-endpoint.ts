@@ -251,12 +251,22 @@ async function testEndpoint() {
         });
         break;
 
-      case 'forex-quote':
-        result = await fmp.forex.getQuote({ symbol: 'EURUSD' });
+      // crypto endpoints
+      case 'crypto-historical':
+        result = await fmp.crypto.getHistoricalPrice({
+          symbol: 'BTCUSD',
+          from: '2024-01-01',
+          to: '2024-01-31',
+        });
         break;
       case 'crypto-quote':
         result = await fmp.crypto.getQuote({ symbol: 'BTCUSD' });
         break;
+
+      case 'forex-quote':
+        result = await fmp.forex.getQuote({ symbol: 'EURUSD' });
+        break;
+
       case 'treasury-rates':
         result = await fmp.economic.getTreasuryRates({
           from: '2024-01-01',
