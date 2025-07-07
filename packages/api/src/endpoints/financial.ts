@@ -1,5 +1,5 @@
+import { APIResponse } from '@/types';
 import { FMPClient } from '@/client';
-import { UnwrappedAPIResponse } from '@/types';
 import {
   FinancialStatementsParams,
   KeyMetrics,
@@ -29,7 +29,7 @@ export class FinancialEndpoints {
     symbol,
     period = 'annual',
     limit = 5,
-  }: FinancialStatementsParams): Promise<UnwrappedAPIResponse<IncomeStatement[]>> {
+  }: FinancialStatementsParams): Promise<APIResponse<IncomeStatement[]>> {
     return this.client.get(`/income-statement/${symbol}?period=${period}&limit=${limit}`, 'v3');
   }
 
@@ -39,13 +39,13 @@ export class FinancialEndpoints {
    * @param symbol - The stock symbol to get the balance sheet for
    * @param period - The period to get the balance sheet for (annual or quarter)
    * @param limit - The number of periods to get
-   * @returns The balance sheet is a financial statement that displays a company’s total assets, liabilities, and shareholder equity over a specific timeframe (quarterly or yearly). Investors can use this statement to determine if the company can fund its operations, meet its debt obligations, and pay a dividend.
+   * @returns The balance sheet is a financial statement that displays a company's total assets, liabilities, and shareholder equity over a specific timeframe (quarterly or yearly). Investors can use this statement to determine if the company can fund its operations, meet its debt obligations, and pay a dividend.
    */
   async getBalanceSheet({
     symbol,
     period = 'annual',
     limit = 5,
-  }: FinancialStatementsParams): Promise<UnwrappedAPIResponse<BalanceSheet[]>> {
+  }: FinancialStatementsParams): Promise<APIResponse<BalanceSheet[]>> {
     return this.client.get(
       `/balance-sheet-statement/${symbol}?period=${period}&limit=${limit}`,
       'v3',
@@ -58,13 +58,13 @@ export class FinancialEndpoints {
    * @param symbol - The stock symbol to get the cash flow statement for
    * @param period - The period to get the cash flow statement for (annual or quarter)
    * @param limit - The number of periods to get
-   * @returns The cash flow statement is a financial statement that highlights how cash moves through the company, including both cash inflows and outflows. This statement shows the cash flows in 3 main categories “Operating Cash Flows”, “Investing Cash Flows”, and “Financing Cash Flows”, which help investors to understand if the company is making money or losing money by conducting business.
+   * @returns The cash flow statement is a financial statement that highlights how cash moves through the company, including both cash inflows and outflows. This statement shows the cash flows in 3 main categories "Operating Cash Flows", "Investing Cash Flows", and "Financing Cash Flows", which help investors to understand if the company is making money or losing money by conducting business.
    */
   async getCashFlowStatement({
     symbol,
     period = 'annual',
     limit = 5,
-  }: FinancialStatementsParams): Promise<UnwrappedAPIResponse<CashFlowStatement[]>> {
+  }: FinancialStatementsParams): Promise<APIResponse<CashFlowStatement[]>> {
     return this.client.get(`/cash-flow-statement/${symbol}?period=${period}&limit=${limit}`, 'v3');
   }
 
@@ -80,7 +80,7 @@ export class FinancialEndpoints {
     symbol,
     period = 'annual',
     limit = 5,
-  }: FinancialStatementsParams): Promise<UnwrappedAPIResponse<KeyMetrics[]>> {
+  }: FinancialStatementsParams): Promise<APIResponse<KeyMetrics[]>> {
     return this.client.get(`/key-metrics/${symbol}?period=${period}&limit=${limit}`, 'v3');
   }
 
@@ -96,7 +96,7 @@ export class FinancialEndpoints {
     symbol,
     period = 'annual',
     limit = 5,
-  }: FinancialStatementsParams): Promise<UnwrappedAPIResponse<FinancialRatios[]>> {
+  }: FinancialStatementsParams): Promise<APIResponse<FinancialRatios[]>> {
     return this.client.get(`/ratios/${symbol}?period=${period}&limit=${limit}`, 'v3');
   }
 
@@ -112,7 +112,7 @@ export class FinancialEndpoints {
     symbol,
     period = 'annual',
     limit = 5,
-  }: FinancialStatementsParams): Promise<UnwrappedAPIResponse<EnterpriseValue[]>> {
+  }: FinancialStatementsParams): Promise<APIResponse<EnterpriseValue[]>> {
     return this.client.get(`/enterprise-value/${symbol}?period=${period}&limit=${limit}`, 'v3');
   }
 
@@ -128,7 +128,7 @@ export class FinancialEndpoints {
     symbol,
     period = 'annual',
     limit = 5,
-  }: FinancialStatementsParams): Promise<UnwrappedAPIResponse<CashflowGrowth[]>> {
+  }: FinancialStatementsParams): Promise<APIResponse<CashflowGrowth[]>> {
     return this.client.get(
       `/cash-flow-statement-growth/${symbol}?period=${period}&limit=${limit}`,
       'v3',
@@ -147,7 +147,7 @@ export class FinancialEndpoints {
     symbol,
     period = 'annual',
     limit = 5,
-  }: FinancialStatementsParams): Promise<UnwrappedAPIResponse<IncomeGrowth[]>> {
+  }: FinancialStatementsParams): Promise<APIResponse<IncomeGrowth[]>> {
     return this.client.get(
       `/income-statement-growth/${symbol}?period=${period}&limit=${limit}`,
       'v3',
@@ -166,7 +166,7 @@ export class FinancialEndpoints {
     symbol,
     period = 'annual',
     limit = 5,
-  }: FinancialStatementsParams): Promise<UnwrappedAPIResponse<BalanceSheetGrowth[]>> {
+  }: FinancialStatementsParams): Promise<APIResponse<BalanceSheetGrowth[]>> {
     return this.client.get(
       `/balance-sheet-statement-growth/${symbol}?period=${period}&limit=${limit}`,
       'v3',
@@ -185,7 +185,7 @@ export class FinancialEndpoints {
     symbol,
     period = 'annual',
     limit = 5,
-  }: FinancialStatementsParams): Promise<UnwrappedAPIResponse<FinancialGrowth[]>> {
+  }: FinancialStatementsParams): Promise<APIResponse<FinancialGrowth[]>> {
     return this.client.get(`/financial-growth/${symbol}?period=${period}&limit=${limit}`, 'v3');
   }
 }

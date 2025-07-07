@@ -1,5 +1,5 @@
+import { APIResponse } from '@/types';
 import { FMPClient } from '@/client';
-import { UnwrappedAPIResponse } from '@/types';
 import {
   CompanyNotes,
   CompanyProfile,
@@ -23,8 +23,8 @@ export class CompanyEndpoints {
     symbol,
   }: {
     symbol: string;
-  }): Promise<UnwrappedAPIResponse<CompanyProfile | null>> {
-    return this.client.get(`/profile/${symbol}`, 'v3');
+  }): Promise<APIResponse<CompanyProfile | null>> {
+    return this.client.getSingle(`/profile/${symbol}`, 'v3');
   }
 
   /**
@@ -37,7 +37,7 @@ export class CompanyEndpoints {
     symbol,
   }: {
     symbol: string;
-  }): Promise<UnwrappedAPIResponse<ExecutiveCompensation[] | null>> {
+  }): Promise<APIResponse<ExecutiveCompensation[] | null>> {
     const params: { symbol: string } = { symbol };
 
     return this.client.get(`/governance/executive_compensation`, 'v4', params);
@@ -53,7 +53,7 @@ export class CompanyEndpoints {
     symbol,
   }: {
     symbol: string;
-  }): Promise<UnwrappedAPIResponse<CompanyNotes[] | null>> {
+  }): Promise<APIResponse<CompanyNotes[] | null>> {
     const params: { symbol: string } = { symbol };
 
     return this.client.get(`/company-notes`, 'v4', params);
@@ -69,7 +69,7 @@ export class CompanyEndpoints {
     symbol,
   }: {
     symbol: string;
-  }): Promise<UnwrappedAPIResponse<HistoricalEmployeeCount[] | null>> {
+  }): Promise<APIResponse<HistoricalEmployeeCount[] | null>> {
     const params: { symbol: string } = { symbol };
 
     return this.client.get(`/historical/employee_count`, 'v4', params);
@@ -81,14 +81,10 @@ export class CompanyEndpoints {
    * @param symbol - The stock symbol to get the shares float for
    * @returns The FMP Company Share Float endpoint provides the total number of shares that are publicly traded for a given company. This is also known as the company's float. The float is calculated by subtracting the number of restricted shares from the total number of outstanding shares.
    */
-  async getSharesFloat({
-    symbol,
-  }: {
-    symbol: string;
-  }): Promise<UnwrappedAPIResponse<SharesFloat | null>> {
+  async getSharesFloat({ symbol }: { symbol: string }): Promise<APIResponse<SharesFloat | null>> {
     const params: { symbol: string } = { symbol };
 
-    return this.client.get(`/shares_float`, 'v4', params);
+    return this.client.getSingle(`/shares_float`, 'v4', params);
   }
 
   /**
@@ -101,7 +97,7 @@ export class CompanyEndpoints {
     symbol,
   }: {
     symbol: string;
-  }): Promise<UnwrappedAPIResponse<HistoricalSharesFloat[] | null>> {
+  }): Promise<APIResponse<HistoricalSharesFloat[] | null>> {
     const params: { symbol: string } = { symbol };
 
     return this.client.get(`/historical/shares_float`, 'v4', params);
@@ -123,7 +119,7 @@ export class CompanyEndpoints {
     symbol: string;
     year: number;
     quarter: number;
-  }): Promise<UnwrappedAPIResponse<EarningsCallTranscript[] | null>> {
+  }): Promise<APIResponse<EarningsCallTranscript[] | null>> {
     const params: { year: number; quarter: number } = { year, quarter };
     return this.client.get(`/earning_call_transcript/${symbol}`, 'v3', params);
   }

@@ -1,7 +1,7 @@
 // Economic endpoints for FMP API
 
 import { FMPClient } from '@/client';
-import { UnwrappedAPIResponse } from '../types/common';
+import { APIResponse } from '@/types/common';
 import {
   TreasuryRate,
   TreasuryRateParams,
@@ -13,7 +13,7 @@ import {
   GDPParams,
   Unemployment,
   UnemploymentParams,
-} from '../types/economic';
+} from '@/types/economic';
 
 export class EconomicEndpoints {
   constructor(private client: FMPClient) {}
@@ -21,9 +21,7 @@ export class EconomicEndpoints {
   /**
    * Get treasury rates
    */
-  async getTreasuryRates(
-    params: TreasuryRateParams = {},
-  ): Promise<UnwrappedAPIResponse<TreasuryRate[]>> {
+  async getTreasuryRates(params: TreasuryRateParams = {}): Promise<APIResponse<TreasuryRate[]>> {
     return this.client.get('/treasury-rates', 'v3', params);
   }
 
@@ -32,30 +30,28 @@ export class EconomicEndpoints {
    */
   async getFederalFundsRate(
     params: FederalFundsRateParams = {},
-  ): Promise<UnwrappedAPIResponse<FederalFundsRate[]>> {
+  ): Promise<APIResponse<FederalFundsRate[]>> {
     return this.client.get('/federal-funds-rate', 'v3', params);
   }
 
   /**
    * Get CPI data
    */
-  async getCPI(params: CPIParams = {}): Promise<UnwrappedAPIResponse<CPI[]>> {
+  async getCPI(params: CPIParams = {}): Promise<APIResponse<CPI[]>> {
     return this.client.get('/economic/cpi', 'v3', params);
   }
 
   /**
    * Get GDP data
    */
-  async getGDP(params: GDPParams = {}): Promise<UnwrappedAPIResponse<GDP[]>> {
+  async getGDP(params: GDPParams = {}): Promise<APIResponse<GDP[]>> {
     return this.client.get('/economic/gdp', 'v3', params);
   }
 
   /**
    * Get unemployment data
    */
-  async getUnemployment(
-    params: UnemploymentParams = {},
-  ): Promise<UnwrappedAPIResponse<Unemployment[]>> {
+  async getUnemployment(params: UnemploymentParams = {}): Promise<APIResponse<Unemployment[]>> {
     return this.client.get('/economic/unemployment', 'v3', params);
   }
 }

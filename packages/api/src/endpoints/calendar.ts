@@ -1,5 +1,5 @@
+import { APIResponse, DateRangeParams } from '@/types';
 import { FMPClient } from '@/client';
-import { UnwrappedAPIResponse, DateRangeParams } from '@/types';
 import {
   EarningsCalendar,
   DividendsCalendar,
@@ -19,7 +19,7 @@ export class CalendarEndpoints {
    * @returns The earnings calendar
    */
   async getEarningsCalendar({ from, to }: DateRangeParams = {}): Promise<
-    UnwrappedAPIResponse<EarningsCalendar[]>
+    APIResponse<EarningsCalendar[]>
   > {
     const params: DateRangeParams = {};
     if (from) params.from = from;
@@ -36,7 +36,7 @@ export class CalendarEndpoints {
    * @returns The dividends calendar
    */
   async getDividendsCalendar({ from, to }: DateRangeParams = {}): Promise<
-    UnwrappedAPIResponse<DividendsCalendar[]>
+    APIResponse<DividendsCalendar[]>
   > {
     const params: DateRangeParams = {};
     if (from) params.from = from;
@@ -53,7 +53,7 @@ export class CalendarEndpoints {
    * @returns The economics calendar
    */
   async getEconomicsCalendar({ from, to }: DateRangeParams = {}): Promise<
-    UnwrappedAPIResponse<EconomicsCalendar[]>
+    APIResponse<EconomicsCalendar[]>
   > {
     const params: DateRangeParams = {};
     if (from) params.from = from;
@@ -69,9 +69,7 @@ export class CalendarEndpoints {
    * @param to - The end date to get the IPO calendar for
    * @returns The IPO calendar
    */
-  async getIPOCalendar({ from, to }: DateRangeParams = {}): Promise<
-    UnwrappedAPIResponse<IPOCalendar[]>
-  > {
+  async getIPOCalendar({ from, to }: DateRangeParams = {}): Promise<APIResponse<IPOCalendar[]>> {
     const params: DateRangeParams = {};
     if (from) params.from = from;
     if (to) params.to = to;
@@ -87,7 +85,7 @@ export class CalendarEndpoints {
    * @returns The stock splits calendar
    */
   async getSplitsCalendar({ from, to }: DateRangeParams = {}): Promise<
-    UnwrappedAPIResponse<SplitsCalendar[]>
+    APIResponse<SplitsCalendar[]>
   > {
     const params: DateRangeParams = {};
     if (from) params.from = from;

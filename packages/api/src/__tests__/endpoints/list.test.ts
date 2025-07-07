@@ -30,8 +30,8 @@ describe('Stock Endpoints', () => {
       } else if (result.data) {
         // Single object case
         expect(typeof result.data).toBe('object');
-        if (result.data.symbol !== undefined) {
-          expect(result.data.symbol).toBeDefined();
+        if ((result.data as any).symbol !== undefined) {
+          expect((result.data as any).symbol).toBeDefined();
         }
       }
     }, 10000);

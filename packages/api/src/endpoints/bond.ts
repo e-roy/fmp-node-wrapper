@@ -1,7 +1,7 @@
 // Bond endpoints for FMP API
 
 import { FMPClient } from '@/client';
-import { UnwrappedAPIResponse, HistoricalPriceResponse } from '../types/common';
+import { APIResponse, HistoricalPriceResponse } from '../types/common';
 import { BondQuote, BondQuoteParams } from '../types/bond';
 
 export class BondEndpoints {
@@ -9,13 +9,19 @@ export class BondEndpoints {
 
   /**
    * Get bond quote
+   * @param params - Parameters for the bond quote request
+   * @returns Bond quote data
    */
-  async getQuote(params: BondQuoteParams): Promise<UnwrappedAPIResponse<BondQuote[]>> {
+  async getQuote(params: BondQuoteParams): Promise<APIResponse<BondQuote[]>> {
     return this.client.get('/quote', 'v3', params);
   }
 
   /**
    * Get historical bond prices
+   * @param symbol - The bond symbol to get the historical prices for
+   * @param from - The start date to get the historical prices for
+   * @param to - The end date to get the historical prices for
+   * @returns Historical bond price data
    */
   async getHistoricalPrice({
     symbol,
@@ -25,7 +31,7 @@ export class BondEndpoints {
     symbol: string;
     from?: string;
     to?: string;
-  }): Promise<UnwrappedAPIResponse<HistoricalPriceResponse>> {
+  }): Promise<APIResponse<HistoricalPriceResponse>> {
     const params: Record<string, any> = {};
     if (from) params.from = from;
     if (to) params.to = to;

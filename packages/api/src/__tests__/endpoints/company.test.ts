@@ -169,7 +169,7 @@ describe('Company Endpoints', () => {
         expect(result.data).toBeDefined();
 
         if (result.data) {
-          const sharesFloat = result.data;
+          const sharesFloat = Array.isArray(result.data) ? result.data[0] : result.data;
           expect(sharesFloat.symbol).toBe(TEST_SYMBOLS.STOCK);
           expect(sharesFloat.freeFloat).toBeGreaterThan(0);
           expect(sharesFloat.floatShares).toBeGreaterThan(0);

@@ -1,11 +1,5 @@
-import {
-  StockQuote,
-  StockSplit,
-  StockDividend,
-  MarketCap,
-  StockHistoricalPriceData,
-  StockHistoricalPriceResponse,
-} from '@/types/stock';
+import { StockQuote, StockSplit, StockDividend, MarketCap } from '@/types/stock';
+import { HistoricalPriceData, HistoricalPriceResponse } from '@/types/common';
 
 describe('Stock Types', () => {
   describe('StockQuote Interface', () => {
@@ -88,9 +82,9 @@ describe('Stock Types', () => {
     });
   });
 
-  describe('StockHistoricalPriceData Interface', () => {
+  describe('HistoricalPriceData Interface', () => {
     it('should validate historical price data structure', () => {
-      const historicalData: StockHistoricalPriceData = {
+      const historicalData: HistoricalPriceData = {
         date: '2024-01-15',
         open: 150.0,
         high: 152.5,
@@ -113,9 +107,9 @@ describe('Stock Types', () => {
     });
   });
 
-  describe('StockHistoricalPriceResponse Interface', () => {
+  describe('HistoricalPriceResponse Interface', () => {
     it('should validate historical price response structure', () => {
-      const response: StockHistoricalPriceResponse = {
+      const response: HistoricalPriceResponse = {
         symbol: 'AAPL',
         historical: [
           {

@@ -1,12 +1,6 @@
 import { FMPClient } from '@/client';
-import { UnwrappedAPIResponse, DateRangeParams } from '@/types';
-import {
-  StockHistoricalPriceResponse,
-  MarketCap,
-  StockSplit,
-  StockDividend,
-  StockQuote,
-} from '@/types/stock';
+import { APIResponse, DateRangeParams, HistoricalPriceResponse } from '@/types';
+import { MarketCap, StockSplitResponse, StockQuote, StockDividendResponse } from '@/types/stock';
 
 export class StockEndpoints {
   constructor(private client: FMPClient) {}
@@ -17,8 +11,8 @@ export class StockEndpoints {
    * @param symbol - The stock symbol to get the quote for
    * @returns This endpoint gives you the latest bid and ask prices for a stock, as well as the volume and last trade price in real time.
    */
-  async getQuote({ symbol }: { symbol: string }): Promise<UnwrappedAPIResponse<StockQuote | null>> {
-    return this.client.get(`/quote/${symbol}`, 'v3');
+  async getQuote({ symbol }: { symbol: string }): Promise<APIResponse<StockQuote | null>> {
+    return this.client.getSingle(`/quote/${symbol}`, 'v3');
   }
 
   /**
@@ -37,12 +31,12 @@ export class StockEndpoints {
     symbol: string;
     from?: string;
     to?: string;
-  }): Promise<UnwrappedAPIResponse<StockHistoricalPriceResponse>> {
+  }): Promise<APIResponse<HistoricalPriceResponse>> {
     const params: DateRangeParams = {};
     if (from) params.from = from;
     if (to) params.to = to;
 
-    return this.client.get(`/historical-price-full/${symbol}`, 'v3', params);
+    return this.client.getSingle(`/historical-price-full/${symbol}`, 'v3', params);
   }
 
   /**
@@ -51,12 +45,8 @@ export class StockEndpoints {
    * @param symbol - The stock symbol to get the market cap for
    * @returns The FMP Market Cap endpoint provides the current market capitalization of a company. Market cap is a measure of the size and relative importance of a company in the stock market. It is calculated by multiplying the current share price by the number of outstanding shares.
    */
-  async getMarketCap({
-    symbol,
-  }: {
-    symbol: string;
-  }): Promise<UnwrappedAPIResponse<MarketCap | null>> {
-    return this.client.get(`/market-capitalization/${symbol}`, 'v3');
+  async getMarketCap({ symbol }: { symbol: string }): Promise<APIResponse<MarketCap | null>> {
+    return this.client.getSingle(`/market-capitalization/${symbol}`, 'v3');
   }
 
   /**
@@ -65,12 +55,8 @@ export class StockEndpoints {
    * @param symbol - The stock symbol to get the splits for
    * @returns A list of historical stock splits for publicly traded companies, including the date of the stock split, the split ratio, and the type of stock split.
    */
-  async getStockSplits({
-    symbol,
-  }: {
-    symbol: string;
-  }): Promise<UnwrappedAPIResponse<StockSplit[]>> {
-    return this.client.get(`/stock-split-calendar/${symbol}`, 'v3');
+  async getStockSplits({ symbol }: { symbol: string }): Promise<APIResponse<StockSplitResponse>> {
+    return this.client.get(`/historical-price-full/stock_split/${symbol}`, 'v3');
   }
 
   /**
@@ -83,7 +69,7 @@ export class StockEndpoints {
     symbol,
   }: {
     symbol: string;
-  }): Promise<UnwrappedAPIResponse<StockDividend[]>> {
-    return this.client.get(`/historical-price-full/stock_dividend/${symbol}`, 'v3');
+  }): Promise<APIResponse<StockDividendResponse>> {
+    return this.client.getSingle(`/historical-price-full/stock_dividend/${symbol}`, 'v3');
   }
 }

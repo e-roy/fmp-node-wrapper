@@ -1,7 +1,5 @@
 // Stock-related types for FMP API
 
-import { HistoricalPriceData, HistoricalPriceResponse } from './common';
-
 // Stock data interfaces
 export interface StockQuote {
   symbol: string;
@@ -35,6 +33,11 @@ export interface StockSplit {
   denominator: number;
 }
 
+export interface StockSplitResponse {
+  symbol: string;
+  historical: StockSplit[];
+}
+
 export interface StockDividend {
   date: string;
   label: string;
@@ -45,16 +48,13 @@ export interface StockDividend {
   declarationDate: string;
 }
 
+export interface StockDividendResponse {
+  symbol: string;
+  historical: StockDividend[];
+}
+
 export interface MarketCap {
   symbol: string;
   date: string;
   marketCap: number;
-}
-
-// Historical price data for stocks (extends common historical price data)
-export interface StockHistoricalPriceData extends HistoricalPriceData {}
-
-// Historical price response for stocks
-export interface StockHistoricalPriceResponse extends HistoricalPriceResponse {
-  historical: StockHistoricalPriceData[];
 }

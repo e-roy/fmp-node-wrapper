@@ -2,7 +2,9 @@
 
 A comprehensive Node.js wrapper for the Financial Modeling Prep (FMP) API with full TypeScript support and organized endpoint structure.
 
-> **📖 For development information, contributing guidelines, and project details, visit the [main repository](https://github.com/e-roy/fmp-node-wrapper).**
+> **📖 Visit the [Documentation](https://fmp-node-wrapper-docs.vercel.app/) for detailed information.**
+
+> **🔧 For development information, contributing guidelines, and project details, visit the [main repository](https://github.com/e-roy/fmp-node-wrapper).**
 
 ## Features
 
@@ -173,7 +175,7 @@ const unemployment = await fmp.economic.getUnemployment();
 
 ### Other Asset Classes
 
-````typescript
+```typescript
 // Forex
 const forexQuote = await fmp.forex.getQuote({ symbol: 'EURUSD' });
 const forexList = await fmp.forex.getForexList();
@@ -204,6 +206,7 @@ const companies = await fmp.company.searchCompany({ query: 'Apple' });
 
 // Company profile
 const companyProfile = await fmp.company.getCompanyProfile({ symbol: 'AAPL' });
+```
 
 ## Testing
 
@@ -213,7 +216,7 @@ This package includes comprehensive tests for all endpoints. There are two test 
 
 ```bash
 pnpm test
-````
+```
 
 - Uses Jest to run all tests
 - Automatically loads API key from `.env` file

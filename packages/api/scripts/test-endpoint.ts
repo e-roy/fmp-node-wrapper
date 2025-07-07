@@ -77,70 +77,70 @@ async function testEndpoint() {
         result = await fmp.financial.getIncomeStatement({
           symbol: 'AAPL',
           period: 'annual',
-          limit: 1,
+          limit: 2,
         });
         break;
       case 'balance-sheet':
         result = await fmp.financial.getBalanceSheet({
           symbol: 'AAPL',
           period: 'annual',
-          limit: 1,
+          limit: 2,
         });
         break;
       case 'cash-flow':
         result = await fmp.financial.getCashFlowStatement({
           symbol: 'AAPL',
           period: 'annual',
-          limit: 1,
+          limit: 2,
         });
         break;
       case 'key-metrics':
         result = await fmp.financial.getKeyMetrics({
           symbol: 'AAPL',
           period: 'annual',
-          limit: 1,
+          limit: 2,
         });
         break;
       case 'financial-ratios':
         result = await fmp.financial.getFinancialRatios({
           symbol: 'AAPL',
           period: 'annual',
-          limit: 1,
+          limit: 2,
         });
         break;
       case 'enterprise-value':
         result = await fmp.financial.getEnterpriseValue({
           symbol: 'AAPL',
           period: 'annual',
-          limit: 1,
+          limit: 2,
         });
         break;
       case 'cashflow-growth':
         result = await fmp.financial.getCashflowGrowth({
           symbol: 'AAPL',
           period: 'annual',
-          limit: 1,
+          limit: 2,
         });
         break;
       case 'income-growth':
         result = await fmp.financial.getIncomeGrowth({
           symbol: 'AAPL',
           period: 'annual',
-          limit: 1,
+          limit: 2,
         });
         break;
       case 'balance-sheet-growth':
         result = await fmp.financial.getBalanceSheetGrowth({
           symbol: 'AAPL',
           period: 'annual',
-          limit: 1,
+          limit: 2,
         });
         break;
       case 'financial-growth':
         result = await fmp.financial.getFinancialGrowth({
           symbol: 'AAPL',
           period: 'annual',
-          limit: 1,
+          limit: 2,
         });
         break;
 
@@ -263,18 +263,18 @@ async function testEndpoint() {
       console.log('📋 Data Structure:');
       console.log(`Type: ${Array.isArray(result.data) ? 'Array' : typeof result.data}`);
 
-      if (Array.isArray(result.data)) {
-        console.log(`Length: ${result.data.length}`);
-        if (result.data.length > 0) {
-          console.log('');
-          console.log('🔍 First Item:');
-          console.log(JSON.stringify(result.data[0], null, 2));
-        }
-      } else {
-        console.log('');
-        console.log('🔍 Data:');
-        console.log(JSON.stringify(result.data, null, 2));
-      }
+      // if (Array.isArray(result.data)) {
+      //   console.log(`Length: ${result.data.length}`);
+      //   if (result.data.length > 0) {
+      //     console.log('');
+      //     console.log('🔍 First Item:');
+      //     console.log(JSON.stringify(result.data[0], null, 2));
+      //   }
+      // } else {
+      //   console.log('');
+      //   console.log('🔍 Data:');
+      //   console.log(JSON.stringify(result.data, null, 2));
+      // }
     } else {
       console.log('❌ Failed:');
       console.log(result.error);

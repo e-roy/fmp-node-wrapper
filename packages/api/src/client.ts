@@ -1,10 +1,10 @@
 import axios, { AxiosInstance } from 'axios';
-import { FMPConfig, UnwrappedAPIResponse } from './types';
+import { FMPConfig, APIResponse } from './types';
 
 /**
  * Utility function to unwrap single objects from arrays
- * If the response is an array with only one item, return just that item
- * Otherwise, return the original response
+ * Only unwraps if the response is an array with exactly one item
+ * Otherwise, returns the original response
  */
 function unwrapSingleObject<T>(data: T): T {
   if (Array.isArray(data) && data.length === 1) {
@@ -46,12 +46,36 @@ export class FMPClient {
     return client;
   }
 
-  // Smart routing method
+  // Standard get method - returns raw API response
   async get<T>(
     endpoint: string,
     version: 'v3' | 'v4' | 'stable' = 'v3',
     params?: Record<string, any>,
-  ): Promise<UnwrappedAPIResponse<T>> {
+  ): Promise<APIResponse<T>> {
+    const client = this.getClientForVersion(version);
+
+    try {
+      const response = await client.get(endpoint, { params });
+      return {
+        success: true,
+        data: response.data,
+        status: response.status,
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        error: error.message || 'Unknown error occurred',
+        status: error.response?.status || 500,
+      };
+    }
+  }
+
+  // Get method for single-object endpoints - unwraps single-item arrays
+  async getSingle<T>(
+    endpoint: string,
+    version: 'v3' | 'v4' | 'stable' = 'v3',
+    params?: Record<string, any>,
+  ): Promise<APIResponse<T>> {
     const client = this.getClientForVersion(version);
 
     try {

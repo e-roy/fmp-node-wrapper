@@ -1,5 +1,5 @@
 import { FMPClient } from '@/client';
-import { UnwrappedAPIResponse } from '@/types';
+import { APIResponse } from '@/types';
 import { StockList, ETFList, CryptoList, ForexList, AvailableIndexesList } from '@/types/list';
 
 export class ListEndpoints {
@@ -10,7 +10,7 @@ export class ListEndpoints {
    * https://site.financialmodelingprep.com/developer/docs#symbol-list-stock-list
    * @returns The stock list
    */
-  async getStockList(): Promise<UnwrappedAPIResponse<StockList[]>> {
+  async getStockList(): Promise<APIResponse<StockList[]>> {
     return this.client.get('/stock/list');
   }
 
@@ -19,7 +19,7 @@ export class ListEndpoints {
    * https://site.financialmodelingprep.com/developer/docs#exchange-traded-fund-search-stock-list
    * @returns The ETF list
    */
-  async getETFList(): Promise<UnwrappedAPIResponse<ETFList[]>> {
+  async getETFList(): Promise<APIResponse<ETFList[]>> {
     return this.client.get('/etf/list');
   }
 
@@ -28,7 +28,7 @@ export class ListEndpoints {
    * https://site.financialmodelingprep.com/developer/docs#cryptocurrencies-list-crypto
    * @returns The crypto list
    */
-  async getCryptoList(): Promise<UnwrappedAPIResponse<CryptoList[]>> {
+  async getCryptoList(): Promise<APIResponse<CryptoList[]>> {
     return this.client.get('/symbol/available-cryptocurrencies');
   }
 
@@ -37,7 +37,7 @@ export class ListEndpoints {
    * https://site.financialmodelingprep.com/developer/docs#forex-list-forex
    * @returns The forex list
    */
-  async getForexList(): Promise<UnwrappedAPIResponse<ForexList[]>> {
+  async getForexList(): Promise<APIResponse<ForexList[]>> {
     return this.client.get('/symbol/available-forex-currency-pairs');
   }
 
@@ -46,7 +46,7 @@ export class ListEndpoints {
    * https://site.financialmodelingprep.com/developer/docs#available-indexes
    * @returns The available indexes list
    */
-  async getAvailableIndexes(): Promise<UnwrappedAPIResponse<AvailableIndexesList[]>> {
+  async getAvailableIndexes(): Promise<APIResponse<AvailableIndexesList[]>> {
     return this.client.get('/symbol/available-indexes');
   }
 }

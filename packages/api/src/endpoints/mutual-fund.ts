@@ -1,7 +1,7 @@
 // Mutual fund endpoints for FMP API
 
 import { FMPClient } from '@/client';
-import { UnwrappedAPIResponse } from '../types/common';
+import { APIResponse } from '../types/common';
 import {
   MutualFundQuote,
   MutualFundProfile,
@@ -16,26 +16,24 @@ export class MutualFundEndpoints {
 
   /**
    * Get mutual fund quote
+   * @param params - Parameters for the mutual fund quote request
+   * @returns Mutual fund quote data
    */
-  async getQuote(params: MutualFundQuoteParams): Promise<UnwrappedAPIResponse<MutualFundQuote[]>> {
+  async getQuote(params: MutualFundQuoteParams): Promise<APIResponse<MutualFundQuote[]>> {
     return this.client.get('/quote', 'v3', params);
   }
 
   /**
    * Get mutual fund profile
    */
-  async getProfile(
-    params: MutualFundProfileParams,
-  ): Promise<UnwrappedAPIResponse<MutualFundProfile[]>> {
+  async getProfile(params: MutualFundProfileParams): Promise<APIResponse<MutualFundProfile[]>> {
     return this.client.get('/profile', 'v3', params);
   }
 
   /**
    * Get mutual fund holdings
    */
-  async getHoldings(
-    params: MutualFundHoldersParams,
-  ): Promise<UnwrappedAPIResponse<MutualFundHolding[]>> {
+  async getHoldings(params: MutualFundHoldersParams): Promise<APIResponse<MutualFundHolding[]>> {
     return this.client.get('/holdings', 'v3', params);
   }
 }

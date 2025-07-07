@@ -6,6 +6,7 @@ import {
   FAST_TIMEOUT,
   TEST_SYMBOLS,
 } from '../utils/test-setup';
+import { StockSplitResponse } from '../../types/stock';
 
 describe('Stock Endpoints', () => {
   let fmp: FMP;
@@ -33,7 +34,7 @@ describe('Stock Endpoints', () => {
         expect(Object.keys(result.data || {}).length).toBeGreaterThan(0);
 
         if (result.data) {
-          const quote = result.data;
+          const quote = Array.isArray(result.data) ? result.data[0] : result.data;
           expect(quote.symbol).toBe(TEST_SYMBOLS.STOCK);
           expect(quote.price).toBeGreaterThan(0);
           expect(quote.marketCap).toBeGreaterThan(0);
@@ -98,7 +99,7 @@ describe('Stock Endpoints', () => {
         expect(Object.keys(result.data || {}).length).toBeGreaterThan(0);
 
         if (result.data) {
-          const marketCap = result.data;
+          const marketCap = Array.isArray(result.data) ? result.data[0] : result.data;
           expect(marketCap.symbol).toBe(TEST_SYMBOLS.STOCK);
           expect(marketCap.marketCap).toBeGreaterThan(0);
         }
@@ -121,7 +122,22 @@ describe('Stock Endpoints', () => {
 
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
-        expect(Array.isArray(result.data)).toBe(true);
+        // Stock splits returns a single object with historical array
+        expect(typeof result.data).toBe('object');
+        if (result.data && typeof result.data === 'object' && 'symbol' in result.data) {
+          expect(result.data.symbol).toBe(TEST_SYMBOLS.STOCK);
+          expect(result.data).toHaveProperty('historical');
+          expect(Array.isArray((result.data as StockSplitResponse).historical)).toBe(true);
+          if (
+            (result.data as StockSplitResponse).historical &&
+            (result.data as StockSplitResponse).historical.length > 0
+          ) {
+            expect((result.data as StockSplitResponse).historical[0].date).toBeDefined();
+            expect((result.data as StockSplitResponse).historical[0].label).toBeDefined();
+            expect((result.data as StockSplitResponse).historical[0].numerator).toBeDefined();
+            expect((result.data as StockSplitResponse).historical[0].denominator).toBeDefined();
+          }
+        }
       },
       FAST_TIMEOUT,
     );
@@ -141,9 +157,23 @@ describe('Stock Endpoints', () => {
 
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
-        // The dividend history endpoint returns a single object with historical array
-        if (result.data && typeof result.data === 'object' && 'historical' in result.data) {
+        // Dividend history returns a single object with historical array
+        expect(typeof result.data).toBe('object');
+        if (result.data && typeof result.data === 'object' && 'symbol' in result.data) {
+          expect(result.data.symbol).toBe(TEST_SYMBOLS.STOCK);
+          expect(result.data).toHaveProperty('historical');
           expect(Array.isArray(result.data.historical)).toBe(true);
+          if (result.data.historical && result.data.historical.length > 0) {
+            expect(result.data.historical[0].date).toBeDefined();
+            expect(result.data.historical[0].label).toBeDefined();
+            expect(result.data.historical[0].adjDividend).toBeDefined();
+            expect(result.data.historical[0].dividend).toBeDefined();
+            expect(result.data.historical[0].recordDate).toBeDefined();
+            expect(result.data.historical[0].paymentDate).toBeDefined();
+            expect(result.data.historical[0].declarationDate).toBeDefined();
+            expect(typeof result.data.historical[0].adjDividend).toBe('number');
+            expect(typeof result.data.historical[0].dividend).toBe('number');
+          }
         }
       },
       FAST_TIMEOUT,

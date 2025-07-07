@@ -39,7 +39,7 @@ describe('FMP API Integration Tests', () => {
       expect(Object.keys(result.data || {}).length).toBeGreaterThan(0);
 
       if (result.data) {
-        const quote = result.data;
+        const quote = Array.isArray(result.data) ? result.data[0] : result.data;
         expect(quote.symbol).toBe('AAPL');
         expect(quote.price).toBeGreaterThan(0);
         expect(quote.marketCap).toBeGreaterThan(0);

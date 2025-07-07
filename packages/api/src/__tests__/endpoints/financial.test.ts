@@ -72,10 +72,12 @@ describe('Financial Endpoints', () => {
 
       expect(result.success).toBe(true);
       expect(result.data).toBeDefined();
-      // When limit is 1, we get a single object instead of an array
-      expect(Array.isArray(result.data)).toBe(false);
-      expect(result.data).toHaveProperty('symbol');
-      expect(result.data).toHaveProperty('date');
+      // When limit is 1, we still get an array with one item
+      expect(Array.isArray(result.data)).toBe(true);
+      if (result.data && result.data.length > 0) {
+        expect(result.data[0]).toHaveProperty('symbol');
+        expect(result.data[0]).toHaveProperty('date');
+      }
     }, 15000);
   });
 
