@@ -1,5 +1,11 @@
 # fmp-node-api
 
+## 0.0.4
+
+### Patch Changes
+
+- Removed wrap on all endpoints and only use for endpoints that return a single object. fixed and cleaned up endpoints for etf, crypto, market and financial.
+
 ## 0.0.3
 
 ### Patch Changes
