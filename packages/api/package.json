@@ -27,6 +27,7 @@
     "test:unit": "jest --testPathPattern=\"src/__tests__/(client|fmp)\\.test\\.ts\"",
     "test:integration": "jest --testPathPattern=\"src/__tests__/integration\\.test\\.ts\"",
     "test:endpoints": "jest --testPathPattern=\"src/__tests__/endpoints\"",
+    "test:quote": "jest --testPathPattern=\"src/__tests__/endpoints/quote\\.test\\.ts\"",
     "test:stock": "jest --testPathPattern=\"src/__tests__/endpoints/stock\\.test\\.ts\"",
     "test:financial": "jest --testPathPattern=\"src/__tests__/endpoints/financial\\.test\\.ts\"",
     "test:market": "jest --testPathPattern=\"src/__tests__/endpoints/market\\.test\\.ts\"",
@@ -54,6 +55,11 @@
   ],
   "author": "Eric <https://github.com/e-roy>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/e-roy/fmp-node-wrapper.git"
+  },
+  "homepage": "https://fmp-node-wrapper.vercel.app",
   "dependencies": {
     "axios": "^1.6.2"
   },

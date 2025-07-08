@@ -15,6 +15,7 @@
     "test:unit": "turbo run test:unit --filter=fmp-node-api",
     "test:integration": "turbo run test:integration --filter=fmp-node-api",
     "test:endpoints": "turbo run test:endpoints --filter=fmp-node-api",
+    "test:quote": "turbo run test:quote --filter=fmp-node-api",
     "test:stock": "turbo run test:stock --filter=fmp-node-api",
     "test:financial": "turbo run test:financial --filter=fmp-node-api",
     "test:market": "turbo run test:market --filter=fmp-node-api",

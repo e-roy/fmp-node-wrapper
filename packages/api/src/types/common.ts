@@ -47,57 +47,9 @@ export interface PeriodParams {
   period?: 'annual' | 'quarter';
 }
 
-// Common historical price data structure
-export interface HistoricalPriceData {
-  date: string;
-  open: number;
-  high: number;
-  low: number;
-  close: number;
-  adjClose: number;
-  volume: number;
-  unadjustedVolume: number;
-  change: number;
-  changePercent: number;
-  vwap: number;
-  label: string;
-  changeOverTime: number;
-}
-
-// Historical price response wrapper
-export interface HistoricalPriceResponse {
-  symbol: string;
-  historical: HistoricalPriceData[];
-}
-
 // Type-safe query parameters
 export interface QueryParams {
   [key: string]: string | number | boolean | undefined;
-}
-
-// Common financial data types
-export interface Quote {
-  symbol: string;
-  price: number;
-  change: number;
-  changePercent: number;
-  dayLow: number;
-  dayHigh: number;
-  yearLow: number;
-  yearHigh: number;
-  marketCap: number;
-  priceAvg50: number;
-  priceAvg200: number;
-  volume: number;
-  avgVolume: number;
-  exchange: string;
-  open: number;
-  previousClose: number;
-  eps: number;
-  pe: number;
-  earningsAnnouncement: string;
-  sharesOutstanding: number;
-  timestamp: number;
 }
 
 // Common enums

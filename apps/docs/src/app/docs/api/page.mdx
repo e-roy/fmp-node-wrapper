@@ -26,8 +26,14 @@ The library is organized into different endpoint categories:
   endpoints={[
     {
       method: 'GET',
+      path: '/quote/*',
+      description:
+        'Unified quote endpoints for all asset types (stocks, crypto, forex, commodities, ETFs)',
+    },
+    {
+      method: 'GET',
       path: '/stock/*',
-      description: 'Stock-related endpoints for quotes, historical data, and market information',
+      description: 'Stock-related endpoints for market information, splits, and dividends',
     },
     {
       method: 'GET',
@@ -44,17 +50,17 @@ The library is organized into different endpoint categories:
     {
       method: 'GET',
       path: '/forex/*',
-      description: 'Foreign exchange endpoints for currency quotes and historical data',
+      description: 'Foreign exchange endpoints for currency rates and forex-specific data',
     },
     {
       method: 'GET',
       path: '/crypto/*',
-      description: 'Cryptocurrency endpoints for crypto quotes and historical data',
+      description: 'Cryptocurrency endpoints for crypto-specific data',
     },
     {
       method: 'GET',
       path: '/etf/*',
-      description: 'ETF endpoints for quotes, profiles, and holdings data',
+      description: 'ETF endpoints for profiles, holdings, and ETF-specific data',
     },
     {
       method: 'GET',
@@ -112,14 +118,25 @@ console.error('Status:', response.status);
 
 ## Endpoint Categories
 
+### Quote Endpoints
+
+Access unified quotes and historical data for all asset types:
+
+- **Unified Quotes** - Real-time quotes for stocks, crypto, forex, commodities, and ETFs
+- **Multiple Quotes** - Get quotes for multiple symbols in one request
+- **Historical Data** - Historical price data with flexible date ranges
+- **Intraday Data** - Intraday data with various time intervals
+
+[View Quote Endpoints →](/docs/api/quote)
+
 ### Stock Endpoints
 
-Access real-time and historical stock data:
+Access stock-specific market information:
 
-- **Quotes** - Real-time stock quotes and market data
-- **Historical Data** - Historical price data with flexible intervals
-- **Market Information** - Market cap, volume, and other metrics
-- **Company Information** - Company profiles and details
+- **Market Capitalization** - Market cap data and metrics
+- **Stock Splits** - Historical stock splits information
+- **Dividend History** - Dividend payment history
+- **Stock-specific Data** - Stock-specific market information
 
 [View Stock Endpoints →](/docs/api/stock)
 
@@ -148,31 +165,30 @@ Access financial statements and ratios:
 
 ### Forex Endpoints
 
-Access foreign exchange data:
+Access forex-specific data:
 
-- **Currency Quotes** - Real-time forex rates
-- **Historical Data** - Historical currency performance
+- **Forex Rates** - Real-time forex rates and currency data
 - **Currency Pairs** - Major and minor currency pairs
+- **Forex-specific Data** - Forex-specific market information
 
 [View Forex Endpoints →](/docs/api/forex)
 
 ### Crypto Endpoints
 
-Access cryptocurrency data:
+Access cryptocurrency-specific data:
 
-- **Crypto Quotes** - Real-time cryptocurrency prices
-- **Historical Data** - Historical crypto performance
 - **Crypto List** - Available cryptocurrencies
+- **Crypto-specific Data** - Cryptocurrency-specific market information
 
 [View Crypto Endpoints →](/docs/api/crypto)
 
 ### ETF Endpoints
 
-Access ETF data:
+Access ETF-specific data:
 
-- **ETF Quotes** - Real-time ETF prices
 - **ETF Profiles** - ETF information and details
 - **ETF Holdings** - Holdings and composition data
+- **ETF-specific Data** - ETF-specific market information
 
 [View ETF Endpoints →](/docs/api/etf)
 

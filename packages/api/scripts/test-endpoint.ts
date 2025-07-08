@@ -35,7 +35,7 @@ async function testEndpoint() {
     console.log('Usage: pnpm test:endpoint <endpoint>');
     console.log('');
     console.log('Available endpoints:');
-    console.log('  quote, profile, historical, stock-list, market-cap');
+    console.log('  quote, quotes, historical, intraday, stock-list, market-cap');
     console.log('  income-statement, balance-sheet, cash-flow');
     console.log('  market-hours, gainers, losers, most-active');
     console.log('  forex-quote, crypto-quote, treasury-rates');
@@ -51,17 +51,43 @@ async function testEndpoint() {
 
     let result;
     switch (endpoint.toLowerCase()) {
-      // Stock endpoints
+      // Quote endpoints
       case 'quote':
-        result = await fmp.stock.getQuote({ symbol: 'AAPL' });
+        result = await fmp.quote.getQuote({ symbol: 'AAPL' });
         break;
+      case 'quote-crypto':
+        result = await fmp.quote.getQuote({ symbol: 'BTCUSD' });
+        break;
+      case 'quote-forex':
+        result = await fmp.quote.getQuote({ symbol: 'EURUSD' });
+        break;
+      case 'quote-commodity':
+        result = await fmp.quote.getQuote({ symbol: 'ZOUSX' });
+        break;
+      case 'quote-etf':
+        result = await fmp.quote.getQuote({ symbol: 'SPY' });
+        break;
+      case 'quotes':
+        result = await fmp.quote.getQuotes(['AAPL', 'GOOGL']);
+        break;
+
       case 'historical':
-        result = await fmp.stock.getHistoricalPrice({
+        result = await fmp.quote.getHistoricalPrice({
           symbol: 'AAPL',
           from: '2024-01-01',
           to: '2024-01-31',
         });
         break;
+      case 'intraday':
+        result = await fmp.quote.getIntraday({
+          symbol: 'BTCUSD',
+          interval: '5min',
+          from: '2024-01-01',
+          to: '2024-01-02',
+        });
+        break;
+
+      // Stock endpoints
       case 'market-cap':
         result = await fmp.stock.getMarketCap({ symbol: 'AAPL' });
         break;

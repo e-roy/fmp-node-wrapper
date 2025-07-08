@@ -12,6 +12,10 @@ const navigationGroups = [
     ],
   },
   {
+    title: 'Quotes',
+    items: [{ name: 'Quote Endpoints', href: '/docs/api/quote' }],
+  },
+  {
     title: 'Asset Classes',
     items: [
       { name: 'Stock Endpoints', href: '/docs/api/stock' },

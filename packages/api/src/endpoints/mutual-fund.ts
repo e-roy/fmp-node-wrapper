@@ -16,6 +16,7 @@ export class MutualFundEndpoints {
 
   /**
    * Get mutual fund quote
+   * @deprecated Use `fmp.quote.getQuote()` instead. This method will be removed in a future release.
    * @param params - Parameters for the mutual fund quote request
    * @returns Mutual fund quote data
    */

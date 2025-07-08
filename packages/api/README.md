@@ -64,13 +64,12 @@ const fmp = new FMP({
 
 ### Available Modules
 
+- **`fmp.quote`** - Quote data for stocks, forex, crypto, commodities, and ETFs
 - **`fmp.stock`** - Stock market data (quotes, profiles, historical prices, etc.)
 - **`fmp.financial`** - Financial statements (income, balance sheet, cash flow)
-- **`fmp.forex`** - Foreign exchange data
 - **`fmp.crypto`** - Cryptocurrency data
 - **`fmp.etf`** - ETF data and holdings
 - **`fmp.mutualFund`** - Mutual fund data
-- **`fmp.bond`** - Bond market data
 - **`fmp.economic`** - Economic indicators
 - **`fmp.market`** - Market-wide data and performance
 - **`fmp.list`** - Stock lists and indices

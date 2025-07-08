@@ -1,5 +1,5 @@
 import { StockQuote, StockSplit, StockDividend, MarketCap } from '@/types/stock';
-import { HistoricalPriceData, HistoricalPriceResponse } from '@/types/common';
+import { HistoricalPriceData, HistoricalPriceResponse } from '@/types/quote';
 
 describe('Stock Types', () => {
   describe('StockQuote Interface', () => {

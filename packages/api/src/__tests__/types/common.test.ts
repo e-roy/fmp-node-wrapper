@@ -7,10 +7,10 @@ import {
   DateRangeParams,
   PaginationParams,
   PeriodParams,
-  Quote,
   Period,
   Exchange,
 } from '../../types/common';
+import { Quote } from '../../types/quote';
 
 describe('Common Types', () => {
   describe('APIResponse', () => {
@@ -133,9 +133,10 @@ describe('Common Types', () => {
     it('should validate Quote structure', () => {
       const quote: Quote = {
         symbol: 'AAPL',
+        name: 'Apple Inc.',
         price: 150.25,
+        changesPercentage: 1.45,
         change: 2.15,
-        changePercent: 1.45,
         dayLow: 148.5,
         dayHigh: 152.0,
         yearLow: 120.0,
@@ -158,7 +159,7 @@ describe('Common Types', () => {
       expect(quote.symbol).toBe('AAPL');
       expect(quote.price).toBe(150.25);
       expect(quote.change).toBe(2.15);
-      expect(quote.changePercent).toBe(1.45);
+      expect(quote.changesPercentage).toBe(1.45);
     });
   });
 

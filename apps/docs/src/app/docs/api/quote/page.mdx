@@ -1,0 +1,444 @@
+# Quote Endpoints
+
+The Quote Endpoints provide unified access to real-time quotes, historical data, and intraday data for all asset types including stocks, cryptocurrencies, forex pairs, commodities, and ETFs. This unified approach simplifies your code by using the same methods regardless of asset type.
+
+## Available Methods
+
+<ApiTable
+  endpoints={[
+    {
+      method: 'GET',
+      path: '/quote/{symbol}',
+      description: 'Get real-time quote for any asset type',
+    },
+    {
+      method: 'GET',
+      path: '/quote/{symbol1},{symbol2},...',
+      description: 'Get multiple quotes at once',
+    },
+    {
+      method: 'GET',
+      path: '/historical-price-full/{symbol}',
+      description: 'Get historical price data for any asset type',
+    },
+    {
+      method: 'GET',
+      path: '/historical-chart/{interval}/{symbol}',
+      description: 'Get intraday data with various intervals',
+    },
+  ]}
+/>
+
+## Supported Asset Types
+
+The unified quote endpoints work with all major asset types:
+
+- **Stocks**: `AAPL`, `MSFT`, `GOOGL`, etc.
+- **Cryptocurrencies**: `BTCUSD`, `ETHUSD`, `ADAUSD`, etc.
+- **Forex Pairs**: `EURUSD`, `GBPUSD`, `USDJPY`, etc.
+- **Commodities**: `ZOUSX` (Gold), `ZOUSX` (Silver), etc.
+- **ETFs**: `SPY`, `QQQ`, `VTI`, etc.
+
+## Get Quote
+
+Retrieve real-time quote data for any asset type. The response structure is consistent across all asset types.
+
+<CodeBlock language="typescript">
+  {`const quote = await fmp.quote.getQuote({ symbol: 'AAPL' });`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Asset symbol (e.g., "AAPL", "BTCUSD", "EURUSD")',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: {      
+      symbol: 'AAPL',
+      name: 'Apple Inc.',
+      price: 150.25,
+      changesPercentage: 2.15,
+      change: 3.15,
+      dayLow: 147.50,
+      dayHigh: 151.75,
+      yearHigh: 198.23,
+      yearLow: 124.17,
+      marketCap: 2375000000000,
+      priceAvg50: 145.67,
+      priceAvg200: 142.89,
+      volume: 45678900,
+      avgVolume: 52345600,
+      exchange: 'NASDAQ',
+      open: 148.50,
+      previousClose: 147.10,
+      eps: 6.16,
+      pe: 24.39,
+      earningsAnnouncement: '2024-01-25T21:30:00.000+00:00',
+      sharesOutstanding: 15800000000,
+      timestamp: 1703123456
+    }
+}`}
+</CodeBlock>
+
+### Examples for Different Asset Types
+
+<CodeBlock language="typescript">
+  {`// Stock quote
+const stockQuote = await fmp.quote.getQuote({ symbol: 'AAPL' });
+
+// Cryptocurrency quote
+const cryptoQuote = await fmp.quote.getQuote({ symbol: 'BTCUSD' });
+
+// Forex quote
+const forexQuote = await fmp.quote.getQuote({ symbol: 'EURUSD' });
+
+// ETF quote
+const etfQuote = await fmp.quote.getQuote({ symbol: 'SPY' });`}
+
+</CodeBlock>
+
+## Get Multiple Quotes
+
+Retrieve quotes for multiple symbols in a single request.
+
+<CodeBlock language="typescript">
+  {`const quotes = await fmp.quote.getQuotes(['AAPL', 'GOOGL', 'MSFT']);`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbols',
+      type: 'string[]',
+      required: true,
+      description: 'Array of asset symbols',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        symbol: 'AAPL',
+        name: 'Apple Inc.',
+        price: 150.25,
+        changesPercentage: 2.15,
+        change: 3.15,
+        // ... other fields
+      },
+      {
+        symbol: 'GOOGL',
+        name: 'Alphabet Inc.',
+        price: 2750.50,
+        changesPercentage: 1.85,
+        change: 50.25,
+        // ... other fields
+      },
+      {
+        symbol: 'MSFT',
+        name: 'Microsoft Corporation',
+        price: 325.75,
+        changesPercentage: 0.95,
+        change: 3.05,
+        // ... other fields
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Historical Data
+
+Retrieve historical price data for any asset type with flexible date ranges.
+
+<CodeBlock language="typescript">
+  {`const historicalData = await fmp.quote.getHistoricalPrice({
+    symbol: 'AAPL',
+    from: '2023-01-01',
+    to: '2023-12-31'
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Asset symbol',
+    },
+    {
+      name: 'from',
+      type: 'string',
+      required: false,
+      description: 'Start date (YYYY-MM-DD format)',
+    },
+    {
+      name: 'to',
+      type: 'string',
+      required: false,
+      description: 'End date (YYYY-MM-DD format)',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: {
+      symbol: 'AAPL',
+      historical: [
+        {
+          date: '2023-12-29',
+          open: 193.58,
+          high: 194.66,
+          low: 192.73,
+          close: 193.58,
+          adjClose: 193.58,
+          volume: 45678900,
+          unadjustedVolume: 45678900,
+          change: 0.00,
+          changePercent: 0.00,
+          vwap: 193.58,
+          label: 'Dec 29, 23',
+          changeOverTime: 0.00
+        },
+        {
+          date: '2023-12-28',
+          open: 192.50,
+          high: 194.20,
+          low: 191.80,
+          close: 193.58,
+          adjClose: 193.58,
+          volume: 42345600,
+          unadjustedVolume: 42345600,
+          change: 1.08,
+          changePercent: 0.56,
+          vwap: 193.15,
+          label: 'Dec 28, 23',
+          changeOverTime: 0.56
+        }
+      ]
+    }
+}`}
+</CodeBlock>
+
+## Get Intraday Data
+
+Retrieve intraday price data with various time intervals.
+
+<CodeBlock language="typescript">
+  {`const intradayData = await fmp.quote.getIntraday({
+    symbol: 'BTCUSD',
+    interval: '5min',
+    from: '2024-01-01',
+    to: '2024-01-02'
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Asset symbol',
+    },
+    {
+      name: 'interval',
+      type: 'string',
+      required: true,
+      description: 'Time interval: "1min", "5min", "15min", "30min", "1hour", "4hour"',
+    },
+    {
+      name: 'from',
+      type: 'string',
+      required: false,
+      description: 'Start date (YYYY-MM-DD format)',
+    },
+    {
+      name: 'to',
+      type: 'string',
+      required: false,
+      description: 'End date (YYYY-MM-DD format)',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        date: '2024-01-01 09:30:00',
+        open: 108000.00,
+        high: 108500.00,
+        low: 107800.00,
+        close: 108250.00,
+        volume: 1250000000
+      },
+      {
+        date: '2024-01-01 09:35:00',
+        open: 108250.00,
+        high: 108750.00,
+        low: 108200.00,
+        close: 108600.00,
+        volume: 1350000000
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Migration from Legacy Endpoints
+
+The unified quote endpoints replace the separate quote methods in individual endpoint classes. The legacy methods are deprecated and will be removed in version 0.1.0.
+
+### Before (Deprecated)
+
+<CodeBlock language="typescript">
+  {`// Stock quotes
+const stockQuote = await fmp.stock.getQuote({ symbol: 'AAPL' });
+
+// Crypto quotes
+const cryptoQuote = await fmp.crypto.getQuote({ symbol: 'BTCUSD' });
+
+// Forex quotes
+const forexQuote = await fmp.forex.getQuote({ symbol: 'EURUSD' });`}
+
+</CodeBlock>
+
+### After (Recommended)
+
+<CodeBlock language="typescript">
+  {`// Unified quotes for all asset types
+const stockQuote = await fmp.quote.getQuote({ symbol: 'AAPL' });
+const cryptoQuote = await fmp.quote.getQuote({ symbol: 'BTCUSD' });
+const forexQuote = await fmp.quote.getQuote({ symbol: 'EURUSD' });`}
+</CodeBlock>
+
+## TypeScript Support
+
+The quote endpoints include full TypeScript support with unified types:
+
+<CodeBlock language="typescript">
+  {`import { Quote, HistoricalPriceResponse } from 'fmp-node-api';
+
+// Quote response type
+const quote: Quote = await fmp.quote.getQuote({ symbol: 'AAPL' });
+
+// Historical data response type
+const historical: HistoricalPriceResponse = await fmp.quote.getHistoricalPrice({
+symbol: 'BTCUSD',
+from: '2024-01-01',
+to: '2024-01-31'
+});`}
+
+</CodeBlock>
+
+## Error Handling
+
+Handle errors consistently across all asset types:
+
+<CodeBlock language="typescript">
+  {`try {
+  const quote = await fmp.quote.getQuote({ symbol: 'INVALID' });
+  
+  if (quote.success) {
+    console.log('Quote data:', quote.data);
+  } else {
+    console.error('API Error:', quote.error);
+    console.error('Status:', quote.status);
+  }
+} catch (error) {
+  console.error('Network Error:', error);
+}`}
+</CodeBlock>
+
+## Rate Limiting
+
+The quote endpoints respect FMP's rate limits. For high-frequency trading applications, consider implementing your own rate limiting strategy.
+
+## Examples
+
+### Portfolio Tracker
+
+<CodeBlock language="typescript">
+  {`// Track a diverse portfolio
+const portfolio = ['AAPL', 'BTCUSD', 'EURUSD', 'SPY'];
+
+const quotes = await fmp.quote.getQuotes(portfolio);
+
+quotes.data?.forEach(quote => {
+console.log(\`\${quote.symbol}: \${quote.price} (\${quote.changesPercentage}%)\`);
+});`}
+
+</CodeBlock>
+
+### Price Alert System
+
+<CodeBlock language="typescript">
+  {`// Monitor price changes
+const checkPrice = async (symbol: string, threshold: number) => {
+  const quote = await fmp.quote.getQuote({ symbol });
+  
+  if (quote.success && quote.data) {
+    if (quote.data.price > threshold) {
+      console.log(\`\${symbol} is above \${threshold}!\`);
+    }
+  }
+};
+
+// Check multiple assets
+await checkPrice('BTCUSD', 100000);
+await checkPrice('AAPL', 200);`}
+
+</CodeBlock>
+
+### Historical Analysis
+
+<CodeBlock language="typescript">
+  {`// Analyze historical performance
+const analyzePerformance = async (symbol: string) => {
+  const historical = await fmp.quote.getHistoricalPrice({
+    symbol,
+    from: '2023-01-01',
+    to: '2023-12-31'
+  });
+  
+  if (historical.success && historical.data) {
+    const prices = historical.data.historical.map(h => h.close);
+    const maxPrice = Math.max(...prices);
+    const minPrice = Math.min(...prices);
+    const avgPrice = prices.reduce((a, b) => a + b, 0) / prices.length;
+    
+    console.log(\`\${symbol} Analysis:\`);
+    console.log(\`Max: \${maxPrice}\`);
+    console.log(\`Min: \${minPrice}\`);
+    console.log(\`Average: \${avgPrice.toFixed(2)}\`);
+  }
+};
+
+await analyzePerformance('AAPL');`}
+
+</CodeBlock>
+
+---
+
+**Ready to get started?** Check out the [Getting Started Guide](/docs/getting-started) or explore other [API endpoints](/docs/api).

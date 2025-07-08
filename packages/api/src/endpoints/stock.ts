@@ -1,5 +1,6 @@
 import { FMPClient } from '@/client';
-import { APIResponse, DateRangeParams, HistoricalPriceResponse } from '@/types/common';
+import { APIResponse, DateRangeParams } from '@/types/common';
+import { HistoricalPriceResponse } from '@/types/quote';
 import { MarketCap, StockSplitResponse, StockQuote, StockDividendResponse } from '@/types/stock';
 
 export class StockEndpoints {
@@ -7,17 +8,20 @@ export class StockEndpoints {
 
   /**
    * Get real-time stock quote
-   * https://site.financialmodelingprep.com/developer/docs#full-quote-quote
+   * @deprecated Use `fmp.quote.getQuote()` instead. This method will be removed in version 0.1.0.
    * @param symbol - The stock symbol to get the quote for
    * @returns This endpoint gives you the latest bid and ask prices for a stock, as well as the volume and last trade price in real time.
    */
   async getQuote({ symbol }: { symbol: string }): Promise<APIResponse<StockQuote | null>> {
+    console.warn(
+      '⚠️  StockEndpoints.getQuote() is deprecated. Use fmp.quote.getQuote() instead. This method will be removed in version 0.1.0.',
+    );
     return this.client.getSingle(`/quote/${symbol}`, 'v3');
   }
 
   /**
    * Get historical stock prices
-   * https://site.financialmodelingprep.com/developer/docs#daily-chart-charts
+   * @deprecated Use `fmp.quote.getHistoricalPrice()` instead. This method will be removed in version 0.1.0.
    * @param symbol - The stock symbol to get the historical prices for
    * @param from - The start date to get the historical prices for
    * @param to - The end date to get the historical prices for
@@ -32,6 +36,9 @@ export class StockEndpoints {
     from?: string;
     to?: string;
   }): Promise<APIResponse<HistoricalPriceResponse>> {
+    console.warn(
+      '⚠️  StockEndpoints.getHistoricalPrice() is deprecated. Use fmp.quote.getHistoricalPrice() instead. This method will be removed in version 0.1.0.',
+    );
     const params: DateRangeParams = {};
     if (from) params.from = from;
     if (to) params.to = to;

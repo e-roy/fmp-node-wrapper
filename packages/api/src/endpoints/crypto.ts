@@ -1,7 +1,8 @@
 // Cryptocurrency endpoints for FMP API
 
 import { FMPClient } from '@/client';
-import { APIResponse, DateRangeParams, HistoricalPriceResponse } from '@/types/common';
+import { APIResponse, DateRangeParams } from '@/types/common';
+import { HistoricalPriceResponse } from '@/types/quote';
 import { CryptoQuote } from '@/types/crypto';
 
 export class CryptoEndpoints {
@@ -9,17 +10,20 @@ export class CryptoEndpoints {
 
   /**
    * Get crypto quote
-   * https://site.financialmodelingprep.com/developer/docs#full-quote-crypto
+   * @deprecated Use `fmp.quote.getQuote()` instead. This method will be removed in version 0.1.0.
    * @param symbol - The crypto symbol to get the quote for
    * @returns Crypto quote data
    */
   async getQuote({ symbol }: { symbol: string }): Promise<APIResponse<CryptoQuote | null>> {
+    console.warn(
+      '⚠️  CryptoEndpoints.getQuote() is deprecated. Use fmp.quote.getQuote() instead. This method will be removed in version 0.1.0.',
+    );
     return this.client.getSingle(`/quote/${symbol}`, 'v3');
   }
 
   /**
    * Get historical crypto prices
-   * https://site.financialmodelingprep.com/developer/docs#cryptocurrency-daily-crypto
+   * @deprecated Use `fmp.quote.getHistoricalPrice()` instead. This method will be removed in version 0.1.0.
    * @param symbol - The crypto symbol to get the historical prices for
    * @param from - The start date to get the historical prices for
    * @param to - The end date to get the historical prices for
@@ -34,6 +38,9 @@ export class CryptoEndpoints {
     from?: string;
     to?: string;
   }): Promise<APIResponse<HistoricalPriceResponse>> {
+    console.warn(
+      '⚠️  CryptoEndpoints.getHistoricalPrice() is deprecated. Use fmp.quote.getHistoricalPrice() instead. This method will be removed in version 0.1.0.',
+    );
     const params: DateRangeParams = {};
     if (from) params.from = from;
     if (to) params.to = to;

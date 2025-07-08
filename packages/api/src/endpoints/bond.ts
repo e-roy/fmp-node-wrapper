@@ -1,14 +1,16 @@
 // Bond endpoints for FMP API
 
 import { FMPClient } from '@/client';
-import { APIResponse, HistoricalPriceResponse } from '../types/common';
-import { BondQuote, BondQuoteParams } from '../types/bond';
+import { APIResponse } from '@/types/common';
+import { BondQuote, BondQuoteParams } from '@/types/bond';
+import { HistoricalPriceResponse } from '@/types/quote';
 
 export class BondEndpoints {
   constructor(private client: FMPClient) {}
 
   /**
    * Get bond quote
+   * @deprecated Use `fmp.quote.getQuote()` instead. This method will be removed in a future release.
    * @param params - Parameters for the bond quote request
    * @returns Bond quote data
    */
@@ -18,6 +20,7 @@ export class BondEndpoints {
 
   /**
    * Get historical bond prices
+   * @deprecated Use `fmp.quote.getHistoricalPrice()` instead. This method will be removed in a future release.
    * @param symbol - The bond symbol to get the historical prices for
    * @param from - The start date to get the historical prices for
    * @param to - The end date to get the historical prices for

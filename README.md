@@ -1,5 +1,13 @@
 # FMP Node Wrapper
 
+[![npm version](https://img.shields.io/npm/v/fmp-node-api.svg)](https://www.npmjs.com/package/fmp-node-api)
+[![npm downloads](https://img.shields.io/npm/dm/fmp-node-api.svg)](https://www.npmjs.com/package/fmp-node-api)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue.svg)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/e-roy/fmp-node-wrapper)
+[![Test Coverage](https://img.shields.io/badge/tests-45+-brightgreen.svg)](https://github.com/e-roy/fmp-node-wrapper)
+
 A modern, comprehensive Node.js wrapper for the Financial Modeling Prep (FMP) API with full TypeScript support.
 
 ## Features
@@ -201,13 +209,12 @@ try {
 
 ## Available Modules
 
+- **`fmp.quote`** - Quote data for stocks, forex, crypto, commodities, and ETFs
 - **`fmp.stock`** - Stock market data (quotes, profiles, historical prices, etc.)
 - **`fmp.financial`** - Financial statements (income, balance sheet, cash flow)
-- **`fmp.forex`** - Foreign exchange data
 - **`fmp.crypto`** - Cryptocurrency data
 - **`fmp.etf`** - ETF data and holdings
 - **`fmp.mutualFund`** - Mutual fund data
-- **`fmp.bond`** - Bond market data
 - **`fmp.economic`** - Economic indicators
 - **`fmp.market`** - Market-wide data and performance
 - **`fmp.list`** - Stock lists and indices

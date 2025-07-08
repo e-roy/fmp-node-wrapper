@@ -52,6 +52,11 @@
       "outputs": ["coverage/**"],
       "env": ["FMP_API_KEY", "NODE_ENV"]
     },
+    "test:quote": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"],
+      "env": ["FMP_API_KEY", "NODE_ENV"]
+    },
     "test:stock": {
       "dependsOn": ["^build"],
       "outputs": ["coverage/**"],

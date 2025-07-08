@@ -1,5 +1,6 @@
 // Re-export all types for easy importing
 export * from './common';
+export * from './quote';
 export * from './stock';
 export * from './financial';
 export * from './forex';
