@@ -1,5 +1,11 @@
 # fmp-node-api
 
+## 0.0.5
+
+### Patch Changes
+
+- c209f7d: Add quote endpoints, a unified way to get quotes for all assets instead of seperating out each asset class
+
 ## 0.0.4
 
 ### Patch Changes
