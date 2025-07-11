@@ -577,7 +577,7 @@ pnpm test
 
 - **📖 [Contributing Guide](https://github.com/e-roy/fmp-node-wrapper/blob/main/CONTRIBUTING.md)**: Detailed guidelines and development setup
 - **🐛 [Issues](https://github.com/e-roy/fmp-node-wrapper/issues)**: Report bugs or request features
-- **📚 [Documentation](https://fmp-node-wrapper.vercel.app)**: Check the docs first
+- **📚 [Documentation](https://fmp-node-wrapper-docs.vercel.app)**: Check the docs first
 
 ### Before Contributing
 

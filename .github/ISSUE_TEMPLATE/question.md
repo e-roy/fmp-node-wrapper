@@ -55,7 +55,7 @@ const result = await fmp.stock.getQuote({ symbol: 'AAPL' });
 
 - [ ] [Main README](https://github.com/e-roy/fmp-node-wrapper)
 - [ ] [Package README](https://www.npmjs.com/package/fmp-node-api)
-- [ ] [Documentation Site](https://fmp-node-wrapper.vercel.app)
+- [ ] [Documentation Site](https://fmp-node-wrapper-docs.vercel.app)
 - [ ] [Examples](https://github.com/e-roy/fmp-node-wrapper/tree/main/examples)
 - [ ] [Existing Issues](https://github.com/e-roy/fmp-node-wrapper/issues)
 
