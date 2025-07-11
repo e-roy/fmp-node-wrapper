@@ -11,3 +11,4 @@ export { CalendarEndpoints } from './calendar';
 export { ListEndpoints } from './list';
 export { CompanyEndpoints } from './company';
 export { QuoteEndpoints } from './quote';
+export { SenateHouseEndpoints } from './senate-house';

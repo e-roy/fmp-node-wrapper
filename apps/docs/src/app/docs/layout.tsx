@@ -21,7 +21,7 @@ const navigationGroups = [
       { name: 'Stock Endpoints', href: '/docs/api/stock' },
       { name: 'Financial Endpoints', href: '/docs/api/financial' },
       // { name: 'Forex Endpoints', href: '/docs/api/forex' },
-      { name: 'Crypto Endpoints', href: '/docs/api/crypto' },
+      // { name: 'Crypto Endpoints', href: '/docs/api/crypto' },
       { name: 'ETF Endpoints', href: '/docs/api/etf' },
       // { name: 'Mutual Fund Endpoints', href: '/docs/api/mutual-fund' },
       // { name: 'Bond Endpoints', href: '/docs/api/bond' },
@@ -40,6 +40,7 @@ const navigationGroups = [
       { name: 'List Endpoints', href: '/docs/api/list' },
       { name: 'Calendar Endpoints', href: '/docs/api/calendar' },
       { name: 'Company Endpoints', href: '/docs/api/company' },
+      { name: 'Senate & House Trading', href: '/docs/api/senate-house' },
     ],
   },
   {

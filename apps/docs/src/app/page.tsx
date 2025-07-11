@@ -112,24 +112,6 @@ export default function Home() {
             </Card>
           </Link>
 
-          <Link href="/docs/api/crypto" className="block">
-            <Card className="h-full hover:shadow-md transition-shadow">
-              <CardHeader>
-                <CardTitle className="text-2xl text-neutral-900 dark:text-white">
-                  🪙 Crypto Data
-                </CardTitle>
-                <CardDescription className="text-neutral-600 dark:text-neutral-300">
-                  Cryptocurrency quotes and historical data.
-                </CardDescription>
-              </CardHeader>
-              <CardFooter>
-                <div className="text-blue-600 dark:text-blue-400 hover:underline">
-                  Crypto Endpoints →
-                </div>
-              </CardFooter>
-            </Card>
-          </Link>
-
           <Link href="/docs/api/etf" className="block">
             <Card className="h-full hover:shadow-md transition-shadow">
               <CardHeader>

@@ -300,6 +300,28 @@ async function testEndpoint() {
         result = await fmp.etf.getStockExposure({ symbol: 'SPY' });
         break;
 
+      // Senate & House Trading endpoints
+      case 'senate-trading':
+        result = await fmp.senateHouse.getSenateTrading({
+          symbol: 'AAPL',
+        });
+        break;
+      case 'senate-trading-rss-feed':
+        result = await fmp.senateHouse.getSenateTradingRSSFeed({
+          page: 0,
+        });
+        break;
+      case 'house-trading':
+        result = await fmp.senateHouse.getHouseTrading({
+          symbol: 'AAPL',
+        });
+        break;
+      case 'house-trading-rss-feed':
+        result = await fmp.senateHouse.getHouseTradingRSSFeed({
+          page: 0,
+        });
+        break;
+
       // crypto endpoints
       case 'crypto-historical':
         result = await fmp.crypto.getHistoricalPrice({
@@ -322,6 +344,7 @@ async function testEndpoint() {
           to: '2024-12-31',
         });
         break;
+
       default:
         console.log(`❌ Unknown endpoint: ${endpoint}`);
         process.exit(1);

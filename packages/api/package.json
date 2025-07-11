@@ -38,6 +38,7 @@
     "test:company": "jest --testPathPattern=\"src/__tests__/endpoints/company\\.test\\.ts\"",
     "test:crypto": "jest --testPathPattern=\"src/__tests__/endpoints/crypto\\.test\\.ts\"",
     "test:etf": "jest --testPathPattern=\"src/__tests__/endpoints/etf\\.test\\.ts\"",
+    "test:senate-house": "jest --testPathPattern=\"src/__tests__/endpoints/senate-house\\.test\\.ts\"",
     "test:manual": "tsx scripts/test-manual.ts",
     "test:endpoint": "tsx scripts/test-endpoint.ts",
     "type-check": "tsc --noEmit",
@@ -59,7 +60,7 @@
     "type": "git",
     "url": "https://github.com/e-roy/fmp-node-wrapper.git"
   },
-  "homepage": "https://fmp-node-wrapper.vercel.app",
+  "homepage": "https://fmp-node-wrapper-docs.vercel.app",
   "dependencies": {
     "axios": "^1.6.2"
   },

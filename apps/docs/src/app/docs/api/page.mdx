@@ -49,16 +49,6 @@ The library is organized into different endpoint categories:
     },
     {
       method: 'GET',
-      path: '/forex/*',
-      description: 'Foreign exchange endpoints for currency rates and forex-specific data',
-    },
-    {
-      method: 'GET',
-      path: '/crypto/*',
-      description: 'Cryptocurrency endpoints for crypto-specific data',
-    },
-    {
-      method: 'GET',
       path: '/etf/*',
       description: 'ETF endpoints for profiles, holdings, and ETF-specific data',
     },
@@ -69,18 +59,8 @@ The library is organized into different endpoint categories:
     },
     {
       method: 'GET',
-      path: '/economic/*',
-      description: 'Economic indicators and calendar data',
-    },
-    {
-      method: 'GET',
-      path: '/bond/*',
-      description: 'Bond data and treasury rates',
-    },
-    {
-      method: 'GET',
-      path: '/mutual-fund/*',
-      description: 'Mutual fund quotes and data',
+      path: '/senate-house-trading/*',
+      description: 'Congressional trading data for senate and house members',
     },
   ]}
 />
@@ -163,25 +143,6 @@ Access financial statements and ratios:
 
 [View Financial Endpoints →](/docs/api/financial)
 
-### Forex Endpoints
-
-Access forex-specific data:
-
-- **Forex Rates** - Real-time forex rates and currency data
-- **Currency Pairs** - Major and minor currency pairs
-- **Forex-specific Data** - Forex-specific market information
-
-[View Forex Endpoints →](/docs/api/forex)
-
-### Crypto Endpoints
-
-Access cryptocurrency-specific data:
-
-- **Crypto List** - Available cryptocurrencies
-- **Crypto-specific Data** - Cryptocurrency-specific market information
-
-[View Crypto Endpoints →](/docs/api/crypto)
-
 ### ETF Endpoints
 
 Access ETF-specific data:
@@ -203,35 +164,16 @@ Access market-wide data:
 
 [View Market Endpoints →](/docs/api/market)
 
-### Economic Endpoints
+### Senate & House Trading Endpoints
 
-Access economic indicators:
+Access congressional trading data:
 
-- **Economic Calendar** - Economic events and releases
-- **Economic Indicators** - Key economic metrics
-- **Treasury Rates** - Government bond yields
+- **Trading Data** - Stock transactions by members of Congress
+- **Politician Profiles** - Individual politician trading history
+- **Company Summaries** - Company-specific political trading activity
+- **Trading Analytics** - Most active traders and most traded stocks
 
-[View Economic Endpoints →](/docs/api/economic)
-
-### Bond Endpoints
-
-Access bond and treasury data:
-
-- **Treasury Rates** - Government bond yields
-- **Bond Prices** - Bond pricing information
-- **Yield Curves** - Yield curve data
-
-[View Bond Endpoints →](/docs/api/bond)
-
-### Mutual Fund Endpoints
-
-Access mutual fund data:
-
-- **Fund Quotes** - Real-time mutual fund prices
-- **Fund Profiles** - Fund information and details
-- **Fund Performance** - Historical fund performance
-
-[View Mutual Fund Endpoints →](/docs/api/mutual-fund)
+[View Senate & House Trading Endpoints →](/docs/api/senate-house)
 
 ## TypeScript Support
 
@@ -256,11 +198,10 @@ const symbol = quote.data[0].symbol; // TypeScript knows this is a string
 
 The client accepts several configuration options:
 
-| Option    | Type     | Default                                      | Description                     |
-| --------- | -------- | -------------------------------------------- | ------------------------------- |
-| `apiKey`  | `string` | **Required**                                 | Your FMP API key                |
-| `baseURL` | `string` | `'https://financialmodelingprep.com/api/v3'` | Base URL for API requests       |
-| `timeout` | `number` | `10000`                                      | Request timeout in milliseconds |
+| Option    | Type     | Default      | Description                     |
+| --------- | -------- | ------------ | ------------------------------- |
+| `apiKey`  | `string` | **Required** | Your FMP API key                |
+| `timeout` | `number` | `10000`      | Request timeout in milliseconds |
 
 ## Rate Limiting
 

@@ -223,7 +223,7 @@ try {
 
 ## Documentation
 
-- **📚 [Full Documentation](https://fmp-node-wrapper.vercel.app)** - Complete API reference and examples
+- **📚 [Full Documentation](https://fmp-node-wrapper-docs.vercel.app)** - Complete API reference and examples
 - **📦 [NPM Package](https://www.npmjs.com/package/fmp-node-api)** - Package information and downloads
 - **🐛 [Issues](https://github.com/e-roy/fmp-node-wrapper/issues)** - Report bugs or request features
 
@@ -248,7 +248,7 @@ We welcome contributions! This is a community-driven project, and your help is g
 
 - **📖 [Contributing Guide](CONTRIBUTING.md)**: Detailed guidelines and development setup
 - **🐛 [Issues](https://github.com/e-roy/fmp-node-wrapper/issues)**: Report bugs or request features
-- **📚 [Documentation](https://fmp-node-wrapper.vercel.app)**: Check the docs first
+- **📚 [Documentation](https://fmp-node-wrapper-docs.vercel.app)**: Check the docs first
 
 ### Before Contributing
 
