@@ -340,9 +340,9 @@ for (const symbol of techStocks) {
 const senateTrading = await fmp.senateHouse.getSenateTrading({ symbol });
 const houseTrading = await fmp.senateHouse.getHouseTrading({ symbol });
 
-console.log(`${symbol}:`);
-console.log(`  Senate transactions: ${senateTrading.data?.length || 0}`);
-console.log(`  House transactions: ${houseTrading.data?.length || 0}`);
+console.log(symbol + ':');
+console.log('  Senate transactions: ' + (senateTrading.data?.length || 0));
+console.log('  House transactions: ' + (houseTrading.data?.length || 0));
 }`}
 
 </CodeBlock>
@@ -372,10 +372,10 @@ async function checkRecentTrading(symbol: string) {
   });
   
   if (recentTrading.length > 0) {
-    console.log(`Alert: ${recentTrading.length} recent trades in ${symbol}`);
-    recentTrading.forEach(trade => {
-      console.log(`  ${trade.owner} ${trade.type} ${trade.amount}`);
-    });
+    console.log('Alert: ' + recentTrading.length + ' recent trades in ' + symbol);
+recentTrading.forEach(trade => {
+  console.log('  ' + trade.owner + ' ' + trade.type + ' ' + trade.amount);
+});
   }
 }
 
@@ -400,7 +400,7 @@ allSenateTrading.push(...result.data);
 }
 }
 
-console.log(`Total senate trading records: ${allSenateTrading.length}`);`}
+console.log('Total senate trading records: ' + allSenateTrading.length);`}
 
 </CodeBlock>
 
