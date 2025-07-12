@@ -1,26 +1,9 @@
 // Economic indicator types for FMP API
 
-import { DateRangeParams } from './common';
-
-// Economic parameter interfaces
-export interface EconomicIndicatorParams extends DateRangeParams {}
-
-export interface TreasuryRateParams extends EconomicIndicatorParams {}
-
-export interface FederalFundsRateParams extends EconomicIndicatorParams {}
-
-export interface CPIParams extends EconomicIndicatorParams {}
-
-export interface GDPParams extends EconomicIndicatorParams {}
-
-export interface UnemploymentParams extends EconomicIndicatorParams {}
-
 // Economic data interfaces
 export interface EconomicIndicator {
   date: string;
   value: number;
-  change: number;
-  changePercent: number;
 }
 
 export interface TreasuryRate {
@@ -39,28 +22,35 @@ export interface TreasuryRate {
   year30: number;
 }
 
-export interface FederalFundsRate {
-  date: string;
-  value: number;
-}
+// Economic indicator names as per FMP API documentation
+export type EconomicIndicatorName =
+  | 'GDP'
+  | 'realGDP'
+  | 'nominalPotentialGDP'
+  | 'realGDPPerCapita'
+  | 'federalFunds'
+  | 'CPI'
+  | 'inflationRate'
+  | 'inflation'
+  | 'retailSales'
+  | 'consumerSentiment'
+  | 'durableGoods'
+  | 'unemploymentRate'
+  | 'totalNonfarmPayroll'
+  | 'initialClaims'
+  | 'industrialProductionTotalIndex'
+  | 'newPrivatelyOwnedHousingUnitsStartedTotalUnits'
+  | 'totalVehicleSales'
+  | 'retailMoneyFunds'
+  | 'smoothedUSRecessionProbabilities'
+  | '3MonthOr90DayRatesAndYieldsCertificatesOfDeposit'
+  | 'commercialBankInterestRateOnCreditCardPlansAllAccounts'
+  | '30YearFixedRateMortgageAverage'
+  | '15YearFixedRateMortgageAverage';
 
-export interface CPI {
-  date: string;
-  value: number;
-  change: number;
-  changePercent: number;
-}
-
-export interface GDP {
-  date: string;
-  value: number;
-  change: number;
-  changePercent: number;
-}
-
-export interface Unemployment {
-  date: string;
-  value: number;
-  change: number;
-  changePercent: number;
+// Parameters for economic indicators
+export interface EconomicIndicatorParams {
+  name: EconomicIndicatorName;
+  from?: string;
+  to?: string;
 }

@@ -44,47 +44,10 @@ describe('Economic Endpoints', () => {
     }, 15000);
   });
 
-  describe('getFederalFundsRate', () => {
-    it('should fetch federal funds rate', async () => {
-      const result = await fmp.economic.getFederalFundsRate({
-        from: '2024-01-01',
-        to: '2024-01-31',
-      });
-
-      expect(result.success).toBe(true);
-      expect(result.data).toBeDefined();
-      expect(Array.isArray(result.data)).toBe(true);
-
-      if (result.data && Array.isArray(result.data) && result.data.length > 0) {
-        const rate = getFirstItem(result.data);
-        expect(rate.date).toBeDefined();
-        expect(rate.value).toBeDefined();
-      }
-    }, 15000);
-  });
-
-  describe('getCPI', () => {
-    it('should fetch CPI data', async () => {
-      const result = await fmp.economic.getCPI({
-        from: '2024-01-01',
-        to: '2024-01-31',
-      });
-
-      expect(result.success).toBe(true);
-      expect(result.data).toBeDefined();
-      expect(Array.isArray(result.data)).toBe(true);
-
-      if (result.data && Array.isArray(result.data) && result.data.length > 0) {
-        const cpi = getFirstItem(result.data);
-        expect(cpi.date).toBeDefined();
-        expect(cpi.value).toBeDefined();
-      }
-    }, 15000);
-  });
-
-  describe('getGDP', () => {
+  describe('getEconomicIndicators', () => {
     it('should fetch GDP data', async () => {
-      const result = await fmp.economic.getGDP({
+      const result = await fmp.economic.getEconomicIndicators({
+        name: 'GDP',
         from: '2020-01-01',
         to: '2024-01-31',
       });
@@ -99,11 +62,46 @@ describe('Economic Endpoints', () => {
         expect(gdp.value).toBeDefined();
       }
     }, 15000);
-  });
 
-  describe('getUnemployment', () => {
+    it('should fetch CPI data', async () => {
+      const result = await fmp.economic.getEconomicIndicators({
+        name: 'CPI',
+        from: '2024-01-01',
+        to: '2024-01-31',
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.data).toBeDefined();
+      expect(Array.isArray(result.data)).toBe(true);
+
+      if (result.data && Array.isArray(result.data) && result.data.length > 0) {
+        const cpi = getFirstItem(result.data);
+        expect(cpi.date).toBeDefined();
+        expect(cpi.value).toBeDefined();
+      }
+    }, 15000);
+
+    it('should fetch federal funds rate', async () => {
+      const result = await fmp.economic.getEconomicIndicators({
+        name: 'federalFunds',
+        from: '2024-01-01',
+        to: '2024-01-31',
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.data).toBeDefined();
+      expect(Array.isArray(result.data)).toBe(true);
+
+      if (result.data && Array.isArray(result.data) && result.data.length > 0) {
+        const rate = getFirstItem(result.data);
+        expect(rate.date).toBeDefined();
+        expect(rate.value).toBeDefined();
+      }
+    }, 15000);
+
     it('should fetch unemployment data', async () => {
-      const result = await fmp.economic.getUnemployment({
+      const result = await fmp.economic.getEconomicIndicators({
+        name: 'unemploymentRate',
         from: '2024-01-01',
         to: '2024-01-31',
       });

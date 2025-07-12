@@ -49,6 +49,11 @@ The library is organized into different endpoint categories:
     },
     {
       method: 'GET',
+      path: '/economic/*',
+      description: 'Economic endpoints for indicators, treasury rates, and economic data',
+    },
+    {
+      method: 'GET',
       path: '/etf/*',
       description: 'ETF endpoints for profiles, holdings, and ETF-specific data',
     },
@@ -147,6 +152,17 @@ Access financial statements and ratios:
 - **Financial Ratios** - Key financial ratios and metrics
 
 [View Financial Endpoints →](/docs/api/financial)
+
+### Economic Endpoints
+
+Access economic indicators and treasury data:
+
+- **Economic Indicators** - GDP, CPI, unemployment, and other key economic metrics
+- **Treasury Rates** - Current treasury rates for different maturities
+- **Federal Funds Rate** - Federal Reserve interest rates
+- **Economic Analysis** - Yield curve analysis and economic trends
+
+[View Economic Endpoints →](/docs/api/economic)
 
 ### ETF Endpoints
 

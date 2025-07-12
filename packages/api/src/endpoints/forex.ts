@@ -1,9 +1,9 @@
 // Forex endpoints for FMP API
 
 import { FMPClient } from '@/client';
-import { APIResponse, QueryParams } from '@/types/common';
+import { APIResponse, QueryParams, SymbolParams } from '@/types/common';
 import { HistoricalPriceResponse } from '@/types/quote';
-import { ForexQuote, ForexQuoteParams } from '@/types/forex';
+import { ForexQuote } from '@/types/forex';
 
 export class ForexEndpoints {
   constructor(private client: FMPClient) {}
@@ -14,7 +14,7 @@ export class ForexEndpoints {
    * @param params - Parameters for the forex quote request
    * @returns Forex quote data
    */
-  async getQuote(params: ForexQuoteParams): Promise<APIResponse<ForexQuote[]>> {
+  async getQuote(params: SymbolParams): Promise<APIResponse<ForexQuote[]>> {
     console.warn(
       '⚠️  ForexEndpoints.getQuote() is deprecated. Use fmp.quote.getQuote() instead. This method will be removed in version 0.1.0.',
     );
@@ -46,22 +46,5 @@ export class ForexEndpoints {
     if (to) params.to = to;
 
     return this.client.get(`/historical-price-full/${symbol}`, 'v3', params);
-  }
-
-  /**
-   * Get forex rates for a specific base currency
-   * @param baseCurrency - The base currency to get forex rates for
-   * @returns Forex rates data
-   */
-  async getForexRates(baseCurrency: string = 'USD'): Promise<APIResponse<Record<string, number>>> {
-    return this.client.get(`/forex/${baseCurrency}`, 'v3');
-  }
-
-  /**
-   * Get all forex rates
-   * @returns All forex rates data
-   */
-  async getAllForexRates(): Promise<APIResponse<Record<string, Record<string, number>>>> {
-    return this.client.get('/forex', 'v3');
   }
 }

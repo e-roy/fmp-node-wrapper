@@ -112,8 +112,6 @@ The documentation uses a grouped sidebar navigation system defined in `src/app/d
 
 - Stock Endpoints
 - Financial Endpoints
-- Forex Endpoints
-- Crypto Endpoints
 - ETF Endpoints
 - Mutual Fund Endpoints
 
