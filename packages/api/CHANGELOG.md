@@ -1,5 +1,11 @@
 # fmp-node-api
 
+## 0.0.7
+
+### Patch Changes
+
+- add endpoints for real time stock prices, transcript dates, confirmed earnings and search house and senate by name
+
 ## 0.0.6
 
 ### Patch Changes
