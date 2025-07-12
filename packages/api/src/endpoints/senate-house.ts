@@ -6,7 +6,9 @@ import {
   HouseTradingResponse,
   SenateHouseTradingParams,
   SenateHouseTradingRSSFeedParams,
+  SenateHouseTradingByNameParams,
   SenateTradingResponse,
+  SenateHouseTradingByNameResponse,
 } from '@/types/senate-house';
 
 export class SenateHouseEndpoints {
@@ -37,6 +39,18 @@ export class SenateHouseEndpoints {
     return this.client.get('/senate-trading-rss-feed', 'v4', { page });
   }
 
+  /** Get Senate trades by name
+   * https://site.financialmodelingprep.com/developer/docs/stable#senate-trading-by-name
+   * @param name - The name of the senator to get the trades for
+   * @returns Senate trades by name
+   */
+  async getSenateTradingByName(
+    params: SenateHouseTradingByNameParams,
+  ): Promise<APIResponse<SenateHouseTradingByNameResponse[]>> {
+    const { name } = params;
+    return this.client.get('/senate-trades-by-name', 'stable', { name });
+  }
+
   /**
    * Get house trading data only
    * https://site.financialmodelingprep.com/developer/docs#house-disclosure
@@ -58,8 +72,20 @@ export class SenateHouseEndpoints {
    */
   async getHouseTradingRSSFeed(
     params: SenateHouseTradingRSSFeedParams,
-  ): Promise<APIResponse<SenateTradingResponse[]>> {
+  ): Promise<APIResponse<HouseTradingResponse[]>> {
     const { page } = params;
     return this.client.get('/senate-disclosure-rss-feed', 'v4', { page });
+  }
+
+  /** Get house trading by name
+   * https://site.financialmodelingprep.com/developer/docs/stable#house-trading-by-name
+   * @param name - The name of the representative to get the trades for
+   * @returns House trading by name
+   */
+  async getHouseTradingByName(
+    params: SenateHouseTradingByNameParams,
+  ): Promise<APIResponse<SenateHouseTradingByNameResponse[]>> {
+    const { name } = params;
+    return this.client.get('/house-trades-by-name', 'stable', { name });
   }
 }

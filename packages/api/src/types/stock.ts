@@ -58,3 +58,32 @@ export interface MarketCap {
   date: string;
   marketCap: number;
 }
+
+export interface StockRealTimePrice {
+  symbol: string;
+  price: number;
+}
+
+export interface StockRealTimePriceFull {
+  bidSize: number;
+  askPrice: number;
+  volume: number;
+  askSize: number;
+  bidPrice: number;
+  lastSalePrice: number;
+  lastSaleSize: number;
+  lastSaleTime: number;
+  fmpLast: number;
+  lastUpdated: number;
+  symbol: string;
+}
+
+// For endpoints that return { stockList: [...] }
+export interface StockListResponse<T> {
+  stockList: T[];
+}
+
+// For endpoints that return { companiesPriceList: [...] }
+export interface CompaniesPriceListResponse<T> {
+  companiesPriceList: T[];
+}

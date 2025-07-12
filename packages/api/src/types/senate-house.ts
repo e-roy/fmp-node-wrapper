@@ -10,6 +10,11 @@ export interface SenateHouseTradingRSSFeedParams {
   page: number;
 }
 
+// Senate trading by name parameters
+export interface SenateHouseTradingByNameParams {
+  name: string;
+}
+
 // Senate trading response interface
 export interface SenateTradingResponse {
   firstName: string;
@@ -41,4 +46,22 @@ export interface HouseTradingResponse {
   district: string;
   link: string;
   capitalGainsOver200USD: string;
+}
+
+export interface SenateHouseTradingByNameResponse {
+  symbol: string;
+  disclosureDate: string;
+  transactionDate: string;
+  firstName: string;
+  lastName: string;
+  office: string;
+  district: string;
+  owner: string;
+  assetDescription: string;
+  assetType: string;
+  type: string;
+  amount: string;
+  capitalGainsOver200USD: string;
+  comment: string;
+  link: string;
 }

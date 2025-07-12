@@ -13,6 +13,23 @@ function unwrapSingleObject<T>(data: T): T {
   return data;
 }
 
+/**
+ * Utility to normalize array responses: always returns an array (possibly empty)
+ */
+function normalizeArrayResponse<T>(data: T | undefined | null): T {
+  if (Array.isArray(data)) return data;
+  if (data == null) return [] as unknown as T;
+  return data;
+}
+
+/**
+ * Utility to normalize object responses: always returns an object (possibly empty)
+ */
+function normalizeObjectResponse<T>(data: T | undefined | null): T {
+  if (data == null) return {} as unknown as T;
+  return data;
+}
+
 export class FMPClient {
   private v3Client: AxiosInstance;
   private v4Client: AxiosInstance;
@@ -26,7 +43,7 @@ export class FMPClient {
     this.v3Client = this.createClient('https://financialmodelingprep.com/api/v3', config.timeout);
     this.v4Client = this.createClient('https://financialmodelingprep.com/api/v4', config.timeout);
     this.stableClient = this.createClient(
-      'https://financialmodelingprep.com/api/stable',
+      'https://financialmodelingprep.com/stable',
       config.timeout,
     );
   }
@@ -46,7 +63,12 @@ export class FMPClient {
     return client;
   }
 
-  // Standard get method - returns raw API response
+  /**
+   * Standard get method - returns raw API response
+   *
+   * For endpoints that return arrays, this will always return an array (possibly empty) for `data` when success is true.
+   * For endpoints that return objects, data is returned as-is.
+   */
   async get<T>(
     endpoint: string,
     version: 'v3' | 'v4' | 'stable' = 'v3',
@@ -56,9 +78,14 @@ export class FMPClient {
 
     try {
       const response = await client.get(endpoint, { params });
+      let data = response.data;
+      // If T is an array type, always return an array (never undefined/null)
+      if (Array.isArray(data) || data == null) {
+        data = normalizeArrayResponse<T>(data);
+      }
       return {
         success: true,
-        data: response.data,
+        data,
         status: response.status,
       };
     } catch (error: any) {
@@ -70,7 +97,11 @@ export class FMPClient {
     }
   }
 
-  // Get method for single-object endpoints - unwraps single-item arrays
+  /**
+   * Get method for single-object endpoints - unwraps single-item arrays
+   *
+   * For endpoints that return single objects, this will always return an object (possibly empty) for `data` when success is true.
+   */
   async getSingle<T>(
     endpoint: string,
     version: 'v3' | 'v4' | 'stable' = 'v3',
@@ -80,9 +111,10 @@ export class FMPClient {
 
     try {
       const response = await client.get(endpoint, { params });
+      const data = normalizeObjectResponse<T>(unwrapSingleObject(response.data));
       return {
         success: true,
-        data: unwrapSingleObject(response.data),
+        data,
         status: response.status,
       };
     } catch (error: any) {

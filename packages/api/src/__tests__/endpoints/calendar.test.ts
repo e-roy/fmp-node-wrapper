@@ -12,6 +12,7 @@ import type {
   EconomicsCalendar,
   IPOCalendar,
   SplitsCalendar,
+  EarningsConfirmed,
 } from '@/types/calendar';
 
 // Helper function to safely access data that could be an array or single object
@@ -234,6 +235,160 @@ describe('Calendar Endpoints', () => {
             expect(isValidDateFormat(earnings.date)).toBe(true);
             expect(earnings.symbol.length).toBeGreaterThan(0);
             // Time format validation is now more flexible to handle various API responses
+          }
+        }
+      },
+      API_TIMEOUT,
+    );
+  });
+
+  describe('getEarningsConfirmed', () => {
+    it(
+      'should fetch earnings confirmed with date range',
+      async () => {
+        if (shouldSkipTests()) {
+          console.log('Skipping earnings confirmed test - no API key available');
+          return;
+        }
+
+        const result = await fmp.calendar.getEarningsConfirmed({
+          from: TEST_DATE_RANGES.RECENT.from,
+          to: TEST_DATE_RANGES.RECENT.to,
+        });
+
+        expect(result.success).toBe(true);
+        expect(result.data).toBeDefined();
+        expect(Array.isArray(result.data)).toBe(true);
+
+        // Validate data structure if data exists
+        if (result.data && Array.isArray(result.data) && result.data.length > 0) {
+          const earnings = getFirstItem(result.data) as EarningsConfirmed;
+
+          // Required properties
+          expect(earnings).toHaveProperty('symbol');
+          expect(earnings).toHaveProperty('exchange');
+          expect(earnings).toHaveProperty('time');
+          expect(earnings).toHaveProperty('when');
+          expect(earnings).toHaveProperty('date');
+          expect(earnings).toHaveProperty('publicationDate');
+          expect(earnings).toHaveProperty('title');
+          expect(earnings).toHaveProperty('url');
+
+          // Validate data types and formats
+          expect(typeof earnings.symbol).toBe('string');
+          expect(earnings.symbol.length).toBeGreaterThan(0);
+
+          expect(typeof earnings.exchange).toBe('string');
+          expect(earnings.exchange.length).toBeGreaterThan(0);
+
+          expect(typeof earnings.time).toBe('string');
+          expect(earnings.time.length).toBeGreaterThan(0);
+
+          expect(typeof earnings.when).toBe('string');
+          expect(earnings.when.length).toBeGreaterThan(0);
+
+          expect(typeof earnings.date).toBe('string');
+          expect(isValidDateFormat(earnings.date)).toBe(true);
+
+          expect(typeof earnings.publicationDate).toBe('string');
+          expect(isValidDateFormat(earnings.publicationDate)).toBe(true);
+
+          expect(typeof earnings.title).toBe('string');
+          expect(earnings.title.length).toBeGreaterThan(0);
+
+          expect(typeof earnings.url).toBe('string');
+          expect(earnings.url.length).toBeGreaterThan(0);
+          expect(earnings.url.startsWith('http')).toBe(true);
+        }
+      },
+      API_TIMEOUT,
+    );
+
+    it(
+      'should fetch earnings confirmed without date parameters',
+      async () => {
+        if (shouldSkipTests()) {
+          console.log('Skipping earnings confirmed no params test - no API key available');
+          return;
+        }
+
+        const result = await fmp.calendar.getEarningsConfirmed({});
+
+        expect(result.success).toBe(true);
+        expect(result.data).toBeDefined();
+        expect(Array.isArray(result.data)).toBe(true);
+
+        // Should return some data even without date range
+        if (result.data && Array.isArray(result.data)) {
+          expect(result.data.length).toBeGreaterThanOrEqual(0);
+        }
+      },
+      API_TIMEOUT,
+    );
+
+    it(
+      'should handle empty date range gracefully',
+      async () => {
+        if (shouldSkipTests()) {
+          console.log('Skipping earnings confirmed empty range test - no API key available');
+          return;
+        }
+
+        const result = await fmp.calendar.getEarningsConfirmed({
+          from: '2024-12-31',
+          to: '2024-12-31',
+        });
+
+        expect(result.success).toBe(true);
+        expect(result.data).toBeDefined();
+        expect(Array.isArray(result.data)).toBe(true);
+        // Empty range might return empty array or no data
+        expect(Array.isArray(result.data) ? result.data.length >= 0 : true).toBe(true);
+      },
+      FAST_TIMEOUT,
+    );
+
+    it(
+      'should validate all earnings confirmed items in response',
+      async () => {
+        if (shouldSkipTests()) {
+          console.log('Skipping earnings confirmed validation test - no API key available');
+          return;
+        }
+
+        const result = await fmp.calendar.getEarningsConfirmed({
+          from: TEST_DATE_RANGES.RECENT.from,
+          to: TEST_DATE_RANGES.RECENT.to,
+        });
+
+        expect(result.success).toBe(true);
+        expect(result.data).toBeDefined();
+        expect(Array.isArray(result.data)).toBe(true);
+
+        if (result.data && Array.isArray(result.data) && result.data.length > 0) {
+          // Validate first 5 items to avoid excessive API usage
+          const itemsToValidate = Math.min(5, result.data.length);
+
+          for (let i = 0; i < itemsToValidate; i++) {
+            const earnings = result.data[i] as EarningsConfirmed;
+
+            // Basic structure validation
+            expect(earnings).toHaveProperty('symbol');
+            expect(earnings).toHaveProperty('exchange');
+            expect(earnings).toHaveProperty('time');
+            expect(earnings).toHaveProperty('date');
+
+            // Data type validation
+            expect(typeof earnings.symbol).toBe('string');
+            expect(typeof earnings.exchange).toBe('string');
+            expect(typeof earnings.time).toBe('string');
+            expect(typeof earnings.date).toBe('string');
+
+            // Format validation
+            expect(earnings.symbol.length).toBeGreaterThan(0);
+            expect(earnings.exchange.length).toBeGreaterThan(0);
+            expect(earnings.time.length).toBeGreaterThan(0);
+            expect(isValidDateFormat(earnings.date)).toBe(true);
           }
         }
       },
@@ -848,6 +1003,7 @@ describe('Calendar Endpoints', () => {
 
         const endpoints = [
           () => fmp.calendar.getEarningsCalendar({ from: '2024-01-01', to: '2024-01-31' }),
+          () => fmp.calendar.getEarningsConfirmed({ from: '2024-01-01', to: '2024-01-31' }),
           () => fmp.calendar.getDividendsCalendar({ from: '2024-01-01', to: '2024-01-31' }),
           () => fmp.calendar.getEconomicsCalendar({ from: '2024-01-01', to: '2024-01-31' }),
           () => fmp.calendar.getIPOCalendar({ from: '2024-01-01', to: '2024-01-31' }),
@@ -882,6 +1038,7 @@ describe('Calendar Endpoints', () => {
 
         const promises = [
           fmp.calendar.getEarningsCalendar({ from: '2024-01-01', to: '2024-01-31' }),
+          fmp.calendar.getEarningsConfirmed({ from: '2024-01-01', to: '2024-01-31' }),
           fmp.calendar.getDividendsCalendar({ from: '2024-01-01', to: '2024-01-31' }),
           fmp.calendar.getEconomicsCalendar({ from: '2024-01-01', to: '2024-01-31' }),
           fmp.calendar.getIPOCalendar({ from: '2024-01-01', to: '2024-01-31' }),

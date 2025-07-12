@@ -6,6 +6,7 @@ import {
   EconomicsCalendar,
   IPOCalendar,
   SplitsCalendar,
+  EarningsConfirmed,
 } from '@/types/calendar';
 
 export class CalendarEndpoints {
@@ -26,6 +27,23 @@ export class CalendarEndpoints {
     if (to) params.to = to;
 
     return this.client.get('/earning_calendar', 'v3', params);
+  }
+
+  /**
+   * Get earnings confirmed
+   * https://site.financialmodelingprep.com/developer/docs#earnings-confirmed-earnings
+   * @param from - The start date to get the earnings confirmed for
+   * @param to - The end date to get the earnings confirmed for
+   * @returns The earnings confirmed
+   */
+  async getEarningsConfirmed({ from, to }: DateRangeParams = {}): Promise<
+    APIResponse<EarningsConfirmed[]>
+  > {
+    const params: DateRangeParams = {};
+    if (from) params.from = from;
+    if (to) params.to = to;
+
+    return this.client.get('/earning-calendar-confirmed', 'v4', params);
   }
 
   /**

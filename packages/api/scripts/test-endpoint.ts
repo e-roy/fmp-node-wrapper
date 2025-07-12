@@ -97,6 +97,12 @@ async function testEndpoint() {
       case 'dividend-history':
         result = await fmp.stock.getDividendHistory({ symbol: 'AAPL' });
         break;
+      case 'real-time-price':
+        result = await fmp.stock.getRealTimePrice({ symbols: ['AAPL'] });
+        break;
+      case 'real-time-price-full':
+        result = await fmp.stock.getRealTimePriceForMultipleStocks({ symbols: ['AAPL', 'GOOGL'] });
+        break;
 
       // Financial endpoints
       case 'income-statement':
@@ -207,6 +213,9 @@ async function testEndpoint() {
           quarter: 3,
         });
         break;
+      case 'company-transcript-data':
+        result = await fmp.company.getCompanyTranscriptData({ symbol: 'AAPL' });
+        break;
 
       // Market endpoints
       case 'market-hours':
@@ -248,6 +257,12 @@ async function testEndpoint() {
       // Calendar endpoints
       case 'earnings-calendar':
         result = await fmp.calendar.getEarningsCalendar({
+          from: '2024-01-01',
+          to: '2024-01-31',
+        });
+        break;
+      case 'earnings-confirmed':
+        result = await fmp.calendar.getEarningsConfirmed({
           from: '2024-01-01',
           to: '2024-01-31',
         });
@@ -311,6 +326,11 @@ async function testEndpoint() {
           page: 0,
         });
         break;
+      case 'senate-trading-by-name':
+        result = await fmp.senateHouse.getSenateTradingByName({
+          name: 'Jerry',
+        });
+        break;
       case 'house-trading':
         result = await fmp.senateHouse.getHouseTrading({
           symbol: 'AAPL',
@@ -319,6 +339,11 @@ async function testEndpoint() {
       case 'house-trading-rss-feed':
         result = await fmp.senateHouse.getHouseTradingRSSFeed({
           page: 0,
+        });
+        break;
+      case 'house-trading-by-name':
+        result = await fmp.senateHouse.getHouseTradingByName({
+          name: 'nancy pelosi',
         });
         break;
 

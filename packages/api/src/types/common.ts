@@ -1,6 +1,6 @@
 // Common types used across all FMP API endpoints
 
-// Base API response wrapper - more type-safe without any default
+// Base API response wrapper - maintains backward compatibility
 export interface APIResponse<T = unknown> {
   success: boolean;
   data?: T;
@@ -8,7 +8,7 @@ export interface APIResponse<T = unknown> {
   status?: number;
 }
 
-// More specific response types for better type safety
+// More specific response types for better type safety (optional use)
 export interface SuccessResponse<T> extends APIResponse<T> {
   success: true;
   data: T;
