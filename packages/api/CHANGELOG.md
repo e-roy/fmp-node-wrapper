@@ -1,5 +1,11 @@
 # fmp-node-api
 
+## 0.0.6
+
+### Patch Changes
+
+- 3ed8858: add endpoints for senate and house trading. fix broken endpoints for forex, economic, mutual fund and bond
+
 ## 0.0.5
 
 ### Patch Changes

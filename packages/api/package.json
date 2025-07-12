@@ -1,6 +1,6 @@
 {
   "name": "fmp-node-api",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A comprehensive Node.js wrapper for Financial Modeling Prep API",
   "disclaimer": "This package is not affiliated with, endorsed by, or sponsored by Financial Modeling Prep (FMP). This is an independent, community-developed wrapper.",
   "main": "./dist/index.js",
