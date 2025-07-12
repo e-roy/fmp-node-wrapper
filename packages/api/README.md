@@ -408,7 +408,7 @@ pnpm test:watch         # Watch mode for development
 pnpm test:coverage      # Generate coverage report
 ```
 
-**Note**: Additional endpoint-specific test scripts (crypto, etf, mutual-fund, bond) are available in the package-level scripts but not exposed at the root level.
+**Note**: Additional endpoint-specific test scripts (crypto, etf, mutual-fund) are available in the package-level scripts but not exposed at the root level.
 
 ## Development
 
@@ -492,7 +492,6 @@ src/
 │   ├── crypto.ts          # Crypto types
 │   ├── etf.ts             # ETF types
 │   ├── mutual-fund.ts     # Mutual fund types
-│   ├── bond.ts            # Bond types
 │   ├── economic.ts        # Economic types
 │   ├── market.ts          # Market types
 │   ├── list.ts            # List types
@@ -506,7 +505,6 @@ src/
 │   ├── crypto.ts
 │   ├── etf.ts
 │   ├── mutual-fund.ts
-│   ├── bond.ts
 │   ├── economic.ts
 │   ├── market.ts
 │   ├── list.ts
@@ -530,7 +528,6 @@ src/
 │   │   ├── crypto.test.ts
 │   │   ├── etf.test.ts
 │   │   ├── mutual-fund.test.ts
-│   │   ├── bond.test.ts
 │   │   ├── list.test.ts
 │   │   ├── calendar.test.ts
 │   │   └── company.test.ts

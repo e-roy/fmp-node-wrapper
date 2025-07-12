@@ -322,6 +322,11 @@ async function testEndpoint() {
         });
         break;
 
+      // mutual fund endpoints
+      case 'mutual-fund-holders':
+        result = await fmp.mutualFund.getHolders({ symbol: 'AAPL' });
+        break;
+
       // crypto endpoints
       case 'crypto-historical':
         result = await fmp.crypto.getHistoricalPrice({

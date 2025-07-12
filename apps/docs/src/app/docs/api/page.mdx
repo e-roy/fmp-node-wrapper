@@ -59,6 +59,11 @@ The library is organized into different endpoint categories:
     },
     {
       method: 'GET',
+      path: '/mutual-fund/*',
+      description: 'Mutual Fund endpoints for mutual fund holders of stocks',
+    },
+    {
+      method: 'GET',
       path: '/senate-house-trading/*',
       description: 'Congressional trading data for senate and house members',
     },
@@ -163,6 +168,16 @@ Access market-wide data:
 - **Gainers/Losers** - Top gainers and losers
 
 [View Market Endpoints →](/docs/api/market)
+
+### Mutual Fund Endpoints
+
+Access mutual fund holdings data:
+
+- **Mutual Fund Holders** - Mutual funds that hold a specific stock
+- **Holdings Analysis** - Analyze which mutual funds are invested in particular stocks
+- **Position Data** - Share counts, weight percentages, and position changes
+
+[View Mutual Fund Endpoints →](/docs/api/mutual-fund)
 
 ### Senate & House Trading Endpoints
 

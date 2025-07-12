@@ -35,7 +35,11 @@ describe('Mutual Fund Endpoints', () => {
       ) {
         const fund = getFirstItem(result.data);
         expect(fund.symbol).toBeDefined();
-        expect((fund as any).name).toBeDefined();
+        expect(fund.price).toBeDefined();
+        expect(fund.changesPercentage).toBeDefined();
+        expect(fund.change).toBeDefined();
+        expect(fund.volume).toBeDefined();
+        expect(fund.exchange).toBeDefined();
       } else {
         // Accept empty result as valid for this test
         expect(result.data).toBeDefined();
@@ -43,29 +47,28 @@ describe('Mutual Fund Endpoints', () => {
     }, 10000);
   });
 
-  describe('getHoldings', () => {
-    it('should fetch mutual fund holdings', async () => {
+  describe('getHolders', () => {
+    it('should fetch mutual fund holders', async () => {
       if (shouldSkipTests()) {
-        console.log('Skipping mutual fund holdings test - no API key available');
+        console.log('Skipping mutual fund holders test - no API key available');
         return;
       }
 
-      const result = await fmp.mutualFund.getHoldings({ symbol: 'VFINX' });
+      const result = await fmp.mutualFund.getHolders({ symbol: 'VFINX' });
 
       expect(result.success).toBe(true);
       expect(result.data).toBeDefined();
 
-      // The API might return { holdings: [...] } or direct array
-      const holdingsData = Array.isArray(result.data)
-        ? result.data
-        : (result.data as any)?.holdings || [];
-
-      expect(Array.isArray(holdingsData)).toBe(true);
-
-      if (holdingsData.length > 0) {
-        const holding = holdingsData[0];
-        expect(holding.asset || holding.symbol).toBeDefined();
-        expect(holding.weightPercent || holding.weighting).toBeDefined();
+      if (result.data && Array.isArray(result.data) && result.data.length > 0) {
+        const holding = result.data[0];
+        expect(holding.holder).toBeDefined();
+        expect(holding.shares).toBeDefined();
+        expect(holding.dateReported).toBeDefined();
+        expect(holding.change).toBeDefined();
+        expect(holding.weightPercent).toBeDefined();
+      } else {
+        // Accept empty result as valid for this test
+        expect(Array.isArray(result.data)).toBe(true);
       }
     }, 10000);
   });
