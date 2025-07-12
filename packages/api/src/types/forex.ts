@@ -3,13 +3,10 @@
 import { SymbolParams, DateRangeParams } from './common';
 
 // Forex parameter interfaces
-export interface ForexQuoteParams extends SymbolParams {}
 
 export interface ForexHistoricalParams extends SymbolParams, DateRangeParams {
   timeseries?: number;
 }
-
-export interface ForexListParams {}
 
 // Forex data interfaces
 export interface ForexQuote {

@@ -1,197 +1,161 @@
 # Economic Endpoints
 
-Access economic indicators, calendar data, and treasury rates.
-
-## Overview
-
-The economic endpoints provide access to economic data, including economic indicators, calendar events, and treasury rates that can impact financial markets.
-
-## Quick Start
-
-<CodeBlock language="typescript">
-{`import { FMP } from 'fmp-node-api';
-
-const fmp = new FMP({ apiKey: 'your-api-key' });
-
-// Get economic calendar
-const calendar = await fmp.economic.getEconomicCalendar();
-
-// Get treasury rates
-const rates = await fmp.economic.getTreasuryRates();
-
-// Get economic indicators
-const indicators = await fmp.economic.getEconomicIndicators();`}
-
-</CodeBlock>
+Access economic indicators, treasury rates, and economic data that impact financial markets.
 
 ## Available Methods
 
-### getEconomicCalendar
-
-Get economic calendar with upcoming events and releases.
-
 <ApiTable
   endpoints={[
     {
       method: 'GET',
-      path: '/economic-calendar',
-      description: 'Get economic calendar',
-    },
-  ]}
-/>
-
-**Example:**
-
-<CodeBlock language="typescript">
-{`const calendar = await fmp.economic.getEconomicCalendar();
-
-if (calendar.success) {
-console.log('Economic Events:', calendar.data);
-}`}
-
-</CodeBlock>
-
-### getTreasuryRates
-
-Get current treasury rates for different maturities.
-
-<ApiTable
-  endpoints={[
-    {
-      method: 'GET',
-      path: '/treasury-rates',
+      path: '/treasury',
       description: 'Get treasury rates',
     },
-  ]}
-/>
-
-**Example:**
-
-<CodeBlock language="typescript">
-{`const rates = await fmp.economic.getTreasuryRates();
-
-if (rates.success) {
-console.log('Treasury Rates:', rates.data);
-}`}
-
-</CodeBlock>
-
-### getEconomicIndicators
-
-Get key economic indicators and metrics.
-
-<ApiTable
-  endpoints={[
     {
       method: 'GET',
-      path: '/economic-indicators',
+      path: '/economic',
       description: 'Get economic indicators',
     },
   ]}
 />
 
-**Example:**
+## Get Treasury Rates
+
+Retrieve current treasury rates for different maturities.
 
 <CodeBlock language="typescript">
-{`const indicators = await fmp.economic.getEconomicIndicators();
-
-if (indicators.success) {
-console.log('Economic Indicators:', indicators.data);
-}`}
-
+  {`const rates = await fmp.economic.getTreasuryRates({
+    from: '2024-01-01',
+    to: '2024-01-31'
+});`}
 </CodeBlock>
 
-### getInflationData
-
-Get inflation data and metrics.
-
-<ApiTable
-  endpoints={[
+<ParameterTable
+  parameters={[
     {
-      method: 'GET',
-      path: '/inflation',
-      description: 'Get inflation data',
+      name: 'from',
+      type: 'string',
+      required: false,
+      description: 'Start date (YYYY-MM-DD format)',
+    },
+    {
+      name: 'to',
+      type: 'string',
+      required: false,
+      description: 'End date (YYYY-MM-DD format)',
     },
   ]}
 />
 
-**Example:**
+### Example Response
 
 <CodeBlock language="typescript">
-{`const inflation = await fmp.economic.getInflationData();
-
-if (inflation.success) {
-console.log('Inflation Data:', inflation.data);
+  {`{
+    success: true,
+    data: [
+      {
+        date: '2024-01-31',
+        month1: 5.33,
+        month2: 5.35,
+        month3: 5.37,
+        month6: 5.42,
+        year1: 5.45,
+        year2: 5.48,
+        year3: 5.52,
+        year5: 5.58,
+        year7: 5.62,
+        year10: 5.65,
+        year20: 5.68,
+        year30: 5.70
+      }
+    ]
 }`}
-
 </CodeBlock>
 
-### getGDPData
+## Get Economic Indicators
 
-Get GDP (Gross Domestic Product) data.
+Retrieve economic indicators with optional filtering by indicator type.
 
-<ApiTable
-  endpoints={[
+**Note:** The `name` parameter is required to specify which economic indicator to retrieve.
+
+<CodeBlock language="typescript">
+  {`const indicators = await fmp.economic.getEconomicIndicators({
+    name: 'GDP',
+    from: '2020-01-01',
+    to: '2024-01-31'
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
     {
-      method: 'GET',
-      path: '/gdp',
-      description: 'Get GDP data',
+      name: 'name',
+      type: 'string',
+      required: true,
+      description: 'Economic indicator name (GDP, CPI, federalFunds, etc.)',
+    },
+    {
+      name: 'from',
+      type: 'string',
+      required: false,
+      description: 'Start date (YYYY-MM-DD format)',
+    },
+    {
+      name: 'to',
+      type: 'string',
+      required: false,
+      description: 'End date (YYYY-MM-DD format)',
     },
   ]}
 />
 
-**Example:**
+### Example Response
 
 <CodeBlock language="typescript">
-{`const gdp = await fmp.economic.getGDPData();
-
-if (gdp.success) {
-console.log('GDP Data:', gdp.data);
+  {`{
+    success: true,
+    data: [
+      {
+        date: '2023-12-31',
+        value: 27.36
+      },
+      {
+        date: '2023-11-30',
+        value: 27.35
+      }
+    ]
 }`}
-
 </CodeBlock>
 
-### getUnemploymentData
+## Available Economic Indicators
 
-Get unemployment data and metrics.
+The following economic indicators are available:
 
-<ApiTable
-  endpoints={[
-    {
-      method: 'GET',
-      path: '/unemployment',
-      description: 'Get unemployment data',
-    },
-  ]}
-/>
-
-**Example:**
-
-<CodeBlock language="typescript">
-{`const unemployment = await fmp.economic.getUnemploymentData();
-
-if (unemployment.success) {
-console.log('Unemployment Data:', unemployment.data);
-}`}
-
-</CodeBlock>
+- **GDP** - Gross Domestic Product
+- **realGDP** - Real Gross Domestic Product
+- **nominalPotentialGDP** - Nominal Potential GDP
+- **realGDPPerCapita** - Real GDP Per Capita
+- **federalFunds** - Federal Funds Rate
+- **CPI** - Consumer Price Index
+- **inflationRate** - Inflation Rate
+- **inflation** - Inflation Data
+- **retailSales** - Retail Sales
+- **consumerSentiment** - Consumer Sentiment
+- **durableGoods** - Durable Goods Orders
+- **unemploymentRate** - Unemployment Rate
+- **totalNonfarmPayroll** - Total Nonfarm Payroll
+- **initialClaims** - Initial Jobless Claims
+- **industrialProductionTotalIndex** - Industrial Production Index
+- **newPrivatelyOwnedHousingUnitsStartedTotalUnits** - Housing Starts
+- **totalVehicleSales** - Total Vehicle Sales
+- **retailMoneyFunds** - Retail Money Funds
+- **smoothedUSRecessionProbabilities** - US Recession Probabilities
+- **3MonthOr90DayRatesAndYieldsCertificatesOfDeposit** - 3-Month CD Rates
+- **commercialBankInterestRateOnCreditCardPlansAllAccounts** - Credit Card Interest Rates
+- **30YearFixedRateMortgageAverage** - 30-Year Fixed Mortgage Rate
+- **15YearFixedRateMortgageAverage** - 15-Year Fixed Mortgage Rate
 
 ## Response Types
-
-### EconomicCalendar
-
-<CodeBlock language="typescript">
-  {`interface EconomicCalendar {
-  date: string;
-  event: string;
-  country: string;
-  currency: string;
-  impact: string;
-  actual: string;
-  forecast: string;
-  previous: string;
-}`}
-</CodeBlock>
 
 ### TreasuryRate
 
@@ -217,33 +181,21 @@ console.log('Unemployment Data:', unemployment.data);
 
 <CodeBlock language="typescript">
   {`interface EconomicIndicator {
-  indicator: string;
-  value: number;
   date: string;
-  unit: string;
+  value: number;
 }`}
 </CodeBlock>
 
-## Key Economic Indicators
-
-Economic data includes important indicators such as:
-
-- **GDP** - Gross Domestic Product growth
-- **Inflation** - Consumer Price Index (CPI)
-- **Unemployment** - Unemployment rate
-- **Interest Rates** - Federal Reserve rates
-- **Treasury Yields** - Government bond yields
-- **Consumer Confidence** - Economic sentiment
-
-## Treasury Yield Curve
-
-The treasury yield curve is a key economic indicator:
+## Treasury Yield Curve Analysis
 
 <CodeBlock language="typescript">
 {`// Analyze yield curve
-const rates = await fmp.economic.getTreasuryRates();
+const rates = await fmp.economic.getTreasuryRates({
+  from: '2024-01-01',
+  to: '2024-01-31'
+});
 
-if (rates.success) {
+if (rates.success && rates.data.length > 0) {
 const current = rates.data[0];
 const shortTerm = current.month3; // 3-month rate
 const longTerm = current.year10; // 10-year rate
@@ -258,81 +210,66 @@ console.log('Inverted Yield Curve - Recession indicator');
 
 </CodeBlock>
 
-## Economic Calendar Analysis
-
-<CodeBlock language="typescript">
-{`// Filter high-impact economic events
-const calendar = await fmp.economic.getEconomicCalendar();
-
-if (calendar.success) {
-const highImpact = calendar.data.filter(event =>
-event.impact === 'High'
-);
-
-console.log('High Impact Events:', highImpact);
-}`}
-
-</CodeBlock>
-
-## Common Use Cases
-
-### Economic Dashboard
+## Economic Dashboard
 
 <CodeBlock language="typescript">
 {`// Create economic dashboard
-const [calendar, rates, indicators] = await Promise.all([
-  fmp.economic.getEconomicCalendar(),
-  fmp.economic.getTreasuryRates(),
-  fmp.economic.getEconomicIndicators()
+const [rates, gdp, cpi, unemployment] = await Promise.all([
+  fmp.economic.getTreasuryRates({ from: '2024-01-01', to: '2024-01-31' }),
+  fmp.economic.getEconomicIndicators({ name: 'GDP', from: '2020-01-01', to: '2024-01-31' }),
+  fmp.economic.getEconomicIndicators({ name: 'CPI', from: '2024-01-01', to: '2024-01-31' }),
+  fmp.economic.getEconomicIndicators({ name: 'unemploymentRate', from: '2024-01-01', to: '2024-01-31' })
 ]);
 
-console.log('Upcoming Events:', calendar.data.slice(0, 5));
-console.log('Current Rates:', rates.data[0]);
-console.log('Key Indicators:', indicators.data);`}
-
-</CodeBlock>
-
-### Market Impact Analysis
-
-<CodeBlock language="typescript">
-{`// Analyze economic impact on markets
-const [rates, inflation] = await Promise.all([
-  fmp.economic.getTreasuryRates(),
-  fmp.economic.getInflationData()
-]);
-
-const realRate = rates.data[0].year10 - inflation.data[0].value;
-console.log('Real Interest Rate:', realRate);`}
+console.log('Current Treasury Rates:', rates.data[0]);
+console.log('Latest GDP:', gdp.data[0]);
+console.log('Latest CPI:', cpi.data[0]);
+console.log('Latest Unemployment:', unemployment.data[0]);`}
 
 </CodeBlock>
 
 ## Error Handling
 
-<CodeBlock language="typescript">
-{`const response = await fmp.economic.getEconomicCalendar();
+Always check the success property before accessing data:
 
-if (response.success) {
-// Handle successful response
-console.log(response.data);
+<CodeBlock language="typescript">
+{`const rates = await fmp.economic.getTreasuryRates({
+  from: '2024-01-01',
+  to: '2024-01-31'
+});
+
+if (rates.success && rates.data) {
+console.log('Treasury Rates:', rates.data[0]);
 } else {
-// Handle error
-console.error('Error:', response.error);
-console.error('Status:', response.status);
+console.error('Error:', rates.error);
+console.error('Status:', rates.status);
 }`}
 
 </CodeBlock>
 
 ## Rate Limiting
 
-Economic endpoints are subject to FMP's rate limits. For production applications, consider implementing appropriate rate limiting strategies.
+Economic endpoints are subject to FMP's rate limits. For production applications, implement appropriate rate limiting and caching strategies.
 
 ## Data Frequency
 
 Economic data is typically updated:
 
-- **Real-time** - Treasury rates, some indicators
-- **Daily** - Economic calendar
+- **Real-time** - Treasury rates
 - **Monthly** - Most economic indicators
 - **Quarterly** - GDP data
 
+## Next Steps
+
+Explore other endpoint categories:
+
+- [Stock Endpoints](/docs/api/stock) - Real-time quotes and historical data
+- [Financial Endpoints](/docs/api/financial) - Financial statements and ratios
+- [Market Endpoints](/docs/api/market) - Market indices and sector data
+- [Calendar Endpoints](/docs/api/calendar) - Earnings and economic calendars
+- [List Endpoints](/docs/api/list) - Available symbols and instruments
+- [Examples](/docs/examples) - Practical code samples
+
 ---
+
+**Ready to explore financial data?** Check out the [Financial Endpoints](/docs/api/financial) for income statements, balance sheets, and more.

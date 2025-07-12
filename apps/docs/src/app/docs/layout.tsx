@@ -30,7 +30,7 @@ const navigationGroups = [
     title: 'Market Data',
     items: [
       { name: 'Market Endpoints', href: '/docs/api/market' },
-      // { name: 'Economic Endpoints', href: '/docs/api/economic' },
+      { name: 'Economic Endpoints', href: '/docs/api/economic' },
     ],
   },
   {

@@ -327,6 +327,36 @@ async function testEndpoint() {
         result = await fmp.mutualFund.getHolders({ symbol: 'AAPL' });
         break;
 
+      // economic endpoints
+      case 'treasury-rates':
+        result = await fmp.economic.getTreasuryRates({
+          from: '2024-01-01',
+          to: '2024-12-31',
+        });
+        break;
+
+      case 'cpi':
+        result = await fmp.economic.getEconomicIndicators({
+          name: 'CPI', // CPI, inflationRate, inflation, retailSales, consumerSentiment, durableGoods, unemploymentRate, totalNonfarmPayroll, initialClaims, industrialProductionTotalIndex, newPrivatelyOwnedHousingUnitsStartedTotalUnits, totalVehicleSales, retailMoneyFunds, smoothedUSRecessionProbabilities, 3MonthOr90DayRatesAndYieldsCertificatesOfDeposit, commercialBankInterestRateOnCreditCardPlansAllAccounts, 30YearFixedRateMortgageAverage, 15YearFixedRateMortgageAverage
+          from: '2024-01-01',
+          to: '2024-12-31',
+        });
+        break;
+      case 'unemployment':
+        result = await fmp.economic.getEconomicIndicators({
+          name: 'unemploymentRate',
+          from: '2024-01-01',
+          to: '2024-12-31',
+        });
+        break;
+      case 'inflation':
+        result = await fmp.economic.getEconomicIndicators({
+          name: 'inflation',
+          from: '2024-01-01',
+          to: '2024-12-31',
+        });
+        break;
+
       // crypto endpoints
       case 'crypto-historical':
         result = await fmp.crypto.getHistoricalPrice({
@@ -341,13 +371,6 @@ async function testEndpoint() {
 
       case 'forex-quote':
         result = await fmp.forex.getQuote({ symbol: 'EURUSD' });
-        break;
-
-      case 'treasury-rates':
-        result = await fmp.economic.getTreasuryRates({
-          from: '2024-01-01',
-          to: '2024-12-31',
-        });
         break;
 
       default:
