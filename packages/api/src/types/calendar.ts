@@ -11,6 +11,18 @@ export interface EarningsCalendar {
   updatedFromDate: string;
 }
 
+// Earnings confirmed data
+export interface EarningsConfirmed {
+  symbol: string;
+  exchange: string;
+  time: string;
+  when: string;
+  date: string;
+  publicationDate: string;
+  title: string;
+  url: string;
+}
+
 // Dividends calendar data
 export interface DividendsCalendar {
   date: string;

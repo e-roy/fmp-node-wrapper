@@ -13,6 +13,11 @@ The Calendar Endpoints provide access to various financial calendars including e
     },
     {
       method: 'GET',
+      path: '/earning-calendar-confirmed',
+      description: 'Get earnings confirmed data',
+    },
+    {
+      method: 'GET',
       path: '/stock_dividend_calendar',
       description: 'Get dividends calendar data',
     },
@@ -89,6 +94,64 @@ Retrieve upcoming earnings announcements with estimated and actual earnings per 
         estimatedRevenue: 61100000000,
         fiscalDateEnding: '2023-12-31',
         updatedFromDate: '2024-01-16'
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Earnings Confirmed
+
+Retrieve confirmed earnings announcements with detailed information including publication dates and URLs.
+
+<CodeBlock language="typescript">
+  {`const earningsConfirmed = await fmp.calendar.getEarningsConfirmed({
+    from: '2024-01-01',
+    to: '2024-01-31'
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'from',
+      type: 'string',
+      required: false,
+      description: 'Start date (YYYY-MM-DD format)',
+    },
+    {
+      name: 'to',
+      type: 'string',
+      required: false,
+      description: 'End date (YYYY-MM-DD format)',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        symbol: 'AAPL',
+        exchange: 'NASDAQ',
+        time: 'AMC',
+        when: 'After Market Close',
+        date: '2024-01-25',
+        publicationDate: '2024-01-25',
+        title: 'Apple Inc. Q1 2024 Earnings Release',
+        url: 'https://investor.apple.com/news-events/press-releases/2024/01/25/apple-reports-first-quarter-results'
+      },
+      {
+        symbol: 'MSFT',
+        exchange: 'NASDAQ',
+        time: 'AMC',
+        when: 'After Market Close',
+        date: '2024-01-26',
+        publicationDate: '2024-01-26',
+        title: 'Microsoft Corporation Q2 2024 Earnings Release',
+        url: 'https://news.microsoft.com/2024/01/26/microsoft-announces-second-quarter-fiscal-year-2024-results'
       }
     ]
 }`}
@@ -358,8 +421,9 @@ Calendar data is particularly useful for building financial dashboards and track
 {`// Get all calendar events for a specific date
 const targetDate = '2024-01-25';
 
-const [earnings, dividends, economic, ipos, splits] = await Promise.all([
+const [earnings, earningsConfirmed, dividends, economic, ipos, splits] = await Promise.all([
 fmp.calendar.getEarningsCalendar({ from: targetDate, to: targetDate }),
+fmp.calendar.getEarningsConfirmed({ from: targetDate, to: targetDate }),
 fmp.calendar.getDividendsCalendar({ from: targetDate, to: targetDate }),
 fmp.calendar.getEconomicsCalendar({ from: targetDate, to: targetDate }),
 fmp.calendar.getIPOCalendar({ from: targetDate, to: targetDate }),
@@ -367,6 +431,7 @@ fmp.calendar.getSplitsCalendar({ from: targetDate, to: targetDate })
 ]);
 
 console.log('Earnings:', earnings.data.length);
+console.log('Earnings Confirmed:', earningsConfirmed.data.length);
 console.log('Dividends:', dividends.data.length);
 console.log('Economic Events:', economic.data.length);
 console.log('IPOs:', ipos.data.length);

@@ -252,6 +252,12 @@ async function testEndpoint() {
           to: '2024-01-31',
         });
         break;
+      case 'earnings-confirmed':
+        result = await fmp.calendar.getEarningsConfirmed({
+          from: '2024-01-01',
+          to: '2024-01-31',
+        });
+        break;
       case 'dividends-calendar':
         result = await fmp.calendar.getDividendsCalendar({
           from: '2024-01-01',
