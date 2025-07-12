@@ -36,14 +36,6 @@ describe('Stock Endpoints', () => {
         const dataKeys = Object.keys(result.data || {});
         expect(dataKeys.length).toBeGreaterThan(0);
 
-        if (dataKeys.length > 0) {
-          console.log(
-            `✅ Stock quote for ${TEST_SYMBOLS.STOCK} returned ${dataKeys.length} data fields`,
-          );
-        } else {
-          console.log('⚠️ Stock quote returned empty data object');
-        }
-
         if (result.data) {
           const quote = Array.isArray(result.data) ? result.data[0] : result.data;
           expect(quote.symbol).toBe(TEST_SYMBOLS.STOCK);
@@ -75,11 +67,6 @@ describe('Stock Endpoints', () => {
 
         // Should return empty object or failed response
         const dataKeys = Object.keys(result.data || {});
-        if (dataKeys.length === 0) {
-          console.log('✅ Invalid symbol correctly returned empty data object');
-        } else if (!result.success) {
-          console.log('✅ Invalid symbol correctly returned failed response');
-        }
 
         expect(dataKeys.length === 0 || result.success === false).toBe(true);
       },
@@ -110,10 +97,6 @@ describe('Stock Endpoints', () => {
           expect(Array.isArray(historical)).toBe(true);
 
           if (historical.length > 0) {
-            console.log(
-              `✅ Historical prices for ${TEST_SYMBOLS.STOCK} returned ${historical.length} records`,
-            );
-
             // Validate first record structure
             const firstRecord = historical[0];
             expect(firstRecord.date).toBeDefined();
@@ -157,14 +140,6 @@ describe('Stock Endpoints', () => {
         const dataKeys = Object.keys(result.data || {});
         expect(dataKeys.length).toBeGreaterThan(0);
 
-        if (dataKeys.length > 0) {
-          console.log(
-            `✅ Market cap for ${TEST_SYMBOLS.STOCK} returned ${dataKeys.length} data fields`,
-          );
-        } else {
-          console.log('⚠️ Market cap returned empty data object');
-        }
-
         if (result.data) {
           const marketCap = Array.isArray(result.data) ? result.data[0] : result.data;
           expect(marketCap.symbol).toBe(TEST_SYMBOLS.STOCK);
@@ -203,10 +178,6 @@ describe('Stock Endpoints', () => {
 
           const historical = (result.data as StockSplitResponse).historical;
           if (historical && historical.length > 0) {
-            console.log(
-              `✅ Stock splits for ${TEST_SYMBOLS.STOCK} returned ${historical.length} records`,
-            );
-
             // Validate first record structure
             const firstRecord = historical[0];
             expect(firstRecord.date).toBeDefined();
@@ -252,10 +223,6 @@ describe('Stock Endpoints', () => {
 
           const historical = result.data.historical;
           if (historical && historical.length > 0) {
-            console.log(
-              `✅ Dividend history for ${TEST_SYMBOLS.STOCK} returned ${historical.length} records`,
-            );
-
             // Validate first record structure
             const firstRecord = historical[0];
             expect(firstRecord.date).toBeDefined();
@@ -277,6 +244,246 @@ describe('Stock Endpoints', () => {
         }
       },
       FAST_TIMEOUT,
+    );
+  });
+
+  describe('getRealTimePrice', () => {
+    it(
+      'should fetch real time price for single stock with comprehensive validation',
+      async () => {
+        if (shouldSkipTests()) {
+          console.log('Skipping real time price test - no API key available');
+          return;
+        }
+        const result = await fmp.stock.getRealTimePrice({
+          symbols: [TEST_SYMBOLS.STOCK],
+        });
+
+        expect(result.success).toBe(true);
+        expect(result.data).toBeDefined();
+        expect(Array.isArray(result.data)).toBe(true);
+
+        if (result.data && result.data.length > 0) {
+          // Validate that at least one record matches the symbol
+          const found = result.data.find(r => r.symbol === TEST_SYMBOLS.STOCK);
+          expect(found).toBeDefined();
+          expect(found!.price).toBeDefined();
+          expect(typeof found!.price).toBe('number');
+          expect(found!.price).toBeGreaterThan(0);
+        } else {
+          console.log('⚠️ Real time price returned empty array');
+        }
+      },
+      FAST_TIMEOUT,
+    );
+
+    it(
+      'should fetch real time price for multiple stocks',
+      async () => {
+        if (shouldSkipTests()) {
+          console.log('Skipping multiple stocks real time price test - no API key available');
+          return;
+        }
+        const symbols = [TEST_SYMBOLS.STOCK, 'MSFT', 'GOOGL'];
+        const result = await fmp.stock.getRealTimePrice({
+          symbols,
+        });
+
+        expect(result.success).toBe(true);
+        expect(result.data).toBeDefined();
+        expect(Array.isArray(result.data)).toBe(true);
+
+        if (result.data && result.data.length > 0) {
+          // Validate that we got data for at least some of the requested symbols
+          const returnedSymbols = result.data.map(item => item.symbol);
+          const hasRequestedSymbols = symbols.some(symbol => returnedSymbols.includes(symbol));
+          expect(hasRequestedSymbols).toBe(true);
+
+          // Validate record structure
+          result.data.forEach(record => {
+            expect(record.symbol).toBeDefined();
+            expect(record.price).toBeDefined();
+            expect(typeof record.price).toBe('number');
+            expect(record.price).toBeGreaterThan(0);
+          });
+        }
+      },
+      FAST_TIMEOUT,
+    );
+
+    it(
+      'should fetch real time price for all stocks when symbols array is empty',
+      async () => {
+        if (shouldSkipTests()) {
+          console.log('Skipping all stocks real time price test - no API key available');
+          return;
+        }
+        const result = await fmp.stock.getRealTimePrice({
+          symbols: [],
+        });
+
+        expect(result.success).toBe(true);
+        expect(result.data).toBeDefined();
+        expect(Array.isArray(result.data)).toBe(true);
+
+        if (result.data && result.data.length > 0) {
+          // Should return a substantial number of stocks
+          expect(result.data.length).toBeGreaterThan(100);
+
+          // Validate record structure
+          const firstRecord = result.data[0];
+          expect(firstRecord.symbol).toBeDefined();
+          expect(firstRecord.price).toBeDefined();
+          expect(typeof firstRecord.price).toBe('number');
+          expect(firstRecord.price).toBeGreaterThan(0);
+        } else {
+          console.log('⚠️ All stocks real time price returned empty array');
+        }
+      },
+      API_TIMEOUT,
+    );
+  });
+
+  describe('getRealTimePriceForMultipleStocks', () => {
+    it(
+      'should fetch full real time price data for single stock',
+      async () => {
+        if (shouldSkipTests()) {
+          console.log('Skipping full real time price test - no API key available');
+          return;
+        }
+        const result = await fmp.stock.getRealTimePriceForMultipleStocks({
+          symbols: [TEST_SYMBOLS.STOCK],
+        });
+
+        expect(result.success).toBe(true);
+        expect(result.data).toBeDefined();
+        expect(Array.isArray(result.data)).toBe(true);
+
+        if (result.data && result.data.length > 0) {
+          // Validate that at least one record matches the symbol
+          const found = result.data.find(r => r.symbol === TEST_SYMBOLS.STOCK);
+          expect(found).toBeDefined();
+          expect(found!.bidPrice).toBeDefined();
+          expect(found!.askPrice).toBeDefined();
+          expect(found!.lastSalePrice).toBeDefined();
+          expect(found!.volume).toBeDefined();
+          expect(found!.bidSize).toBeDefined();
+          expect(found!.askSize).toBeDefined();
+          expect(found!.lastSaleSize).toBeDefined();
+          expect(found!.lastSaleTime).toBeDefined();
+          expect(found!.fmpLast).toBeDefined();
+          expect(found!.lastUpdated).toBeDefined();
+
+          // Validate numeric fields
+          expect(typeof found!.bidPrice).toBe('number');
+          expect(typeof found!.askPrice).toBe('number');
+          expect(typeof found!.lastSalePrice).toBe('number');
+          expect(typeof found!.volume).toBe('number');
+          expect(typeof found!.bidSize).toBe('number');
+          expect(typeof found!.askSize).toBe('number');
+          expect(typeof found!.lastSaleSize).toBe('number');
+          expect(typeof found!.lastSaleTime).toBe('number');
+          expect(typeof found!.fmpLast).toBe('number');
+          expect(typeof found!.lastUpdated).toBe('number');
+        } else {
+          console.log('⚠️ Full real time price returned empty array');
+        }
+      },
+      FAST_TIMEOUT,
+    );
+
+    it(
+      'should fetch full real time price data for multiple stocks',
+      async () => {
+        if (shouldSkipTests()) {
+          console.log('Skipping multiple stocks full real time price test - no API key available');
+          return;
+        }
+        const symbols = [TEST_SYMBOLS.STOCK, 'MSFT', 'GOOGL'];
+        const result = await fmp.stock.getRealTimePriceForMultipleStocks({
+          symbols,
+        });
+
+        expect(result.success).toBe(true);
+        expect(result.data).toBeDefined();
+        expect(Array.isArray(result.data)).toBe(true);
+
+        if (result.data && result.data.length > 0) {
+          // Validate that we got data for at least some of the requested symbols
+          const returnedSymbols = result.data.map(item => item.symbol);
+          const hasRequestedSymbols = symbols.some(symbol => returnedSymbols.includes(symbol));
+          expect(hasRequestedSymbols).toBe(true);
+
+          // Validate record structure
+          result.data.forEach(record => {
+            expect(record.symbol).toBeDefined();
+            expect(record.bidPrice).toBeDefined();
+            expect(record.askPrice).toBeDefined();
+            expect(record.lastSalePrice).toBeDefined();
+            expect(record.volume).toBeDefined();
+            expect(typeof record.bidPrice).toBe('number');
+            expect(typeof record.askPrice).toBe('number');
+            expect(typeof record.lastSalePrice).toBe('number');
+            expect(typeof record.volume).toBe('number');
+          });
+        }
+      },
+      FAST_TIMEOUT,
+    );
+
+    it(
+      'should fetch full real time price data for all stocks when symbols array is empty',
+      async () => {
+        if (shouldSkipTests()) {
+          console.log('Skipping all stocks full real time price test - no API key available');
+          return;
+        }
+        const result = await fmp.stock.getRealTimePriceForMultipleStocks({
+          symbols: [],
+        });
+
+        expect(result.success).toBe(true);
+        expect(result.data).toBeDefined();
+        expect(Array.isArray(result.data)).toBe(true);
+
+        if (result.data && result.data.length > 0) {
+          // Should return a substantial number of stocks
+          expect(result.data.length).toBeGreaterThan(100);
+
+          // Validate record structure - be flexible about which properties exist
+          const firstRecord = result.data[0];
+          if (firstRecord && firstRecord.symbol) {
+            expect(firstRecord.symbol).toBeDefined();
+            expect(typeof firstRecord.symbol).toBe('string');
+
+            // Check for common properties that might exist
+            if ('bidPrice' in firstRecord) {
+              expect(typeof firstRecord.bidPrice).toBe('number');
+            }
+            if ('askPrice' in firstRecord) {
+              expect(typeof firstRecord.askPrice).toBe('number');
+            }
+            if ('lastSalePrice' in firstRecord) {
+              expect(typeof firstRecord.lastSalePrice).toBe('number');
+            }
+            if ('volume' in firstRecord) {
+              expect(typeof firstRecord.volume).toBe('number');
+            }
+            if ('price' in firstRecord) {
+              expect(typeof firstRecord.price).toBe('number');
+            }
+          } else {
+            console.log('⚠️ First record is invalid or missing required properties');
+          }
+        } else {
+          console.log(
+            '⚠️ All stocks full real time price returned empty array (API limitation or no data)',
+          );
+          // Don't run assertions if no data is returned
+        }
+      },
+      API_TIMEOUT,
     );
   });
 });

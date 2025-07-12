@@ -1,7 +1,16 @@
 import { FMPClient } from '@/client';
 import { APIResponse, DateRangeParams } from '@/types/common';
 import { HistoricalPriceResponse } from '@/types/quote';
-import { MarketCap, StockSplitResponse, StockQuote, StockDividendResponse } from '@/types/stock';
+import {
+  MarketCap,
+  StockSplitResponse,
+  StockQuote,
+  StockDividendResponse,
+  StockRealTimePrice,
+  StockRealTimePriceFull,
+  StockListResponse,
+  CompaniesPriceListResponse,
+} from '@/types/stock';
 
 export class StockEndpoints {
   constructor(private client: FMPClient) {}
@@ -12,7 +21,7 @@ export class StockEndpoints {
    * @param symbol - The stock symbol to get the quote for
    * @returns This endpoint gives you the latest bid and ask prices for a stock, as well as the volume and last trade price in real time.
    */
-  async getQuote({ symbol }: { symbol: string }): Promise<APIResponse<StockQuote | null>> {
+  async getQuote({ symbol }: { symbol: string }): Promise<APIResponse<StockQuote>> {
     console.warn(
       '⚠️  StockEndpoints.getQuote() is deprecated. Use fmp.quote.getQuote() instead. This method will be removed in version 0.1.0.',
     );
@@ -52,7 +61,7 @@ export class StockEndpoints {
    * @param symbol - The stock symbol to get the market cap for
    * @returns The FMP Market Cap endpoint provides the current market capitalization of a company. Market cap is a measure of the size and relative importance of a company in the stock market. It is calculated by multiplying the current share price by the number of outstanding shares.
    */
-  async getMarketCap({ symbol }: { symbol: string }): Promise<APIResponse<MarketCap | null>> {
+  async getMarketCap({ symbol }: { symbol: string }): Promise<APIResponse<MarketCap>> {
     return this.client.getSingle(`/market-capitalization/${symbol}`, 'v3');
   }
 
@@ -78,5 +87,123 @@ export class StockEndpoints {
     symbol: string;
   }): Promise<APIResponse<StockDividendResponse>> {
     return this.client.getSingle(`/historical-price-full/stock_dividend/${symbol}`, 'v3');
+  }
+
+  /**
+   * Get stock real time price
+   * @param symbol - The stock symbol to get the real time price for
+   * @returns The real time price for the stock
+   */
+  async getRealTimePrice({
+    symbols,
+  }: {
+    symbols: string[];
+  }): Promise<APIResponse<StockRealTimePrice[]>> {
+    const url = `stock/real-time-price/${symbols.join(',')}`;
+    const result = await this.client.get(url, 'v3');
+    if (result.success && result.data && !Array.isArray(result.data)) {
+      const data = result.data as
+        | StockListResponse<StockRealTimePrice>
+        | CompaniesPriceListResponse<StockRealTimePrice>
+        | StockRealTimePrice;
+
+      // Check for companiesPriceList (when symbols are provided)
+      if (
+        typeof data === 'object' &&
+        data !== null &&
+        'companiesPriceList' in data &&
+        Array.isArray(data.companiesPriceList)
+      ) {
+        const filteredData = data.companiesPriceList.filter(item => item && item.symbol);
+        if (filteredData.length > 0) {
+          return { ...result, data: filteredData };
+        }
+      }
+
+      // Check for stockList (when no symbols are provided - all stocks)
+      if (
+        typeof data === 'object' &&
+        data !== null &&
+        'stockList' in data &&
+        Array.isArray(data.stockList)
+      ) {
+        const filteredData = data.stockList.filter(item => item && item.symbol);
+        if (filteredData.length > 0) {
+          return { ...result, data: filteredData };
+        }
+      }
+
+      // fallback: wrap single object in array if it has a symbol
+      if ((data as StockRealTimePrice).symbol) {
+        return { ...result, data: [data as StockRealTimePrice] };
+      }
+
+      if (symbols.length === 1) {
+        console.warn(`No real-time price data found for symbol: ${symbols[0]}`);
+      }
+      return { ...result, data: [] };
+    }
+    const filteredData = (result.data as StockRealTimePrice[]).filter(item => item && item.symbol);
+    return { ...result, data: filteredData };
+  }
+
+  /**
+   * Get stock real time price full
+   * https://site.financialmodelingprep.com/developer/docs#real-time-full-price-quote
+   * @param symbols - The stock symbols to get the real time price for
+   * @returns The real time price for the stocks
+   */
+  async getRealTimePriceForMultipleStocks({
+    symbols,
+  }: {
+    symbols: string[];
+  }): Promise<APIResponse<StockRealTimePriceFull[]>> {
+    const url = `stock/full/real-time-price/${symbols.join(',')}`;
+    const result = await this.client.get(url, 'v3');
+    if (result.success && result.data && !Array.isArray(result.data)) {
+      const data = result.data as
+        | StockListResponse<StockRealTimePriceFull>
+        | CompaniesPriceListResponse<StockRealTimePriceFull>
+        | StockRealTimePriceFull;
+
+      // Check for companiesPriceList (when symbols are provided)
+      if (
+        typeof data === 'object' &&
+        data !== null &&
+        'companiesPriceList' in data &&
+        Array.isArray(data.companiesPriceList)
+      ) {
+        const filteredData = data.companiesPriceList.filter(item => item && item.symbol);
+        if (filteredData.length > 0) {
+          return { ...result, data: filteredData };
+        }
+      }
+
+      // Check for stockList (when no symbols are provided - all stocks)
+      if (
+        typeof data === 'object' &&
+        data !== null &&
+        'stockList' in data &&
+        Array.isArray(data.stockList)
+      ) {
+        const filteredData = data.stockList.filter(item => item && item.symbol);
+        if (filteredData.length > 0) {
+          return { ...result, data: filteredData };
+        }
+      }
+
+      if ((data as StockRealTimePriceFull).symbol) {
+        return { ...result, data: [data as StockRealTimePriceFull] };
+      }
+
+      if (symbols.length === 1) {
+        console.warn(`No full real-time price data found for symbol: ${symbols[0]}`);
+      }
+      return { ...result, data: [] };
+    }
+    const filteredData = (result.data as StockRealTimePriceFull[]).filter(
+      item => item && item.symbol,
+    );
+    return { ...result, data: filteredData };
   }
 }

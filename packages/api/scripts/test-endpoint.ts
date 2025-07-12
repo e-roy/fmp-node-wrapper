@@ -97,6 +97,12 @@ async function testEndpoint() {
       case 'dividend-history':
         result = await fmp.stock.getDividendHistory({ symbol: 'AAPL' });
         break;
+      case 'real-time-price':
+        result = await fmp.stock.getRealTimePrice({ symbols: ['AAPL'] });
+        break;
+      case 'real-time-price-full':
+        result = await fmp.stock.getRealTimePriceForMultipleStocks({ symbols: ['AAPL', 'GOOGL'] });
+        break;
 
       // Financial endpoints
       case 'income-statement':

@@ -31,6 +31,16 @@ The Stock Endpoints provide access to real-time and historical stock data, quote
       path: '/historical-price-full/stock_dividend/{symbol}',
       description: 'Get dividend history',
     },
+    {
+      method: 'GET',
+      path: '/stock/real-time-price/{symbols}',
+      description: 'Get real-time price for multiple stocks',
+    },
+    {
+      method: 'GET',
+      path: '/stock/full/real-time-price/{symbols}',
+      description: 'Get full real-time price data for multiple stocks',
+    },
   ]}
 />
 
@@ -278,6 +288,118 @@ Retrieve historical dividend payments for a specific stock.
         recordDate: '2023-08-14',
         paymentDate: '2023-08-17',
         declarationDate: '2023-05-18'
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Real-Time Price
+
+Retrieve real-time price data for multiple stocks. When the symbols array is empty, returns data for all available stocks.
+
+<CodeBlock language="typescript">
+  {`const realTimePrice = await fmp.stock.getRealTimePrice({
+    symbols: ['AAPL', 'MSFT', 'GOOGL']
+  });
+
+// Get all stocks
+const allStocks = await fmp.stock.getRealTimePrice({
+symbols: []
+});`}
+
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbols',
+      type: 'string[]',
+      required: true,
+      description: 'Array of stock symbols. Empty array returns all stocks.',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        symbol: 'AAPL',
+        price: 150.25
+      },
+      {
+        symbol: 'MSFT',
+        price: 375.50
+      },
+      {
+        symbol: 'GOOGL',
+        price: 142.75
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Full Real-Time Price Data
+
+Retrieve comprehensive real-time price data including bid/ask prices, volume, and trade details for multiple stocks. When the symbols array is empty, returns data for all available stocks.
+
+<CodeBlock language="typescript">
+  {`const fullRealTimeData = await fmp.stock.getRealTimePriceForMultipleStocks({
+    symbols: ['AAPL', 'MSFT', 'GOOGL']
+  });
+
+// Get all stocks with full data
+const allStocksFull = await fmp.stock.getRealTimePriceForMultipleStocks({
+symbols: []
+});`}
+
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbols',
+      type: 'string[]',
+      required: true,
+      description: 'Array of stock symbols. Empty array returns all stocks.',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        symbol: 'AAPL',
+        bidPrice: 150.20,
+        askPrice: 150.30,
+        lastSalePrice: 150.25,
+        lastSaleSize: 100,
+        lastSaleTime: 1703123456789,
+        volume: 45678900,
+        bidSize: 500,
+        askSize: 300,
+        fmpLast: 1703123456789,
+        lastUpdated: 1703123456789
+      },
+      {
+        symbol: 'MSFT',
+        bidPrice: 375.45,
+        askPrice: 375.55,
+        lastSalePrice: 375.50,
+        lastSaleSize: 200,
+        lastSaleTime: 1703123456789,
+        volume: 23456700,
+        bidSize: 400,
+        askSize: 250,
+        fmpLast: 1703123456789,
+        lastUpdated: 1703123456789
       }
     ]
 }`}
