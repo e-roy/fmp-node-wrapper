@@ -9,7 +9,6 @@ import { ForexEndpoints } from './endpoints/forex';
 import { CryptoEndpoints } from './endpoints/crypto';
 import { ETFEndpoints } from './endpoints/etf';
 import { MutualFundEndpoints } from './endpoints/mutual-fund';
-import { BondEndpoints } from './endpoints/bond';
 import { EconomicEndpoints } from './endpoints/economic';
 import { MarketEndpoints } from './endpoints/market';
 import { ListEndpoints } from './endpoints/list';
@@ -47,7 +46,6 @@ export class FMP {
   public readonly crypto: CryptoEndpoints;
   public readonly etf: ETFEndpoints;
   public readonly mutualFund: MutualFundEndpoints;
-  public readonly bond: BondEndpoints;
   public readonly economic: EconomicEndpoints;
   public readonly market: MarketEndpoints;
   public readonly list: ListEndpoints;
@@ -75,7 +73,6 @@ export class FMP {
 
     this.forex = new ForexEndpoints(client);
     this.economic = new EconomicEndpoints(client);
-    this.bond = new BondEndpoints(client);
     this.mutualFund = new MutualFundEndpoints(client);
   }
 

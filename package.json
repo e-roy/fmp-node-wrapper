@@ -26,6 +26,7 @@
     "test:company": "turbo run test:company --filter=fmp-node-api",
     "test:crypto": "turbo run test:crypto --filter=fmp-node-api",
     "test:etf": "turbo run test:etf --filter=fmp-node-api",
+    "test:mutual-fund": "turbo run test:mutual-fund --filter=fmp-node-api",
     "test:senate-house": "turbo run test:senate-house --filter=fmp-node-api",
     "lint": "pnpm exec eslint packages/api/src/**/*.ts apps/docs/src/**/*.ts",
     "lint:fix": "turbo run lint:fix",

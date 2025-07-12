@@ -425,52 +425,7 @@ await economicAnalysis();`}
 
 </CodeBlock>
 
-## Example 8: Bond Portfolio Analysis
-
-Analyze bond yields and create a bond ladder strategy:
-
-<CodeBlock language="typescript">
-{`async function bondAnalysis() {
-  console.log('=== Bond Analysis ===\\n');
-
-// Get treasury rates for different maturities
-const rates = await fmp.bond.getTreasuryRates();
-if (rates.success) {
-const current = rates.data[0];
-
-    console.log('📊 Treasury Yield Ladder:');
-    const maturities = [
-      { name: '3-Month', rate: current.month3 },
-      { name: '6-Month', rate: current.month6 },
-      { name: '1-Year', rate: current.year1 },
-      { name: '2-Year', rate: current.year2 },
-      { name: '5-Year', rate: current.year5 },
-      { name: '10-Year', rate: current.year10 },
-      { name: '30-Year', rate: current.year30 }
-    ];
-
-    maturities.forEach(maturity => {
-      console.log(\` \${maturity.name.padEnd(8)}: \${maturity.rate.toFixed(2)}%\`);
-    });
-
-    // Calculate average yield
-    const avgYield = maturities.reduce((sum, m) => sum + m.rate, 0) / maturities.length;
-    console.log(\`\\nAverage Yield: \${avgYield.toFixed(2)}%\`);
-
-    // Find best yield
-    const bestYield = maturities.reduce((best, current) =>
-      current.rate > best.rate ? current : best
-    );
-    console.log(\`Best Yield: \${bestYield.name} at \${bestYield.rate.toFixed(2)}%\`);
-
-}
-}
-
-await bondAnalysis();`}
-
-</CodeBlock>
-
-## Example 9: Fund Comparison Tool
+## Example 8: Fund Comparison Tool
 
 Compare different investment funds:
 

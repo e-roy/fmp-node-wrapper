@@ -1,378 +1,83 @@
 # Mutual Fund Endpoints
 
-Access mutual fund data including quotes, profiles, and performance information.
-
-## Overview
-
-The mutual fund endpoints provide access to mutual fund market data, including real-time quotes, fund profiles, performance metrics, and fund listings.
-
-## Quick Start
-
-<CodeBlock language="typescript">
-{`import { FMP } from 'fmp-node-api';
-
-const fmp = new FMP({ apiKey: 'your-api-key' });
-
-// Get mutual fund quote
-const quote = await fmp.mutualFund.getQuote({ symbol: 'VFINX' });
-
-// Get mutual fund profile
-const profile = await fmp.mutualFund.getProfile({ symbol: 'VFINX' });
-
-// Get mutual fund list
-const funds = await fmp.mutualFund.getMutualFundList();`}
-
-</CodeBlock>
+The Mutual Fund Endpoints provide access to mutual fund holdings data. For mutual fund quotes, use the general quote endpoint documented in the [Quote Endpoints](/docs/api/quote).
 
 ## Available Methods
-
-### getQuote
-
-Get real-time mutual fund quote.
-
-<ApiTable
-  endpoints={[
-    {
-      method: 'GET',
-      path: '/quote/{symbol}',
-      description: 'Get real-time mutual fund quote',
-    },
-  ]}
-/>
-
-**Parameters:**
-
-| Parameter | Type     | Required | Description                 |
-| --------- | -------- | -------- | --------------------------- |
-| `symbol`  | `string` | Yes      | Fund symbol (e.g., 'VFINX') |
-
-**Example:**
-
-<CodeBlock language="typescript">
-{`const quote = await fmp.mutualFund.getQuote({ symbol: 'VFINX' });
-
-if (quote.success) {
-console.log('NAV:', quote.data[0].price);
-console.log('Change:', quote.data[0].change);
-console.log('Volume:', quote.data[0].volume);
-}`}
-
-</CodeBlock>
-
-### getProfile
-
-Get mutual fund profile and information.
-
-<ApiTable
-  endpoints={[
-    {
-      method: 'GET',
-      path: '/profile/{symbol}',
-      description: 'Get mutual fund profile',
-    },
-  ]}
-/>
-
-**Parameters:**
-
-| Parameter | Type     | Required | Description                 |
-| --------- | -------- | -------- | --------------------------- |
-| `symbol`  | `string` | Yes      | Fund symbol (e.g., 'VFINX') |
-
-**Example:**
-
-<CodeBlock language="typescript">
-{`const profile = await fmp.mutualFund.getProfile({ symbol: 'VFINX' });
-
-if (profile.success) {
-console.log('Fund Name:', profile.data[0].companyName);
-console.log('Category:', profile.data[0].industry);
-console.log('Expense Ratio:', profile.data[0].expenseRatio);
-}`}
-
-</CodeBlock>
-
-### getMutualFundList
-
-Get list of all available mutual funds.
-
-<ApiTable
-  endpoints={[
-    {
-      method: 'GET',
-      path: '/mutual-fund/list',
-      description: 'Get list of all mutual funds',
-    },
-  ]}
-/>
-
-**Example:**
-
-<CodeBlock language="typescript">
-{`const funds = await fmp.mutualFund.getMutualFundList();
-
-if (funds.success) {
-console.log('Available Funds:', funds.data);
-}`}
-
-</CodeBlock>
-
-### getHoldings
-
-Get mutual fund holdings and composition.
 
 <ApiTable
   endpoints={[
     {
       method: 'GET',
       path: '/mutual-fund-holder/{symbol}',
-      description: 'Get mutual fund holdings',
+      description: 'Get mutual fund holders of a stock',
     },
   ]}
 />
 
-**Parameters:**
+## Get Mutual Fund Holders
 
-| Parameter | Type     | Required | Description                  |
-| --------- | -------- | -------- | ---------------------------- |
-| `symbol`  | `string` | Yes      | Fund symbol (e.g., 'VFINX')  |
-| `limit`   | `number` | No       | Number of holdings to return |
-| `page`    | `number` | No       | Page number for pagination   |
-
-**Example:**
+Retrieve the mutual funds that hold a specific stock and their positions.
 
 <CodeBlock language="typescript">
-{`const holdings = await fmp.mutualFund.getHoldings({ 
-    symbol: 'VFINX',
-    limit: 10 
-});
-
-if (holdings.success) {
-console.log('Fund Holdings:', holdings.data);
-}`}
-
+  {`const holders = await fmp.mutualFund.getHolders({ symbol: 'AAPL' });`}
 </CodeBlock>
 
-## Response Types
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol (e.g., "AAPL", "MSFT")',
+    },
+  ]}
+/>
 
-### MutualFundQuote
-
-<CodeBlock language="typescript">
-  {`interface MutualFundQuote {
-    symbol: string;
-    name: string;
-    price: number;
-    changesPercentage: number;
-    change: number;
-    dayLow: number;
-    dayHigh: number;
-    yearHigh: number;
-    yearLow: number;
-    marketCap: number;
-    priceAvg50: number;
-    priceAvg200: number;
-    volume: number;
-    avgVolume: number;
-    exchange: string;
-    open: number;
-    previousClose: number;
-    eps: number;
-    pe: number;
-    earningsAnnouncement: string;
-    sharesOutstanding: number;
-    timestamp: number;
-}`}
-</CodeBlock>
-
-### MutualFundProfile
+### Example Response
 
 <CodeBlock language="typescript">
-  {`interface MutualFundProfile {
-    symbol: string;
-    price: number;
-    beta: number;
-    volumeAvg: number;
-    marketCap: number;
-    lastDiv: number;
-    range: string;
-    changes: number;
-    companyName: string;
-    currency: string;
-    cik: string;
-    isin: string;
-    cusip: string;
-    exchange: string;
-    exchangeShortName: string;
-    industry: string;
-    website: string;
-    description: string;
-    ceo: string;
-    sector: string;
-    country: string;
-    fullTimeEmployees: number;
-    phone: string;
-    address: string;
-    city: string;
-    state: string;
-    zip: string;
-    dcfDiff: number;
-    dcf: number;
-    image: string;
-    ipoDate: string;
-    defaultImage: boolean;
-    isEtf: boolean;
-    isActivelyTrading: boolean;
-    isAdr: boolean;
-    isFund: boolean;
-}`}
-</CodeBlock>
-
-### MutualFundHolding
-
-<CodeBlock language="typescript">
-  {`interface MutualFundHolding {
-    asset: string;
-    weight: number;
-    shares: number;
-    marketValue: number;
-}`}
-</CodeBlock>
-
-## Popular Mutual Funds
-
-Here are some popular mutual fund symbols you can use:
-
-- **VFINX** - Vanguard 500 Index Fund
-- **VTSMX** - Vanguard Total Stock Market Index Fund
-- **VBMFX** - Vanguard Total Bond Market Index Fund
-- **VGTSX** - Vanguard Total International Stock Index Fund
-- **VGSIX** - Vanguard REIT Index Fund
-- **FAGIX** - Fidelity Capital & Income Fund
-- **FCNTX** - Fidelity Contrafund
-- **AGTHX** - American Funds Growth Fund of America
-
-## Fund Categories
-
-Mutual funds can be categorized by their investment focus:
-
-- **Equity Funds** - Invest primarily in stocks
-- **Bond Funds** - Invest primarily in bonds
-- **Balanced Funds** - Mix of stocks and bonds
-- **Index Funds** - Track specific market indices
-- **Sector Funds** - Focus on specific industry sectors
-- **International Funds** - Invest in foreign markets
-- **Money Market Funds** - Short-term, low-risk investments
-
-## Fund Analysis
-
-### Expense Ratio Analysis
-
-<CodeBlock language="typescript">
-{`// Compare expense ratios
-const [fund1, fund2] = await Promise.all([
-    fmp.mutualFund.getProfile({ symbol: 'VFINX' }),
-    fmp.mutualFund.getProfile({ symbol: 'FAGIX' })
-]);
-
-if (fund1.success && fund2.success) {
-const expense1 = fund1.data[0].expenseRatio || 0;
-const expense2 = fund2.data[0].expenseRatio || 0;
-
-    console.log('VFINX Expense Ratio:', expense1);
-    console.log('FAGIX Expense Ratio:', expense2);
-    console.log('Difference:', expense2 - expense1);
-
-}`}
-
-</CodeBlock>
-
-### Performance Comparison
-
-<CodeBlock language="typescript">
-{`// Compare fund performance
-const [fund1, fund2] = await Promise.all([
-    fmp.mutualFund.getQuote({ symbol: 'VFINX' }),
-    fmp.mutualFund.getQuote({ symbol: 'VTSMX' })
-]);
-
-if (fund1.success && fund2.success) {
-const perf1 = fund1.data[0].changesPercentage;
-const perf2 = fund2.data[0].changesPercentage;
-
-    console.log('VFINX Performance:', perf1);
-    console.log('VTSMX Performance:', perf2);
-
-}`}
-
-</CodeBlock>
-
-## Common Use Cases
-
-### Fund Research Dashboard
-
-<CodeBlock language="typescript">
-{`// Create fund research dashboard
-const [quote, profile, holdings] = await Promise.all([
-    fmp.mutualFund.getQuote({ symbol: 'VFINX' }),
-    fmp.mutualFund.getProfile({ symbol: 'VFINX' }),
-    fmp.mutualFund.getHoldings({ symbol: 'VFINX', limit: 5 })
-]);
-
-console.log('Current NAV:', quote.data[0].price);
-console.log('Fund Details:', profile.data[0]);
-console.log('Top Holdings:', holdings.data);`}
-
-</CodeBlock>
-
-### Fund Screening
-
-<CodeBlock language="typescript">
-{`// Screen funds by category
-const funds = await fmp.mutualFund.getMutualFundList();
-
-if (funds.success) {
-const indexFunds = funds.data.filter(fund =>
-fund.name.toLowerCase().includes('index')
-);
-
-    console.log('Index Funds:', indexFunds.slice(0, 10));
-
-}`}
-
+  {`{
+    success: true,
+    data: [
+      {
+        holder: 'Vanguard 500 Index Fund',
+        shares: 1234567,
+        dateReported: '2024-03-31',
+        change: 10000,
+        weightPercent: 12.34
+      },
+      {
+        holder: 'Fidelity Contrafund',
+        shares: 987654,
+        dateReported: '2024-03-31',
+        change: -5000,
+        weightPercent: 9.87
+      }
+    ]
+  }`}
 </CodeBlock>
 
 ## Error Handling
 
-<CodeBlock language="typescript">
-{`const response = await fmp.mutualFund.getQuote({ symbol: 'INVALID' });
+Always check the `success` property before accessing data:
 
-if (response.success) {
-// Handle successful response
-console.log(response.data);
+<CodeBlock language="typescript">
+{`const holders = await fmp.mutualFund.getHolders({ symbol: 'INVALID' });
+
+if (holders.success && holders.data) {
+console.log('Mutual Fund Holders:', holders.data);
 } else {
-// Handle error
-console.error('Error:', response.error);
-console.error('Status:', response.status);
+console.error('Error:', holders.error);
+console.error('Status:', holders.status);
 }`}
 
 </CodeBlock>
 
-## Rate Limiting
+## Notes
 
-Mutual fund endpoints are subject to FMP's rate limits. For production applications, consider implementing appropriate rate limiting strategies.
-
-## NAV vs Market Price
-
-Mutual funds trade at their Net Asset Value (NAV), which is calculated once per day after market close. This differs from ETFs, which trade throughout the day at market prices.
-
-## Key Fund Metrics
-
-- **NAV** - Net Asset Value per share
-- **Expense Ratio** - Annual management fees
-- **Load** - Sales charges (if any)
-- **Turnover Ratio** - Trading activity level
-- **Yield** - Income distribution rate
-- **Beta** - Volatility relative to market
+- The `getHolders` method returns the mutual funds that hold a given stock and their respective positions.
+- For mutual fund quotes, use the [Quote Endpoints](/docs/api/quote).
+- All mutual fund data is sourced from Financial Modeling Prep's comprehensive financial database.
 
 ---
 

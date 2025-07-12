@@ -18,7 +18,6 @@ describe('FMP', () => {
     expect(fmp.crypto).toBeDefined();
     expect(fmp.etf).toBeDefined();
     expect(fmp.mutualFund).toBeDefined();
-    expect(fmp.bond).toBeDefined();
     expect(fmp.economic).toBeDefined();
     expect(fmp.market).toBeDefined();
   });

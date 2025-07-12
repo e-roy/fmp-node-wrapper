@@ -19,7 +19,6 @@ src/
 │   │   │   ├── etf/            # ETF endpoints
 │   │   │   ├── market/         # Market data endpoints
 │   │   │   ├── economic/       # Economic indicators
-│   │   │   ├── bond/           # Bond and treasury endpoints
 │   │   │   ├── mutual-fund/    # Mutual fund endpoints
 │   │   │   ├── list/           # List and screening endpoints
 │   │   │   ├── calendar/       # Calendar and events endpoints
@@ -117,7 +116,6 @@ The documentation uses a grouped sidebar navigation system defined in `src/app/d
 - Crypto Endpoints
 - ETF Endpoints
 - Mutual Fund Endpoints
-- Bond Endpoints
 
 ### Market Data
 
@@ -176,11 +174,8 @@ The documentation covers comprehensive financial data across multiple asset clas
 
 - **Stock Endpoints**: Real-time and historical stock data, company profiles, market information
 - **Financial Endpoints**: Financial statements, ratios, income statements, balance sheets
-- **Forex Endpoints**: Foreign exchange rates, currency pairs, historical forex data
-- **Crypto Endpoints**: Cryptocurrency quotes, historical data, crypto listings
 - **ETF Endpoints**: ETF quotes, profiles, holdings, and fund information
 - **Mutual Fund Endpoints**: Mutual fund data, NAV, profiles, and performance
-- **Bond Endpoints**: Treasury rates, bond prices, yield curves, fixed income data
 
 ### Market Data
 

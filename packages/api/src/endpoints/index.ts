@@ -4,7 +4,6 @@ export { ForexEndpoints } from './forex';
 export { CryptoEndpoints } from './crypto';
 export { ETFEndpoints } from './etf';
 export { MutualFundEndpoints } from './mutual-fund';
-export { BondEndpoints } from './bond';
 export { EconomicEndpoints } from './economic';
 export { MarketEndpoints } from './market';
 export { CalendarEndpoints } from './calendar';
