@@ -41,6 +41,11 @@ The Company Endpoints provide access to comprehensive company information includ
       path: '/earning_call_transcript/{symbol}',
       description: 'Get earnings call transcripts',
     },
+    {
+      method: 'GET',
+      path: '/earning_call_transcript',
+      description: 'Get company transcript dates and data',
+    },
   ]}
 />
 
@@ -362,6 +367,40 @@ Retrieve earnings call transcripts for specific quarters and years.
 }`}
 </CodeBlock>
 
+## Get Company Transcript Data
+
+Retrieve available transcript dates and data for a company's earnings calls.
+
+<CodeBlock language="typescript">
+  {`const transcriptData = await fmp.company.getCompanyTranscriptData({ symbol: 'AAPL' });`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      [2024, 1, '2024-01-25'],
+      [2023, 4, '2023-10-26'],
+      [2023, 3, '2023-07-27'],
+      [2023, 2, '2023-05-04'],
+      [2023, 1, '2023-02-02']
+    ]
+}`}
+</CodeBlock>
+
 ## Data Types
 
 ### CompanyProfile
@@ -455,6 +494,18 @@ Retrieve earnings call transcripts for specific quarters and years.
 }`}
 </CodeBlock>
 
+### CompanyTranscriptData
+
+<CodeBlock language="typescript">
+  {`type CompanyTranscriptData = [number, number, string];`}
+</CodeBlock>
+
+**Note**: The `CompanyTranscriptData` type represents an array where:
+
+- `[0]`: Year (number)
+- `[1]`: Quarter (number, 1-4)
+- `[2]`: Date (string, ISO format)
+
 ## Error Handling
 
 All company endpoints return a standardized response format with error handling:
@@ -483,11 +534,12 @@ Company endpoints are subject to the same rate limits as other FMP API endpoints
 
 <CodeBlock language="typescript">
   {`// Get comprehensive company information
-const [profile, compensation, employeeData, sharesFloat] = await Promise.all([
+const [profile, compensation, employeeData, sharesFloat, transcriptData] = await Promise.all([
   fmp.company.getCompanyProfile({ symbol: 'AAPL' }),
   fmp.company.getExecutiveCompensation({ symbol: 'AAPL' }),
   fmp.company.getHistoricalEmployeeCount({ symbol: 'AAPL' }),
-  fmp.company.getSharesFloat({ symbol: 'AAPL' })
+  fmp.company.getSharesFloat({ symbol: 'AAPL' }),
+  fmp.company.getCompanyTranscriptData({ symbol: 'AAPL' })
 ]);
 
 // Analyze company metrics
@@ -496,6 +548,13 @@ console.log('Company:', profile.data.companyName);
 console.log('Market Cap:', profile.data.mktCap);
 console.log('Industry:', profile.data.industry);
 console.log('Employees:', profile.data.fullTimeEmployees);
+}
+
+// Check available transcripts
+if (transcriptData.success && transcriptData.data) {
+console.log('Available transcripts:', transcriptData.data.length);
+const latestTranscript = transcriptData.data[0];
+console.log('Latest transcript:', \`Q\${latestTranscript[1]} \${latestTranscript[0]} - \${latestTranscript[2]}\`);
 }`}
 
 </CodeBlock>

@@ -3,6 +3,7 @@ import { FMPClient } from '@/client';
 import {
   CompanyNotes,
   CompanyProfile,
+  CompanyTranscriptData,
   EarningsCallTranscript,
   ExecutiveCompensation,
   HistoricalEmployeeCount,
@@ -19,11 +20,7 @@ export class CompanyEndpoints {
    * @param symbol - The stock symbol to get the profile for
    * @returns Get a comprehensive overview of a company with our Company Profile endpoint. This endpoint provides key information such as price, beta, market capitalization, description, headquarters, and more.
    */
-  async getCompanyProfile({
-    symbol,
-  }: {
-    symbol: string;
-  }): Promise<APIResponse<CompanyProfile | null>> {
+  async getCompanyProfile({ symbol }: { symbol: string }): Promise<APIResponse<CompanyProfile>> {
     return this.client.getSingle(`/profile/${symbol}`, 'v3');
   }
 
@@ -37,7 +34,7 @@ export class CompanyEndpoints {
     symbol,
   }: {
     symbol: string;
-  }): Promise<APIResponse<ExecutiveCompensation[] | null>> {
+  }): Promise<APIResponse<ExecutiveCompensation[]>> {
     const params: { symbol: string } = { symbol };
 
     return this.client.get(`/governance/executive_compensation`, 'v4', params);
@@ -49,11 +46,7 @@ export class CompanyEndpoints {
    * @param symbol - The stock symbol to get the notes for
    * @returns Stay up-to-date on a company's financial condition, operations, and risks with our Company Notes endpoint. This endpoint provides information about notes reported by a company in their financial statements.
    */
-  async getCompanyNotes({
-    symbol,
-  }: {
-    symbol: string;
-  }): Promise<APIResponse<CompanyNotes[] | null>> {
+  async getCompanyNotes({ symbol }: { symbol: string }): Promise<APIResponse<CompanyNotes[]>> {
     const params: { symbol: string } = { symbol };
 
     return this.client.get(`/company-notes`, 'v4', params);
@@ -69,7 +62,7 @@ export class CompanyEndpoints {
     symbol,
   }: {
     symbol: string;
-  }): Promise<APIResponse<HistoricalEmployeeCount[] | null>> {
+  }): Promise<APIResponse<HistoricalEmployeeCount[]>> {
     const params: { symbol: string } = { symbol };
 
     return this.client.get(`/historical/employee_count`, 'v4', params);
@@ -81,7 +74,7 @@ export class CompanyEndpoints {
    * @param symbol - The stock symbol to get the shares float for
    * @returns The FMP Company Share Float endpoint provides the total number of shares that are publicly traded for a given company. This is also known as the company's float. The float is calculated by subtracting the number of restricted shares from the total number of outstanding shares.
    */
-  async getSharesFloat({ symbol }: { symbol: string }): Promise<APIResponse<SharesFloat | null>> {
+  async getSharesFloat({ symbol }: { symbol: string }): Promise<APIResponse<SharesFloat>> {
     const params: { symbol: string } = { symbol };
 
     return this.client.getSingle(`/shares_float`, 'v4', params);
@@ -97,7 +90,7 @@ export class CompanyEndpoints {
     symbol,
   }: {
     symbol: string;
-  }): Promise<APIResponse<HistoricalSharesFloat[] | null>> {
+  }): Promise<APIResponse<HistoricalSharesFloat[]>> {
     const params: { symbol: string } = { symbol };
 
     return this.client.get(`/historical/shares_float`, 'v4', params);
@@ -119,8 +112,23 @@ export class CompanyEndpoints {
     symbol: string;
     year: number;
     quarter: number;
-  }): Promise<APIResponse<EarningsCallTranscript[] | null>> {
+  }): Promise<APIResponse<EarningsCallTranscript[]>> {
     const params: { year: number; quarter: number } = { year, quarter };
     return this.client.getSingle(`/earning_call_transcript/${symbol}`, 'v3', params);
+  }
+
+  /**
+   * Get company transcript dates
+   * https://site.financialmodelingprep.com/developer/docs#transcript-dates-earnings-transcripts
+   * @param symbol - The stock symbol to get the transcript data for
+   * @returns The FMP Company Transcript Data endpoint provides the transcript data for a company's earnings call.
+   */
+  async getCompanyTranscriptData({
+    symbol,
+  }: {
+    symbol: string;
+  }): Promise<APIResponse<CompanyTranscriptData[]>> {
+    const params: { symbol: string } = { symbol };
+    return this.client.getSingle(`/earning_call_transcript`, 'v4', params);
   }
 }

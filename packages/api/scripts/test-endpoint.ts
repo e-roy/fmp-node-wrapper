@@ -213,6 +213,9 @@ async function testEndpoint() {
           quarter: 3,
         });
         break;
+      case 'company-transcript-data':
+        result = await fmp.company.getCompanyTranscriptData({ symbol: 'AAPL' });
+        break;
 
       // Market endpoints
       case 'market-hours':

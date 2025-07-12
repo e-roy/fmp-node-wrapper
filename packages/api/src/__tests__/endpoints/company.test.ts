@@ -265,4 +265,51 @@ describe('Company Endpoints', () => {
       FAST_TIMEOUT,
     );
   });
+
+  describe('getCompanyTranscriptData', () => {
+    it(
+      'should fetch company transcript data for AAPL',
+      async () => {
+        if (shouldSkipTests()) {
+          console.log('Skipping company transcript data test - no API key available');
+          return;
+        }
+        const result = await fmp.company.getCompanyTranscriptData({
+          symbol: TEST_SYMBOLS.STOCK,
+        });
+
+        expect(result.success).toBe(true);
+        expect(result.data).toBeDefined();
+
+        if (result.data && Array.isArray(result.data)) {
+          expect(result.data.length).toBeGreaterThan(0);
+          const transcriptData = result.data[0];
+          expect(Array.isArray(transcriptData)).toBe(true);
+          expect(transcriptData.length).toBe(3);
+          expect(typeof transcriptData[0]).toBe('number'); // year
+          expect(typeof transcriptData[1]).toBe('number'); // quarter
+          expect(typeof transcriptData[2]).toBe('string'); // date
+        }
+      },
+      API_TIMEOUT,
+    );
+
+    it(
+      'should handle invalid symbol gracefully',
+      async () => {
+        if (shouldSkipTests()) {
+          console.log('Skipping invalid symbol transcript data test - no API key available');
+          return;
+        }
+        const result = await fmp.company.getCompanyTranscriptData({
+          symbol: 'INVALID_SYMBOL_12345',
+        });
+
+        // Should either return empty array or handle gracefully
+        expect(result.success).toBe(true);
+        expect(result.data).toBeDefined();
+      },
+      FAST_TIMEOUT,
+    );
+  });
 });

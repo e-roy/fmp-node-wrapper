@@ -99,3 +99,5 @@ export interface EarningsCallTranscript {
   date: string;
   content: string;
 }
+
+export type CompanyTranscriptData = [number, number, string];
