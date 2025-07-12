@@ -43,7 +43,7 @@ export class FMPClient {
     this.v3Client = this.createClient('https://financialmodelingprep.com/api/v3', config.timeout);
     this.v4Client = this.createClient('https://financialmodelingprep.com/api/v4', config.timeout);
     this.stableClient = this.createClient(
-      'https://financialmodelingprep.com/api/stable',
+      'https://financialmodelingprep.com/stable',
       config.timeout,
     );
   }

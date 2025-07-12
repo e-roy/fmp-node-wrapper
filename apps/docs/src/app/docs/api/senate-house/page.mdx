@@ -1,39 +1,6 @@
 # Senate & House Trading Endpoints
 
-Access congressional trading data including senate and house member transactions through both direct API calls and RSS feeds.
-
-## Overview
-
 The Senate & House Trading endpoints provide access to congressional trading data, allowing you to track stock transactions made by members of Congress. This data is valuable for understanding potential conflicts of interest and market sentiment based on political insider trading.
-
-## Quick Start
-
-<CodeBlock language="typescript">
-{`import { FMP } from 'fmp-node-api';
-
-const fmp = new FMP({ apiKey: 'your-api-key' });
-
-// Get senate trading data for Apple
-const senateTrading = await fmp.senateHouse.getSenateTrading({
-symbol: 'AAPL'
-});
-
-// Get house trading data for Microsoft
-const houseTrading = await fmp.senateHouse.getHouseTrading({
-symbol: 'MSFT'
-});
-
-// Get senate trading RSS feed
-const senateRSS = await fmp.senateHouse.getSenateTradingRSSFeed({
-page: 0
-});
-
-// Get house trading RSS feed
-const houseRSS = await fmp.senateHouse.getHouseTradingRSSFeed({
-page: 0
-});`}
-
-</CodeBlock>
 
 ## Available Methods
 
@@ -51,6 +18,11 @@ page: 0
     },
     {
       method: 'GET',
+      path: '/senate-trades-by-name',
+      description: 'Get senate trading data by senator name',
+    },
+    {
+      method: 'GET',
       path: '/senate-disclosure',
       description: 'Get house trading data for a specific stock symbol',
     },
@@ -59,8 +31,15 @@ page: 0
       path: '/senate-disclosure-rss-feed',
       description: 'Get house trading RSS feed with pagination',
     },
+    {
+      method: 'GET',
+      path: '/house-trades-by-name',
+      description: 'Get house trading data by representative name',
+    },
   ]}
 />
+
+---
 
 ## Get Senate Trading Data
 
@@ -108,6 +87,8 @@ Retrieve senate trading data for a specific stock symbol.
 }`}
 </CodeBlock>
 
+---
+
 ## Get Senate Trading RSS Feed
 
 Retrieve senate trading data through RSS feed with pagination.
@@ -154,6 +135,58 @@ Retrieve senate trading data through RSS feed with pagination.
 }`}
 </CodeBlock>
 
+---
+
+## Get Senate Trading by Name
+
+Retrieve senate trading data for a specific senator by name.
+
+<CodeBlock language="typescript">
+  {`const senateByName = await fmp.senateHouse.getSenateTradingByName({
+  name: 'Jerry'
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'name',
+      type: 'string',
+      required: true,
+      description: 'Senator name (e.g., "Jerry", "John")',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+  success: true,
+  data: [
+    {
+      symbol: "AAPL",
+      disclosureDate: "2024-01-15",
+      transactionDate: "2024-01-10",
+      firstName: "Jerry",
+      lastName: "Senator",
+      office: "Senator",
+      district: "CA",
+      owner: "Self",
+      assetDescription: "Apple Inc. Common Stock",
+      assetType: "Stock",
+      type: "Purchase",
+      amount: "$1,001 - $15,000",
+      capitalGainsOver200USD: "No",
+      comment: "Purchase of Apple stock",
+      link: "https://disclosures-clerk.house.gov/..."
+    }
+  ]
+}`}
+</CodeBlock>
+
+---
+
 ## Get House Trading Data
 
 Retrieve house trading data for a specific stock symbol.
@@ -198,6 +231,8 @@ Retrieve house trading data for a specific stock symbol.
   ]
 }`}
 </CodeBlock>
+
+---
 
 ## Get House Trading RSS Feed
 
@@ -244,6 +279,58 @@ Retrieve house trading data through RSS feed with pagination.
 }`}
 </CodeBlock>
 
+---
+
+## Get House Trading by Name
+
+Retrieve house trading data for a specific representative by name.
+
+<CodeBlock language="typescript">
+  {`const houseByName = await fmp.senateHouse.getHouseTradingByName({
+  name: 'Nancy'
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'name',
+      type: 'string',
+      required: true,
+      description: 'Representative name (e.g., "Nancy", "Kevin")',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+  success: true,
+  data: [
+    {
+      symbol: "TSLA",
+      disclosureDate: "2024-01-20",
+      transactionDate: "2024-01-15",
+      firstName: "Nancy",
+      lastName: "Representative",
+      office: "House",
+      district: "NY-14",
+      owner: "Spouse",
+      assetDescription: "Tesla, Inc. Common Stock",
+      assetType: "Stock",
+      type: "Sale",
+      amount: "$15,001 - $50,000",
+      capitalGainsOver200USD: "Yes",
+      comment: "Sale of Tesla stock",
+      link: "https://disclosures-clerk.house.gov/..."
+    }
+  ]
+}`}
+</CodeBlock>
+
+---
+
 ## Data Types
 
 ### SenateTradingResponse
@@ -285,135 +372,37 @@ Retrieve house trading data through RSS feed with pagination.
 }`}
 </CodeBlock>
 
-## Use Cases
-
-### 1. Track Political Trading by Stock
-
-Monitor which politicians are trading specific stocks.
+### SenateHouseTradingByNameResponse
 
 <CodeBlock language="typescript">
-  {`// Track Apple trading by politicians
-const appleTrading = await fmp.senateHouse.getSenateTrading({
-  symbol: 'AAPL'
-});
-
-console.log('Senate members trading Apple:', appleTrading.data);
-
-const houseAppleTrading = await fmp.senateHouse.getHouseTrading({
-symbol: 'AAPL'
-});
-
-console.log('House members trading Apple:', houseAppleTrading.data);`}
-
-</CodeBlock>
-
-### 2. Monitor Recent Trading Activity
-
-Use RSS feeds to get the latest trading disclosures.
-
-<CodeBlock language="typescript">
-  {`// Get latest senate trading activity
-const latestSenateTrading = await fmp.senateHouse.getSenateTradingRSSFeed({
-  page: 0
-});
-
-console.log('Latest senate trading:', latestSenateTrading.data);
-
-// Get latest house trading activity
-const latestHouseTrading = await fmp.senateHouse.getHouseTradingRSSFeed({
-page: 0
-});
-
-console.log('Latest house trading:', latestHouseTrading.data);`}
-
-</CodeBlock>
-
-### 3. Analyze Trading Patterns
-
-Compare trading activity across different stocks and chambers.
-
-<CodeBlock language="typescript">
-  {`// Compare senate vs house trading for tech stocks
-const techStocks = ['AAPL', 'MSFT', 'GOOGL', 'TSLA'];
-
-for (const symbol of techStocks) {
-const senateTrading = await fmp.senateHouse.getSenateTrading({ symbol });
-const houseTrading = await fmp.senateHouse.getHouseTrading({ symbol });
-
-console.log(symbol + ':');
-console.log(' Senate transactions: ' + (senateTrading.data?.length || 0));
-console.log(' House transactions: ' + (houseTrading.data?.length || 0));
+  {`interface SenateHouseTradingByNameResponse {
+  symbol: string;
+  disclosureDate: string;
+  transactionDate: string;
+  firstName: string;
+  lastName: string;
+  office: string;
+  district: string;
+  owner: string;
+  assetDescription: string;
+  assetType: string;
+  type: string;
+  amount: string;
+  capitalGainsOver200USD: string;
+  comment: string;
+  link: string;
 }`}
-
 </CodeBlock>
 
-### 4. Build Trading Alerts
+---
 
-Create alerts for when politicians trade specific stocks.
+## Data Guarantees
 
-<CodeBlock language="typescript">
-  {`// Check for recent trading in a specific stock
-async function checkRecentTrading(symbol: string) {
-  const senateTrading = await fmp.senateHouse.getSenateTrading({ symbol });
-  const houseTrading = await fmp.senateHouse.getHouseTrading({ symbol });
-  
-  const allTrading = [
-    ...(senateTrading.data || []),
-    ...(houseTrading.data || [])
-  ];
-  
-  // Filter for recent transactions (last 30 days)
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-  
-  const recentTrading = allTrading.filter(trade => {
-    const tradeDate = new Date(trade.transactionDate);
-    return tradeDate >= thirtyDaysAgo;
-  });
-  
-  if (recentTrading.length > 0) {
-    console.log('Alert: ' + recentTrading.length + ' recent trades in ' + symbol);
-recentTrading.forEach(trade => {
-  console.log('  ' + trade.owner + ' ' + trade.type + ' ' + trade.amount);
-});
-  }
-}
+- All list endpoints always return an array (never undefined). If there are no results, the array will be empty.
+- Single-object endpoints always return an object (never undefined). If there is no result, the object will be empty.
+- This ensures type safety and a consistent developer experience.
 
-// Check for Apple trading
-await checkRecentTrading('AAPL');`}
-
-</CodeBlock>
-
-## Pagination
-
-Both RSS feed endpoints support pagination to access historical data:
-
-<CodeBlock language="typescript">
-  {`// Get multiple pages of senate trading data
-const pages = [0, 1, 2, 3, 4];
-const allSenateTrading = [];
-
-for (const page of pages) {
-const result = await fmp.senateHouse.getSenateTradingRSSFeed({ page });
-if (result.success && result.data) {
-allSenateTrading.push(...result.data);
-}
-}
-
-console.log('Total senate trading records: ' + allSenateTrading.length);`}
-
-</CodeBlock>
-
-## Rate Limits
-
-The senate-house trading endpoints respect FMP's rate limits. For applications requiring frequent updates, consider implementing appropriate caching strategies.
-
-## Data Availability
-
-- Trading data is typically available within 45 days of transaction disclosure
-- Historical data may be limited based on your subscription plan
-- RSS feeds provide the most recent disclosures first
-- Direct symbol queries return all available data for that specific stock
+---
 
 ## Error Handling
 
@@ -430,3 +419,23 @@ console.error('Status:', result.status);
 }`}
 
 </CodeBlock>
+
+---
+
+## Rate Limits
+
+Senate and house trading endpoints are subject to FMP's rate limits. For production applications, implement appropriate rate limiting and caching strategies.
+
+---
+
+## Next Steps
+
+Explore other endpoint categories:
+
+- [Stock Endpoints](/docs/api/stock) - Real-time and historical stock data
+- [Company Endpoints](/docs/api/company) - Company profiles, executive compensation, and employee data
+- [Financial Endpoints](/docs/api/financial) - Financial statements and ratios
+- [Market Endpoints](/docs/api/market) - Market indices and sector data
+- [Calendar Endpoints](/docs/api/calendar) - Earnings, dividends, and economic calendars
+- [List Endpoints](/docs/api/list) - Available symbols and instruments
+- [Examples](/docs/examples) - Practical code samples

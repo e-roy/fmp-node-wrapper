@@ -311,6 +311,11 @@ async function testEndpoint() {
           page: 0,
         });
         break;
+      case 'senate-trading-by-name':
+        result = await fmp.senateHouse.getSenateTradingByName({
+          name: 'Jerry',
+        });
+        break;
       case 'house-trading':
         result = await fmp.senateHouse.getHouseTrading({
           symbol: 'AAPL',
@@ -319,6 +324,11 @@ async function testEndpoint() {
       case 'house-trading-rss-feed':
         result = await fmp.senateHouse.getHouseTradingRSSFeed({
           page: 0,
+        });
+        break;
+      case 'house-trading-by-name':
+        result = await fmp.senateHouse.getHouseTradingByName({
+          name: 'nancy pelosi',
         });
         break;
 
