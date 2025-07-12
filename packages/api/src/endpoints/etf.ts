@@ -63,7 +63,7 @@ export class ETFEndpoints {
    * @param symbol - The symbol of the ETF to get the profile for
    * @returns The FMP ETF Information endpoint provides basic information about an ETF, such as its ticker symbol, name, expense ratio, and asset under management. For example, an investor may want to compare the expense ratios of different ETFs to find the one that is most cost-effective.
    */
-  async getProfile({ symbol }: SymbolParams): Promise<APIResponse<ETFProfile | null>> {
+  async getProfile({ symbol }: SymbolParams): Promise<APIResponse<ETFProfile>> {
     const params: { symbol?: string } = {};
     if (symbol) params.symbol = symbol;
     return this.client.getSingle('/etf-info', 'v4', params);

@@ -19,7 +19,7 @@ export class QuoteEndpoints {
    * @param params - Parameters for the quote request
    * @returns Quote data for the specified asset
    */
-  async getQuote(params: QuoteParams): Promise<APIResponse<Quote | null>> {
+  async getQuote(params: QuoteParams): Promise<APIResponse<Quote>> {
     const { symbol } = params;
 
     // All asset types use the same /quote/{symbol} endpoint
