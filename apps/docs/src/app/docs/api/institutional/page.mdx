@@ -1,0 +1,304 @@
+# Institutional Endpoints
+
+The Institutional Endpoints provide access to Form 13F filings, institutional ownership data, and institutional holder information. These endpoints help you track institutional investment activities and ownership patterns.
+
+## Available Methods
+
+<ApiTable
+  endpoints={[
+    {
+      method: 'GET',
+      path: '/form-thirteen/{cik}',
+      description: 'Get Form 13F institutional stock ownership data',
+    },
+    {
+      method: 'GET',
+      path: '/form-thirteen-date/{cik}',
+      description: 'Get available Form 13F filing dates for an institution',
+    },
+    {
+      method: 'GET',
+      path: '/institutional-holder/{symbol}',
+      description: 'Get institutional holders for a specific stock',
+    },
+  ]}
+/>
+
+## Get Form 13F Data
+
+Retrieve Form 13F institutional stock ownership data for a specific CIK (Central Index Key) and filing date. Form 13F reports are filed quarterly by institutional investment managers with at least $100 million in assets under management.
+
+<CodeBlock language="typescript">
+  {`const form13F = await fmp.institutional.getForm13F({
+  cik: '0001388838',
+  date: '2021-09-30'
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'cik',
+      type: 'string',
+      required: true,
+      description:
+        'Central Index Key (CIK) of the institutional investor (10-digit number with leading zeros)',
+    },
+    {
+      name: 'date',
+      type: 'string',
+      required: true,
+      description:
+        'Filing date in YYYY-MM-DD format (quarterly filing dates: 03-31, 06-30, 09-30, 12-31)',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        acceptedDate: "2021-11-15",
+        cik: "0001388838",
+        cusip: "69331C108",
+        date: "2021-09-30",
+        fillingDate: "2021-11-15",
+        finalLink: "https://www.sec.gov/Archives/edgar/data/1388838/000117266121002324/infotable.xml",
+        link: "https://www.sec.gov/Archives/edgar/data/1388838/000117266121002324/0001172661-21-002324-index.htm",
+        nameOfIssuer: "PG&E CORP",
+        shares: 57900,
+        tickercusip: "PCG",
+        titleOfClass: "COM",
+        value: 556000
+      },
+      {
+        acceptedDate: "2021-11-15",
+        cik: "0001388838",
+        cusip: "037833100",
+        date: "2021-09-30",
+        fillingDate: "2021-11-15",
+        finalLink: "https://www.sec.gov/Archives/edgar/data/1388838/000117266121002324/infotable.xml",
+        link: "https://www.sec.gov/Archives/edgar/data/1388838/000117266121002324/0001172661-21-002324-index.htm",
+        nameOfIssuer: "APPLE INC",
+        shares: 1000000,
+        tickercusip: "AAPL",
+        titleOfClass: "COM",
+        value: 142000000
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Form 13F Dates
+
+Retrieve available Form 13F filing dates for a specific institutional investor (CIK). This helps you identify which quarters have been filed and are available for analysis.
+
+<CodeBlock language="typescript">
+  {`const form13FDates = await fmp.institutional.getForm13FDates({
+  cik: '0001067983'
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'cik',
+      type: 'string',
+      required: true,
+      description:
+        'Central Index Key (CIK) of the institutional investor (10-digit number with leading zeros)',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      "2025-03-31",
+      "2024-12-31",
+      "2024-09-30",
+      "2024-06-30",
+      "2024-03-31",
+      "2023-12-31"
+    ]
+}`}
+</CodeBlock>
+
+## Get Institutional Holders
+
+Retrieve information about institutional holders for a specific stock symbol. This data shows which institutional investors own shares in the company and their current positions.
+
+<CodeBlock language="typescript">
+  {`const institutionalHolders = await fmp.institutional.getInstitutionalHolders({
+  symbol: 'AAPL'
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol (e.g., "AAPL", "MSFT", "GOOGL")',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        change: 524612,
+        dateReported: "2025-06-30",
+        holder: "WEALTH ENHANCEMENT ADVISORY SERVICES, LLC",
+        shares: 7551499
+      },
+      {
+        change: -125000,
+        dateReported: "2025-06-30",
+        holder: "BLACKROCK INC.",
+        shares: 12345678
+      },
+      {
+        change: 250000,
+        dateReported: "2025-06-30",
+        holder: "VANGUARD GROUP INC",
+        shares: 9876543
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Understanding Form 13F Data
+
+Form 13F reports provide valuable insights into institutional investment strategies:
+
+### Key Fields Explained
+
+- **cik**: Central Index Key - unique identifier for the institutional investor
+- **cusip**: Committee on Uniform Securities Identification Procedures - unique identifier for the security
+- **nameOfIssuer**: Company name of the security issuer
+- **tickercusip**: Stock ticker symbol
+- **titleOfClass**: Class of security (usually "COM" for common stock)
+- **shares**: Number of shares held
+- **value**: Total market value of the position (in USD)
+- **date**: Quarter-end date of the filing
+- **acceptedDate**: Date the SEC accepted the filing
+- **fillingDate**: Date the filing was submitted
+
+### Common CIKs
+
+Some well-known institutional investors and their CIKs:
+
+- **BlackRock Inc.**: 0001364742
+- **Vanguard Group Inc.**: 0000102909
+- **State Street Corporation**: 0000093751
+- **Fidelity Management**: 0000315066
+- **T. Rowe Price**: 0001113169
+
+## Use Cases
+
+### 1. Track Institutional Sentiment
+
+Monitor how institutional investors are positioning themselves in specific stocks or sectors.
+
+<CodeBlock language="typescript">
+{`// Get institutional holders for a stock
+const holders = await fmp.institutional.getInstitutionalHolders({ symbol: 'AAPL' });
+
+// Analyze institutional sentiment
+const totalShares = holders.data.reduce((sum, holder) => sum + holder.shares, 0);
+const netChange = holders.data.reduce((sum, holder) => sum + holder.change, 0);
+
+console.log('Total institutional shares:', totalShares);
+console.log('Net institutional change:', netChange);`}
+
+</CodeBlock>
+
+### 2. Monitor Specific Institutions
+
+Track the holdings of specific institutional investors across different companies.
+
+<CodeBlock language="typescript">
+{`// Get available dates for BlackRock
+const dates = await fmp.institutional.getForm13FDates({ cik: '0001364742' });
+
+// Get BlackRock's holdings for the most recent quarter
+const holdings = await fmp.institutional.getForm13F({
+cik: '0001364742',
+date: dates.data[0] // Most recent date
+});
+
+console.log('BlackRock holdings:', holdings.data);`}
+
+</CodeBlock>
+
+### 3. Sector Analysis
+
+Analyze institutional ownership patterns across different sectors.
+
+<CodeBlock language="typescript">
+{`// Compare institutional ownership across tech stocks
+const techStocks = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'META'];
+
+for (const symbol of techStocks) {
+const holders = await fmp.institutional.getInstitutionalHolders({ symbol });
+const totalShares = holders.data.reduce((sum, holder) => sum + holder.shares, 0);
+console.log(\`\${symbol}: \${totalShares.toLocaleString()} institutional shares\`);
+}`}
+
+</CodeBlock>
+
+## Error Handling
+
+Always check the success property before accessing data:
+
+<CodeBlock language="typescript">
+{`const form13F = await fmp.institutional.getForm13F({
+  cik: '0001388838',
+  date: '2021-09-30'
+});
+
+if (form13F.success && form13F.data) {
+console.log('Form 13F data:', form13F.data);
+} else {
+console.error('Error:', form13F.error);
+console.error('Status:', form13F.status);
+}`}
+
+</CodeBlock>
+
+## Rate Limiting
+
+Institutional endpoints are subject to FMP's rate limits. For production applications, implement appropriate rate limiting and caching strategies.
+
+## Data Availability
+
+- **Form 13F Data**: Available quarterly (45 days after quarter-end)
+- **Institutional Holders**: Updated regularly based on latest filings
+- **Historical Data**: Limited by filing requirements and data availability
+
+## Next Steps
+
+Explore other endpoint categories:
+
+- [Stock Endpoints](/docs/api/stock) - Real-time quotes and historical data
+- [Company Endpoints](/docs/api/company) - Company profiles and executive data
+- [Financial Endpoints](/docs/api/financial) - Financial statements and ratios
+- [Market Endpoints](/docs/api/market) - Market indices and sector data
+- [Calendar Endpoints](/docs/api/calendar) - Earnings and economic calendars
+- [Examples](/docs/examples) - Practical code samples
+
+---
+
+**Ready to analyze institutional data?** Check out the [Financial Endpoints](/docs/api/financial) for comprehensive financial analysis tools.

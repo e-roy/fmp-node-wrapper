@@ -72,6 +72,11 @@ The library is organized into different endpoint categories:
       path: '/senate-house-trading/*',
       description: 'Congressional trading data for senate and house members',
     },
+    {
+      method: 'GET',
+      path: '/institutional/*',
+      description: 'Form 13F filings and institutional ownership data',
+    },
   ]}
 />
 
@@ -205,6 +210,17 @@ Access congressional trading data:
 - **Trading Analytics** - Most active traders and most traded stocks
 
 [View Senate & House Trading Endpoints →](/docs/api/senate-house)
+
+### Institutional Endpoints
+
+Access Form 13F filings and institutional ownership data:
+
+- **Form 13F Data** - Quarterly institutional stock ownership reports
+- **Filing Dates** - Available Form 13F filing dates for institutions
+- **Institutional Holders** - Institutional investors holding specific stocks
+- **Ownership Analysis** - Track institutional sentiment and positions
+
+[View Institutional Endpoints →](/docs/api/institutional)
 
 ## TypeScript Support
 

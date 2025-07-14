@@ -40,6 +40,7 @@
     "test:etf": "jest --testPathPattern=\"src/__tests__/endpoints/etf\\.test\\.ts\"",
     "test:mutual-fund": "jest --testPathPattern=\"src/__tests__/endpoints/mutual-fund\\.test\\.ts\"",
     "test:senate-house": "jest --testPathPattern=\"src/__tests__/endpoints/senate-house\\.test\\.ts\"",
+    "test:institutional": "jest --testPathPattern=\"src/__tests__/endpoints/institutional\\.test\\.ts\"",
     "test:manual": "tsx scripts/test-manual.ts",
     "test:endpoint": "tsx scripts/test-endpoint.ts",
     "type-check": "tsc --noEmit",

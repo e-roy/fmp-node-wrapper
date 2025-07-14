@@ -39,6 +39,7 @@ async function testEndpoint() {
     console.log('  income-statement, balance-sheet, cash-flow');
     console.log('  market-hours, gainers, losers, most-active');
     console.log('  forex-quote, crypto-quote, treasury-rates');
+    console.log('  institutional-holder, form-13f, form-13f-dates');
     console.log('');
     console.log('Example: pnpm test:endpoint quote');
     process.exit(1);
@@ -379,6 +380,24 @@ async function testEndpoint() {
           name: 'inflation',
           from: '2024-01-01',
           to: '2024-12-31',
+        });
+        break;
+
+      // institutional endpoints
+      case 'institutional-holder':
+        result = await fmp.institutional.getInstitutionalHolders({
+          symbol: 'AAPL',
+        });
+        break;
+      case 'form-13f':
+        result = await fmp.institutional.getForm13F({
+          cik: '0001388838',
+          date: '2021-09-30',
+        });
+        break;
+      case 'form-13f-dates':
+        result = await fmp.institutional.getForm13FDates({
+          cik: '0001067983',
         });
         break;
 
