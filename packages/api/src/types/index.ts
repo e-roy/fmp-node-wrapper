@@ -14,3 +14,4 @@ export * from './list';
 export * from './company';
 export * from './senate-house';
 export * from './institutional';
+export * from './insider';

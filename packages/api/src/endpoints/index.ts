@@ -12,3 +12,4 @@ export { CompanyEndpoints } from './company';
 export { QuoteEndpoints } from './quote';
 export { SenateHouseEndpoints } from './senate-house';
 export { InstitutionalEndpoints } from './institutional';
+export { InsiderEndpoints } from './insider';

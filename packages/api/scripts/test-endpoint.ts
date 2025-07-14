@@ -40,6 +40,9 @@ async function testEndpoint() {
     console.log('  market-hours, gainers, losers, most-active');
     console.log('  forex-quote, crypto-quote, treasury-rates');
     console.log('  institutional-holder, form-13f, form-13f-dates');
+    console.log('  insider-trading-rss, insider-trading-search, transaction-types');
+    console.log('  insiders-by-symbol, insider-trade-statistics, cik-mapper');
+    console.log('  beneficial-ownership, fail-to-deliver');
     console.log('');
     console.log('Example: pnpm test:endpoint quote');
     process.exit(1);
@@ -399,6 +402,77 @@ async function testEndpoint() {
         result = await fmp.institutional.getForm13FDates({
           cik: '0001067983',
         });
+        break;
+
+      // insider endpoints
+      case 'insider-trading-rss':
+        result = await fmp.insider.getInsiderTradingRSS({
+          page: 0,
+        });
+        break;
+      case 'insider-trading-search':
+        result = await fmp.insider.searchInsiderTrading({
+          symbol: 'AAPL',
+          page: 0,
+        });
+        break;
+      case 'insider-trading-search-by-type':
+        result = await fmp.insider.searchInsiderTrading({
+          transactionType: 'P-Purchase',
+          page: 0,
+        });
+        break;
+      case 'transaction-types':
+        result = await fmp.insider.getTransactionTypes();
+        break;
+      case 'insiders-by-symbol':
+        result = await fmp.insider.getInsidersBySymbol({
+          symbol: 'AAPL',
+        });
+        break;
+      case 'insider-trade-statistics':
+        result = await fmp.insider.getInsiderTradeStatistics({
+          symbol: 'AAPL',
+        });
+        break;
+      case 'cik-mapper':
+        result = await fmp.insider.getCikMapper({
+          page: 0,
+        });
+        break;
+      case 'cik-mapper-by-name':
+        result = await fmp.insider.getCikMapperByName({
+          name: 'zuckerberg',
+          page: 0,
+        });
+        break;
+      case 'cik-mapper-by-symbol':
+        result = await fmp.insider.getCikMapperBySymbol({
+          symbol: 'MSFT',
+        });
+        break;
+      case 'beneficial-ownership':
+        result = await fmp.insider.getBeneficialOwnership({
+          symbol: 'AAPL',
+        });
+        break;
+      case 'fail-to-deliver':
+        result = await fmp.insider.getFailToDeliver({
+          symbol: 'GE',
+          page: 0,
+        });
+        break;
+      case 'insider-trades-by-symbol':
+        result = await fmp.insider.getInsiderTradesBySymbol('AAPL');
+        break;
+      case 'insider-trades-by-type':
+        result = await fmp.insider.getInsiderTradesByType('P-Purchase');
+        break;
+      case 'insider-trades-by-reporting-cik':
+        result = await fmp.insider.getInsiderTradesByReportingCik('0001767094');
+        break;
+      case 'insider-trades-by-company-cik':
+        result = await fmp.insider.getInsiderTradesByCompanyCik('0000320193');
         break;
 
       // crypto endpoints

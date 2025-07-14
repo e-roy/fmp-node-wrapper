@@ -39,6 +39,7 @@ const navigationGroups = [
       { name: 'Company Endpoints', href: '/docs/api/company' },
       { name: 'Senate & House Trading', href: '/docs/api/senate-house' },
       { name: 'Institutional Endpoints', href: '/docs/api/institutional' },
+      { name: 'Insider Endpoints', href: '/docs/api/insider' },
     ],
   },
   {
