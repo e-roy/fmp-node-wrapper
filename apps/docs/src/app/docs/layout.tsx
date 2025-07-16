@@ -40,6 +40,7 @@ const navigationGroups = [
       { name: 'Senate & House Trading', href: '/docs/api/senate-house' },
       { name: 'Institutional Endpoints', href: '/docs/api/institutional' },
       { name: 'Insider Endpoints', href: '/docs/api/insider' },
+      { name: 'SEC Endpoints', href: '/docs/api/sec' },
     ],
   },
   {

@@ -43,6 +43,9 @@ async function testEndpoint() {
     console.log('  insider-trading-rss, insider-trading-search, transaction-types');
     console.log('  insiders-by-symbol, insider-trade-statistics, cik-mapper');
     console.log('  beneficial-ownership, fail-to-deliver');
+    console.log(
+      '  sec-rss-feed, sec-rss-feed-all, sec-industry-classification, sec-industry-classification-cik, sec-all-industry-classifications',
+    );
     console.log('');
     console.log('Example: pnpm test:endpoint quote');
     process.exit(1);
@@ -473,6 +476,55 @@ async function testEndpoint() {
         break;
       case 'insider-trades-by-company-cik':
         result = await fmp.insider.getInsiderTradesByCompanyCik('0000320193');
+        break;
+
+      // SEC endpoints
+      case 'sec-rss-feed':
+        result = await fmp.sec.getRSSFeed({
+          limit: 5,
+          type: '10-K',
+          from: '2024-01-01',
+          to: '2024-12-31',
+          isDone: true,
+        });
+        break;
+      case 'sec-rss-feed-all':
+        result = await fmp.sec.getRSSFeedAll({
+          page: 0,
+          datatype: 'csv',
+        });
+        break;
+      case 'sec-rss-feed-v3':
+        result = await fmp.sec.getRSSFeedV3({
+          page: 0,
+        });
+        break;
+      case 'sec-rss-feed-8k':
+        result = await fmp.sec.getRSSFeed8K({
+          page: 0,
+        });
+        break;
+      case 'sec-filings':
+        result = await fmp.sec.getSECFilings({
+          symbol: 'AAPL',
+          params: {
+            page: 0,
+          },
+        });
+        break;
+      case 'sec-industry-classification':
+        result = await fmp.sec.getIndividualIndustryClassification({ symbol: 'AAPL' });
+        break;
+      case 'sec-industry-classification-cik':
+        result = await fmp.sec.getIndividualIndustryClassification({ cik: '0001767094' });
+        break;
+      case 'sec-all-industry-classifications':
+        result = await fmp.sec.getAllIndustryClassifications();
+        break;
+      case 'sec-industry-classification-codes':
+        result = await fmp.sec.getIndustryClassificationCodes({
+          industryTitle: 'Software',
+        });
         break;
 
       // crypto endpoints

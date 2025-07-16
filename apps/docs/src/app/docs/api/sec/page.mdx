@@ -1,0 +1,459 @@
+# SEC Endpoints
+
+Access Securities and Exchange Commission (SEC) filings and industry classification data. These endpoints provide real-time feeds of SEC filings, direct links to specific filings, and industry classification information based on the Standard Industrial Classification (SIC) system.
+
+## Overview
+
+The SEC endpoints provide access to:
+
+- **RSS Feeds** - Real-time feeds of SEC filings from publicly traded companies
+- **SEC Filings** - Direct links to specific SEC filings for companies
+- **Industry Classification** - SIC-based industry classification data
+
+## RSS Feed API (v4)
+
+Get a real-time feed of SEC filings from publicly traded companies, including the filing type, link to SEC page, and direct link to the filing.
+
+<CodeBlock language="typescript">
+{`const response = await fmp.sec.getRSSFeed({
+  limit: 100,
+  type: '10-K',
+  from: '2024-01-01',
+  to: '2024-12-31',
+  isDone: true
+});
+
+if (response.success) {
+response.data.forEach(filing => {
+console.log(\`\${filing.title} - \${filing.date}\`);
+console.log(\`Link: \${filing.link}\`);
+console.log(\`CIK: \${filing.cik}\`);
+console.log(\`Form Type: \${filing.form_type}\`);
+console.log(\`Ticker: \${filing.ticker}\`);
+});
+}`}
+
+</CodeBlock>
+
+### Parameters
+
+| Parameter | Type      | Required | Description                                |
+| --------- | --------- | -------- | ------------------------------------------ |
+| `limit`   | `number`  | No       | Number of results to return (default: 100) |
+| `type`    | `string`  | No       | Filter by form type (e.g., '10-K', '8-K')  |
+| `from`    | `string`  | No       | Start date in YYYY-MM-DD format            |
+| `to`      | `string`  | No       | End date in YYYY-MM-DD format              |
+| `isDone`  | `boolean` | No       | Filter by completion status                |
+
+### Response
+
+<CodeBlock language="typescript">
+  {`interface RSSFeedItem {
+  title: string;
+  date: string;
+  link: string;
+  cik: string;
+  form_type: string;
+  ticker: string;
+  done: boolean;
+}`}
+</CodeBlock>
+
+## RSS Feed All API
+
+Get a real-time feed of all SEC filings from publicly traded companies in the latest RSS feed format. This endpoint provides a comprehensive overview of all SEC filings, including the filing type, link to SEC page, and direct link to the filing.
+
+<CodeBlock language="typescript">
+{`const response = await fmp.sec.getRSSFeedAll({
+  page: 0,
+  datatype: 'csv'
+});
+
+if (response.success) {
+response.data.forEach(filing => {
+console.log(\`\${filing.symbol}: \${filing.type} - \${filing.fillingDate}\`);
+console.log(\`Accepted: \${filing.acceptedDate}\`);
+console.log(\`Link: \${filing.link}\`);
+console.log(\`Final Link: \${filing.finalLink}\`);
+});
+}`}
+
+</CodeBlock>
+
+### Parameters
+
+| Parameter  | Type     | Required | Description                             |
+| ---------- | -------- | -------- | --------------------------------------- |
+| `page`     | `number` | No       | Page number for pagination (default: 0) |
+| `datatype` | `string` | No       | Data format (e.g., 'csv', 'json')       |
+
+### Response
+
+<CodeBlock language="typescript">
+  {`interface RSSFeedAllItem {
+  symbol: string;
+  fillingDate: string;
+  acceptedDate: string;
+  cik: string;
+  type: string;
+  link: string;
+  finalLink: string;
+}`}
+</CodeBlock>
+
+## RSS Feed V3 API
+
+Get a real-time feed of SEC filings in the latest RSS feed format (V3), which includes support for multiple namespaces, digital signatures, enclosures, and categories and tags.
+
+<CodeBlock language="typescript">
+{`const response = await fmp.sec.getRSSFeedV3({
+  page: 0,
+  datatype: 'csv'
+});
+
+if (response.success) {
+response.data.forEach(filing => {
+console.log(\`\${filing.title} - \${filing.date}\`);
+console.log(\`Form Type: \${filing.form_type}\`);
+console.log(\`Ticker: \${filing.ticker}\`);
+});
+}`}
+
+</CodeBlock>
+
+### Parameters
+
+| Parameter  | Type     | Required | Description                             |
+| ---------- | -------- | -------- | --------------------------------------- |
+| `page`     | `number` | No       | Page number for pagination (default: 0) |
+| `datatype` | `string` | No       | Data format (e.g., 'csv', 'json')       |
+
+### Response
+
+<CodeBlock language="typescript">
+  {`interface RSSFeedV3Item {
+  title: string;
+  date: string;
+  link: string;
+  cik: string;
+  form_type: string;
+  ticker: string;
+  done: boolean;
+}`}
+</CodeBlock>
+
+## RSS Feed 8-K API
+
+Get a real-time feed of 8-K SEC filings from publicly traded companies. 8-K filings are required when a company experiences a significant event.
+
+<CodeBlock language="typescript">
+{`const response = await fmp.sec.getRSSFeed8K({
+  page: 0,
+  from: '2024-01-01',
+  to: '2024-12-31',
+  hasFinancial: true,
+  limit: 10
+});
+
+if (response.success) {
+response.data.forEach(filing => {
+console.log(\`\${filing.title} - \${filing.symbol}\`);
+console.log(\`Date: \${filing.date}\`);
+console.log(\`SEC Link: \${filing.link}\`);
+console.log(\`Final Link: \${filing.finalLink}\`);
+});
+}`}
+
+</CodeBlock>
+
+### Parameters
+
+| Parameter      | Type      | Required | Description                                |
+| -------------- | --------- | -------- | ------------------------------------------ |
+| `page`         | `number`  | No       | Page number for pagination (default: 0)    |
+| `from`         | `string`  | No       | Start date in YYYY-MM-DD format            |
+| `to`           | `string`  | No       | End date in YYYY-MM-DD format              |
+| `hasFinancial` | `boolean` | No       | Filter filings that contain financial data |
+| `limit`        | `number`  | No       | Number of results to return                |
+
+### Response
+
+<CodeBlock language="typescript">
+  {`interface RSSFeed8KItem {
+  title: string;
+  symbol: string;
+  cik: string;
+  link: string;
+  finalLink: string;
+  date: string;
+}`}
+</CodeBlock>
+
+## SEC Filings API
+
+Access direct links to SEC filings for a specific company, including the filing type, link to the SEC page, and direct link to the specific filing.
+
+<CodeBlock language="typescript">
+{`const response = await fmp.sec.getSECFilings({
+  symbol: 'AAPL',
+  params: {
+    page: 0,
+    type: '10-K'
+  }
+});
+
+if (response.success) {
+response.data.forEach(filing => {
+console.log(\`\${filing.type} - \${filing.symbol}\`);
+console.log(\`Accepted: \${filing.acceptedDate}\`);
+console.log(\`Filing Date: \${filing.fillingDate}\`);
+console.log(\`SEC Link: \${filing.link}\`);
+console.log(\`Final Link: \${filing.finalLink}\`);
+});
+}`}
+
+</CodeBlock>
+
+### Parameters
+
+| Parameter | Type     | Required | Description                             |
+| --------- | -------- | -------- | --------------------------------------- |
+| `symbol`  | `string` | Yes      | The stock symbol to get filings for     |
+| `page`    | `number` | No       | Page number for pagination (default: 0) |
+| `type`    | `string` | No       | Filter by form type (e.g., '10-K')      |
+
+### Response
+
+<CodeBlock language="typescript">
+  {`interface SECFiling {
+  symbol: string;
+  cik: string;
+  type: string;
+  link: string;
+  finalLink: string;
+  acceptedDate: string;
+  fillingDate: string;
+}`}
+</CodeBlock>
+
+## Individual Industry Classification API
+
+Identify the industry in which a particular company operates, based on the Standard Industrial Classification (SIC) system.
+
+<CodeBlock language="typescript">
+{`// Get by symbol
+const response = await fmp.sec.getIndividualIndustryClassification({
+  symbol: 'AAPL'
+});
+
+// Or get by CIK
+const responseByCIK = await fmp.sec.getIndividualIndustryClassification({
+cik: 320193
+});
+
+if (response.success) {
+const company = response.data;
+console.log(\`\${company.name} (\${company.symbol})\`);
+console.log(\`SIC Code: \${company.sicCode}\`);
+console.log(\`Industry: \${company.industryTitle}\`);
+console.log(\`Phone: \${company.phoneNumber}\`);
+console.log(\`Address: \${company.businessAdress}\`);
+}`}
+
+</CodeBlock>
+
+### Parameters
+
+| Parameter | Type     | Required | Description                  |
+| --------- | -------- | -------- | ---------------------------- |
+| `symbol`  | `string` | No\*     | The stock symbol to classify |
+| `cik`     | `number` | No\*     | The CIK number to classify   |
+| `sicCode` | `number` | No\*     | The SIC code to search for   |
+
+\*At least one parameter is required
+
+### Response
+
+<CodeBlock language="typescript">
+  {`interface IndustryClassification {
+  symbol: string;
+  name: string;
+  cik: string;
+  sicCode: string;
+  industryTitle: string;
+  businessAdress: string; // API returns as string, not array
+  phoneNumber: string;
+}`}
+</CodeBlock>
+
+## All Industry Classification API
+
+Get a comprehensive overview of all industries, classified according to the SIC system.
+
+<CodeBlock language="typescript">
+{`const response = await fmp.sec.getAllIndustryClassifications();
+
+if (response.success) {
+response.data.forEach(company => {
+console.log(\`\${company.name} (\${company.symbol})\`);
+console.log(\`SIC Code: \${company.sicCode}\`);
+console.log(\`Industry: \${company.industryTitle}\`);
+});
+}`}
+
+</CodeBlock>
+
+### Response
+
+Returns an array of `IndustryClassification` objects (same as Individual Industry Classification API).
+
+## Industry Classification Codes API
+
+Learn more about the SIC system and identify the SIC code for a particular industry.
+
+<CodeBlock language="typescript">
+{`// Search by industry title
+const response = await fmp.sec.getIndustryClassificationCodes({
+  industryTitle: 'services'
+});
+
+// Or search by SIC code
+const responseByCode = await fmp.sec.getIndustryClassificationCodes({
+sicCode: 6321
+});
+
+if (response.success) {
+response.data.forEach(code => {
+console.log(\`Office: \${code.office}\`);
+console.log(\`SIC Code: \${code.sicCode}\`);
+console.log(\`Industry: \${code.industryTitle}\`);
+});
+}`}
+
+</CodeBlock>
+
+### Parameters
+
+| Parameter       | Type     | Required | Description              |
+| --------------- | -------- | -------- | ------------------------ |
+| `industryTitle` | `string` | No\*     | Search by industry title |
+| `sicCode`       | `number` | No\*     | Search by SIC code       |
+
+\*At least one parameter is required
+
+### Response
+
+<CodeBlock language="typescript">
+  {`interface IndustryClassificationCode {
+  office: string;
+  sicCode: string;
+  industryTitle: string;
+}`}
+</CodeBlock>
+
+## Common Use Cases
+
+### Monitor Recent SEC Filings
+
+<CodeBlock language="typescript">
+{`// Get recent 10-K filings
+const recentFilings = await fmp.sec.getRSSFeed({
+  limit: 50,
+  type: '10-K',
+  from: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days ago
+  isDone: true
+});
+
+if (recentFilings.success) {
+console.log('Recent 10-K filings:');
+recentFilings.data.forEach(filing => {
+console.log(\`\${filing.ticker}: \${filing.title} (\${filing.date})\`);
+});
+}`}
+
+</CodeBlock>
+
+### Track 8-K Events
+
+<CodeBlock language="typescript">
+{`// Get 8-K filings with financial data
+const eightKFilings = await fmp.sec.getRSSFeed8K({
+  hasFinancial: true,
+  limit: 20
+});
+
+if (eightKFilings.success) {
+console.log('8-K filings with financial data:');
+eightKFilings.data.forEach(filing => {
+console.log(\`\${filing.symbol}: \${filing.title}\`);
+console.log(\`Date: \${filing.date}\`);
+console.log(\`Final Link: \${filing.finalLink}\`);
+});
+}`}
+
+</CodeBlock>
+
+### Analyze Company SEC History
+
+<CodeBlock language="typescript">
+{`// Get all SEC filings for a company
+const companyFilings = await fmp.sec.getSECFilings({
+  symbol: 'AAPL'
+});
+
+if (companyFilings.success) {
+console.log('Apple SEC filings:');
+companyFilings.data.forEach(filing => {
+console.log(\`\${filing.type}: \${filing.acceptedDate}\`);
+console.log(\`Link: \${filing.finalLink}\`);
+});
+}`}
+
+</CodeBlock>
+
+### Industry Analysis
+
+<CodeBlock language="typescript">
+{`// Get industry classification for multiple companies
+const companies = ['AAPL', 'MSFT', 'GOOGL'];
+
+for (const symbol of companies) {
+const classification = await fmp.sec.getIndividualIndustryClassification({
+symbol: symbol
+});
+
+if (classification.success && classification.data.length > 0) {
+const company = classification.data[0];
+console.log(\`\${company.symbol}: \${company.industryTitle} (SIC: \${company.sicCode})\`);
+}
+}`}
+
+</CodeBlock>
+
+## Error Handling
+
+All SEC endpoints return the standard API response format:
+
+<CodeBlock language="typescript">
+{`const response = await fmp.sec.getRSSFeed();
+
+if (response.success) {
+// Handle successful response
+console.log(response.data);
+} else {
+// Handle error
+console.error('Error:', response.error);
+console.error('Status:', response.status);
+}`}
+
+</CodeBlock>
+
+## Rate Limiting
+
+SEC endpoints are subject to FMP's standard rate limits. For high-volume applications, consider implementing appropriate caching and rate limiting strategies.
+
+## Related Endpoints
+
+- **[Company Endpoints](/docs/api/company)** - Company profiles and information
+- **[Financial Endpoints](/docs/api/financial)** - Financial statements and ratios
+- **[Institutional Endpoints](/docs/api/institutional)** - Form 13F filings and institutional data

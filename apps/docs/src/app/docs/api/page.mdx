@@ -82,6 +82,11 @@ The library is organized into different endpoint categories:
       path: '/insider/*',
       description: 'Insider data',
     },
+    {
+      method: 'GET',
+      path: '/sec/*',
+      description: 'SEC filings, RSS feeds, and industry classification data',
+    },
   ]}
 />
 
@@ -226,6 +231,17 @@ Access Form 13F filings and institutional ownership data:
 - **Ownership Analysis** - Track institutional sentiment and positions
 
 [View Institutional Endpoints →](/docs/api/institutional)
+
+### SEC Endpoints
+
+Access Securities and Exchange Commission filings and industry classification data:
+
+- **RSS Feeds** - Real-time feeds of SEC filings from publicly traded companies
+- **SEC Filings** - Direct links to specific SEC filings for companies
+- **Industry Classification** - SIC-based industry classification data
+- **8-K Filings** - Significant event filings and notifications
+
+[View SEC Endpoints →](/docs/api/sec)
 
 ## TypeScript Support
 

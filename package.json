@@ -30,6 +30,7 @@
     "test:senate-house": "turbo run test:senate-house --filter=fmp-node-api",
     "test:institutional": "turbo run test:institutional --filter=fmp-node-api",
     "test:insider": "turbo run test:insider --filter=fmp-node-api",
+    "test:sec": "turbo run test:sec --filter=fmp-node-api",
     "lint": "pnpm exec eslint packages/api/src/**/*.ts apps/docs/src/**/*.ts",
     "lint:fix": "turbo run lint:fix",
     "clean": "turbo run clean",

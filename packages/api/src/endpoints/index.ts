@@ -13,3 +13,4 @@ export { QuoteEndpoints } from './quote';
 export { SenateHouseEndpoints } from './senate-house';
 export { InstitutionalEndpoints } from './institutional';
 export { InsiderEndpoints } from './insider';
+export { SECEndpoints } from './sec';
