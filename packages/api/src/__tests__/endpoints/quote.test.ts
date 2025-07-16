@@ -18,6 +18,8 @@ describe('QuoteEndpoints', () => {
       const mockResponse = {
         success: true,
         data: { symbol: 'AAPL', price: 150, exchange: 'NASDAQ' },
+        error: null,
+        status: 200,
       };
       mockClient.getSingle.mockResolvedValue(mockResponse);
 
@@ -31,6 +33,8 @@ describe('QuoteEndpoints', () => {
       const mockResponse = {
         success: true,
         data: { symbol: 'BTCUSD', price: 50000, exchange: 'CRYPTO' },
+        error: null,
+        status: 200,
       };
       mockClient.getSingle.mockResolvedValue(mockResponse);
 
@@ -44,6 +48,8 @@ describe('QuoteEndpoints', () => {
       const mockResponse = {
         success: true,
         data: { symbol: 'EURUSD', price: 1.1, exchange: 'FOREX' },
+        error: null,
+        status: 200,
       };
       mockClient.getSingle.mockResolvedValue(mockResponse);
 
@@ -57,6 +63,8 @@ describe('QuoteEndpoints', () => {
       const mockResponse = {
         success: true,
         data: { symbol: 'ZOUSX', price: 379.75, exchange: 'COMMODITY' },
+        error: null,
+        status: 200,
       };
       mockClient.getSingle.mockResolvedValue(mockResponse);
 
@@ -69,7 +77,12 @@ describe('QuoteEndpoints', () => {
 
   describe('getHistoricalPrice', () => {
     it('should get historical prices for any asset type', async () => {
-      const mockResponse = { success: true, data: { symbol: 'AAPL', historical: [] } };
+      const mockResponse = {
+        success: true,
+        data: { symbol: 'AAPL', historical: [] },
+        error: null,
+        status: 200,
+      };
       mockClient.getSingle.mockResolvedValue(mockResponse);
 
       const result = await quoteEndpoints.getHistoricalPrice({
@@ -86,7 +99,12 @@ describe('QuoteEndpoints', () => {
     });
 
     it('should get historical prices without date range', async () => {
-      const mockResponse = { success: true, data: { symbol: 'AAPL', historical: [] } };
+      const mockResponse = {
+        success: true,
+        data: { symbol: 'AAPL', historical: [] },
+        error: null,
+        status: 200,
+      };
       mockClient.getSingle.mockResolvedValue(mockResponse);
 
       const result = await quoteEndpoints.getHistoricalPrice({ symbol: 'AAPL' });
@@ -104,6 +122,8 @@ describe('QuoteEndpoints', () => {
           { symbol: 'AAPL', exchange: 'NASDAQ' },
           { symbol: 'BTCUSD', exchange: 'CRYPTO' },
         ],
+        error: null,
+        status: 200,
       };
       mockClient.get.mockResolvedValue(mockResponse);
 
@@ -128,6 +148,8 @@ describe('QuoteEndpoints', () => {
             volume: 1000,
           },
         ],
+        error: null,
+        status: 200,
       };
       mockClient.get.mockResolvedValue(mockResponse);
 
@@ -146,7 +168,12 @@ describe('QuoteEndpoints', () => {
     });
 
     it('should get intraday data without date range', async () => {
-      const mockResponse = { success: true, data: [] };
+      const mockResponse = {
+        success: true,
+        data: [],
+        error: null,
+        status: 200,
+      };
       mockClient.get.mockResolvedValue(mockResponse);
 
       const result = await quoteEndpoints.getIntraday({
