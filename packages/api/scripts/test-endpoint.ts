@@ -39,6 +39,13 @@ async function testEndpoint() {
     console.log('  income-statement, balance-sheet, cash-flow');
     console.log('  market-hours, gainers, losers, most-active');
     console.log('  forex-quote, crypto-quote, treasury-rates');
+    console.log('  institutional-holder, form-13f, form-13f-dates');
+    console.log('  insider-trading-rss, insider-trading-search, transaction-types');
+    console.log('  insiders-by-symbol, insider-trade-statistics, cik-mapper');
+    console.log('  beneficial-ownership, fail-to-deliver');
+    console.log(
+      '  sec-rss-feed, sec-rss-feed-all, sec-industry-classification, sec-industry-classification-cik, sec-all-industry-classifications',
+    );
     console.log('');
     console.log('Example: pnpm test:endpoint quote');
     process.exit(1);
@@ -379,6 +386,144 @@ async function testEndpoint() {
           name: 'inflation',
           from: '2024-01-01',
           to: '2024-12-31',
+        });
+        break;
+
+      // institutional endpoints
+      case 'institutional-holder':
+        result = await fmp.institutional.getInstitutionalHolders({
+          symbol: 'AAPL',
+        });
+        break;
+      case 'form-13f':
+        result = await fmp.institutional.getForm13F({
+          cik: '0001388838',
+          date: '2021-09-30',
+        });
+        break;
+      case 'form-13f-dates':
+        result = await fmp.institutional.getForm13FDates({
+          cik: '0001067983',
+        });
+        break;
+
+      // insider endpoints
+      case 'insider-trading-rss':
+        result = await fmp.insider.getInsiderTradingRSS({
+          page: 0,
+        });
+        break;
+      case 'insider-trading-search':
+        result = await fmp.insider.searchInsiderTrading({
+          symbol: 'AAPL',
+          page: 0,
+        });
+        break;
+      case 'insider-trading-search-by-type':
+        result = await fmp.insider.searchInsiderTrading({
+          transactionType: 'P-Purchase',
+          page: 0,
+        });
+        break;
+      case 'transaction-types':
+        result = await fmp.insider.getTransactionTypes();
+        break;
+      case 'insiders-by-symbol':
+        result = await fmp.insider.getInsidersBySymbol({
+          symbol: 'AAPL',
+        });
+        break;
+      case 'insider-trade-statistics':
+        result = await fmp.insider.getInsiderTradeStatistics({
+          symbol: 'AAPL',
+        });
+        break;
+      case 'cik-mapper':
+        result = await fmp.insider.getCikMapper({
+          page: 0,
+        });
+        break;
+      case 'cik-mapper-by-name':
+        result = await fmp.insider.getCikMapperByName({
+          name: 'zuckerberg',
+          page: 0,
+        });
+        break;
+      case 'cik-mapper-by-symbol':
+        result = await fmp.insider.getCikMapperBySymbol({
+          symbol: 'MSFT',
+        });
+        break;
+      case 'beneficial-ownership':
+        result = await fmp.insider.getBeneficialOwnership({
+          symbol: 'AAPL',
+        });
+        break;
+      case 'fail-to-deliver':
+        result = await fmp.insider.getFailToDeliver({
+          symbol: 'GE',
+          page: 0,
+        });
+        break;
+      case 'insider-trades-by-symbol':
+        result = await fmp.insider.getInsiderTradesBySymbol('AAPL');
+        break;
+      case 'insider-trades-by-type':
+        result = await fmp.insider.getInsiderTradesByType('P-Purchase');
+        break;
+      case 'insider-trades-by-reporting-cik':
+        result = await fmp.insider.getInsiderTradesByReportingCik('0001767094');
+        break;
+      case 'insider-trades-by-company-cik':
+        result = await fmp.insider.getInsiderTradesByCompanyCik('0000320193');
+        break;
+
+      // SEC endpoints
+      case 'sec-rss-feed':
+        result = await fmp.sec.getRSSFeed({
+          limit: 5,
+          type: '10-K',
+          from: '2024-01-01',
+          to: '2024-12-31',
+          isDone: true,
+        });
+        break;
+      case 'sec-rss-feed-all':
+        result = await fmp.sec.getRSSFeedAll({
+          page: 0,
+          datatype: 'csv',
+        });
+        break;
+      case 'sec-rss-feed-v3':
+        result = await fmp.sec.getRSSFeedV3({
+          page: 0,
+        });
+        break;
+      case 'sec-rss-feed-8k':
+        result = await fmp.sec.getRSSFeed8K({
+          page: 0,
+        });
+        break;
+      case 'sec-filings':
+        result = await fmp.sec.getSECFilings({
+          symbol: 'AAPL',
+          params: {
+            page: 0,
+          },
+        });
+        break;
+      case 'sec-industry-classification':
+        result = await fmp.sec.getIndividualIndustryClassification({ symbol: 'AAPL' });
+        break;
+      case 'sec-industry-classification-cik':
+        result = await fmp.sec.getIndividualIndustryClassification({ cik: '0001767094' });
+        break;
+      case 'sec-all-industry-classifications':
+        result = await fmp.sec.getAllIndustryClassifications();
+        break;
+      case 'sec-industry-classification-codes':
+        result = await fmp.sec.getIndustryClassificationCodes({
+          industryTitle: 'Software',
         });
         break;
 

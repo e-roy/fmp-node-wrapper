@@ -1,7 +1,5 @@
 import {
   APIResponse,
-  SuccessResponse,
-  ErrorResponse,
   FMPConfig,
   SymbolParams,
   DateRangeParams,
@@ -14,56 +12,46 @@ import { Quote } from '../../types/quote';
 
 describe('Common Types', () => {
   describe('APIResponse', () => {
-    it('should allow generic type parameter', () => {
+    it('should allow generic type parameter for success case', () => {
       const response: APIResponse<string> = {
         success: true,
         data: 'test data',
+        error: null,
         status: 200,
       };
 
       expect(response.success).toBe(true);
       expect(response.data).toBe('test data');
+      expect(response.error).toBeNull();
       expect(response.status).toBe(200);
     });
 
-    it('should work with unknown default type', () => {
+    it('should work with error case', () => {
       const response: APIResponse = {
         success: false,
+        data: null,
         error: 'API Error',
         status: 400,
       };
 
       expect(response.success).toBe(false);
+      expect(response.data).toBeNull();
       expect(response.error).toBe('API Error');
       expect(response.status).toBe(400);
     });
-  });
 
-  describe('SuccessResponse', () => {
-    it('should enforce success: true and required data', () => {
-      const response: SuccessResponse<number[]> = {
-        success: true,
-        data: [1, 2, 3],
-        status: 200,
-      };
-
-      expect(response.success).toBe(true);
-      expect(response.data).toEqual([1, 2, 3]);
-      expect(response.status).toBe(200);
-    });
-  });
-
-  describe('ErrorResponse', () => {
-    it('should enforce success: false and required error', () => {
-      const response: ErrorResponse = {
+    it('should work with unknown default type', () => {
+      const response: APIResponse = {
         success: false,
-        error: 'Not Found',
-        status: 404,
+        data: null,
+        error: 'API Error',
+        status: 400,
       };
 
       expect(response.success).toBe(false);
-      expect(response.error).toBe('Not Found');
-      expect(response.status).toBe(404);
+      expect(response.data).toBeNull();
+      expect(response.error).toBe('API Error');
+      expect(response.status).toBe(400);
     });
   });
 

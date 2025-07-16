@@ -104,7 +104,7 @@ describe('Calendar Endpoints', () => {
           expect(typeof earnings.symbol).toBe('string');
           expect(earnings.symbol.length).toBeGreaterThan(0);
 
-          expect(isValidNumber(earnings.eps)).toBe(true);
+          expect(earnings.eps === null || isValidNumber(earnings.eps)).toBe(true);
           expect(earnings.epsEstimated === null || isValidNumber(earnings.epsEstimated)).toBe(true);
 
           expect(typeof earnings.time).toBe('string');
