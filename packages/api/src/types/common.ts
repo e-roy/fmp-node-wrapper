@@ -1,23 +1,10 @@
 // Common types used across all FMP API endpoints
 
-// Base API response wrapper - maintains backward compatibility
+// Base API response wrapper - consistent structure with nullable fields
 export interface APIResponse<T = unknown> {
   success: boolean;
-  data?: T;
-  error?: string;
-  status?: number;
-}
-
-// More specific response types for better type safety (optional use)
-export interface SuccessResponse<T> extends APIResponse<T> {
-  success: true;
-  data: T;
-  status: number;
-}
-
-export interface ErrorResponse extends APIResponse<never> {
-  success: false;
-  error: string;
+  data: T | null;
+  error: string | null;
   status: number;
 }
 

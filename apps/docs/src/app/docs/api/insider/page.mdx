@@ -1,0 +1,414 @@
+# Insider Trading Endpoints
+
+The Insider Trading Endpoints provide access to real-time and historical insider trading data, transaction types, CIK mapping, beneficial ownership, and fail-to-deliver information. These endpoints help you analyze insider activity, compliance, and market sentiment.
+
+## Available Methods
+
+<ApiTable
+  endpoints={[
+    {
+      method: 'GET',
+      path: '/insider-trading-rss-feed',
+      description: 'Get real-time insider trading RSS feed',
+    },
+    {
+      method: 'GET',
+      path: '/insider-trading',
+      description: 'Search insider trades by symbol, CIK, or type',
+    },
+    {
+      method: 'GET',
+      path: '/insider-trading-transaction-type',
+      description: 'Get all insider transaction types',
+    },
+    { method: 'GET', path: '/insider-roaster', description: 'Get insiders by symbol' },
+    {
+      method: 'GET',
+      path: '/insider-roaster-statistic',
+      description: 'Get insider trade statistics',
+    },
+    {
+      method: 'GET',
+      path: '/mapper-cik-name',
+      description: 'Get CIK to name mapping or search by name',
+    },
+    {
+      method: 'GET',
+      path: '/mapper-cik-company/{symbol}',
+      description: 'Get CIK for a specific symbol',
+    },
+    {
+      method: 'GET',
+      path: '/insider/ownership/acquisition_of_beneficial_ownership',
+      description: 'Get beneficial ownership acquisitions',
+    },
+    { method: 'GET', path: '/fail_to_deliver', description: 'Get fail to deliver data' },
+  ]}
+/>
+
+---
+
+## Get Insider Trading RSS Feed
+
+<CodeBlock language="typescript">{`
+const rssFeed = await fmp.insider.getInsiderTradingRSS({ page: 0 });
+`}</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    { name: 'page', type: 'number', required: true, description: 'Page number for pagination' },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">{`
+{
+  success: true,
+  data: [
+    {
+      title: '4 - Atlantic Union Bankshares Corp (0000883948) (Issuer)',
+      fillingDate: '2022-10-05 13:43:47',
+      symbol: 'AUB',
+      link: 'https://www.sec.gov/Archives/edgar/data/883948/000141588922010327/0001415889-22-010327-index.htm',
+      reportingCik: '0001745407',
+      issuerCik: '0000883948'
+    }
+  ]
+}
+`}</CodeBlock>
+
+---
+
+## Search Insider Trades
+
+<CodeBlock language="typescript">{`
+const trades = await fmp.insider.searchInsiderTrading({ symbol: 'AAPL', page: 0 });
+`}</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    { name: 'symbol', type: 'string', required: false, description: 'Stock symbol to filter by' },
+    {
+      name: 'reportingCik',
+      type: 'string',
+      required: false,
+      description: 'Reporting CIK to filter by',
+    },
+    {
+      name: 'companyCik',
+      type: 'string',
+      required: false,
+      description: 'Company CIK to filter by',
+    },
+    {
+      name: 'transactionType',
+      type: 'string',
+      required: false,
+      description: 'Transaction type to filter by',
+    },
+    { name: 'page', type: 'number', required: true, description: 'Page number for pagination' },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">{`
+{
+  success: true,
+  data: [
+    {
+      symbol: 'AAPL',
+      filingDate: '2022-10-04 22:05:07',
+      transactionDate: '2022-10-03',
+      reportingCik: '0001767094',
+      transactionType: 'S-Sale',
+      securitiesOwned: 270196,
+      securitiesTransacted: 42393,
+      companyCik: '0000320193',
+      reportingName: "O'BRIEN DEIRDRE",
+      typeOfOwner: 'officer: Senior Vice President',
+      link: 'https://www.sec.gov/Archives/edgar/data/320193/000032019322000097/0000320193-22-000097-index.htm',
+      securityName: 'Common Stock',
+      price: 141.09,
+      formType: '4',
+      acquistionOrDisposition: 'D'
+    }
+  ]
+}
+`}</CodeBlock>
+
+---
+
+## Get Transaction Types
+
+<CodeBlock language="typescript">{`
+const types = await fmp.insider.getTransactionTypes();
+`}</CodeBlock>
+
+### Example Response
+
+<CodeBlock language="typescript">{`
+{
+  success: true,
+  data: [
+    'J-Other', 'P-Purchase', 'W-Will', 'I-Discretionary', 'Z-Trust', 'F-InKind'
+  ]
+}
+`}</CodeBlock>
+
+---
+
+## Get Insiders by Symbol
+
+<CodeBlock language="typescript">{`
+const insiders = await fmp.insider.getInsidersBySymbol({ symbol: 'AAPL' });
+`}</CodeBlock>
+
+<ParameterTable
+  parameters={[{ name: 'symbol', type: 'string', required: true, description: 'Stock symbol' }]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">{`
+{
+  success: true,
+  data: [
+    {
+      typeOfOwner: 'officer: SVP, GC and Secretary',
+      transactionDate: '2022-10-03',
+      owner: 'Adams Katherine L.'
+    }
+  ]
+}
+`}</CodeBlock>
+
+---
+
+## Get Insider Trade Statistics
+
+<CodeBlock language="typescript">{`
+const stats = await fmp.insider.getInsiderTradeStatistics({ symbol: 'AAPL' });
+`}</CodeBlock>
+
+<ParameterTable
+  parameters={[{ name: 'symbol', type: 'string', required: true, description: 'Stock symbol' }]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">{`
+{
+  success: true,
+  data: [
+    {
+      symbol: 'AAPL',
+      cik: '0000320193',
+      year: 2022,
+      quarter: 4,
+      purchases: 6,
+      sales: 30,
+      buySellRatio: 0.2,
+      totalBought: 1492148,
+      totalSold: 2810029,
+      averageBought: 248691.3333,
+      averageSold: 93667.6333,
+      pPurchases: 0,
+      sSales: 15
+    }
+  ]
+}
+`}</CodeBlock>
+
+---
+
+## Get CIK Mapper
+
+<CodeBlock language="typescript">{`
+const cikMapper = await fmp.insider.getCikMapper({ page: 0 });
+`}</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    { name: 'page', type: 'number', required: true, description: 'Page number for pagination' },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">{`
+{
+  success: true,
+  data: [
+    {
+      reportingCik: '0001453356',
+      reportingName: '10X Fund, L.P.'
+    }
+  ]
+}
+`}</CodeBlock>
+
+---
+
+## Get CIK Mapper by Name
+
+<CodeBlock language="typescript">{`
+const cikByName = await fmp.insider.getCikMapperByName({ name: 'zuckerberg', page: 0 });
+`}</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    { name: 'name', type: 'string', required: true, description: 'Name to search for' },
+    {
+      name: 'page',
+      type: 'number',
+      required: false,
+      description: 'Page number for pagination (default: 0)',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">{`
+{
+  success: true,
+  data: [
+    {
+      reportingCik: '0001548760',
+      reportingName: 'Zuckerberg Mark'
+    }
+  ]
+}
+`}</CodeBlock>
+
+---
+
+## Get CIK Mapper by Symbol
+
+<CodeBlock language="typescript">{`
+const cikBySymbol = await fmp.insider.getCikMapperBySymbol({ symbol: 'MSFT' });
+`}</CodeBlock>
+
+<ParameterTable
+  parameters={[{ name: 'symbol', type: 'string', required: true, description: 'Stock symbol' }]}
+/>
+
+> **Note:** This endpoint returns a single object, not an array.
+
+### Example Response
+
+<CodeBlock language="typescript">{`
+{
+  success: true,
+  data: {
+    symbol: 'MSFT',
+    companyCik: '0000789019'
+  }
+}
+`}</CodeBlock>
+
+---
+
+## Get Beneficial Ownership
+
+<CodeBlock language="typescript">{`
+const beneficialOwnership = await fmp.insider.getBeneficialOwnership({ symbol: 'AAPL' });
+`}</CodeBlock>
+
+<ParameterTable
+  parameters={[{ name: 'symbol', type: 'string', required: true, description: 'Stock symbol' }]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">{`
+{
+  success: true,
+  data: [
+    {
+      cik: '0000102909',
+      symbol: 'AAPL',
+      filingDate: '2024-02-13',
+      acceptedDate: '2024-02-13 16:55:49',
+      cusip: '037833100',
+      nameOfReportingPerson: 'The Vanguard Group',
+      citizenshipOrPlaceOfOrganization: 'Pennsylvania',
+      soleVotingPower: '0',
+      sharedVotingPower: '19912339',
+      soleDispositivePower: '1254220941',
+      sharedDispositivePower: '63745530',
+      amountBeneficiallyOwned: '1317966471',
+      percentOfClass: '8.47',
+      typeOfReportingPerson: 'IA',
+      url: 'https://www.sec.gov/Archives/edgar/data/102909/000110465924020009/tv0017-appleinc.htm'
+    }
+  ]
+}
+`}</CodeBlock>
+
+---
+
+## Get Fail to Deliver Data
+
+<CodeBlock language="typescript">{`
+const failToDeliver = await fmp.insider.getFailToDeliver({ symbol: 'GE', page: 0 });
+`}</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    { name: 'symbol', type: 'string', required: true, description: 'Stock symbol' },
+    {
+      name: 'page',
+      type: 'number',
+      required: false,
+      description: 'Page number for pagination (default: 0)',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">{`
+{
+  success: true,
+  data: [
+    {
+      symbol: 'GE',
+      date: '2023-09-27',
+      price: 109.93,
+      quantity: 3320,
+      cusip: '369604301',
+      name: 'GEN ELEC CO COM NEW (NY)'
+    }
+  ]
+}
+`}</CodeBlock>
+
+---
+
+## Error Handling
+
+Always check the `success` property before accessing `data`:
+
+<CodeBlock language="typescript">{`
+const result = await fmp.insider.getInsiderTradesBySymbol('AAPL');
+
+if (result.success && result.data) {
+console.log('Found', result.data.length, 'insider trades');
+} else {
+console.error('Error:', result.error);
+}
+`}</CodeBlock>
+
+---
+
+## See Also
+
+- [Stock Endpoints](/docs/api/stock)
+- [Company Endpoints](/docs/api/company)
+- [Financial Endpoints](/docs/api/financial)
+- [Market Endpoints](/docs/api/market)
+- [Calendar Endpoints](/docs/api/calendar)
+- [List Endpoints](/docs/api/list)

@@ -86,11 +86,13 @@ export class FMPClient {
       return {
         success: true,
         data,
+        error: null,
         status: response.status,
       };
     } catch (error: any) {
       return {
         success: false,
+        data: null,
         error: error.message || 'Unknown error occurred',
         status: error.response?.status || 500,
       };
@@ -115,11 +117,13 @@ export class FMPClient {
       return {
         success: true,
         data,
+        error: null,
         status: response.status,
       };
     } catch (error: any) {
       return {
         success: false,
+        data: null,
         error: error.message || 'Unknown error occurred',
         status: error.response?.status || 500,
       };

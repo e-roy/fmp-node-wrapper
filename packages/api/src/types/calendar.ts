@@ -2,7 +2,7 @@
 export interface EarningsCalendar {
   date: string;
   symbol: string;
-  eps: number;
+  eps: number | null;
   epsEstimated: number | null;
   time: string;
   revenue: number | null;
