@@ -1,5 +1,11 @@
 # fmp-node-api
 
+## 0.0.8
+
+### Patch Changes
+
+- add insitituional, insider and sec endpoints
+
 ## 0.0.7
 
 ### Patch Changes
