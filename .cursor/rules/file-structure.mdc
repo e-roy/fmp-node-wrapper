@@ -28,7 +28,18 @@ fmp-node-wrapper/
 ├── package.json           # Root package.json with workspace scripts
 ├── pnpm-workspace.yaml    # Workspace configuration
 ├── turbo.json            # Turbo build pipeline configuration
-└── tsconfig.json         # Root TypeScript configuration
+├── tsconfig.json         # Root TypeScript configuration
+├── jest.config.js        # Jest configuration
+├── .eslintrc.js          # ESLint configuration
+├── .prettierrc           # Prettier configuration
+├── .npmrc                # NPM configuration
+├── .gitignore            # Git ignore rules
+├── LICENSE               # MIT license
+├── CONTRIBUTING.md       # Contributing guidelines
+├── README.md             # Main project README
+├── .changeset/           # Changeset configuration
+├── .github/              # GitHub workflows and templates
+└── .cursor/              # Cursor IDE configuration
 ```
 
 ## Package Structure
@@ -50,13 +61,41 @@ fmp-node-wrapper/
   - Documentation pages organized as:
     - `docs/getting-started/` - Getting started guide
     - `docs/examples/` - Code examples and tutorials
-    - `docs/api/` - API reference with subcategories (`stock/`, `financial/`)
+    - `docs/api/` - API reference with subcategories:
+      - `quote/` - Unified quotes for all asset types
+      - `stock/` - Stock market data (market cap, splits, dividends)
+      - `financial/` - Financial statements and ratios
+      - `company/` - Company information and profiles
+      - `etf/` - ETF data and holdings
+      - `mutual-fund/` - Mutual fund data
+      - `market/` - Market-wide data and performance
+      - `economic/` - Economic indicators
+      - `list/` - Stock lists and indices
+      - `calendar/` - Earnings and economic calendar
+      - `senate-house/` - Congressional trading data
+      - `institutional/` - Form 13F filings
+      - `insider/` - Insider trading data
+      - `sec/` - SEC filings and industry data
 
 ### Packages
 
 - **`packages/api/`**: Main FMP API wrapper (`fmp-node-api`)
   - Core API client implementation
-  - Endpoint modules for different API categories
+  - Endpoint modules for different API categories:
+    - `quote.ts` - Unified quotes for all asset types
+    - `stock.ts` - Market cap, splits, dividends, real-time prices
+    - `financial.ts` - Financial statements and ratios
+    - `company.ts` - Company information and profiles
+    - `etf.ts` - ETF data and holdings
+    - `mutual-fund.ts` - Mutual fund data
+    - `market.ts` - Market-wide data and performance
+    - `economic.ts` - Economic indicators
+    - `list.ts` - Stock lists and indices
+    - `calendar.ts` - Earnings and economic calendar
+    - `senate-house.ts` - Congressional trading data
+    - `institutional.ts` - Form 13F filings
+    - `insider.ts` - Insider trading data
+    - `sec.ts` - SEC filings and industry data
   - All TypeScript types and interfaces (including shared types)
   - Shared utilities and constants
   - Jest tests and manual testing scripts
@@ -69,6 +108,7 @@ fmp-node-wrapper/
 - **tsup**: TypeScript bundling for packages
 - **Jest**: Testing framework
 - **ESLint + Prettier**: Code quality and formatting
+- **Changesets**: Version management and publishing
 
 ## Key Scripts
 
@@ -88,19 +128,24 @@ fmp-node-wrapper/
 - `pnpm test`: Run all tests across packages
 - `pnpm test:watch`: Run tests in watch mode
 - `pnpm test:coverage`: Run tests with coverage report
-- `pnpm test:api`: Run manual API tests
 - `pnpm test:endpoint`: Run specific endpoint test (requires cd to packages/api)
 - `pnpm test:unit`: Run unit tests for API package
 - `pnpm test:integration`: Run integration tests for API package
 - `pnpm test:endpoints`: Run all endpoint tests
+- `pnpm test:quote`: Run quote endpoint tests
 - `pnpm test:stock`: Run stock endpoint tests
 - `pnpm test:financial`: Run financial endpoint tests
 - `pnpm test:market`: Run market endpoint tests
-- `pnpm test:forex`: Run forex endpoint tests
 - `pnpm test:economic`: Run economic endpoint tests
 - `pnpm test:list`: Run list endpoint tests
 - `pnpm test:calendar`: Run calendar endpoint tests
 - `pnpm test:company`: Run company endpoint tests
+- `pnpm test:etf`: Run ETF endpoint tests
+- `pnpm test:mutual-fund`: Run mutual fund endpoint tests
+- `pnpm test:senate-house`: Run senate house endpoint tests
+- `pnpm test:institutional`: Run institutional endpoint tests
+- `pnpm test:insider`: Run insider endpoint tests
+- `pnpm test:sec`: Run SEC endpoint tests
 
 ### Code Quality
 
@@ -127,6 +172,7 @@ fmp-node-wrapper/
 3. API implementation and types are in `packages/api/`
 4. Documentation site consumes the API package
 5. Turbo handles build dependencies and caching
+6. Changesets manages versioning and publishing
 
 ## File Naming Conventions
 
@@ -141,3 +187,22 @@ fmp-node-wrapper/
 - External dependencies are managed at the package level
 - All types are included in the main API package
 - API client is imported from `fmp-node-api`
+
+## API Structure
+
+The API is organized into logical endpoint categories:
+
+- **Quote Endpoints**: Unified quotes for stocks, forex, crypto, commodities, and ETFs
+- **Stock Endpoints**: Market capitalization, stock splits, dividend history, real-time prices
+- **Financial Endpoints**: Financial statements, ratios, income statements, balance sheets
+- **Company Endpoints**: Company information, executive data, employee information
+- **ETF Endpoints**: ETF data, holdings, and fund information
+- **Mutual Fund Endpoints**: Mutual fund data, NAV, and performance
+- **Market Endpoints**: Market performance, trading hours, sector data
+- **Economic Endpoints**: Economic indicators, treasury rates, inflation data
+- **List Endpoints**: Stock listings, screening, and filtering
+- **Calendar Endpoints**: Earnings calendar, economic calendar, events
+- **Senate House Endpoints**: Congressional trading data
+- **Institutional Endpoints**: Form 13F filings and institutional ownership
+- **Insider Endpoints**: Insider trading data and transactions
+- **SEC Endpoints**: SEC filings, RSS feeds, industry classification

@@ -56,12 +56,12 @@ Let's make your first API call to get a stock quote:
 
 <CodeBlock language="typescript">
 {`// Get real-time stock quote
-const quote = await fmp.stock.getQuote({ symbol: 'AAPL' });
+const quote = await fmp.quote.getQuote({ symbol: 'AAPL' });
 
-if (quote.success) {
-console.log('Stock Price:', quote.data[0].price);
-console.log('Change:', quote.data[0].change);
-console.log('Market Cap:', quote.data[0].marketCap);
+if (quote.success && quote.data) {
+console.log('Stock Price:', quote.data.price);
+console.log('Change:', quote.data.change);
+console.log('Market Cap:', quote.data.marketCap);
 } else {
 console.error('Error:', quote.error);
 }`}
@@ -75,16 +75,16 @@ All API methods return a consistent response format:
 <CodeBlock language="typescript">
   {`interface ApiResponse<T> {
     success: boolean;
-    data?: T;
-    error?: string;
-    status?: number;
+    data: T | null;
+    error: string | null;
+    status: number;
 }`}
 </CodeBlock>
 
 - `success`: Boolean indicating if the request was successful
-- `data`: The response data (only present when `success` is `true`)
-- `error`: Error message (only present when `success` is `false`)
-- `status`: HTTP status code (only present when `success` is `false`)
+- `data`: The response data (null if unsuccessful)
+- `error`: Error message string (null if successful)
+- `status`: HTTP status code
 
 ## Error Handling
 
@@ -92,9 +92,9 @@ Always check the `success` property before accessing the
 data:
 
 <CodeBlock language="typescript">
-{`const response = await fmp.stock.getQuote({ symbol: 'INVALID' });
+{`const response = await fmp.quote.getQuote({ symbol: 'INVALID' });
 
-if (response.success) {
+if (response.success && response.data) {
 // Handle successful response
 console.log(response.data);
 } else {

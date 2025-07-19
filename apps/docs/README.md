@@ -12,17 +12,20 @@ src/
 │   ├── docs/                    # Main documentation pages
 │   │   ├── getting-started/     # Getting started guide
 │   │   ├── api/                 # API reference
-│   │   │   ├── stock/          # Stock endpoints
+│   │   │   ├── stock/          # Stock endpoints (market cap, splits, dividends)
+│   │   │   ├── quote/          # Quote endpoints (unified quotes for all assets)
 │   │   │   ├── financial/      # Financial endpoints
-│   │   │   ├── forex/          # Forex endpoints
-│   │   │   ├── crypto/         # Cryptocurrency endpoints
 │   │   │   ├── etf/            # ETF endpoints
 │   │   │   ├── market/         # Market data endpoints
 │   │   │   ├── economic/       # Economic indicators
 │   │   │   ├── mutual-fund/    # Mutual fund endpoints
 │   │   │   ├── list/           # List and screening endpoints
 │   │   │   ├── calendar/       # Calendar and events endpoints
-│   │   │   └── company/        # Company information endpoints
+│   │   │   ├── company/        # Company information endpoints
+│   │   │   ├── senate-house/   # Congressional trading data
+│   │   │   ├── institutional/  # Form 13F filings
+│   │   │   ├── insider/        # Insider trading data
+│   │   │   └── sec/            # SEC filings and industry data
 │   │   ├── examples/           # Code examples
 │   │   ├── layout.tsx          # Documentation layout
 │   │   └── page.mdx            # Main docs page
@@ -110,7 +113,8 @@ The documentation uses a grouped sidebar navigation system defined in `src/app/d
 
 ### Asset Classes
 
-- Stock Endpoints
+- Quote Endpoints (unified quotes for all assets)
+- Stock Endpoints (market cap, splits, dividends)
 - Financial Endpoints
 - ETF Endpoints
 - Mutual Fund Endpoints
@@ -125,6 +129,10 @@ The documentation uses a grouped sidebar navigation system defined in `src/app/d
 - List Endpoints
 - Calendar Endpoints
 - Company Endpoints
+- Senate & House Trading
+- Institutional Data
+- Insider Trading
+- SEC Filings
 
 ### Resources
 
@@ -170,7 +178,8 @@ The documentation covers comprehensive financial data across multiple asset clas
 
 ### Asset Classes
 
-- **Stock Endpoints**: Real-time and historical stock data, company profiles, market information
+- **Quote Endpoints**: Unified quotes for stocks, forex, crypto, commodities, and ETFs
+- **Stock Endpoints**: Market capitalization, stock splits, dividend history, real-time prices
 - **Financial Endpoints**: Financial statements, ratios, income statements, balance sheets
 - **ETF Endpoints**: ETF quotes, profiles, holdings, and fund information
 - **Mutual Fund Endpoints**: Mutual fund data, NAV, profiles, and performance
@@ -185,6 +194,10 @@ The documentation covers comprehensive financial data across multiple asset clas
 - **List Endpoints**: Stock listings, screening, and filtering capabilities
 - **Calendar Endpoints**: Earnings calendar, economic calendar, and event scheduling
 - **Company Endpoints**: Company profiles, executive information, and corporate data
+- **Senate & House Trading**: Congressional trading data and political stock activity
+- **Institutional Data**: Form 13F filings and institutional ownership
+- **Insider Trading**: Insider transactions and holdings data
+- **SEC Filings**: SEC filings, RSS feeds, and industry classification
 
 ## Development
 
@@ -261,7 +274,7 @@ Key dependencies include:
 - Show both success and error handling
 - Use realistic data in examples
 - Include comments for complex code
-- Use the new `FMP` class structure: `fmp.stock.getQuote()` instead of `fmp.getQuote()`
+- Use the current API structure: `fmp.quote.getQuote()` for quotes, `fmp.stock.getMarketCap()` for stock data
 
 ### API Documentation
 
@@ -273,19 +286,41 @@ Key dependencies include:
 
 ### API Structure
 
-The documentation reflects the updated API structure:
+The documentation reflects the current API structure:
 
 ```typescript
-// New structure (current)
+// Current structure
 import { FMP } from 'fmp-node-api';
 const fmp = new FMP({ apiKey: 'your-key' });
-const quote = await fmp.stock.getQuote({ symbol: 'AAPL' });
 
-// Old structure (deprecated)
-import { FMPClient, FMPEndpoints } from 'fmp-node-api';
-const client = new FMPClient({ apiKey: 'your-key' });
-const fmp = new FMPEndpoints(client);
-const quote = await fmp.getQuote({ symbol: 'AAPL' });
+// Quote data (unified for all asset types)
+const quote = await fmp.quote.getQuote({ symbol: 'AAPL' });
+const forexQuote = await fmp.quote.getQuote({ symbol: 'EURUSD' });
+const cryptoQuote = await fmp.quote.getQuote({ symbol: 'BTCUSD' });
+
+// Stock-specific data
+const marketCap = await fmp.stock.getMarketCap({ symbol: 'AAPL' });
+const splits = await fmp.stock.getStockSplits({ symbol: 'AAPL' });
+const dividends = await fmp.stock.getDividendHistory({ symbol: 'AAPL' });
+
+// Financial data
+const income = await fmp.financial.getIncomeStatement({ symbol: 'AAPL' });
+
+// Company data
+const profile = await fmp.company.getCompanyProfile({ symbol: 'AAPL' });
+```
+
+### Response Format
+
+All API responses follow a consistent structure:
+
+```typescript
+interface APIResponse<T> {
+  success: boolean;
+  data: T | null;
+  error: string | null;
+  status: number;
+}
 ```
 
 ## Deployment

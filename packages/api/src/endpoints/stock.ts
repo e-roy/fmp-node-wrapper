@@ -1,10 +1,8 @@
 import { FMPClient } from '@/client';
-import { APIResponse, DateRangeParams } from '@/types/common';
-import { HistoricalPriceResponse } from '@/types/quote';
+import { APIResponse } from '@/types/common';
 import {
   MarketCap,
   StockSplitResponse,
-  StockQuote,
   StockDividendResponse,
   StockRealTimePrice,
   StockRealTimePriceFull,
@@ -14,46 +12,6 @@ import {
 
 export class StockEndpoints {
   constructor(private client: FMPClient) {}
-
-  /**
-   * Get real-time stock quote
-   * @deprecated Use `fmp.quote.getQuote()` instead. This method will be removed in version 0.1.0.
-   * @param symbol - The stock symbol to get the quote for
-   * @returns This endpoint gives you the latest bid and ask prices for a stock, as well as the volume and last trade price in real time.
-   */
-  async getQuote({ symbol }: { symbol: string }): Promise<APIResponse<StockQuote>> {
-    console.warn(
-      '⚠️  StockEndpoints.getQuote() is deprecated. Use fmp.quote.getQuote() instead. This method will be removed in version 0.1.0.',
-    );
-    return this.client.getSingle(`/quote/${symbol}`, 'v3');
-  }
-
-  /**
-   * Get historical stock prices
-   * @deprecated Use `fmp.quote.getHistoricalPrice()` instead. This method will be removed in version 0.1.0.
-   * @param symbol - The stock symbol to get the historical prices for
-   * @param from - The start date to get the historical prices for
-   * @param to - The end date to get the historical prices for
-   * @returns The FMP Daily Chart endpoint provides daily stock data for a specified company, including opening, high, low, and closing prices, with a default limit of 5 years of historical data. To access data beyond this limit, use the from and to parameters for custom date ranges, each with a 5-year limit
-   */
-  async getHistoricalPrice({
-    symbol,
-    from,
-    to,
-  }: {
-    symbol: string;
-    from?: string;
-    to?: string;
-  }): Promise<APIResponse<HistoricalPriceResponse>> {
-    console.warn(
-      '⚠️  StockEndpoints.getHistoricalPrice() is deprecated. Use fmp.quote.getHistoricalPrice() instead. This method will be removed in version 0.1.0.',
-    );
-    const params: DateRangeParams = {};
-    if (from) params.from = from;
-    if (to) params.to = to;
-
-    return this.client.getSingle(`/historical-price-full/${symbol}`, 'v3', params);
-  }
 
   /**
    * Get market cap

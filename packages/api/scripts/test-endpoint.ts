@@ -105,10 +105,12 @@ async function testEndpoint() {
         result = await fmp.stock.getDividendHistory({ symbol: 'AAPL' });
         break;
       case 'real-time-price':
-        result = await fmp.stock.getRealTimePrice({ symbols: ['AAPL'] });
+        result = await fmp.stock.getRealTimePrice({ symbols: ['AAPL', 'MSFT', 'GOOGL'] });
         break;
       case 'real-time-price-full':
-        result = await fmp.stock.getRealTimePriceForMultipleStocks({ symbols: ['AAPL', 'GOOGL'] });
+        result = await fmp.stock.getRealTimePriceForMultipleStocks({
+          symbols: ['AAPL', 'MSFT', 'GOOGL'],
+        });
         break;
 
       // Financial endpoints
@@ -525,22 +527,6 @@ async function testEndpoint() {
         result = await fmp.sec.getIndustryClassificationCodes({
           industryTitle: 'Software',
         });
-        break;
-
-      // crypto endpoints
-      case 'crypto-historical':
-        result = await fmp.crypto.getHistoricalPrice({
-          symbol: 'BTCUSD',
-          from: '2024-01-01',
-          to: '2024-01-31',
-        });
-        break;
-      case 'crypto-quote':
-        result = await fmp.crypto.getQuote({ symbol: 'BTCUSD' });
-        break;
-
-      case 'forex-quote':
-        result = await fmp.forex.getQuote({ symbol: 'EURUSD' });
         break;
 
       default:

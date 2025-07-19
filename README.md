@@ -47,41 +47,66 @@ const fmp = new FMP({
 });
 
 // Get stock quote
-const quote = await fmp.stock.getQuote({ symbol: 'AAPL' });
-if (quote.success) {
-  console.log('Price:', quote.data[0].price);
+const quote = await fmp.quote.getQuote({ symbol: 'AAPL' });
+if (quote.success && quote.data) {
+  console.log('Price:', quote.data.price);
 }
 
 // Get company profile
-const profile = await fmp.stock.getCompanyProfile({ symbol: 'AAPL' });
-if (profile.success) {
-  console.log('Company:', profile.data[0].companyName);
+const profile = await fmp.company.getCompanyProfile({ symbol: 'AAPL' });
+if (profile.success && profile.data) {
+  console.log('Company:', profile.data.companyName);
 }
 ```
 
 ## API Examples
 
-### Stock Data
+### Quote Data
 
 ```typescript
-// Get real-time quote
-const quote = await fmp.stock.getQuote({ symbol: 'AAPL' });
+// Get real-time quote for any asset type
+const quote = await fmp.quote.getQuote({ symbol: 'AAPL' });
 
-// Get company profile
-const profile = await fmp.stock.getCompanyProfile({ symbol: 'AAPL' });
+// Get multiple quotes
+const quotes = await fmp.quote.getQuotes(['AAPL', 'MSFT', 'GOOGL']);
 
 // Get historical prices
-const historical = await fmp.stock.getHistoricalPrice({
+const historical = await fmp.quote.getHistoricalPrice({
   symbol: 'AAPL',
   from: '2024-01-01',
   to: '2024-12-31',
 });
+
+// Get intraday data
+const intraday = await fmp.quote.getIntraday({
+  symbol: 'AAPL',
+  interval: '1hour',
+  from: '2024-01-01',
+  to: '2024-01-02',
+});
+```
+
+### Stock Data
+
+```typescript
+// Get market capitalization
+const marketCap = await fmp.stock.getMarketCap({ symbol: 'AAPL' });
 
 // Get stock splits
 const splits = await fmp.stock.getStockSplits({ symbol: 'AAPL' });
 
 // Get dividend history
 const dividends = await fmp.stock.getDividendHistory({ symbol: 'AAPL' });
+
+// Get real-time price data
+const realTimePrice = await fmp.stock.getRealTimePrice({
+  symbols: ['AAPL', 'MSFT', 'GOOGL'],
+});
+
+// Get full real-time price data
+const fullRealTimeData = await fmp.stock.getRealTimePriceForMultipleStocks({
+  symbols: ['AAPL', 'MSFT', 'GOOGL'],
+});
 ```
 
 ### Financial Statements
@@ -131,13 +156,13 @@ const mostActive = await fmp.market.getMostActive();
 
 ```typescript
 // Forex
-const forexQuote = await fmp.forex.getQuote({ symbol: 'EURUSD' });
+const forexQuote = await fmp.quote.getQuote({ symbol: 'EURUSD' });
 
 // Cryptocurrency
-const cryptoQuote = await fmp.crypto.getQuote({ symbol: 'BTCUSD' });
+const cryptoQuote = await fmp.quote.getQuote({ symbol: 'BTCUSD' });
 
 // ETFs
-const etfQuote = await fmp.etf.getQuote({ symbol: 'SPY' });
+const etfQuote = await fmp.quote.getQuote({ symbol: 'SPY' });
 
 // Economic indicators
 const treasury = await fmp.economic.getTreasuryRates({
@@ -166,9 +191,9 @@ All API methods return a standardized response format:
 ```typescript
 interface APIResponse<T> {
   success: boolean;
-  data?: T;
-  error?: string;
-  status?: number;
+  data: T | null;
+  error: string | null;
+  status: number;
 }
 ```
 
@@ -177,15 +202,14 @@ interface APIResponse<T> {
 ```typescript
 {
   success: true,
-  data: [
-    {
-      symbol: 'AAPL',
-      price: 150.25,
-      change: 2.15,
-      changePercent: 1.45,
-      // ... other fields
-    }
-  ],
+  data: {
+    symbol: 'AAPL',
+    price: 150.25,
+    change: 2.15,
+    changePercent: 1.45,
+    // ... other fields
+  },
+  error: null,
   status: 200
 }
 ```
@@ -194,14 +218,16 @@ interface APIResponse<T> {
 
 ```typescript
 try {
-  const quote = await fmp.stock.getQuote({ symbol: 'INVALID' });
+  const quote = await fmp.quote.getQuote({ symbol: 'INVALID' });
 
   if (!quote.success) {
     console.error('API Error:', quote.error);
     return;
   }
 
-  console.log('Quote:', quote.data);
+  if (quote.data) {
+    console.log('Quote:', quote.data);
+  }
 } catch (error) {
   console.error('Network Error:', error);
 }
@@ -210,16 +236,19 @@ try {
 ## Available Modules
 
 - **`fmp.quote`** - Quote data for stocks, forex, crypto, commodities, and ETFs
-- **`fmp.stock`** - Stock market data (quotes, profiles, historical prices, etc.)
+- **`fmp.stock`** - Stock market data (market cap, splits, dividends, real-time prices)
 - **`fmp.financial`** - Financial statements (income, balance sheet, cash flow)
-- **`fmp.crypto`** - Cryptocurrency data
+- **`fmp.company`** - Company information and profiles
 - **`fmp.etf`** - ETF data and holdings
 - **`fmp.mutualFund`** - Mutual fund data
 - **`fmp.economic`** - Economic indicators
 - **`fmp.market`** - Market-wide data and performance
 - **`fmp.list`** - Stock lists and indices
 - **`fmp.calendar`** - Earnings and economic calendar
-- **`fmp.company`** - Company information and search
+- **`fmp.senateHouse`** - Congressional trading data
+- **`fmp.institutional`** - Form 13F filings and institutional ownership
+- **`fmp.insider`** - Insider trading data
+- **`fmp.sec`** - SEC filings and industry classification
 
 ## Documentation
 
@@ -308,7 +337,7 @@ pnpm test:endpoints   # Run all endpoint tests
 pnpm test:stock       # Run stock endpoint tests
 pnpm test:financial   # Run financial endpoint tests
 pnpm test:market      # Run market endpoint tests
-pnpm test:forex       # Run forex endpoint tests
+pnpm test:quote       # Run quote endpoint tests
 pnpm test:economic    # Run economic endpoint tests
 pnpm test:list        # Run list endpoint tests
 pnpm test:calendar    # Run calendar endpoint tests

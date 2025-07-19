@@ -80,7 +80,7 @@ The library is organized into different endpoint categories:
     {
       method: 'GET',
       path: '/insider/*',
-      description: 'Insider data',
+      description: 'Insider trading data and transactions',
     },
     {
       method: 'GET',
@@ -97,9 +97,9 @@ All API methods return a consistent response format:
 <CodeBlock language="typescript">
   {`interface ApiResponse<T> {
     success: boolean;
-    data?: T;
-    error?: string;
-    status?: number;
+    data: T | null;
+    error: string | null;
+    status: number;
 }`}
 </CodeBlock>
 
@@ -108,9 +108,9 @@ All API methods return a consistent response format:
 Always check the success property before accessing data:
 
 <CodeBlock language="typescript">
-{`const response = await fmp.stock.getQuote({ symbol: 'AAPL' });
+{`const response = await fmp.quote.getQuote({ symbol: 'AAPL' });
 
-if (response.success) {
+if (response.success && response.data) {
 // Handle successful response
 console.log(response.data);
 } else {
@@ -232,6 +232,17 @@ Access Form 13F filings and institutional ownership data:
 
 [View Institutional Endpoints →](/docs/api/institutional)
 
+### Insider Endpoints
+
+Access insider trading data and transactions:
+
+- **Insider Transactions** - Stock transactions by company insiders
+- **Insider Holdings** - Current insider ownership positions
+- **Transaction History** - Historical insider trading activity
+- **Insider Analysis** - Track insider sentiment and trading patterns
+
+[View Insider Endpoints →](/docs/api/insider)
+
 ### SEC Endpoints
 
 Access Securities and Exchange Commission filings and industry classification data:
@@ -250,14 +261,14 @@ endpoints:
 
 <CodeBlock language="typescript">
 {`// Full type safety for parameters
-const quote = await fmp.stock.getQuote({ 
+const quote = await fmp.quote.getQuote({ 
     symbol: 'AAPL' // TypeScript will ensure this is a string
 });
 
 // Full type safety for responses
-if (quote.success) {
-const price = quote.data[0].price; // TypeScript knows this is a number
-const symbol = quote.data[0].symbol; // TypeScript knows this is a string
+if (quote.success && quote.data) {
+const price = quote.data.price; // TypeScript knows this is a number
+const symbol = quote.data.symbol; // TypeScript knows this is a string
 }`}
 
 </CodeBlock>

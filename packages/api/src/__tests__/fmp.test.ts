@@ -14,8 +14,6 @@ describe('FMP', () => {
   it('should initialize with all endpoint modules', () => {
     expect(fmp.stock).toBeDefined();
     expect(fmp.financial).toBeDefined();
-    expect(fmp.forex).toBeDefined();
-    expect(fmp.crypto).toBeDefined();
     expect(fmp.etf).toBeDefined();
     expect(fmp.mutualFund).toBeDefined();
     expect(fmp.economic).toBeDefined();
@@ -28,9 +26,7 @@ describe('FMP', () => {
   });
 
   it('should have working stock endpoints', () => {
-    expect(typeof fmp.stock.getQuote).toBe('function');
     expect(typeof fmp.company.getCompanyProfile).toBe('function');
-    expect(typeof fmp.stock.getHistoricalPrice).toBe('function');
   });
 
   it('should have working financial endpoints', () => {

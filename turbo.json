@@ -72,11 +72,6 @@
       "outputs": ["coverage/**"],
       "env": ["FMP_API_KEY", "NODE_ENV"]
     },
-    "test:forex": {
-      "dependsOn": ["^build"],
-      "outputs": ["coverage/**"],
-      "env": ["FMP_API_KEY", "NODE_ENV"]
-    },
     "test:economic": {
       "dependsOn": ["^build"],
       "outputs": ["coverage/**"],
@@ -93,11 +88,6 @@
       "env": ["FMP_API_KEY", "NODE_ENV"]
     },
     "test:company": {
-      "dependsOn": ["^build"],
-      "outputs": ["coverage/**"],
-      "env": ["FMP_API_KEY", "NODE_ENV"]
-    },
-    "test:crypto": {
       "dependsOn": ["^build"],
       "outputs": ["coverage/**"],
       "env": ["FMP_API_KEY", "NODE_ENV"]
