@@ -41,7 +41,7 @@ All endpoints return responses with a consistent structure: `{ success: boolean,
 Retrieve market capitalization data for a specific stock.
 
 <CodeBlock language="typescript">
-  {`const marketCap = await fmp.stock.getMarketCap({ symbol: 'AAPL' });`}
+  {`const marketCap = await fmp.stock.getMarketCap('AAPL');`}
 </CodeBlock>
 
 <ParameterTable
@@ -75,7 +75,7 @@ Retrieve market capitalization data for a specific stock.
 Retrieve historical stock splits for a specific stock.
 
 <CodeBlock language="typescript">
-  {`const stockSplits = await fmp.stock.getStockSplits({ symbol: 'AAPL' });`}
+  {`const stockSplits = await fmp.stock.getStockSplits('AAPL');`}
 </CodeBlock>
 
 <ParameterTable
@@ -121,7 +121,7 @@ Retrieve historical stock splits for a specific stock.
 Retrieve historical dividend payments for a specific stock.
 
 <CodeBlock language="typescript">
-  {`const dividendHistory = await fmp.stock.getDividendHistory({ symbol: 'AAPL' });`}
+  {`const dividendHistory = await fmp.stock.getDividendHistory('AAPL');`}
 </CodeBlock>
 
 <ParameterTable
@@ -173,14 +173,10 @@ Retrieve historical dividend payments for a specific stock.
 Retrieve real-time price data for multiple stocks. When the symbols array is empty, returns data for all available stocks.
 
 <CodeBlock language="typescript">
-  {`const realTimePrice = await fmp.stock.getRealTimePrice({
-    symbols: ['AAPL', 'MSFT', 'GOOGL']
-  });
+  {`const realTimePrice = await fmp.stock.getRealTimePrice(['AAPL', 'MSFT', 'GOOGL']);
 
 // Get all stocks
-const allStocks = await fmp.stock.getRealTimePrice({
-symbols: []
-});`}
+const allStocks = await fmp.stock.getRealTimePrice([]);`}
 
 </CodeBlock>
 
@@ -224,14 +220,10 @@ symbols: []
 Retrieve comprehensive real-time price data including bid/ask prices, volume, and trade details for multiple stocks. When the symbols array is empty, returns data for all available stocks.
 
 <CodeBlock language="typescript">
-  {`const fullRealTimeData = await fmp.stock.getRealTimePriceForMultipleStocks({
-    symbols: ['AAPL', 'MSFT', 'GOOGL']
-  });
+  {`const fullRealTimeData = await fmp.stock.getRealTimePriceForMultipleStocks(['AAPL', 'MSFT', 'GOOGL']);
 
 // Get all stocks with full data
-const allStocksFull = await fmp.stock.getRealTimePriceForMultipleStocks({
-symbols: []
-});`}
+const allStocksFull = await fmp.stock.getRealTimePriceForMultipleStocks([]);`}
 
 </CodeBlock>
 
@@ -309,7 +301,7 @@ All API responses follow a consistent structure with the following properties:
 Always check the success property before accessing data:
 
 <CodeBlock language="typescript">
-{`const marketCap = await fmp.stock.getMarketCap({ symbol: 'INVALID' });
+{`const marketCap = await fmp.stock.getMarketCap('INVALID');
 
 if (marketCap.success && marketCap.data) {
 console.log('Market Cap:', marketCap.data.marketCap);
@@ -324,19 +316,19 @@ console.error('Status:', marketCap.status);
 
 <CodeBlock language="typescript">
 {`// Invalid symbol
-const result = await fmp.stock.getMarketCap({ symbol: 'INVALID_SYMBOL' });
+const result = await fmp.stock.getMarketCap('INVALID_SYMBOL');
 // Result: { success: false, data: null, error: "No data found", status: 404 }
 
 // API key issues
-const result = await fmp.stock.getMarketCap({ symbol: 'AAPL' });
+const result = await fmp.stock.getMarketCap('AAPL');
 // Result: { success: false, data: null, error: "Invalid API key", status: 401 }
 
 // Rate limiting
-const result = await fmp.stock.getMarketCap({ symbol: 'AAPL' });
+const result = await fmp.stock.getMarketCap('AAPL');
 // Result: { success: false, data: null, error: "Rate limit exceeded", status: 429 }
 
 // Network errors
-const result = await fmp.stock.getMarketCap({ symbol: 'AAPL' });
+const result = await fmp.stock.getMarketCap('AAPL');
 // Result: { success: false, data: null, error: "Network Error", status: 500 }
 `}
 

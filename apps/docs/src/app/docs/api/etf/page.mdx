@@ -52,9 +52,7 @@ The ETF endpoints provide access to ETF market data, including fund profiles, ho
 
 Retrieve ETF profile and basic information including expense ratio, AUM, and fund details.
 
-<CodeBlock language="typescript">
-  {`const profile = await fmp.etf.getProfile({ symbol: 'SPY' });`}
-</CodeBlock>
+<CodeBlock language="typescript">{`const profile = await fmp.etf.getProfile('SPY');`}</CodeBlock>
 
 <ParameterTable
   parameters={[
@@ -104,7 +102,7 @@ Retrieve ETF profile and basic information including expense ratio, AUM, and fun
 Retrieve available dates for ETF holdings data.
 
 <CodeBlock language="typescript">
-  {`const holdingDates = await fmp.etf.getHoldingDates({ symbol: 'SPY' });`}
+  {`const holdingDates = await fmp.etf.getHoldingDates('SPY');`}
 </CodeBlock>
 
 <ParameterTable
@@ -201,9 +199,7 @@ Retrieve detailed holdings data for a specific ETF and date.
 
 Retrieve all stocks held by a specific ETF with asset details.
 
-<CodeBlock language="typescript">
-  {`const holder = await fmp.etf.getHolder({ symbol: 'SPY' });`}
-</CodeBlock>
+<CodeBlock language="typescript">{`const holder = await fmp.etf.getHolder('SPY');`}</CodeBlock>
 
 <ParameterTable
   parameters={[
@@ -241,7 +237,7 @@ Retrieve all stocks held by a specific ETF with asset details.
 Retrieve sector breakdown of ETF holdings.
 
 <CodeBlock language="typescript">
-  {`const sectorWeighting = await fmp.etf.getSectorWeighting({ symbol: 'SPY' });`}
+  {`const sectorWeighting = await fmp.etf.getSectorWeighting('SPY');`}
 </CodeBlock>
 
 <ParameterTable
@@ -282,7 +278,7 @@ Retrieve sector breakdown of ETF holdings.
 Retrieve country breakdown of ETF holdings.
 
 <CodeBlock language="typescript">
-  {`const countryWeighting = await fmp.etf.getCountryWeighting({ symbol: 'SPY' });`}
+  {`const countryWeighting = await fmp.etf.getCountryWeighting('SPY');`}
 </CodeBlock>
 
 <ParameterTable
@@ -323,7 +319,7 @@ Retrieve country breakdown of ETF holdings.
 Retrieve which ETFs hold a specific stock.
 
 <CodeBlock language="typescript">
-  {`const stockExposure = await fmp.etf.getStockExposure({ symbol: 'AAPL' });`}
+  {`const stockExposure = await fmp.etf.getStockExposure('AAPL');`}
 </CodeBlock>
 
 <ParameterTable
@@ -483,7 +479,7 @@ Here are some popular ETF symbols you can use:
 Always check the success property before accessing data:
 
 <CodeBlock language="typescript">
-{`const profile = await fmp.etf.getProfile({ symbol: 'INVALID' });
+{`const profile = await fmp.etf.getProfile('INVALID');
 
 if (profile.success && profile.data) {
 console.log('ETF Name:', profile.data.name);

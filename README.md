@@ -51,13 +51,13 @@ const fmp = new FMP({
 });
 
 // Get stock quote
-const quote = await fmp.quote.getQuote({ symbol: 'AAPL' });
+const quote = await fmp.quote.getQuote('AAPL');
 if (quote.success && quote.data) {
   console.log('Price:', quote.data.price);
 }
 
 // Get company profile
-const profile = await fmp.company.getCompanyProfile({ symbol: 'AAPL' });
+const profile = await fmp.company.getCompanyProfile('AAPL');
 if (profile.success && profile.data) {
   console.log('Company:', profile.data.companyName);
 }
@@ -69,7 +69,7 @@ if (profile.success && profile.data) {
 
 ```typescript
 // Get real-time quote for any asset type
-const quote = await fmp.quote.getQuote({ symbol: 'AAPL' });
+const quote = await fmp.quote.getQuote('AAPL');
 
 // Get multiple quotes
 const quotes = await fmp.quote.getQuotes(['AAPL', 'MSFT', 'GOOGL']);
@@ -94,23 +94,23 @@ const intraday = await fmp.quote.getIntraday({
 
 ```typescript
 // Get market capitalization
-const marketCap = await fmp.stock.getMarketCap({ symbol: 'AAPL' });
+const marketCap = await fmp.stock.getMarketCap('AAPL');
 
 // Get stock splits
-const splits = await fmp.stock.getStockSplits({ symbol: 'AAPL' });
+const splits = await fmp.stock.getStockSplits('AAPL');
 
 // Get dividend history
-const dividends = await fmp.stock.getDividendHistory({ symbol: 'AAPL' });
+const dividends = await fmp.stock.getDividendHistory('AAPL');
 
 // Get real-time price data
-const realTimePrice = await fmp.stock.getRealTimePrice({
-  symbols: ['AAPL', 'MSFT', 'GOOGL'],
-});
+const realTimePrice = await fmp.stock.getRealTimePrice(['AAPL', 'MSFT', 'GOOGL']);
 
 // Get full real-time price data
-const fullRealTimeData = await fmp.stock.getRealTimePriceForMultipleStocks({
-  symbols: ['AAPL', 'MSFT', 'GOOGL'],
-});
+const fullRealTimeData = await fmp.stock.getRealTimePriceForMultipleStocks([
+  'AAPL',
+  'MSFT',
+  'GOOGL',
+]);
 ```
 
 ### Financial Statements
@@ -160,13 +160,13 @@ const mostActive = await fmp.market.getMostActive();
 
 ```typescript
 // Forex
-const forexQuote = await fmp.quote.getQuote({ symbol: 'EURUSD' });
+const forexQuote = await fmp.quote.getQuote('EURUSD');
 
 // Cryptocurrency
-const cryptoQuote = await fmp.quote.getQuote({ symbol: 'BTCUSD' });
+const cryptoQuote = await fmp.quote.getQuote('BTCUSD');
 
 // ETFs
-const etfQuote = await fmp.quote.getQuote({ symbol: 'SPY' });
+const etfQuote = await fmp.quote.getQuote('SPY');
 
 // Economic indicators
 const treasury = await fmp.economic.getTreasuryRates({
@@ -222,7 +222,7 @@ interface APIResponse<T> {
 
 ```typescript
 try {
-  const quote = await fmp.quote.getQuote({ symbol: 'INVALID' });
+  const quote = await fmp.quote.getQuote('INVALID');
 
   if (!quote.success) {
     console.error('API Error:', quote.error);

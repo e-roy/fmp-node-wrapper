@@ -294,20 +294,20 @@ import { FMP } from 'fmp-node-api';
 const fmp = new FMP({ apiKey: 'your-key' });
 
 // Quote data (unified for all asset types)
-const quote = await fmp.quote.getQuote({ symbol: 'AAPL' });
-const forexQuote = await fmp.quote.getQuote({ symbol: 'EURUSD' });
-const cryptoQuote = await fmp.quote.getQuote({ symbol: 'BTCUSD' });
+const quote = await fmp.quote.getQuote('AAPL');
+const forexQuote = await fmp.quote.getQuote('EURUSD');
+const cryptoQuote = await fmp.quote.getQuote('BTCUSD');
 
 // Stock-specific data
-const marketCap = await fmp.stock.getMarketCap({ symbol: 'AAPL' });
-const splits = await fmp.stock.getStockSplits({ symbol: 'AAPL' });
-const dividends = await fmp.stock.getDividendHistory({ symbol: 'AAPL' });
+const marketCap = await fmp.stock.getMarketCap('AAPL');
+const splits = await fmp.stock.getStockSplits('AAPL');
+const dividends = await fmp.stock.getDividendHistory('AAPL');
 
 // Financial data
 const income = await fmp.financial.getIncomeStatement({ symbol: 'AAPL' });
 
 // Company data
-const profile = await fmp.company.getCompanyProfile({ symbol: 'AAPL' });
+const profile = await fmp.company.getCompanyProfile('AAPL');
 ```
 
 ### Response Format

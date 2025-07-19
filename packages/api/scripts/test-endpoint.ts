@@ -60,19 +60,19 @@ async function testEndpoint() {
     switch (endpoint.toLowerCase()) {
       // Quote endpoints
       case 'quote':
-        result = await fmp.quote.getQuote({ symbol: 'AAPL' });
+        result = await fmp.quote.getQuote('AAPL');
         break;
       case 'quote-crypto':
-        result = await fmp.quote.getQuote({ symbol: 'BTCUSD' });
+        result = await fmp.quote.getQuote('BTCUSD');
         break;
       case 'quote-forex':
-        result = await fmp.quote.getQuote({ symbol: 'EURUSD' });
+        result = await fmp.quote.getQuote('EURUSD');
         break;
       case 'quote-commodity':
-        result = await fmp.quote.getQuote({ symbol: 'ZOUSX' });
+        result = await fmp.quote.getQuote('ZOUSX');
         break;
       case 'quote-etf':
-        result = await fmp.quote.getQuote({ symbol: 'SPY' });
+        result = await fmp.quote.getQuote('SPY');
         break;
       case 'quotes':
         result = await fmp.quote.getQuotes(['AAPL', 'GOOGL']);
@@ -96,21 +96,19 @@ async function testEndpoint() {
 
       // Stock endpoints
       case 'market-cap':
-        result = await fmp.stock.getMarketCap({ symbol: 'AAPL' });
+        result = await fmp.stock.getMarketCap('AAPL');
         break;
       case 'stock-splits':
-        result = await fmp.stock.getStockSplits({ symbol: 'AAPL' });
+        result = await fmp.stock.getStockSplits('AAPL');
         break;
       case 'dividend-history':
-        result = await fmp.stock.getDividendHistory({ symbol: 'AAPL' });
+        result = await fmp.stock.getDividendHistory('AAPL');
         break;
       case 'real-time-price':
-        result = await fmp.stock.getRealTimePrice({ symbols: ['AAPL', 'MSFT', 'GOOGL'] });
+        result = await fmp.stock.getRealTimePrice(['AAPL', 'MSFT', 'GOOGL']);
         break;
       case 'real-time-price-full':
-        result = await fmp.stock.getRealTimePriceForMultipleStocks({
-          symbols: ['AAPL', 'MSFT', 'GOOGL'],
-        });
+        result = await fmp.stock.getRealTimePriceForMultipleStocks(['AAPL', 'MSFT', 'GOOGL']);
         break;
 
       // Financial endpoints
@@ -191,29 +189,27 @@ async function testEndpoint() {
         });
         break;
       case 'earnings-surprises':
-        result = await fmp.financial.getEarningsSurprises({
-          symbol: 'AAPL',
-        });
+        result = await fmp.financial.getEarningsSurprises('AAPL');
         break;
 
       // Company endpoints
       case 'company-profile':
-        result = await fmp.company.getCompanyProfile({ symbol: 'AAPL' });
+        result = await fmp.company.getCompanyProfile('AAPL');
         break;
       case 'executive-compensation':
-        result = await fmp.company.getExecutiveCompensation({ symbol: 'AAPL' });
+        result = await fmp.company.getExecutiveCompensation('AAPL');
         break;
       case 'company-notes':
-        result = await fmp.company.getCompanyNotes({ symbol: 'AAPL' });
+        result = await fmp.company.getCompanyNotes('AAPL');
         break;
       case 'historical-employee-count':
-        result = await fmp.company.getHistoricalEmployeeCount({ symbol: 'AAPL' });
+        result = await fmp.company.getHistoricalEmployeeCount('AAPL');
         break;
       case 'shares-float':
-        result = await fmp.company.getSharesFloat({ symbol: 'AAPL' });
+        result = await fmp.company.getSharesFloat('AAPL');
         break;
       case 'historical-shares-float':
-        result = await fmp.company.getHistoricalSharesFloat({ symbol: 'AAPL' });
+        result = await fmp.company.getHistoricalSharesFloat('AAPL');
         break;
       case 'earnings-call-transcript':
         result = await fmp.company.getEarningsCallTranscript({
@@ -223,7 +219,7 @@ async function testEndpoint() {
         });
         break;
       case 'company-transcript-data':
-        result = await fmp.company.getCompanyTranscriptData({ symbol: 'AAPL' });
+        result = await fmp.company.getCompanyTranscriptData('AAPL');
         break;
 
       // Market endpoints
@@ -303,25 +299,25 @@ async function testEndpoint() {
 
       // ETF endpoints
       case 'etf-holding-dates':
-        result = await fmp.etf.getHoldingDates({ symbol: 'SPY' });
+        result = await fmp.etf.getHoldingDates('SPY');
         break;
       case 'etf-holdings':
         result = await fmp.etf.getHoldings({ symbol: 'SPY', date: '2023-09-30' });
         break;
       case 'etf-holder':
-        result = await fmp.etf.getHolder({ symbol: 'SPY' });
+        result = await fmp.etf.getHolder('SPY');
         break;
       case 'etf-profile':
-        result = await fmp.etf.getProfile({ symbol: 'SPY' });
+        result = await fmp.etf.getProfile('SPY');
         break;
       case 'etf-sector-weighting':
-        result = await fmp.etf.getSectorWeighting({ symbol: 'SPY' });
+        result = await fmp.etf.getSectorWeighting('SPY');
         break;
       case 'etf-country-weighting':
-        result = await fmp.etf.getCountryWeighting({ symbol: 'SPY' });
+        result = await fmp.etf.getCountryWeighting('SPY');
         break;
       case 'etf-stock-exposure':
-        result = await fmp.etf.getStockExposure({ symbol: 'SPY' });
+        result = await fmp.etf.getStockExposure('SPY');
         break;
 
       // Senate & House Trading endpoints
@@ -358,7 +354,7 @@ async function testEndpoint() {
 
       // mutual fund endpoints
       case 'mutual-fund-holders':
-        result = await fmp.mutualFund.getHolders({ symbol: 'AAPL' });
+        result = await fmp.mutualFund.getHolders('AAPL');
         break;
 
       // economic endpoints
@@ -518,7 +514,7 @@ async function testEndpoint() {
         result = await fmp.sec.getIndividualIndustryClassification({ symbol: 'AAPL' });
         break;
       case 'sec-industry-classification-cik':
-        result = await fmp.sec.getIndividualIndustryClassification({ cik: '0001767094' });
+        result = await fmp.sec.getIndividualIndustryClassification({ cik: '0001708646' });
         break;
       case 'sec-all-industry-classifications':
         result = await fmp.sec.getAllIndustryClassifications();

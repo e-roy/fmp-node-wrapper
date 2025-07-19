@@ -43,9 +43,7 @@ The unified quote endpoints work with all major asset types:
 
 Retrieve real-time quote data for any asset type. The response structure is consistent across all asset types.
 
-<CodeBlock language="typescript">
-  {`const quote = await fmp.quote.getQuote({ symbol: 'AAPL' });`}
-</CodeBlock>
+<CodeBlock language="typescript">{`const quote = await fmp.quote.getQuote('AAPL');`}</CodeBlock>
 
 <ParameterTable
   parameters={[
@@ -94,16 +92,16 @@ Retrieve real-time quote data for any asset type. The response structure is cons
 
 <CodeBlock language="typescript">
   {`// Stock quote
-const stockQuote = await fmp.quote.getQuote({ symbol: 'AAPL' });
+const stockQuote = await fmp.quote.getQuote('AAPL');
 
 // Cryptocurrency quote
-const cryptoQuote = await fmp.quote.getQuote({ symbol: 'BTCUSD' });
+const cryptoQuote = await fmp.quote.getQuote('BTCUSD');
 
 // Forex quote
-const forexQuote = await fmp.quote.getQuote({ symbol: 'EURUSD' });
+const forexQuote = await fmp.quote.getQuote('EURUSD');
 
 // ETF quote
-const etfQuote = await fmp.quote.getQuote({ symbol: 'SPY' });`}
+const etfQuote = await fmp.quote.getQuote('SPY');`}
 
 </CodeBlock>
 
@@ -314,13 +312,13 @@ The unified quote endpoints replace the separate quote methods in individual end
 
 <CodeBlock language="typescript">
   {`// Stock quotes
-const stockQuote = await fmp.stock.getQuote({ symbol: 'AAPL' });
+const stockQuote = await fmp.stock.getQuote('AAPL');
 
 // Crypto quotes
-const cryptoQuote = await fmp.crypto.getQuote({ symbol: 'BTCUSD' });
+const cryptoQuote = await fmp.crypto.getQuote('BTCUSD');
 
 // Forex quotes
-const forexQuote = await fmp.forex.getQuote({ symbol: 'EURUSD' });`}
+const forexQuote = await fmp.forex.getQuote('EURUSD');`}
 
 </CodeBlock>
 
@@ -328,9 +326,9 @@ const forexQuote = await fmp.forex.getQuote({ symbol: 'EURUSD' });`}
 
 <CodeBlock language="typescript">
   {`// Unified quotes for all asset types
-const stockQuote = await fmp.quote.getQuote({ symbol: 'AAPL' });
-const cryptoQuote = await fmp.quote.getQuote({ symbol: 'BTCUSD' });
-const forexQuote = await fmp.quote.getQuote({ symbol: 'EURUSD' });`}
+const stockQuote = await fmp.quote.getQuote('AAPL');
+const cryptoQuote = await fmp.quote.getQuote('BTCUSD');
+const forexQuote = await fmp.quote.getQuote('EURUSD');`}
 </CodeBlock>
 
 ## TypeScript Support
@@ -341,7 +339,7 @@ The quote endpoints include full TypeScript support with unified types:
   {`import { Quote, HistoricalPriceResponse } from 'fmp-node-api';
 
 // Quote response type
-const quote: Quote = await fmp.quote.getQuote({ symbol: 'AAPL' });
+const quote: Quote = await fmp.quote.getQuote('AAPL');
 
 // Historical data response type
 const historical: HistoricalPriceResponse = await fmp.quote.getHistoricalPrice({
@@ -358,7 +356,7 @@ Handle errors consistently across all asset types:
 
 <CodeBlock language="typescript">
   {`try {
-  const quote = await fmp.quote.getQuote({ symbol: 'INVALID' });
+  const quote = await fmp.quote.getQuote('INVALID');
   
   if (quote.success) {
     console.log('Quote data:', quote.data);
@@ -396,7 +394,7 @@ console.log(\`\${quote.symbol}: \${quote.price} (\${quote.changesPercentage}%)\`
 <CodeBlock language="typescript">
   {`// Monitor price changes
 const checkPrice = async (symbol: string, threshold: number) => {
-  const quote = await fmp.quote.getQuote({ symbol });
+  const quote = await fmp.quote.getQuote(symbol);
   
   if (quote.success && quote.data) {
     if (quote.data.price > threshold) {
