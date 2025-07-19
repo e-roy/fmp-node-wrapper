@@ -114,9 +114,9 @@ describe('FMPUtils', () => {
       expect(FMPUtils.getWorkingDays('2024-01-15', '2024-01-19')).toBeGreaterThanOrEqual(4);
       expect(FMPUtils.getWorkingDays('2024-01-15', '2024-01-19')).toBeLessThanOrEqual(5);
 
-      // Monday to Monday (5 working days, excluding weekend)
-      expect(FMPUtils.getWorkingDays('2024-01-15', '2024-01-22')).toBeGreaterThanOrEqual(4);
-      expect(FMPUtils.getWorkingDays('2024-01-15', '2024-01-22')).toBeLessThanOrEqual(5);
+      // Monday to Monday (6 working days, excluding weekend)
+      expect(FMPUtils.getWorkingDays('2024-01-15', '2024-01-22')).toBeGreaterThanOrEqual(5);
+      expect(FMPUtils.getWorkingDays('2024-01-15', '2024-01-22')).toBeLessThanOrEqual(6);
 
       // Same day
       expect(FMPUtils.getWorkingDays('2024-01-15', '2024-01-15')).toBeGreaterThanOrEqual(0);

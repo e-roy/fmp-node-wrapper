@@ -77,8 +77,34 @@ export class FMPUtils {
       return null;
     }
 
-    const date = new Date(dateString);
-    return isNaN(date.getTime()) ? null : date;
+    // Parse date in UTC to avoid timezone issues
+    const [year, month, day] = dateString.split('-').map(Number);
+    if (isNaN(year) || isNaN(month) || isNaN(day)) {
+      return null;
+    }
+
+    // Validate date components
+    if (month < 1 || month > 12) {
+      return null;
+    }
+
+    const date = new Date(Date.UTC(year, month - 1, day));
+
+    // Check if the date is valid (handles cases like 2024-02-30)
+    if (isNaN(date.getTime())) {
+      return null;
+    }
+
+    // Verify the parsed date matches the input (handles cases like 2024-02-30 becoming 2024-03-01)
+    const parsedYear = date.getUTCFullYear();
+    const parsedMonth = date.getUTCMonth() + 1;
+    const parsedDay = date.getUTCDate();
+
+    if (parsedYear !== year || parsedMonth !== month || parsedDay !== day) {
+      return null;
+    }
+
+    return date;
   }
 
   /**
@@ -131,13 +157,18 @@ export class FMPUtils {
     let workingDays = 0;
     const currentDate = new Date(startDate);
 
-    while (currentDate <= endDate) {
-      const dayOfWeek = currentDate.getDay();
+    // Normalize to start of day in UTC for consistent comparison
+    const endDateNormalized = new Date(
+      Date.UTC(endDate.getUTCFullYear(), endDate.getUTCMonth(), endDate.getUTCDate()),
+    );
+
+    while (currentDate <= endDateNormalized) {
+      const dayOfWeek = currentDate.getUTCDay();
       if (dayOfWeek !== 0 && dayOfWeek !== 6) {
         // Not Sunday (0) or Saturday (6)
         workingDays++;
       }
-      currentDate.setDate(currentDate.getDate() + 1);
+      currentDate.setUTCDate(currentDate.getUTCDate() + 1);
     }
 
     return workingDays;
