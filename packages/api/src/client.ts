@@ -27,6 +27,7 @@ function normalizeArrayResponse<T>(data: T | undefined | null): T {
  */
 function normalizeObjectResponse<T>(data: T | undefined | null): T {
   if (data == null) return {} as unknown as T;
+  if (Array.isArray(data) && data.length === 0) return {} as unknown as T;
   return data;
 }
 
@@ -40,27 +41,31 @@ export class FMPClient {
     this.apiKey = config.apiKey;
 
     // Create separate clients for each version
-    this.v3Client = this.createClient('https://financialmodelingprep.com/api/v3', config.timeout);
-    this.v4Client = this.createClient('https://financialmodelingprep.com/api/v4', config.timeout);
-    this.stableClient = this.createClient(
-      'https://financialmodelingprep.com/stable',
-      config.timeout,
-    );
-  }
-
-  private createClient(baseURL: string, timeout?: number): AxiosInstance {
-    const client = axios.create({
-      baseURL,
-      timeout: timeout || 10000,
+    this.v3Client = axios.create({
+      baseURL: 'https://financialmodelingprep.com/api/v3',
+      timeout: config.timeout || 10000,
       headers: { 'Content-Type': 'application/json' },
     });
 
-    client.interceptors.request.use(config => {
-      config.params = { ...config.params, apikey: this.apiKey };
-      return config;
+    this.v4Client = axios.create({
+      baseURL: 'https://financialmodelingprep.com/api/v4',
+      timeout: config.timeout || 10000,
+      headers: { 'Content-Type': 'application/json' },
     });
 
-    return client;
+    this.stableClient = axios.create({
+      baseURL: 'https://financialmodelingprep.com/stable',
+      timeout: config.timeout || 10000,
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    // Add API key to all requests
+    [this.v3Client, this.v4Client, this.stableClient].forEach(client => {
+      client.interceptors.request.use(config => {
+        config.params = { ...config.params, apikey: this.apiKey };
+        return config;
+      });
+    });
   }
 
   /**
