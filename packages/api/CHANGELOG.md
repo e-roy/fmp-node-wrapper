@@ -1,5 +1,11 @@
 # fmp-node-api
 
+## 0.1.0
+
+### Minor Changes
+
+- feat: add runtime method discovery helpers and utility system - feat: add environment variable support for API key configuration - refactor: improve JSDoc documentation and parameter patterns across all endpoints
+
 ## 0.0.8
 
 ### Patch Changes
