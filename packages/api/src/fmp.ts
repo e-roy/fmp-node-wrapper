@@ -2,7 +2,7 @@
 
 import { FMPClient } from './client';
 import { FMPConfig } from './types/common';
-import { validateApiKey } from './utils/validation';
+import { FMPValidation } from './utils/validation';
 import { StockEndpoints } from './endpoints/stock';
 import { FinancialEndpoints } from './endpoints/financial';
 import { ETFEndpoints } from './endpoints/etf';
@@ -27,8 +27,11 @@ import { MutualFundEndpoints } from './endpoints/mutual-fund';
  *
  * const fmp = new FMP({ apiKey: 'your-api-key' });
  *
- * // Get stock quote
- * const quote = await fmp.stock.getQuote({ symbol: 'AAPL' });
+ * // Get quote for any asset type
+ * const quote = await fmp.quote.getQuote({ symbol: 'AAPL' });
+ *
+ * // Get stock-specific data
+ * const marketCap = await fmp.stock.getMarketCap({ symbol: 'AAPL' });
  *
  * // Get financial statements
  * const incomeStatement = await fmp.financial.getIncomeStatement({
@@ -56,7 +59,9 @@ export class FMP {
 
   constructor(config: FMPConfig) {
     // Validate API key at construction time
-    validateApiKey(config.apiKey);
+    if (!FMPValidation.isValidApiKey(config.apiKey)) {
+      throw new Error('Invalid API key format');
+    }
 
     const client = new FMPClient(config);
 

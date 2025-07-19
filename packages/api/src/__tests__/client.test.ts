@@ -5,7 +5,7 @@ describe('FMPClient', () => {
 
   beforeEach(() => {
     client = new FMPClient({
-      apiKey: 'test-api-key',
+      apiKey: 'testapikey123456789012345678901234567890',
     });
   });
 

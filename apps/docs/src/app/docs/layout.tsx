@@ -45,7 +45,10 @@ const navigationGroups = [
   },
   {
     title: 'Resources',
-    items: [{ name: 'Examples', href: '/docs/examples' }],
+    items: [
+      { name: 'Examples', href: '/docs/examples' },
+      { name: 'Helper Utilities', href: '/docs/api/helpers' },
+    ],
   },
 ];
 

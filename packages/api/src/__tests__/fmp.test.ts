@@ -7,7 +7,7 @@ describe('FMP', () => {
 
   beforeEach(() => {
     fmp = new FMP({
-      apiKey: 'test-api-key',
+      apiKey: 'testapikey32characterslong123456789012345',
     });
   });
 
@@ -46,24 +46,24 @@ describe('FMP', () => {
     it('should throw error for empty API key', () => {
       expect(() => {
         new FMP({ apiKey: '' });
-      }).toThrow('API key is required and must be a non-empty string');
+      }).toThrow('Invalid API key format');
     });
 
     it('should throw error for undefined API key', () => {
       expect(() => {
         new FMP({ apiKey: undefined as any });
-      }).toThrow('API key is required and must be a non-empty string');
+      }).toThrow('Invalid API key format');
     });
 
     it('should throw error for null API key', () => {
       expect(() => {
         new FMP({ apiKey: null as any });
-      }).toThrow('API key is required and must be a non-empty string');
+      }).toThrow('Invalid API key format');
     });
 
     it('should accept valid API key', () => {
       expect(() => {
-        new FMP({ apiKey: 'valid-api-key' });
+        new FMP({ apiKey: 'validapikey32characterslong123456789012345' });
       }).not.toThrow();
     });
   });

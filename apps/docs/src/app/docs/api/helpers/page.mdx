@@ -1,0 +1,319 @@
+# Helper Utilities
+
+The FMP Node Wrapper includes a comprehensive set of helper utilities to enhance your development experience, provide better error handling, and simplify common financial data processing tasks.
+
+## Available Helper Categories
+
+### API Exploration Helpers (`FMPHelpers`)
+
+Discover and explore the available API methods at runtime.
+
+<CodeBlock language="typescript">
+```typescript
+import { FMP, FMPHelpers } from 'fmp-node-api';
+
+const fmp = new FMP({ apiKey: 'your-api-key' });
+
+// Get all endpoint categories
+const categories = FMPHelpers.getEndpointCategories(fmp);
+console.log('Available endpoints:', categories);
+// Output: ['stock', 'financial', 'quote', 'market', ...]
+
+// Get methods for a specific endpoint
+const stockMethods = FMPHelpers.getEndpointMethods(fmp, 'stock');
+console.log('Stock methods:', stockMethods);
+// Output: ['getQuote', 'getMarketCap', 'getStockSplits', ...]
+
+// Get comprehensive API summary
+const summary = FMPHelpers.getApiSummary(fmp);
+console.log('API Summary:', summary);
+// Output: { totalEndpoints: 15, totalMethods: 45, categories: [...], methodCounts: {...} }
+
+// Check if a method exists
+const hasMethod = FMPHelpers.hasMethod(fmp, 'stock', 'getQuote');
+console.log('Has getQuote method:', hasMethod); // true
+
+// Get method information
+const methodInfo = FMPHelpers.getMethodInfo(fmp, 'stock', 'getQuote');
+console.log('Method info:', methodInfo);
+// Output: { name: 'getQuote', type: 'function', async: true }
+
+````
+
+</CodeBlock>
+
+### Validation Helpers (`FMPValidation`)
+
+Validate parameters and API responses with comprehensive error checking.
+
+<CodeBlock language="typescript">
+```typescript
+import { FMPValidation } from 'fmp-node-api';
+
+// Validate symbols
+FMPValidation.isValidSymbol('AAPL'); // true
+FMPValidation.isValidSymbol('aapl'); // false (must be uppercase)
+FMPValidation.isValidCryptoSymbol('BTCUSD'); // true
+FMPValidation.isValidForexPair('EURUSD'); // true
+
+// Validate dates
+FMPValidation.isValidDate('2024-01-15'); // true
+FMPValidation.isValidDate('2024-13-01'); // false (invalid month)
+FMPValidation.isValidDateRange('2024-01-01', '2024-01-31'); // true
+
+// Validate API responses
+const response = { success: true, data: [] };
+FMPValidation.isValidResponse(response); // true
+
+// Validate API keys
+FMPValidation.isValidApiKey('your-32-character-api-key'); // true
+
+// Comprehensive parameter validation
+const quoteParams = { symbol: 'AAPL', from: '2024-01-01', to: '2024-01-31' };
+const errors = FMPValidation.validateQuoteParams(quoteParams);
+if (errors.length > 0) {
+console.error('Validation errors:', errors);
+}
+
+// Throw validation errors
+FMPValidation.throwIfInvalid(errors, 'Quote Parameters');
+````
+
+</CodeBlock>
+
+### Utility Helpers (`FMPUtils`)
+
+Format and process financial data with common utilities.
+
+<CodeBlock language="typescript">
+```typescript
+import { FMPUtils } from 'fmp-node-api';
+
+// Format currency values
+FMPUtils.formatCurrency(1234.56); // '$1,234.56'
+FMPUtils.formatCurrency(1234.56, 'EUR'); // '€1,234.56'
+FMPUtils.formatCurrency(1234.56, 'GBP', 'en-GB'); // '£1,234.56'
+
+// Format percentages
+FMPUtils.formatPercentage(0.15); // '15.00%'
+FMPUtils.formatPercentage(0.1234, 1); // '12.3%'
+
+// Format large numbers
+FMPUtils.formatLargeNumber(1000); // '1.0K'
+FMPUtils.formatLargeNumber(1500000); // '1.5M'
+FMPUtils.formatLargeNumber(2000000000); // '2.0B'
+FMPUtils.formatLargeNumber(3000000000000); // '3.0T'
+
+// Date utilities
+const date = FMPUtils.parseDate('2024-01-15');
+FMPUtils.formatDate(date, 'short'); // 'Jan 15, 2024'
+FMPUtils.formatDate(date, 'long'); // 'Monday, January 15, 2024'
+FMPUtils.formatDate(date, 'iso'); // '2024-01-15'
+
+// Calculate working days
+FMPUtils.getWorkingDays('2024-01-15', '2024-01-19'); // 5 (Monday to Friday)
+
+// Calculate percentage change
+FMPUtils.calculatePercentageChange(100, 120); // 20 (20% increase)
+
+// Batch API calls with rate limiting
+const calls = [
+() => fmp.quote.getQuote({ symbol: 'AAPL' }),
+() => fmp.quote.getQuote({ symbol: 'GOOGL' }),
+() => fmp.quote.getQuote({ symbol: 'MSFT' })
+];
+
+const results = await FMPUtils.batchCalls(calls, 100); // 100ms delay between calls
+
+// Retry with exponential backoff
+const result = await FMPUtils.retryWithBackoff(
+() => fmp.quote.getQuote({ symbol: 'AAPL' }),
+3, // max retries
+1000 // base delay
+);
+
+// Debounce and throttle functions
+const debouncedFn = FMPUtils.debounce(() => console.log('Debounced'), 300);
+const throttledFn = FMPUtils.throttle(() => console.log('Throttled'), 1000);
+
+````
+
+</CodeBlock>
+
+### Debug Helpers (`FMPDebug`)
+
+Enhanced debugging and development tools.
+
+<CodeBlock language="typescript">
+```typescript
+import { FMP, FMPDebug } from 'fmp-node-api';
+
+const fmp = new FMP({ apiKey: 'your-api-key' });
+
+// Enable debug mode
+FMPDebug.enableDebugMode();
+
+// Get API statistics
+const stats = FMPDebug.getApiStats(fmp);
+console.log('API Stats:', stats);
+
+// Validate API key
+const keyValidation = FMPDebug.validateApiKey('your-api-key');
+console.log('API Key validation:', keyValidation);
+
+// Check environment setup
+const envCheck = FMPDebug.checkApiKeyEnvironment();
+console.log('Environment check:', envCheck);
+
+// Get performance information
+const performance = FMPDebug.getPerformanceInfo();
+console.log('Performance:', performance);
+
+// Print comprehensive debug information
+FMPDebug.printDebugInfo(fmp);
+
+// Create debug wrapper for automatic logging
+const debugFmp = FMPDebug.createDebugWrapper(fmp);
+// All API calls will now be logged automatically
+
+// Log specific API calls
+FMPDebug.logApiCall('quote.getQuote', { symbol: 'AAPL' }, { success: true }, 150);
+FMPDebug.logApiError('quote.getQuote', { symbol: 'INVALID' }, new Error('Symbol not found'));
+````
+
+</CodeBlock>
+
+## Environment Variables
+
+The debug helpers support the following environment variables:
+
+- `FMP_DEBUG=true` - Enable debug mode
+- `NODE_ENV=development` - Enable development logging
+
+## Error Handling with Helpers
+
+Combine validation and error handling for robust applications:
+
+<CodeBlock language="typescript">
+```typescript
+import { FMP, FMPValidation, FMPUtils } from 'fmp-node-api';
+
+async function getStockQuote(symbol: string) {
+// Validate input
+const errors = FMPValidation.validateQuoteParams({ symbol });
+FMPValidation.throwIfInvalid(errors, 'Stock Quote Parameters');
+
+try {
+const fmp = new FMP({ apiKey: process.env.FMP_API_KEY! });
+const response = await fmp.quote.getQuote({ symbol });
+
+    if (!FMPValidation.isValidResponse(response)) {
+      throw new Error('Invalid API response');
+    }
+
+    if (response.success && response.data) {
+      const quote = response.data[0];
+      return {
+        symbol: quote.symbol,
+        price: FMPUtils.formatCurrency(quote.price),
+        change: FMPUtils.formatCurrency(quote.change),
+        changePercent: FMPUtils.formatPercentage(quote.changesPercentage / 100)
+      };
+    } else {
+      throw new Error(response.error || 'Unknown error');
+    }
+
+} catch (error) {
+console.error('Error fetching quote:', error);
+throw error;
+}
+}
+
+// Usage
+const formattedQuote = await getStockQuote('AAPL');
+console.log(formattedQuote);
+// Output: { symbol: 'AAPL', price: '$150.25', change: '$2.15', changePercent: '1.45%' }
+
+````
+
+</CodeBlock>
+
+## Batch Processing Example
+
+Use utilities for efficient batch processing:
+
+<CodeBlock language="typescript">
+```typescript
+import { FMP, FMPUtils, FMPValidation } from 'fmp-node-api';
+
+async function analyzeMultipleStocks(symbols: string[]) {
+const fmp = new FMP({ apiKey: process.env.FMP_API_KEY! });
+
+// Validate all symbols
+const invalidSymbols = symbols.filter(s => !FMPValidation.isValidSymbol(s));
+if (invalidSymbols.length > 0) {
+throw new Error(`Invalid symbols: ${invalidSymbols.join(', ')}`);
+}
+
+// Create batch calls
+const calls = symbols.map(symbol =>
+() => fmp.quote.getQuote({ symbol })
+);
+
+// Execute with rate limiting
+const results = await FMPUtils.batchCalls(calls, 100);
+
+// Process results
+return results.map((response, index) => {
+if (response.success && response.data) {
+const quote = response.data[0];
+return {
+symbol: quote.symbol,
+price: FMPUtils.formatCurrency(quote.price),
+marketCap: FMPUtils.formatLargeNumber(quote.marketCap),
+volume: FMPUtils.formatLargeNumber(quote.volume)
+};
+} else {
+return {
+symbol: symbols[index],
+error: response.error
+};
+}
+});
+}
+
+// Usage
+const analysis = await analyzeMultipleStocks(['AAPL', 'GOOGL', 'MSFT', 'TSLA']);
+console.table(analysis);
+````
+
+</CodeBlock>
+
+## Best Practices
+
+1. **Use validation helpers** to catch errors early and provide better error messages
+2. **Format data consistently** using utility helpers for better user experience
+3. **Enable debug mode** during development for better troubleshooting
+4. **Use batch processing** for multiple API calls to respect rate limits
+5. **Implement retry logic** for transient failures using retry helpers
+
+## Type Safety
+
+All helper utilities are fully typed and provide excellent TypeScript support:
+
+<CodeBlock language="typescript">
+```typescript
+import { FMP, FMPHelpers, FMPValidation, FMPUtils, FMPDebug } from 'fmp-node-api';
+
+// All helpers provide full type safety
+const categories: string[] = FMPHelpers.getEndpointCategories(fmp);
+const isValid: boolean = FMPValidation.isValidSymbol('AAPL');
+const formatted: string = FMPUtils.formatCurrency(1234.56);
+const debugMode: boolean = FMPDebug.isDebugMode();
+
+```
+
+</CodeBlock>
+
+The helper utilities enhance the FMP Node Wrapper with powerful tools for validation, formatting, debugging, and API exploration while maintaining the library's TypeScript-first approach.
+```

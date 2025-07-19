@@ -1,7 +1,7 @@
 import { FMP } from '../../fmp';
 
 // Mock API key for testing
-const API_KEY = 'test-api-key';
+const API_KEY = 'testapikey123456789012345678901234567890';
 
 describe('SenateHouseEndpoints', () => {
   let fmp: FMP;
