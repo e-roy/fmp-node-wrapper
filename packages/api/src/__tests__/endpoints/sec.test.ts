@@ -525,7 +525,7 @@ describe('SEC Endpoints', () => {
           return;
         }
         const result = await fmp.sec.getIndividualIndustryClassification({
-          cik: 320193, // Apple's CIK
+          cik: '0001708646',
         });
 
         expect(result.success).toBe(true);
@@ -535,7 +535,7 @@ describe('SEC Endpoints', () => {
           // Handle both single object and array responses (API inconsistency)
           const record = Array.isArray(result.data) ? result.data[0] : result.data;
           if (record && record.cik) {
-            expect(record.cik).toBe('0000320193'); // CIK should be padded with zeros
+            expect(record.cik).toBe('0001708646'); // CIK should be padded with zeros
             expect(record.name).toBeDefined();
             expect(record.name.length).toBeGreaterThan(0);
             expect(record.sicCode).toBeDefined();

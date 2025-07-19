@@ -1,6 +1,6 @@
 # Mutual Fund Endpoints
 
-The Mutual Fund Endpoints provide access to mutual fund holdings data. For mutual fund quotes, use the general quote endpoint documented in the [Quote Endpoints](/docs/api/quote).
+The Mutual Fund Endpoints provide access to mutual fund holder data. This allows you to see which mutual funds hold a specific stock and their positions. For mutual fund quotes, use the general quote endpoint documented in the [Quote Endpoints](/docs/api/quote).
 
 ## Available Methods
 
@@ -9,17 +9,17 @@ The Mutual Fund Endpoints provide access to mutual fund holdings data. For mutua
     {
       method: 'GET',
       path: '/mutual-fund-holder/{symbol}',
-      description: 'Get mutual fund holders of a stock',
+      description: 'Get mutual fund holders of a specific stock',
     },
   ]}
 />
 
 ## Get Mutual Fund Holders
 
-Retrieve the mutual funds that hold a specific stock and their positions.
+Retrieve the mutual funds that hold a specific stock and their positions. This is essential for understanding which mutual funds are invested in particular stocks and their respective holdings.
 
 <CodeBlock language="typescript">
-  {`const holders = await fmp.mutualFund.getHolders({ symbol: 'AAPL' });`}
+  {`const holders = await fmp.mutualFund.getHolders('AAPL');`}
 </CodeBlock>
 
 <ParameterTable
@@ -28,7 +28,7 @@ Retrieve the mutual funds that hold a specific stock and their positions.
       name: 'symbol',
       type: 'string',
       required: true,
-      description: 'Stock symbol (e.g., "AAPL", "MSFT")',
+      description: 'Stock symbol (e.g., "AAPL", "MSFT", "GOOGL")',
     },
   ]}
 />
@@ -57,12 +57,33 @@ Retrieve the mutual funds that hold a specific stock and their positions.
   }`}
 </CodeBlock>
 
+### Usage Examples
+
+<CodeBlock language="typescript">
+{`// Get mutual funds that hold Apple stock
+const appleHolders = await fmp.mutualFund.getHolders('AAPL');
+console.log(\`\${appleHolders.data.length} mutual funds hold AAPL\`);
+
+// Get mutual funds that hold Microsoft stock
+const msftHolders = await fmp.mutualFund.getHolders('MSFT');
+
+// Find top mutual fund holders by shares
+const topHolders = msftHolders.data
+.sort((a, b) => (b.shares || 0) - (a.shares || 0))
+.slice(0, 10);
+console.log('Top 10 mutual fund holders by shares:');
+topHolders.forEach((holder, index) => {
+console.log(\`\${index + 1}. \${holder.holder}: \${holder.shares.toLocaleString()} shares\`);
+});`}
+
+</CodeBlock>
+
 ## Error Handling
 
 Always check the `success` property before accessing data:
 
 <CodeBlock language="typescript">
-{`const holders = await fmp.mutualFund.getHolders({ symbol: 'INVALID' });
+{`const holders = await fmp.mutualFund.getHolders('INVALID');
 
 if (holders.success && holders.data) {
 console.log('Mutual Fund Holders:', holders.data);
@@ -76,8 +97,13 @@ console.error('Status:', holders.status);
 ## Notes
 
 - The `getHolders` method returns the mutual funds that hold a given stock and their respective positions.
+- Use this endpoint to analyze which mutual funds are invested in particular stocks.
 - For mutual fund quotes, use the [Quote Endpoints](/docs/api/quote).
 - All mutual fund data is sourced from Financial Modeling Prep's comprehensive financial database.
+- Common stock symbols to analyze include:
+  - `AAPL` - Apple Inc.
+  - `MSFT` - Microsoft Corporation
+  - `GOOGL` - Alphabet Inc.
 
 ---
 

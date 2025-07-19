@@ -1,41 +1,7 @@
-import { StockQuote, StockSplit, StockDividend, MarketCap } from '@/types/stock';
+import { StockSplit, StockDividend, MarketCap } from '@/types/stock';
 import { HistoricalPriceData, HistoricalPriceResponse } from '@/types/quote';
 
 describe('Stock Types', () => {
-  describe('StockQuote Interface', () => {
-    it('should validate stock quote structure', () => {
-      const quote: StockQuote = {
-        symbol: 'AAPL',
-        name: 'Apple Inc.',
-        price: 150.25,
-        change: 2.15,
-        changesPercentage: 1.45,
-        dayLow: 148.5,
-        dayHigh: 152.0,
-        yearLow: 120.0,
-        yearHigh: 180.0,
-        marketCap: 2500000000000,
-        priceAvg50: 145.0,
-        priceAvg200: 140.0,
-        volume: 50000000,
-        avgVolume: 45000000,
-        exchange: 'NASDAQ',
-        open: 149.0,
-        previousClose: 148.1,
-        eps: 6.15,
-        pe: 24.43,
-        earningsAnnouncement: '2024-01-25',
-        sharesOutstanding: 15700000000,
-        timestamp: 1704067200,
-      };
-
-      expect(quote.symbol).toBe('AAPL');
-      expect(quote.price).toBe(150.25);
-      expect(quote.change).toBe(2.15);
-      expect(quote.marketCap).toBe(2500000000000);
-    });
-  });
-
   describe('StockSplit Interface', () => {
     it('should validate stock split structure', () => {
       const split: StockSplit = {

@@ -8,6 +8,7 @@ const navigationGroups = [
     title: 'Documentation',
     items: [
       { name: 'Getting Started', href: '/docs/getting-started' },
+      { name: 'Configuration', href: '/docs/configuration' },
       { name: 'API Reference', href: '/docs/api' },
     ],
   },
@@ -45,7 +46,10 @@ const navigationGroups = [
   },
   {
     title: 'Resources',
-    items: [{ name: 'Examples', href: '/docs/examples' }],
+    items: [
+      { name: 'Examples', href: '/docs/examples' },
+      { name: 'Helper Utilities', href: '/docs/api/helpers' },
+    ],
   },
 ];
 

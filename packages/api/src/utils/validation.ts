@@ -1,75 +1,235 @@
 // Validation utilities for FMP API
 
-import { FMPError } from '../shared';
+import { APIResponse } from '../types/common';
 
 /**
- * Validate API key
+ * Validation utilities for FMP API parameters and responses
  */
-export function validateApiKey(apiKey: string): void {
-  if (!apiKey || typeof apiKey !== 'string' || apiKey.trim().length === 0) {
-    throw new FMPError('API key is required and must be a non-empty string');
+export class FMPValidation {
+  /**
+   * Validate stock symbol format
+   * @param symbol - The symbol to validate
+   * @returns True if the symbol format is valid
+   */
+  static isValidSymbol(symbol: string): boolean {
+    if (!symbol || typeof symbol !== 'string') {
+      return false;
+    }
+    // Basic stock symbol validation: 1-5 uppercase letters
+    return /^[A-Z]{1,5}$/.test(symbol);
   }
-}
 
-/**
- * Validate stock symbol
- */
-export function validateSymbol(symbol: string): void {
-  if (!symbol || typeof symbol !== 'string' || symbol.trim().length === 0) {
-    throw new FMPError('Symbol is required and must be a non-empty string');
+  /**
+   * Validate crypto symbol format
+   * @param symbol - The crypto symbol to validate
+   * @returns True if the crypto symbol format is valid
+   */
+  static isValidCryptoSymbol(symbol: string): boolean {
+    if (!symbol || typeof symbol !== 'string') {
+      return false;
+    }
+    // Crypto symbols typically end with USD, EUR, etc.
+    return /^[A-Z]{2,10}(USD|EUR|GBP|JPY|CAD|AUD|CHF|CNY)$/.test(symbol);
   }
 
-  // Basic symbol validation (alphanumeric and common symbols)
-  const symbolRegex = /^[A-Z0-9.-]+$/;
-  if (!symbolRegex.test(symbol.toUpperCase())) {
-    throw new FMPError(
-      'Invalid symbol format. Symbols should contain only letters, numbers, dots, and hyphens',
+  /**
+   * Validate forex pair format
+   * @param symbol - The forex pair to validate
+   * @returns True if the forex pair format is valid
+   */
+  static isValidForexPair(symbol: string): boolean {
+    if (!symbol || typeof symbol !== 'string') {
+      return false;
+    }
+    // Forex pairs: 6 characters, 3+3 format (e.g., EURUSD)
+    return /^[A-Z]{3}[A-Z]{3}$/.test(symbol);
+  }
+
+  /**
+   * Validate date format (YYYY-MM-DD)
+   * @param date - The date string to validate
+   * @returns True if the date format is valid
+   */
+  static isValidDate(date: string): boolean {
+    if (!date || typeof date !== 'string') {
+      return false;
+    }
+
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!dateRegex.test(date)) {
+      return false;
+    }
+
+    const dateObj = new Date(date);
+    return !isNaN(dateObj.getTime()) && dateObj.toISOString().split('T')[0] === date;
+  }
+
+  /**
+   * Validate date range
+   * @param from - Start date
+   * @param to - End date
+   * @returns True if the date range is valid
+   */
+  static isValidDateRange(from: string, to: string): boolean {
+    if (!this.isValidDate(from) || !this.isValidDate(to)) {
+      return false;
+    }
+
+    const fromDate = new Date(from);
+    const toDate = new Date(to);
+
+    return fromDate <= toDate;
+  }
+
+  /**
+   * Validate API response structure
+   * @param response - The response to validate
+   * @returns True if the response has the expected structure
+   */
+  static isValidResponse(response: any): response is APIResponse<any> {
+    return Boolean(
+      response && typeof response === 'object' && typeof response.success === 'boolean',
     );
   }
-}
 
-/**
- * Validate date format (YYYY-MM-DD)
- */
-export function validateDate(date: string): void {
-  if (!date || typeof date !== 'string') {
-    throw new FMPError('Date is required and must be a string');
+  /**
+   * Validate API key format
+   * @param apiKey - The API key to validate
+   * @returns True if the API key format is valid
+   */
+  static isValidApiKey(apiKey: string): boolean {
+    if (!apiKey || typeof apiKey !== 'string') {
+      return false;
+    }
+    // FMP API keys are typically alphanumeric and at least 32 characters
+    return /^[a-zA-Z0-9]{32,}$/.test(apiKey);
   }
 
-  const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-  if (!dateRegex.test(date)) {
-    throw new FMPError('Invalid date format. Use YYYY-MM-DD format');
+  /**
+   * Validate period parameter
+   * @param period - The period to validate
+   * @returns True if the period is valid
+   */
+  static isValidPeriod(period: string): boolean {
+    if (!period || typeof period !== 'string') {
+      return false;
+    }
+    return ['annual', 'quarter', 'fy'].includes(period.toLowerCase());
   }
 
-  const parsedDate = new Date(date);
-  if (isNaN(parsedDate.getTime())) {
-    throw new FMPError('Invalid date');
+  /**
+   * Validate limit parameter
+   * @param limit - The limit to validate
+   * @returns True if the limit is valid
+   */
+  static isValidLimit(limit: number): boolean {
+    return typeof limit === 'number' && Number.isInteger(limit) && limit > 0 && limit <= 1000;
   }
-}
 
-/**
- * Validate period parameter
- */
-export function validatePeriod(period: string): void {
-  if (period && !['annual', 'quarter'].includes(period)) {
-    throw new FMPError('Period must be either "annual" or "quarter"');
+  /**
+   * Get validation errors for quote parameters
+   * @param params - The parameters to validate
+   * @returns Array of validation error messages
+   */
+  static validateQuoteParams(params: any): string[] {
+    const errors: string[] = [];
+
+    if (!params) {
+      errors.push('Parameters object is required');
+      return errors;
+    }
+
+    if (!params.symbol) {
+      errors.push('Symbol is required');
+    } else if (
+      !this.isValidSymbol(params.symbol) &&
+      !this.isValidCryptoSymbol(params.symbol) &&
+      !this.isValidForexPair(params.symbol)
+    ) {
+      errors.push('Invalid symbol format');
+    }
+
+    if (params.from && !this.isValidDate(params.from)) {
+      errors.push('Invalid from date format (expected YYYY-MM-DD)');
+    }
+
+    if (params.to && !this.isValidDate(params.to)) {
+      errors.push('Invalid to date format (expected YYYY-MM-DD)');
+    }
+
+    if (params.from && params.to && !this.isValidDateRange(params.from, params.to)) {
+      errors.push('From date must be before or equal to to date');
+    }
+
+    return errors;
   }
-}
 
-/**
- * Validate limit parameter
- */
-export function validateLimit(limit: number): void {
-  if (limit !== undefined && (typeof limit !== 'number' || limit < 1 || limit > 1000)) {
-    throw new FMPError('Limit must be a number between 1 and 1000');
+  /**
+   * Get validation errors for financial statement parameters
+   * @param params - The parameters to validate
+   * @returns Array of validation error messages
+   */
+  static validateFinancialParams(params: any): string[] {
+    const errors: string[] = [];
+
+    if (!params) {
+      errors.push('Parameters object is required');
+      return errors;
+    }
+
+    if (!params.symbol) {
+      errors.push('Symbol is required');
+    } else if (!this.isValidSymbol(params.symbol)) {
+      errors.push('Invalid symbol format');
+    }
+
+    if (params.period && !this.isValidPeriod(params.period)) {
+      errors.push('Invalid period (must be "annual", "quarter", or "FY")');
+    }
+
+    if (params.limit && !this.isValidLimit(params.limit)) {
+      errors.push('Invalid limit (must be a positive integer <= 1000)');
+    }
+
+    return errors;
   }
-}
 
-/**
- * Validate page parameter
- */
-export function validatePage(page: number): void {
-  if (page !== undefined && (typeof page !== 'number' || page < 0)) {
-    throw new FMPError('Page must be a non-negative number');
+  /**
+   * Get validation errors for date range parameters
+   * @param params - The parameters to validate
+   * @returns Array of validation error messages
+   */
+  static validateDateRangeParams(params: any): string[] {
+    const errors: string[] = [];
+
+    if (!params) {
+      errors.push('Parameters object is required');
+      return errors;
+    }
+
+    if (params.from && !this.isValidDate(params.from)) {
+      errors.push('Invalid from date format (expected YYYY-MM-DD)');
+    }
+
+    if (params.to && !this.isValidDate(params.to)) {
+      errors.push('Invalid to date format (expected YYYY-MM-DD)');
+    }
+
+    if (params.from && params.to && !this.isValidDateRange(params.from, params.to)) {
+      errors.push('From date must be before or equal to to date');
+    }
+
+    return errors;
+  }
+
+  /**
+   * Validate and throw error if validation fails
+   * @param errors - Array of validation errors
+   * @param context - Context for the error message
+   */
+  static throwIfInvalid(errors: string[], context = 'Validation'): void {
+    if (errors.length > 0) {
+      throw new Error(`${context} failed: ${errors.join(', ')}`);
+    }
   }
 }

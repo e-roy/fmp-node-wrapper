@@ -13,7 +13,7 @@ describe('InsiderEndpoints', () => {
     jest.clearAllMocks();
 
     // Create a new FMP instance for each test
-    fmp = new FMP({ apiKey: 'test-api-key' });
+    fmp = new FMP({ apiKey: 'testapikey123456789012345678901234567890' });
     mockClient = fmp.getClient();
   });
 

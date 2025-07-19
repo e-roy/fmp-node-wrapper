@@ -97,49 +97,6 @@ export interface FailToDeliverResponse {
   name: string;
 }
 
-// Parameter interfaces
-export interface InsiderTradingRSSParams {
-  page: number;
-}
-
-export interface InsiderTradingSearchParams {
-  symbol?: string;
-  reportingCik?: string;
-  companyCik?: string;
-  transactionType?: string;
-  page: number;
-}
-
-export interface InsidersBySymbolParams {
-  symbol: string;
-}
-
-export interface InsiderTradeStatisticsParams {
-  symbol: string;
-}
-
-export interface CikMapperParams {
-  page: number;
-}
-
-export interface CikMapperByNameParams {
-  name: string;
-  page?: number;
-}
-
-export interface CikMapperBySymbolParams {
-  symbol: string;
-}
-
-export interface BeneficialOwnershipParams {
-  symbol: string;
-}
-
-export interface FailToDeliverParams {
-  symbol: string;
-  page?: number;
-}
-
 // Transaction type enum for better type safety
 export enum TransactionType {
   AWARD = 'A-Award',

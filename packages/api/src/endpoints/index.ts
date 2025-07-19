@@ -1,7 +1,5 @@
 export { StockEndpoints } from './stock';
 export { FinancialEndpoints } from './financial';
-export { ForexEndpoints } from './forex';
-export { CryptoEndpoints } from './crypto';
 export { ETFEndpoints } from './etf';
 export { MutualFundEndpoints } from './mutual-fund';
 export { EconomicEndpoints } from './economic';

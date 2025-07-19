@@ -1,12 +1,5 @@
 // Financial statement types for FMP API
 
-import { SymbolParams, PeriodParams } from './common';
-
-// Base parameter interface for all financial endpoints
-export interface FinancialStatementsParams extends SymbolParams, PeriodParams {
-  limit?: number;
-}
-
 // Base interface for common fields across all financial statements
 export interface FinancialStatementBase {
   date: string;

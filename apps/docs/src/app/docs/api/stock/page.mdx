@@ -1,6 +1,8 @@
 # Stock Endpoints
 
-The Stock Endpoints provide access to real-time and historical stock data, quotes, market capitalization, stock splits, and dividend history. For company profile information, see the [Company Endpoints](/docs/api/company).
+The Stock Endpoints provide access to market capitalization, stock splits, dividend history, and real-time price data. For real-time quotes, historical prices, and intraday data, see the [Quote Endpoints](/docs/api/quote). For company profile information, see the [Company Endpoints](/docs/api/company).
+
+All endpoints return responses with a consistent structure: `{ success: boolean, data: T | null, error: string | null, status: number }`.
 
 ## Available Methods
 
@@ -8,22 +10,12 @@ The Stock Endpoints provide access to real-time and historical stock data, quote
   endpoints={[
     {
       method: 'GET',
-      path: '/quote/{symbol}',
-      description: 'Get real-time stock quote',
-    },
-    {
-      method: 'GET',
-      path: '/historical-price-full/{symbol}',
-      description: 'Get historical price data',
-    },
-    {
-      method: 'GET',
       path: '/market-capitalization/{symbol}',
       description: 'Get market capitalization data',
     },
     {
       method: 'GET',
-      path: '/stock_split_calendar/{symbol}',
+      path: '/historical-price-full/stock_split/{symbol}',
       description: 'Get stock splits history',
     },
     {
@@ -44,141 +36,12 @@ The Stock Endpoints provide access to real-time and historical stock data, quote
   ]}
 />
 
-## Get Stock Quote
-
-Retrieve real-time stock quote data including price, change, volume, and market cap.
-
-<CodeBlock language="typescript">
-  {`const quote = await fmp.stock.getQuote({ symbol: 'AAPL' });`}
-</CodeBlock>
-
-<ParameterTable
-  parameters={[
-    {
-      name: 'symbol',
-      type: 'string',
-      required: true,
-      description: 'Stock symbol (e.g., "AAPL", "MSFT")',
-    },
-  ]}
-/>
-
-### Example Response
-
-<CodeBlock language="typescript">
-  {`{
-    success: true,
-    data: {      
-      symbol: 'AAPL',
-      name: 'Apple Inc.',
-      price: 150.25,
-      changesPercentage: 2.15,
-      change: 3.15,
-      dayLow: 147.50,
-      dayHigh: 151.75,
-      yearHigh: 198.23,
-      yearLow: 124.17,
-      marketCap: 2375000000000,
-      priceAvg50: 145.67,
-      priceAvg200: 142.89,
-      volume: 45678900,
-      avgVolume: 52345600,
-      exchange: 'NASDAQ',
-      open: 148.50,
-      previousClose: 147.10,
-      eps: 6.16,
-      pe: 24.39,
-      earningsAnnouncement: '2024-01-25T21:30:00.000+00:00',
-      sharesOutstanding: 15800000000,
-      timestamp: 1703123456
-    }
-}`}
-</CodeBlock>
-
-## Get Historical Data
-
-Retrieve historical price data with flexible date ranges.
-
-<CodeBlock language="typescript">
-  {`const historicalData = await fmp.stock.getHistoricalPrice({
-    symbol: 'AAPL',
-    from: '2023-01-01',
-    to: '2023-12-31'
-});`}
-</CodeBlock>
-
-<ParameterTable
-  parameters={[
-    {
-      name: 'symbol',
-      type: 'string',
-      required: true,
-      description: 'Stock symbol',
-    },
-    {
-      name: 'from',
-      type: 'string',
-      required: false,
-      description: 'Start date (YYYY-MM-DD format)',
-    },
-    {
-      name: 'to',
-      type: 'string',
-      required: false,
-      description: 'End date (YYYY-MM-DD format)',
-    },
-  ]}
-/>
-
-### Example Response
-
-<CodeBlock language="typescript">
-  {`{
-    success: true,
-    data: {
-      symbol: 'AAPL',
-      historical: [
-        {
-          date: '2023-12-29',
-          open: 193.58,
-          high: 194.66,
-          low: 192.73,
-          close: 193.58,
-          adjClose: 193.58,
-          volume: 45678900,
-          unadjustedVolume: 45678900,
-          change: 0.00,
-          changePercent: 0.00,
-          vwap: 193.58,
-          label: 'Dec 29, 23',
-          changeOverTime: 0.00
-        },
-        {
-          date: '2023-12-28',
-          open: 192.50,
-          high: 194.20,
-          low: 191.80,
-          close: 193.58,
-          adjClose: 193.58,
-          volume: 42345600,
-          unadjustedVolume: 42345600,
-          change: 1.08,
-          changePercent: 0.56,
-          vwap: 193.15,
-          label: 'Dec 28, 23',
-          changeOverTime: 0.56
-        }
-      ]
-    }
-}`}
-</CodeBlock>
-
 ## Get Market Capitalization
 
 Retrieve market capitalization data for a specific stock.
 
 <CodeBlock language="typescript">
-  {`const marketCap = await fmp.stock.getMarketCap({ symbol: 'AAPL' });`}
+  {`const marketCap = await fmp.stock.getMarketCap('AAPL');`}
 </CodeBlock>
 
 <ParameterTable
@@ -201,7 +64,9 @@ Retrieve market capitalization data for a specific stock.
       symbol: 'AAPL',
       date: '2023-12-29',
       marketCap: 2375000000000
-    }
+    },
+    error: null,
+    status: 200
 }`}
 </CodeBlock>
 
@@ -210,7 +75,7 @@ Retrieve market capitalization data for a specific stock.
 Retrieve historical stock splits for a specific stock.
 
 <CodeBlock language="typescript">
-  {`const stockSplits = await fmp.stock.getStockSplits({ symbol: 'AAPL' });`}
+  {`const stockSplits = await fmp.stock.getStockSplits('AAPL');`}
 </CodeBlock>
 
 <ParameterTable
@@ -229,20 +94,25 @@ Retrieve historical stock splits for a specific stock.
 <CodeBlock language="typescript">
   {`{
     success: true,
-    data: [
-      {
-        date: '2020-08-31',
-        label: 'Aug 31, 20',
-        numerator: 4,
-        denominator: 1
-      },
-      {
-        date: '2014-06-09',
-        label: 'Jun 09, 14',
-        numerator: 7,
-        denominator: 1
-      }
-    ]
+    data: {
+      symbol: 'AAPL',
+      historical: [
+        {
+          date: '2020-08-31',
+          label: 'Aug 31, 20',
+          numerator: 4,
+          denominator: 1
+        },
+        {
+          date: '2014-06-09',
+          label: 'Jun 09, 14',
+          numerator: 7,
+          denominator: 1
+        }
+      ]
+    },
+    error: null,
+    status: 200
 }`}
 </CodeBlock>
 
@@ -251,7 +121,7 @@ Retrieve historical stock splits for a specific stock.
 Retrieve historical dividend payments for a specific stock.
 
 <CodeBlock language="typescript">
-  {`const dividendHistory = await fmp.stock.getDividendHistory({ symbol: 'AAPL' });`}
+  {`const dividendHistory = await fmp.stock.getDividendHistory('AAPL');`}
 </CodeBlock>
 
 <ParameterTable
@@ -270,26 +140,31 @@ Retrieve historical dividend payments for a specific stock.
 <CodeBlock language="typescript">
   {`{
     success: true,
-    data: [
-      {
-        date: '2023-11-16',
-        label: 'Nov 16, 23',
-        adjDividend: 0.24,
-        dividend: 0.24,
-        recordDate: '2023-11-13',
-        paymentDate: '2023-11-16',
-        declarationDate: '2023-08-17'
-      },
-      {
-        date: '2023-08-17',
-        label: 'Aug 17, 23',
-        adjDividend: 0.24,
-        dividend: 0.24,
-        recordDate: '2023-08-14',
-        paymentDate: '2023-08-17',
-        declarationDate: '2023-05-18'
-      }
-    ]
+    data: {
+      symbol: 'AAPL',
+      historical: [
+        {
+          date: '2023-11-16',
+          label: 'Nov 16, 23',
+          adjDividend: 0.24,
+          dividend: 0.24,
+          recordDate: '2023-11-13',
+          paymentDate: '2023-11-16',
+          declarationDate: '2023-08-17'
+        },
+        {
+          date: '2023-08-17',
+          label: 'Aug 17, 23',
+          adjDividend: 0.24,
+          dividend: 0.24,
+          recordDate: '2023-08-14',
+          paymentDate: '2023-08-17',
+          declarationDate: '2023-05-18'
+        }
+      ]
+    },
+    error: null,
+    status: 200
 }`}
 </CodeBlock>
 
@@ -298,14 +173,10 @@ Retrieve historical dividend payments for a specific stock.
 Retrieve real-time price data for multiple stocks. When the symbols array is empty, returns data for all available stocks.
 
 <CodeBlock language="typescript">
-  {`const realTimePrice = await fmp.stock.getRealTimePrice({
-    symbols: ['AAPL', 'MSFT', 'GOOGL']
-  });
+  {`const realTimePrice = await fmp.stock.getRealTimePrice(['AAPL', 'MSFT', 'GOOGL']);
 
 // Get all stocks
-const allStocks = await fmp.stock.getRealTimePrice({
-symbols: []
-});`}
+const allStocks = await fmp.stock.getRealTimePrice([]);`}
 
 </CodeBlock>
 
@@ -338,7 +209,9 @@ symbols: []
         symbol: 'GOOGL',
         price: 142.75
       }
-    ]
+    ],
+    error: null,
+    status: 200
 }`}
 </CodeBlock>
 
@@ -347,14 +220,10 @@ symbols: []
 Retrieve comprehensive real-time price data including bid/ask prices, volume, and trade details for multiple stocks. When the symbols array is empty, returns data for all available stocks.
 
 <CodeBlock language="typescript">
-  {`const fullRealTimeData = await fmp.stock.getRealTimePriceForMultipleStocks({
-    symbols: ['AAPL', 'MSFT', 'GOOGL']
-  });
+  {`const fullRealTimeData = await fmp.stock.getRealTimePriceForMultipleStocks(['AAPL', 'MSFT', 'GOOGL']);
 
 // Get all stocks with full data
-const allStocksFull = await fmp.stock.getRealTimePriceForMultipleStocks({
-symbols: []
-});`}
+const allStocksFull = await fmp.stock.getRealTimePriceForMultipleStocks([]);`}
 
 </CodeBlock>
 
@@ -376,48 +245,92 @@ symbols: []
     success: true,
     data: [
       {
-        symbol: 'AAPL',
-        bidPrice: 150.20,
-        askPrice: 150.30,
-        lastSalePrice: 150.25,
-        lastSaleSize: 100,
-        lastSaleTime: 1703123456789,
-        volume: 45678900,
-        bidSize: 500,
-        askSize: 300,
-        fmpLast: 1703123456789,
-        lastUpdated: 1703123456789
+        "bidSize": 1,
+        "askPrice": 211.3,
+        "volume": 48317144,
+        "askSize": 1,
+        "bidPrice": 211.12,
+        "lastSalePrice": 211.26,
+        "lastSaleSize": 7,
+        "lastSaleTime": 1752883199000,
+        "fmpLast": 211.26,
+        "lastUpdated": 1752883166000,
+        "symbol": "AAPL"
       },
       {
-        symbol: 'MSFT',
-        bidPrice: 375.45,
-        askPrice: 375.55,
-        lastSalePrice: 375.50,
-        lastSaleSize: 200,
-        lastSaleTime: 1703123456789,
-        volume: 23456700,
-        bidSize: 400,
-        askSize: 250,
-        fmpLast: 1703123456789,
-        lastUpdated: 1703123456789
+        "bidSize": 1,
+        "askPrice": 515,
+        "volume": 21086806,
+        "askSize": 1,
+        "bidPrice": 488.2,
+        "lastSalePrice": 510.15,
+        "lastSaleSize": 48,
+        "lastSaleTime": 1752883175000,
+        "fmpLast": 510.15,
+        "lastUpdated": 1752868800000,
+        "symbol": "MSFT"
+      },
+      {
+        "bidSize": 1,
+        "askPrice": 185.58,
+        "volume": 33639843,
+        "askSize": 1,
+        "bidPrice": 185.51,
+        "lastSalePrice": 185.53,
+        "lastSaleSize": 22,
+        "lastSaleTime": 1752883190000,
+        "fmpLast": 185.53,
+        "lastUpdated": 1752883103000,
+        "symbol": "GOOGL"
       }
-    ]
+    ],
+    error: null,
+    status: 200
 }`}
 </CodeBlock>
 
 ## Error Handling
 
+All API responses follow a consistent structure with the following properties:
+
+- `success`: Boolean indicating if the request was successful
+- `data`: The response data (null if unsuccessful)
+- `error`: Error message string (null if successful)
+- `status`: HTTP status code
+
 Always check the success property before accessing data:
 
 <CodeBlock language="typescript">
-{`const quote = await fmp.stock.getQuote({ symbol: 'INVALID' });
+{`const marketCap = await fmp.stock.getMarketCap('INVALID');
 
-if (quote.success && quote.data) {
-console.log('Stock Price:', quote.data.price);
+if (marketCap.success && marketCap.data) {
+console.log('Market Cap:', marketCap.data.marketCap);
 } else {
-console.error('Error:', quote.error);
-console.error('Status:', quote.status);
+console.error('Error:', marketCap.error);
+console.error('Status:', marketCap.status);
 }`}
+
+</CodeBlock>
+
+### Common Error Scenarios
+
+<CodeBlock language="typescript">
+{`// Invalid symbol
+const result = await fmp.stock.getMarketCap('INVALID_SYMBOL');
+// Result: { success: false, data: null, error: "No data found", status: 404 }
+
+// API key issues
+const result = await fmp.stock.getMarketCap('AAPL');
+// Result: { success: false, data: null, error: "Invalid API key", status: 401 }
+
+// Rate limiting
+const result = await fmp.stock.getMarketCap('AAPL');
+// Result: { success: false, data: null, error: "Rate limit exceeded", status: 429 }
+
+// Network errors
+const result = await fmp.stock.getMarketCap('AAPL');
+// Result: { success: false, data: null, error: "Network Error", status: 500 }
+`}
 
 </CodeBlock>
 
@@ -429,6 +342,7 @@ Stock endpoints are subject to FMP's rate limits. For production applications, i
 
 Explore other endpoint categories:
 
+- [Quote Endpoints](/docs/api/quote) - Real-time quotes, historical prices, and intraday data
 - [Company Endpoints](/docs/api/company) - Company profiles, executive compensation, and employee data
 - [Financial Endpoints](/docs/api/financial) - Financial statements and ratios
 - [Market Endpoints](/docs/api/market) - Market indices and sector data
@@ -439,3 +353,5 @@ Explore other endpoint categories:
 ---
 
 **Ready to explore financial data?** Check out the [Financial Endpoints](/docs/api/financial) for income statements, balance sheets, and more.
+
+**Need real-time quotes?** Check out the [Quote Endpoints](/docs/api/quote) for comprehensive quote data, historical prices, and intraday charts.

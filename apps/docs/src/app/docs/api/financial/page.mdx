@@ -76,7 +76,7 @@ Retrieve income statement data including revenue, expenses, and profit
 metrics.
 
 <CodeBlock language="typescript">
-  {`const incomeStatement = await fmp.getIncomeStatement({
+  {`const incomeStatement = await fmp.financial.getIncomeStatement({
     symbol: 'AAPL',
     period: 'annual',
     limit: 5,
@@ -160,7 +160,7 @@ metrics.
 Retrieve balance sheet data including assets, liabilities, and equity.
 
 <CodeBlock language="typescript">
-  {`const balanceSheet = await fmp.getBalanceSheet({
+  {`const balanceSheet = await fmp.financial.getBalanceSheet({
     symbol: 'AAPL',
     period: 'quarter',
     limit: 4,
@@ -263,7 +263,7 @@ Retrieve cash flow statement data including operating, investing, and
 financing activities.
 
 <CodeBlock language="typescript">
-  {`const cashFlow = await fmp.getCashFlowStatement({
+  {`const cashFlow = await fmp.financial.getCashFlowStatement({
     symbol: 'AAPL',
     period: 'annual',
     limit: 5,
@@ -350,7 +350,7 @@ financing activities.
 Retrieve key financial ratios and metrics for analysis.
 
 <CodeBlock language="typescript">
-  {`const ratios = await fmp.getFinancialRatios({
+  {`const ratios = await fmp.financial.getFinancialRatios({
     symbol: 'AAPL',
     period: 'annual',
     limit: 5,
@@ -454,7 +454,7 @@ Retrieve key financial ratios and metrics for analysis.
 Retrieve key financial metrics including valuation ratios, profitability metrics, and efficiency ratios.
 
 <CodeBlock language="typescript">
-  {`const keyMetrics = await fmp.getKeyMetrics({
+  {`const keyMetrics = await fmp.financial.getKeyMetrics({
     symbol: 'AAPL',
     period: 'annual',
     limit: 5,
@@ -561,7 +561,7 @@ Retrieve key financial metrics including valuation ratios, profitability metrics
 Retrieve enterprise value data including market capitalization, debt, and cash calculations.
 
 <CodeBlock language="typescript">
-  {`const enterpriseValue = await fmp.getEnterpriseValue({
+  {`const enterpriseValue = await fmp.financial.getEnterpriseValue({
     symbol: 'AAPL',
     period: 'annual',
     limit: 5,
@@ -616,7 +616,7 @@ Retrieve enterprise value data including market capitalization, debt, and cash c
 Retrieve cash flow growth metrics showing period-over-period changes in cash flow components.
 
 <CodeBlock language="typescript">
-  {`const cashflowGrowth = await fmp.getCashflowGrowth({
+  {`const cashflowGrowth = await fmp.financial.getCashflowGrowth({
     symbol: 'AAPL',
     period: 'annual',
     limit: 5,
@@ -697,7 +697,7 @@ Retrieve cash flow growth metrics showing period-over-period changes in cash flo
 Retrieve income statement growth metrics showing period-over-period changes in revenue, expenses, and profitability.
 
 <CodeBlock language="typescript">
-  {`const incomeGrowth = await fmp.getIncomeGrowth({
+  {`const incomeGrowth = await fmp.financial.getIncomeGrowth({
     symbol: 'AAPL',
     period: 'annual',
     limit: 5,
@@ -774,7 +774,7 @@ Retrieve income statement growth metrics showing period-over-period changes in r
 Retrieve balance sheet growth metrics showing period-over-period changes in assets, liabilities, and equity.
 
 <CodeBlock language="typescript">
-  {`const balanceSheetGrowth = await fmp.getBalanceSheetGrowth({
+  {`const balanceSheetGrowth = await fmp.financial.getBalanceSheetGrowth({
     symbol: 'AAPL',
     period: 'annual',
     limit: 5,
@@ -864,7 +864,7 @@ Retrieve balance sheet growth metrics showing period-over-period changes in asse
 Retrieve comprehensive financial growth metrics including revenue, earnings, and cash flow growth over multiple time periods.
 
 <CodeBlock language="typescript">
-  {`const financialGrowth = await fmp.getFinancialGrowth({
+  {`const financialGrowth = await fmp.financial.getFinancialGrowth({
     symbol: 'AAPL',
     period: 'annual',
     limit: 5,
@@ -949,7 +949,7 @@ Retrieve comprehensive financial growth metrics including revenue, earnings, and
 Retrieve historical and upcoming earnings announcements for a specific company, including estimated and actual earnings per share (EPS) and revenue data.
 
 <CodeBlock language="typescript">
-  {`const earningsHistorical = await fmp.getEarningsHistorical({
+  {`const earningsHistorical = await fmp.financial.getEarningsHistorical({
     symbol: 'AAPL',
     limit: 5,
 });`}
@@ -1009,9 +1009,7 @@ Retrieve historical and upcoming earnings announcements for a specific company, 
 Retrieve earnings surprises data showing the difference between estimated and actual earnings per share (EPS) for companies.
 
 <CodeBlock language="typescript">
-  {`const earningsSurprises = await fmp.getEarningsSurprises({
-    symbol: 'AAPL',
-  });`}
+  {`const earningsSurprises = await fmp.financial.getEarningsSurprises('AAPL');`}
 </CodeBlock>
 
 <ParameterTable
@@ -1058,7 +1056,7 @@ Retrieve earnings surprises data showing the difference between estimated and ac
 Always check the success property before accessing data:
 
 <CodeBlock language="typescript">
-{`const incomeStatement = await fmp.getIncomeStatement({ symbol: 'INVALID' });
+{`const incomeStatement = await fmp.financial.getIncomeStatement({ symbol: 'INVALID' });
 
 if (incomeStatement.success) {
 console.log('Revenue:', incomeStatement.data[0].revenue);

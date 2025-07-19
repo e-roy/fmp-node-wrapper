@@ -1,7 +1,6 @@
 import { APIResponse } from '@/types';
 import { FMPClient } from '@/client';
 import {
-  FinancialStatementsParams,
   KeyMetrics,
   FinancialRatios,
   EnterpriseValue,
@@ -20,34 +19,76 @@ export class FinancialEndpoints {
   constructor(private client: FMPClient) {}
 
   /**
-   * Get income statement
-   * https://site.financialmodelingprep.com/developer/docs#income-statements-financial-statements
-   * @param symbol - The stock symbol to get the income statement for
-   * @param period - The period to get the income statement for (annual or quarter)
-   * @param limit - The number of periods to get
-   * @returns FMP's Income Statement API provides access to real-time income statement data for a wide range of companies, including public companies, private companies, and ETFs. This data can be used to track a company's profitability over time, to compare a company to its competitors, and to identify trends in a company's business.
+   * Get income statement data
+   *
+   * Provides comprehensive income statement data including revenue, expenses,
+   * net income, and earnings per share. Essential for analyzing company
+   * profitability, revenue trends, and financial performance over time.
+   *
+   * @param params - Income statement request parameters
+   * @param params.symbol - The stock symbol to get income statement for (e.g., 'AAPL', 'MSFT', 'GOOGL')
+   * @param params.period - The reporting period: 'annual' or 'quarter' (default: 'annual')
+   * @param params.limit - Number of periods to retrieve (default: 5)
+   *
+   * @returns Promise resolving to array of income statement data with financial metrics
+   *
+   * @example
+   * ```typescript
+   * // Get annual income statements for Apple
+   * const incomeStatements = await fmp.financial.getIncomeStatement({ symbol: 'AAPL' });
+   * incomeStatements.data.forEach(statement => {
+   *   console.log(`${statement.date}: Revenue $${statement.revenue.toLocaleString()}, Net Income $${statement.netIncome.toLocaleString()}`);
+   * });
+   *
+   * // Get quarterly income statements for Microsoft
+   * const quarterlyIncome = await fmp.financial.getIncomeStatement({ symbol: 'MSFT', period: 'quarter', limit: 8 });
+   * ```
+   *
+   * @see {@link https://site.financialmodelingprep.com/developer/docs#income-statements-financial-statements|FMP Income Statement Documentation}
    */
-  async getIncomeStatement({
-    symbol,
-    period = 'annual',
-    limit = 5,
-  }: FinancialStatementsParams): Promise<APIResponse<IncomeStatement[]>> {
+  async getIncomeStatement(params: {
+    symbol: string;
+    period?: 'annual' | 'quarter';
+    limit?: number;
+  }): Promise<APIResponse<IncomeStatement[]>> {
+    const { symbol, period = 'annual', limit = 5 } = params;
     return this.client.get(`/income-statement/${symbol}?period=${period}&limit=${limit}`, 'v3');
   }
 
   /**
-   * Get balance sheet
-   * https://site.financialmodelingprep.com/developer/docs#balance-sheet-statements-financial-statements
-   * @param symbol - The stock symbol to get the balance sheet for
-   * @param period - The period to get the balance sheet for (annual or quarter)
-   * @param limit - The number of periods to get
-   * @returns The balance sheet is a financial statement that displays a company's total assets, liabilities, and shareholder equity over a specific timeframe (quarterly or yearly). Investors can use this statement to determine if the company can fund its operations, meet its debt obligations, and pay a dividend.
+   * Get balance sheet data
+   *
+   * Provides comprehensive balance sheet data including assets, liabilities,
+   * and shareholder equity. Essential for analyzing company financial position,
+   * liquidity, and capital structure.
+   *
+   * @param params - Balance sheet request parameters
+   * @param params.symbol - The stock symbol to get balance sheet for (e.g., 'AAPL', 'MSFT', 'GOOGL')
+   * @param params.period - The reporting period: 'annual' or 'quarter' (default: 'annual')
+   * @param params.limit - Number of periods to retrieve (default: 5)
+   *
+   * @returns Promise resolving to array of balance sheet data with financial position metrics
+   *
+   * @example
+   * ```typescript
+   * // Get annual balance sheets for Apple
+   * const balanceSheets = await fmp.financial.getBalanceSheet({ symbol: 'AAPL' });
+   * balanceSheets.data.forEach(sheet => {
+   *   console.log(`${sheet.date}: Assets $${sheet.totalAssets.toLocaleString()}, Equity $${sheet.totalStockholdersEquity.toLocaleString()}`);
+   * });
+   *
+   * // Get quarterly balance sheets for Microsoft
+   * const quarterlyBalance = await fmp.financial.getBalanceSheet({ symbol: 'MSFT', period: 'quarter', limit: 8 });
+   * ```
+   *
+   * @see {@link https://site.financialmodelingprep.com/developer/docs#balance-sheet-statements-financial-statements|FMP Balance Sheet Documentation}
    */
-  async getBalanceSheet({
-    symbol,
-    period = 'annual',
-    limit = 5,
-  }: FinancialStatementsParams): Promise<APIResponse<BalanceSheet[]>> {
+  async getBalanceSheet(params: {
+    symbol: string;
+    period?: 'annual' | 'quarter';
+    limit?: number;
+  }): Promise<APIResponse<BalanceSheet[]>> {
+    const { symbol, period = 'annual', limit = 5 } = params;
     return this.client.get(
       `/balance-sheet-statement/${symbol}?period=${period}&limit=${limit}`,
       'v3',
@@ -55,82 +96,187 @@ export class FinancialEndpoints {
   }
 
   /**
-   * Get cash flow statement
-   * https://site.financialmodelingprep.com/developer/docs#cashflow-statements-financial-statements
-   * @param symbol - The stock symbol to get the cash flow statement for
-   * @param period - The period to get the cash flow statement for (annual or quarter)
-   * @param limit - The number of periods to get
-   * @returns The cash flow statement is a financial statement that highlights how cash moves through the company, including both cash inflows and outflows. This statement shows the cash flows in 3 main categories "Operating Cash Flows", "Investing Cash Flows", and "Financing Cash Flows", which help investors to understand if the company is making money or losing money by conducting business.
+   * Get cash flow statement data
+   *
+   * Provides comprehensive cash flow data including operating, investing,
+   * and financing cash flows. Essential for analyzing company cash generation,
+   * capital allocation, and financial sustainability.
+   *
+   * @param params - Cash flow statement request parameters
+   * @param params.symbol - The stock symbol to get cash flow statement for (e.g., 'AAPL', 'MSFT', 'GOOGL')
+   * @param params.period - The reporting period: 'annual' or 'quarter' (default: 'annual')
+   * @param params.limit - Number of periods to retrieve (default: 5)
+   *
+   * @returns Promise resolving to array of cash flow statement data with cash flow metrics
+   *
+   * @example
+   * ```typescript
+   * // Get annual cash flow statements for Apple
+   * const cashFlows = await fmp.financial.getCashFlowStatement({ symbol: 'AAPL' });
+   * cashFlows.data.forEach(flow => {
+   *   console.log(`${flow.date}: Operating CF $${flow.operatingCashFlow.toLocaleString()}, Free CF $${flow.freeCashFlow.toLocaleString()}`);
+   * });
+   *
+   * // Get quarterly cash flow statements for Microsoft
+   * const quarterlyCashFlow = await fmp.financial.getCashFlowStatement({ symbol: 'MSFT', period: 'quarter', limit: 8 });
+   * ```
+   *
+   * @see {@link https://site.financialmodelingprep.com/developer/docs#cashflow-statements-financial-statements|FMP Cash Flow Statement Documentation}
    */
-  async getCashFlowStatement({
-    symbol,
-    period = 'annual',
-    limit = 5,
-  }: FinancialStatementsParams): Promise<APIResponse<CashFlowStatement[]>> {
+  async getCashFlowStatement(params: {
+    symbol: string;
+    period?: 'annual' | 'quarter';
+    limit?: number;
+  }): Promise<APIResponse<CashFlowStatement[]>> {
+    const { symbol, period = 'annual', limit = 5 } = params;
     return this.client.get(`/cash-flow-statement/${symbol}?period=${period}&limit=${limit}`, 'v3');
   }
 
   /**
-   * Get key metrics
-   * https://site.financialmodelingprep.com/developer/docs#key-metrics-statement-analysis
-   * @param symbol - The stock symbol to get the key metrics for
-   * @param period - The period to get the key metrics for (annual or quarter)
-   * @param limit - The number of periods to get
-   * @returns Get key financial metrics for a company, including revenue, net income, and price-to-earnings ratio (P/E ratio). Assess a company's financial performance and compare it to its competitors.
+   * Get key financial metrics
+   *
+   * Provides essential financial metrics including revenue, net income,
+   * P/E ratio, and other key performance indicators. Essential for
+   * fundamental analysis and company valuation.
+   *
+   * @param params - Key metrics request parameters
+   * @param params.symbol - The stock symbol to get key metrics for (e.g., 'AAPL', 'MSFT', 'GOOGL')
+   * @param params.period - The reporting period: 'annual' or 'quarter' (default: 'annual')
+   * @param params.limit - Number of periods to retrieve (default: 5)
+   *
+   * @returns Promise resolving to array of key metrics data with financial indicators
+   *
+   * @example
+   * ```typescript
+   * // Get key metrics for Apple
+   * const keyMetrics = await fmp.financial.getKeyMetrics({ symbol: 'AAPL' });
+   * keyMetrics.data.forEach(metric => {
+   *   console.log(`${metric.date}: P/E ${metric.peRatio}, ROE ${metric.roe}%`);
+   * });
+   *
+   * // Get quarterly key metrics for Microsoft
+   * const quarterlyMetrics = await fmp.financial.getKeyMetrics({ symbol: 'MSFT', period: 'quarter', limit: 8 });
+   * ```
+   *
+   * @see {@link https://site.financialmodelingprep.com/developer/docs#key-metrics-statement-analysis|FMP Key Metrics Documentation}
    */
-  async getKeyMetrics({
-    symbol,
-    period = 'annual',
-    limit = 5,
-  }: FinancialStatementsParams): Promise<APIResponse<KeyMetrics[]>> {
+  async getKeyMetrics(params: {
+    symbol: string;
+    period?: 'annual' | 'quarter';
+    limit?: number;
+  }): Promise<APIResponse<KeyMetrics[]>> {
+    const { symbol, period = 'annual', limit = 5 } = params;
     return this.client.get(`/key-metrics/${symbol}?period=${period}&limit=${limit}`, 'v3');
   }
 
   /**
    * Get financial ratios
-   * https://site.financialmodelingprep.com/developer/docs#ratios-statement-analysis
-   * @param symbol - The stock symbol to get the financial ratios for
-   * @param period - The period to get the financial ratios for (annual or quarter)
-   * @param limit - The number of periods to get
-   * @returns Get financial ratios for a company, such as the P/B ratio and the ROE. Assess a company's financial health and compare it to its competitors.
+   *
+   * Provides comprehensive financial ratios including P/B ratio, ROE,
+   * debt-to-equity, and other important ratios. Essential for analyzing
+   * company financial health and comparing with peers.
+   *
+   * @param params - Financial ratios request parameters
+   * @param params.symbol - The stock symbol to get financial ratios for (e.g., 'AAPL', 'MSFT', 'GOOGL')
+   * @param params.period - The reporting period: 'annual' or 'quarter' (default: 'annual')
+   * @param params.limit - Number of periods to retrieve (default: 5)
+   *
+   * @returns Promise resolving to array of financial ratios data with ratio metrics
+   *
+   * @example
+   * ```typescript
+   * // Get financial ratios for Apple
+   * const ratios = await fmp.financial.getFinancialRatios({ symbol: 'AAPL' });
+   * ratios.data.forEach(ratio => {
+   *   console.log(`${ratio.date}: P/B ${ratio.priceToBookRatio}, Debt/Equity ${ratio.debtToEquity}`);
+   * });
+   *
+   * // Get quarterly ratios for Microsoft
+   * const quarterlyRatios = await fmp.financial.getFinancialRatios({ symbol: 'MSFT', period: 'quarter', limit: 8 });
+   * ```
+   *
+   * @see {@link https://site.financialmodelingprep.com/developer/docs#ratios-statement-analysis|FMP Financial Ratios Documentation}
    */
-  async getFinancialRatios({
-    symbol,
-    period = 'annual',
-    limit = 5,
-  }: FinancialStatementsParams): Promise<APIResponse<FinancialRatios[]>> {
+  async getFinancialRatios(params: {
+    symbol: string;
+    period?: 'annual' | 'quarter';
+    limit?: number;
+  }): Promise<APIResponse<FinancialRatios[]>> {
+    const { symbol, period = 'annual', limit = 5 } = params;
     return this.client.get(`/ratios/${symbol}?period=${period}&limit=${limit}`, 'v3');
   }
 
   /**
-   * Get enterprise value
-   * https://site.financialmodelingprep.com/developer/docs#enterprise-values-statement-analysis
-   * @param symbol - The stock symbol to get the enterprise value for
-   * @param period - The period to get the enterprise value for (annual or quarter)
-   * @param limit - The number of periods to get
-   * @returns Get the enterprise value of a company, which is the total value of a company, including its equity and debt. Assess a company's overall value and compare it to its peers.
+   * Get enterprise value data
+   *
+   * Provides enterprise value metrics including total enterprise value,
+   * market cap, and debt information. Essential for company valuation
+   * and comparing companies with different capital structures.
+   *
+   * @param params - Enterprise value request parameters
+   * @param params.symbol - The stock symbol to get enterprise value for (e.g., 'AAPL', 'MSFT', 'GOOGL')
+   * @param params.period - The reporting period: 'annual' or 'quarter' (default: 'annual')
+   * @param params.limit - Number of periods to retrieve (default: 5)
+   *
+   * @returns Promise resolving to array of enterprise value data with valuation metrics
+   *
+   * @example
+   * ```typescript
+   * // Get enterprise value for Apple
+   * const enterpriseValue = await fmp.financial.getEnterpriseValue({ symbol: 'AAPL' });
+   * enterpriseValue.data.forEach(ev => {
+   *   console.log(`${ev.date}: EV $${ev.enterpriseValue.toLocaleString()}, Market Cap $${ev.marketCapitalization.toLocaleString()}`);
+   * });
+   *
+   * // Get quarterly enterprise value for Microsoft
+   * const quarterlyEV = await fmp.financial.getEnterpriseValue({ symbol: 'MSFT', period: 'quarter', limit: 8 });
+   * ```
+   *
+   * @see {@link https://site.financialmodelingprep.com/developer/docs#enterprise-values-statement-analysis|FMP Enterprise Value Documentation}
    */
-  async getEnterpriseValue({
-    symbol,
-    period = 'annual',
-    limit = 5,
-  }: FinancialStatementsParams): Promise<APIResponse<EnterpriseValue[]>> {
+  async getEnterpriseValue(params: {
+    symbol: string;
+    period?: 'annual' | 'quarter';
+    limit?: number;
+  }): Promise<APIResponse<EnterpriseValue[]>> {
+    const { symbol, period = 'annual', limit = 5 } = params;
     return this.client.get(`/enterprise-value/${symbol}?period=${period}&limit=${limit}`, 'v3');
   }
 
   /**
-   * Get cashflow growth
-   * https://site.financialmodelingprep.com/developer/docs#cashflow-growth-statement-analysis
-   * @param symbol - The stock symbol to get the cashflow growth for
-   * @param period - The period to get the cashflow growth for (annual or quarter)
-   * @param limit - The number of periods to get
-   * @returns Get the cash flow growth rate for a company. Measure how quickly a company's cash flow is growing.
+   * Get cash flow growth data
+   *
+   * Provides cash flow growth rates showing how quickly a company's
+   * cash flows are growing over time. Essential for analyzing cash
+   * generation trends and financial sustainability.
+   *
+   * @param params - Cash flow growth request parameters
+   * @param params.symbol - The stock symbol to get cash flow growth for (e.g., 'AAPL', 'MSFT', 'GOOGL')
+   * @param params.period - The reporting period: 'annual' or 'quarter' (default: 'annual')
+   * @param params.limit - Number of periods to retrieve (default: 5)
+   *
+   * @returns Promise resolving to array of cash flow growth data with growth metrics
+   *
+   * @example
+   * ```typescript
+   * // Get cash flow growth for Apple
+   * const cashFlowGrowth = await fmp.financial.getCashflowGrowth({ symbol: 'AAPL' });
+   * cashFlowGrowth.data.forEach(growth => {
+   *   console.log(`${growth.date}: Operating CF Growth ${growth.operatingCashFlowGrowth}%`);
+   * });
+   *
+   * // Get quarterly cash flow growth for Microsoft
+   * const quarterlyGrowth = await fmp.financial.getCashflowGrowth({ symbol: 'MSFT', period: 'quarter', limit: 8 });
+   * ```
+   *
+   * @see {@link https://site.financialmodelingprep.com/developer/docs#cashflow-growth-statement-analysis|FMP Cash Flow Growth Documentation}
    */
-  async getCashflowGrowth({
-    symbol,
-    period = 'annual',
-    limit = 5,
-  }: FinancialStatementsParams): Promise<APIResponse<CashflowGrowth[]>> {
+  async getCashflowGrowth(params: {
+    symbol: string;
+    period?: 'annual' | 'quarter';
+    limit?: number;
+  }): Promise<APIResponse<CashflowGrowth[]>> {
+    const { symbol, period = 'annual', limit = 5 } = params;
     return this.client.get(
       `/cash-flow-statement-growth/${symbol}?period=${period}&limit=${limit}`,
       'v3',
@@ -138,18 +284,39 @@ export class FinancialEndpoints {
   }
 
   /**
-   *  Get income growth
-   * https://site.financialmodelingprep.com/developer/docs#income-growth-statement-analysis
-   * @param symbol - The stock symbol to get the income growth for
-   * @param period - The period to get the income growth for (annual or quarter)
-   * @param limit - The number of periods to get
-   * @returns Get the income growth rate for a company. Measure how quickly a company's income is growing.
+   * Get income growth data
+   *
+   * Provides income growth rates showing how quickly a company's
+   * revenue and net income are growing over time. Essential for
+   * analyzing profitability trends and business momentum.
+   *
+   * @param params - Income growth request parameters
+   * @param params.symbol - The stock symbol to get income growth for (e.g., 'AAPL', 'MSFT', 'GOOGL')
+   * @param params.period - The reporting period: 'annual' or 'quarter' (default: 'annual')
+   * @param params.limit - Number of periods to retrieve (default: 5)
+   *
+   * @returns Promise resolving to array of income growth data with growth metrics
+   *
+   * @example
+   * ```typescript
+   * // Get income growth for Apple
+   * const incomeGrowth = await fmp.financial.getIncomeGrowth({ symbol: 'AAPL' });
+   * incomeGrowth.data.forEach(growth => {
+   *   console.log(`${growth.date}: Revenue Growth ${growth.revenueGrowth}%, Net Income Growth ${growth.netIncomeGrowth}%`);
+   * });
+   *
+   * // Get quarterly income growth for Microsoft
+   * const quarterlyGrowth = await fmp.financial.getIncomeGrowth({ symbol: 'MSFT', period: 'quarter', limit: 8 });
+   * ```
+   *
+   * @see {@link https://site.financialmodelingprep.com/developer/docs#income-growth-statement-analysis|FMP Income Growth Documentation}
    */
-  async getIncomeGrowth({
-    symbol,
-    period = 'annual',
-    limit = 5,
-  }: FinancialStatementsParams): Promise<APIResponse<IncomeGrowth[]>> {
+  async getIncomeGrowth(params: {
+    symbol: string;
+    period?: 'annual' | 'quarter';
+    limit?: number;
+  }): Promise<APIResponse<IncomeGrowth[]>> {
+    const { symbol, period = 'annual', limit = 5 } = params;
     return this.client.get(
       `/income-statement-growth/${symbol}?period=${period}&limit=${limit}`,
       'v3',
@@ -157,18 +324,39 @@ export class FinancialEndpoints {
   }
 
   /**
-   * Get balance sheet growth
-   * https://site.financialmodelingprep.com/developer/docs#balance-sheet-growth-statement-analysis
-   * @param symbol - The stock symbol to get the balance sheet growth for
-   * @param period - The period to get the balance sheet growth for (annual or quarter)
-   * @param limit - The number of periods to get
-   * @returns Get the balance sheet growth rate for a company. Measure how quickly a company's assets and liabilities are growing.
+   * Get balance sheet growth data
+   *
+   * Provides balance sheet growth rates showing how quickly a company's
+   * assets, liabilities, and equity are growing over time. Essential for
+   * analyzing capital structure trends and financial position changes.
+   *
+   * @param params - Balance sheet growth request parameters
+   * @param params.symbol - The stock symbol to get balance sheet growth for (e.g., 'AAPL', 'MSFT', 'GOOGL')
+   * @param params.period - The reporting period: 'annual' or 'quarter' (default: 'annual')
+   * @param params.limit - Number of periods to retrieve (default: 5)
+   *
+   * @returns Promise resolving to array of balance sheet growth data with growth metrics
+   *
+   * @example
+   * ```typescript
+   * // Get balance sheet growth for Apple
+   * const balanceSheetGrowth = await fmp.financial.getBalanceSheetGrowth({ symbol: 'AAPL' });
+   * balanceSheetGrowth.data.forEach(growth => {
+   *   console.log(`${growth.date}: Assets Growth ${growth.totalAssetsGrowth}%, Equity Growth ${growth.totalStockholdersEquityGrowth}%`);
+   * });
+   *
+   * // Get quarterly balance sheet growth for Microsoft
+   * const quarterlyGrowth = await fmp.financial.getBalanceSheetGrowth({ symbol: 'MSFT', period: 'quarter', limit: 8 });
+   * ```
+   *
+   * @see {@link https://site.financialmodelingprep.com/developer/docs#balance-sheet-growth-statement-analysis|FMP Balance Sheet Growth Documentation}
    */
-  async getBalanceSheetGrowth({
-    symbol,
-    period = 'annual',
-    limit = 5,
-  }: FinancialStatementsParams): Promise<APIResponse<BalanceSheetGrowth[]>> {
+  async getBalanceSheetGrowth(params: {
+    symbol: string;
+    period?: 'annual' | 'quarter';
+    limit?: number;
+  }): Promise<APIResponse<BalanceSheetGrowth[]>> {
+    const { symbol, period = 'annual', limit = 5 } = params;
     return this.client.get(
       `/balance-sheet-statement-growth/${symbol}?period=${period}&limit=${limit}`,
       'v3',
@@ -176,45 +364,103 @@ export class FinancialEndpoints {
   }
 
   /**
-   * Get financial growth
-   * https://site.financialmodelingprep.com/developer/docs#financial-growth-statement-analysis
-   * @param symbol - The stock symbol to get the financial growth for
-   * @param period - The period to get the financial growth for (annual or quarter)
-   * @param limit - The number of periods to get
-   * @returns Financial Growth Get the financial growth rate for a company. Measure how quickly a company's overall financial performance is improving.
+   * Get financial growth data
+   *
+   * Provides comprehensive financial growth rates across all key
+   * financial metrics. Essential for analyzing overall financial
+   * performance trends and business momentum.
+   *
+   * @param params - Financial growth request parameters
+   * @param params.symbol - The stock symbol to get financial growth for (e.g., 'AAPL', 'MSFT', 'GOOGL')
+   * @param params.period - The reporting period: 'annual' or 'quarter' (default: 'annual')
+   * @param params.limit - Number of periods to retrieve (default: 5)
+   *
+   * @returns Promise resolving to array of financial growth data with comprehensive growth metrics
+   *
+   * @example
+   * ```typescript
+   * // Get financial growth for Apple
+   * const financialGrowth = await fmp.financial.getFinancialGrowth({ symbol: 'AAPL' });
+   * financialGrowth.data.forEach(growth => {
+   *   console.log(`${growth.date}: Revenue Growth ${growth.revenueGrowth}%, EPS Growth ${growth.epsGrowth}%`);
+   * });
+   *
+   * // Get quarterly financial growth for Microsoft
+   * const quarterlyGrowth = await fmp.financial.getFinancialGrowth({ symbol: 'MSFT', period: 'quarter', limit: 8 });
+   * ```
+   *
+   * @see {@link https://site.financialmodelingprep.com/developer/docs#financial-growth-statement-analysis|FMP Financial Growth Documentation}
    */
-  async getFinancialGrowth({
-    symbol,
-    period = 'annual',
-    limit = 5,
-  }: FinancialStatementsParams): Promise<APIResponse<FinancialGrowth[]>> {
+  async getFinancialGrowth(params: {
+    symbol: string;
+    period?: 'annual' | 'quarter';
+    limit?: number;
+  }): Promise<APIResponse<FinancialGrowth[]>> {
+    const { symbol, period = 'annual', limit = 5 } = params;
     return this.client.get(`/financial-growth/${symbol}?period=${period}&limit=${limit}`, 'v3');
   }
 
   /**
-   * Get earnings historical
-   * https://site.financialmodelingprep.com/developer/docs#earnings-historical-earnings
-   * @param symbol - The stock symbol to get the earnings historical for
-   * @param limit - The number of periods to get
-   * @returns A list of historical & upcoming earnings announcements for a specific company, including the date, estimated EPS, and actual EPS.
+   * Get historical earnings data
+   *
+   * Provides historical and upcoming earnings announcements including
+   * dates, estimated EPS, and actual EPS. Essential for analyzing
+   * earnings trends and tracking company performance.
+   *
+   * @param params - Earnings historical request parameters
+   * @param params.symbol - The stock symbol to get earnings history for (e.g., 'AAPL', 'MSFT', 'GOOGL')
+   * @param params.limit - Number of periods to retrieve (default: 5)
+   *
+   * @returns Promise resolving to array of historical earnings data with announcement details
+   *
+   * @example
+   * ```typescript
+   * // Get earnings history for Apple
+   * const earningsHistory = await fmp.financial.getEarningsHistorical({ symbol: 'AAPL', limit: 10 });
+   * earningsHistory.data.forEach(earning => {
+   *   console.log(`${earning.date}: Est. ${earning.estimatedEps}, Actual ${earning.actualEps}`);
+   * });
+   *
+   * // Get earnings history for Microsoft
+   * const msftEarnings = await fmp.financial.getEarningsHistorical({ symbol: 'MSFT', limit: 8 });
+   * ```
+   *
+   * @see {@link https://site.financialmodelingprep.com/developer/docs#earnings-historical-earnings|FMP Earnings Historical Documentation}
    */
-  async getEarningsHistorical({
-    symbol,
-    limit = 5,
-  }: FinancialStatementsParams): Promise<APIResponse<EarningsHistorical[]>> {
+  async getEarningsHistorical(params: {
+    symbol: string;
+    limit?: number;
+  }): Promise<APIResponse<EarningsHistorical[]>> {
+    const { symbol, limit = 5 } = params;
     return this.client.get(`/historical/earning_calendar/${symbol}?limit=${limit}`, 'v3');
   }
 
   /**
-   * Get earnings surprises
-   * https://site.financialmodelingprep.com/developer/docs#earnings-surprises-earnings
-   * @param symbol - The stock symbol to get the earnings surprises for
-   * @param limit - The number of periods to get
-   * @returns A list of earnings announcements for publicly traded companies that were either positive or negative surprises. This endpoint includes the date of the earnings announcement, the estimated EPS, the actual EPS, and the earnings surprise.
+   * Get earnings surprises data
+   *
+   * Provides earnings announcements that exceeded or fell short of
+   * analyst estimates. Essential for analyzing earnings quality and
+   * market reactions to earnings releases.
+   *
+   * @param symbol - The stock symbol to get earnings surprises for (e.g., 'AAPL', 'MSFT', 'GOOGL')
+   *
+   * @returns Promise resolving to array of earnings surprises data with surprise details
+   *
+   * @example
+   * ```typescript
+   * // Get earnings surprises for Apple
+   * const earningsSurprises = await fmp.financial.getEarningsSurprises('AAPL');
+   * earningsSurprises.data.forEach(surprise => {
+   *   console.log(`${surprise.date}: Est. ${surprise.estimatedEps}, Actual ${surprise.actualEps}, Surprise ${surprise.surprisePercentage}%`);
+   * });
+   *
+   * // Get earnings surprises for Microsoft
+   * const msftSurprises = await fmp.financial.getEarningsSurprises('MSFT');
+   * ```
+   *
+   * @see {@link https://site.financialmodelingprep.com/developer/docs#earnings-surprises-earnings|FMP Earnings Surprises Documentation}
    */
-  async getEarningsSurprises({
-    symbol,
-  }: FinancialStatementsParams): Promise<APIResponse<EarningsSurprises[]>> {
+  async getEarningsSurprises(symbol: string): Promise<APIResponse<EarningsSurprises[]>> {
     return this.client.get(`/earnings-surprises/${symbol}`, 'v3');
   }
 }

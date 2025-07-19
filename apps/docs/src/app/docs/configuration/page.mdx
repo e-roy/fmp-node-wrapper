@@ -1,0 +1,208 @@
+# Configuration
+
+The FMP Node Wrapper supports multiple configuration options to suit different use cases and security requirements.
+
+## API Key Configuration
+
+The FMP client supports three ways to provide your API key:
+
+### Option 1: Environment Variable (Recommended)
+
+Set the `FMP_API_KEY` environment variable and initialize without parameters:
+
+<CodeBlock language="typescript">
+{`import { FMP } from 'fmp-node-api';
+
+// Automatically uses FMP_API_KEY from environment
+const fmp = new FMP();`}
+
+</CodeBlock>
+
+**Setup:**
+
+<CodeBlock language="env">{`# .env file
+FMP_API_KEY=your-api-key-here`}</CodeBlock>
+
+<CodeBlock language="bash">{`# Linux/macOS
+export FMP_API_KEY=your-api-key-here
+
+# Windows PowerShell
+
+$env:FMP_API_KEY="your-api-key-here"
+
+# Windows Command Prompt
+
+set FMP_API_KEY=your-api-key-here`}</CodeBlock>
+
+### Option 2: Direct Configuration
+
+Provide the API key directly in the constructor:
+
+<CodeBlock language="typescript">
+{`import { FMP } from 'fmp-node-api';
+
+const fmp = new FMP({
+apiKey: 'your-api-key-here',
+timeout: 10000, // optional
+});`}
+
+</CodeBlock>
+
+### Option 3: Mixed Configuration
+
+Provide partial configuration and let the client fall back to environment variables:
+
+<CodeBlock language="typescript">
+{`import { FMP } from 'fmp-node-api';
+
+const fmp = new FMP({
+timeout: 15000, // custom timeout
+// apiKey will be loaded from FMP_API_KEY environment variable
+});`}
+
+</CodeBlock>
+
+## Configuration Options
+
+| Option    | Type     | Default               | Description                                   |
+| --------- | -------- | --------------------- | --------------------------------------------- |
+| `apiKey`  | `string` | `FMP_API_KEY` env var | Your FMP API key (optional if env var is set) |
+| `timeout` | `number` | `10000`               | Request timeout in milliseconds               |
+
+## Error Handling
+
+The client provides clear error messages for configuration issues:
+
+<CodeBlock language="typescript">
+  {`try {
+  const fmp = new FMP(); // No API key provided
+} catch (error) {
+  console.error(error.message);
+  // Output: "FMP API key is required. Please provide it in the config or set the FMP_API_KEY environment variable."
+}`}
+</CodeBlock>
+
+## Security Best Practices
+
+### 1. Use Environment Variables
+
+Always use environment variables for API keys in production:
+
+<CodeBlock language="typescript">
+{`// ✅ Good - Environment variable
+const fmp = new FMP();
+
+// ❌ Bad - Hardcoded API key
+const fmp = new FMP({ apiKey: 'your-actual-key' });`}
+
+</CodeBlock>
+
+### 2. Never Commit API Keys
+
+Ensure your `.env` file is in `.gitignore`:
+
+<CodeBlock language="gitignore">{`# .gitignore
+.env
+.env.local
+.env.*.local`}</CodeBlock>
+
+### 3. Use Different Keys for Different Environments
+
+<CodeBlock language="env">{`# .env.development
+FMP_API_KEY=your-dev-key
+
+# .env.production
+
+FMP_API_KEY=your-prod-key`}</CodeBlock>
+
+## Environment-Specific Configuration
+
+### Development
+
+<CodeBlock language="typescript">
+  {`// Development with shorter timeout for faster feedback
+const fmp = new FMP({
+  timeout: 5000,
+});`}
+</CodeBlock>
+
+### Production
+
+<CodeBlock language="typescript">
+  {`// Production with longer timeout for reliability
+const fmp = new FMP({
+  timeout: 15000,
+});`}
+</CodeBlock>
+
+### Testing
+
+<CodeBlock language="typescript">
+  {`// Testing with mock API key
+const fmp = new FMP({
+  apiKey: 'test-api-key-for-testing',
+  timeout: 1000,
+});`}
+</CodeBlock>
+
+## Advanced Configuration
+
+### Multiple Client Instances
+
+You can create multiple client instances with different configurations:
+
+<CodeBlock language="typescript">
+{`// Client for real-time data
+const realtimeClient = new FMP({
+  timeout: 5000,
+});
+
+// Client for historical data
+const historicalClient = new FMP({
+timeout: 30000,
+});`}
+
+</CodeBlock>
+
+## Troubleshooting
+
+### Common Issues
+
+**Issue:** "FMP API key is required" error
+**Solution:** Set the `FMP_API_KEY` environment variable or provide it in the config
+
+**Issue:** Environment variable not detected
+**Solution:**
+
+- Ensure the variable is set correctly
+- Restart your terminal/IDE
+- Check for typos in the variable name
+
+**Issue:** Timeout errors
+**Solution:** Increase the timeout value:
+
+<CodeBlock language="typescript">
+  {`const fmp = new FMP({
+  timeout: 30000, // 30 seconds
+});`}
+</CodeBlock>
+
+### Debugging
+
+Enable debug logging to troubleshoot configuration issues:
+
+<CodeBlock language="typescript">
+{`import { FMP } from 'fmp-node-api';
+
+// Check if environment variable is set
+console.log('FMP_API_KEY exists:', !!process.env.FMP_API_KEY);
+
+const fmp = new FMP();`}
+
+</CodeBlock>
+
+## Next Steps
+
+- [Getting Started](/docs/getting-started) - Learn how to make your first API call
+- [API Reference](/docs/api) - Explore all available endpoints
+- [Examples](/docs/examples) - See practical usage examples

@@ -26,9 +26,7 @@ describe('Company Endpoints', () => {
           console.log('Skipping company profile test - no API key available');
           return;
         }
-        const result = await fmp.company.getCompanyProfile({
-          symbol: TEST_SYMBOLS.STOCK,
-        });
+        const result = await fmp.company.getCompanyProfile(TEST_SYMBOLS.STOCK);
 
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
@@ -55,9 +53,7 @@ describe('Company Endpoints', () => {
           console.log('Skipping invalid symbol test - no API key available');
           return;
         }
-        const result = await fmp.company.getCompanyProfile({
-          symbol: 'INVALID_SYMBOL_12345',
-        });
+        const result = await fmp.company.getCompanyProfile('INVALID_SYMBOL_12345');
 
         expect(Object.keys(result.data || {}).length === 0 || result.success === false).toBe(true);
       },
@@ -73,9 +69,7 @@ describe('Company Endpoints', () => {
           console.log('Skipping executive compensation test - no API key available');
           return;
         }
-        const result = await fmp.company.getExecutiveCompensation({
-          symbol: TEST_SYMBOLS.STOCK,
-        });
+        const result = await fmp.company.getExecutiveCompensation(TEST_SYMBOLS.STOCK);
 
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
@@ -103,9 +97,7 @@ describe('Company Endpoints', () => {
           console.log('Skipping company notes test - no API key available');
           return;
         }
-        const result = await fmp.company.getCompanyNotes({
-          symbol: TEST_SYMBOLS.STOCK,
-        });
+        const result = await fmp.company.getCompanyNotes(TEST_SYMBOLS.STOCK);
 
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
@@ -131,9 +123,7 @@ describe('Company Endpoints', () => {
           console.log('Skipping historical employee count test - no API key available');
           return;
         }
-        const result = await fmp.company.getHistoricalEmployeeCount({
-          symbol: TEST_SYMBOLS.STOCK,
-        });
+        const result = await fmp.company.getHistoricalEmployeeCount(TEST_SYMBOLS.STOCK);
 
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
@@ -161,9 +151,7 @@ describe('Company Endpoints', () => {
           console.log('Skipping shares float test - no API key available');
           return;
         }
-        const result = await fmp.company.getSharesFloat({
-          symbol: TEST_SYMBOLS.STOCK,
-        });
+        const result = await fmp.company.getSharesFloat(TEST_SYMBOLS.STOCK);
 
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
@@ -190,9 +178,7 @@ describe('Company Endpoints', () => {
           console.log('Skipping historical shares float test - no API key available');
           return;
         }
-        const result = await fmp.company.getHistoricalSharesFloat({
-          symbol: TEST_SYMBOLS.STOCK,
-        });
+        const result = await fmp.company.getHistoricalSharesFloat(TEST_SYMBOLS.STOCK);
 
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
@@ -274,9 +260,7 @@ describe('Company Endpoints', () => {
           console.log('Skipping company transcript data test - no API key available');
           return;
         }
-        const result = await fmp.company.getCompanyTranscriptData({
-          symbol: TEST_SYMBOLS.STOCK,
-        });
+        const result = await fmp.company.getCompanyTranscriptData(TEST_SYMBOLS.STOCK);
 
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
@@ -301,9 +285,7 @@ describe('Company Endpoints', () => {
           console.log('Skipping invalid symbol transcript data test - no API key available');
           return;
         }
-        const result = await fmp.company.getCompanyTranscriptData({
-          symbol: 'INVALID_SYMBOL_12345',
-        });
+        const result = await fmp.company.getCompanyTranscriptData('INVALID_SYMBOL_12345');
 
         // Should either return empty array or handle gracefully
         expect(result.success).toBe(true);

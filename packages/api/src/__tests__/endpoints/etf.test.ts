@@ -19,7 +19,7 @@ describe('ETF Endpoints', () => {
         return;
       }
 
-      const result = await fmp.etf.getProfile({ symbol: 'SPY' });
+      const result = await fmp.etf.getProfile('SPY');
 
       expect(result.success).toBe(true);
       expect(result.data).toBeDefined();
@@ -41,7 +41,7 @@ describe('ETF Endpoints', () => {
       }
 
       // First get holding dates to get a valid date
-      const datesResult = await fmp.etf.getHoldingDates({ symbol: 'SPY' });
+      const datesResult = await fmp.etf.getHoldingDates('SPY');
       if (!datesResult.success || !datesResult.data || datesResult.data.length === 0) {
         console.log('No holding dates available for SPY, skipping holdings test');
         return;
@@ -71,7 +71,7 @@ describe('ETF Endpoints', () => {
         return;
       }
 
-      const result = await fmp.etf.getHolder({ symbol: 'SPY' });
+      const result = await fmp.etf.getHolder('SPY');
 
       expect(result.success).toBe(true);
       expect(result.data).toBeDefined();
@@ -92,7 +92,7 @@ describe('ETF Endpoints', () => {
         return;
       }
 
-      const result = await fmp.etf.getSectorWeighting({ symbol: 'SPY' });
+      const result = await fmp.etf.getSectorWeighting('SPY');
 
       expect(result.success).toBe(true);
       expect(result.data).toBeDefined();
@@ -115,7 +115,7 @@ describe('ETF Endpoints', () => {
         return;
       }
 
-      const result = await fmp.etf.getCountryWeighting({ symbol: 'SPY' });
+      const result = await fmp.etf.getCountryWeighting('SPY');
 
       expect(result.success).toBe(true);
       expect(result.data).toBeDefined();
@@ -139,7 +139,7 @@ describe('ETF Endpoints', () => {
       }
 
       // getStockExposure takes a stock symbol to find which ETFs hold that stock
-      const result = await fmp.etf.getStockExposure({ symbol: 'AAPL' });
+      const result = await fmp.etf.getStockExposure('AAPL');
 
       expect(result.success).toBe(true);
       expect(result.data).toBeDefined();

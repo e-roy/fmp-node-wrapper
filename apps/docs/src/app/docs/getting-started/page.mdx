@@ -33,10 +33,18 @@ Here's how to initialize the client:
 <CodeBlock language="typescript">
 {`import { FMP } from 'fmp-node-api';
 
-// Initialize the client with your API key
+// Option 1: Use environment variable (recommended)
+const fmp = new FMP(); // Automatically uses FMP_API_KEY from environment
+
+// Option 2: Provide API key directly
 const fmp = new FMP({
 apiKey: 'your-api-key-here',
 timeout: 10000, // optional, default 10s
+});
+
+// Option 3: Mixed configuration
+const fmp = new FMP({
+timeout: 15000, // custom timeout, apiKey from FMP_API_KEY env var
 });`}
 
 </CodeBlock>
@@ -45,10 +53,10 @@ timeout: 10000, // optional, default 10s
 
 The `FMP` client accepts the following configuration options:
 
-| Option    | Type     | Default      | Description                     |
-| --------- | -------- | ------------ | ------------------------------- |
-| `apiKey`  | `string` | **Required** | Your FMP API key                |
-| `timeout` | `number` | `10000`      | Request timeout in milliseconds |
+| Option    | Type     | Default               | Description                                   |
+| --------- | -------- | --------------------- | --------------------------------------------- |
+| `apiKey`  | `string` | `FMP_API_KEY` env var | Your FMP API key (optional if env var is set) |
+| `timeout` | `number` | `10000`               | Request timeout in milliseconds               |
 
 ## Your First API Call
 
@@ -56,12 +64,12 @@ Let's make your first API call to get a stock quote:
 
 <CodeBlock language="typescript">
 {`// Get real-time stock quote
-const quote = await fmp.stock.getQuote({ symbol: 'AAPL' });
+const quote = await fmp.quote.getQuote({ symbol: 'AAPL' });
 
-if (quote.success) {
-console.log('Stock Price:', quote.data[0].price);
-console.log('Change:', quote.data[0].change);
-console.log('Market Cap:', quote.data[0].marketCap);
+if (quote.success && quote.data) {
+console.log('Stock Price:', quote.data.price);
+console.log('Change:', quote.data.change);
+console.log('Market Cap:', quote.data.marketCap);
 } else {
 console.error('Error:', quote.error);
 }`}
@@ -75,16 +83,16 @@ All API methods return a consistent response format:
 <CodeBlock language="typescript">
   {`interface ApiResponse<T> {
     success: boolean;
-    data?: T;
-    error?: string;
-    status?: number;
+    data: T | null;
+    error: string | null;
+    status: number;
 }`}
 </CodeBlock>
 
 - `success`: Boolean indicating if the request was successful
-- `data`: The response data (only present when `success` is `true`)
-- `error`: Error message (only present when `success` is `false`)
-- `status`: HTTP status code (only present when `success` is `false`)
+- `data`: The response data (null if unsuccessful)
+- `error`: Error message string (null if successful)
+- `status`: HTTP status code
 
 ## Error Handling
 
@@ -92,9 +100,9 @@ Always check the `success` property before accessing the
 data:
 
 <CodeBlock language="typescript">
-{`const response = await fmp.stock.getQuote({ symbol: 'INVALID' });
+{`const response = await fmp.quote.getQuote({ symbol: 'INVALID' });
 
-if (response.success) {
+if (response.success && response.data) {
 // Handle successful response
 console.log(response.data);
 } else {
@@ -107,19 +115,16 @@ console.error('Status:', response.status);
 
 ## Environment Variables
 
-For security, store your API key in environment variables:
+For security, store your API key in environment variables. The FMP client automatically detects the `FMP_API_KEY` environment variable:
 
 <CodeBlock language="typescript">
 {`import { FMP } from 'fmp-node-api';
 
-// Validate that API key exists
-if (!process.env.FMP_API_KEY) {
-throw new Error('FMP_API_KEY environment variable is required');
-}
+// Simply initialize without any parameters
+const fmp = new FMP(); // Automatically uses FMP_API_KEY from environment
 
-const fmp = new FMP({
-apiKey: process.env.FMP_API_KEY,
-});`}
+// The client will throw a clear error if no API key is found:
+// "FMP API key is required. Please provide it in the config or set the FMP_API_KEY environment variable."`}
 
 </CodeBlock>
 
@@ -127,6 +132,19 @@ Create a `.env` file in your project root:
 
 <CodeBlock language="env">{`# Your FMP API key (get one at https://financialmodelingprep.com/developer)
 FMP_API_KEY=your-api-key-here`}</CodeBlock>
+
+Or set it in your system environment:
+
+<CodeBlock language="bash">{`# Linux/macOS
+export FMP_API_KEY=your-api-key-here
+
+# Windows PowerShell
+
+$env:FMP_API_KEY="your-api-key-here"
+
+# Windows Command Prompt
+
+set FMP_API_KEY=your-api-key-here`}</CodeBlock>
 
 **⚠️ Security Note:** Never commit your `.env` file to version control. It should already be in your `.gitignore`.
 
@@ -138,6 +156,7 @@ All code blocks in this documentation include a copy button that appears when yo
 
 Now that you have the basics set up, explore:
 
+- [Configuration](/docs/configuration) - Detailed configuration options and best practices
 - [API Reference](/docs/api) - Complete endpoint documentation
 - [Stock Endpoints](/docs/api/stock) - Stock-specific API methods
 - [Financial Endpoints](/docs/api/financial) - Financial statement methods

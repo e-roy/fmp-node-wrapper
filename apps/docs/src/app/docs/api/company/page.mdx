@@ -54,7 +54,7 @@ The Company Endpoints provide access to comprehensive company information includ
 Retrieve comprehensive company profile information including financial metrics, company details, and market data.
 
 <CodeBlock language="typescript">
-  {`const profile = await fmp.company.getCompanyProfile({ symbol: 'AAPL' });`}
+  {`const profile = await fmp.company.getCompanyProfile('AAPL');`}
 </CodeBlock>
 
 <ParameterTable
@@ -119,7 +119,7 @@ Retrieve comprehensive company profile information including financial metrics, 
 Retrieve detailed executive compensation data including salary, bonuses, stock awards, and total compensation.
 
 <CodeBlock language="typescript">
-  {`const compensation = await fmp.company.getExecutiveCompensation({ symbol: 'AAPL' });`}
+  {`const compensation = await fmp.company.getExecutiveCompensation('AAPL');`}
 </CodeBlock>
 
 <ParameterTable
@@ -165,7 +165,7 @@ Retrieve detailed executive compensation data including salary, bonuses, stock a
 Retrieve company notes and financial statement information.
 
 <CodeBlock language="typescript">
-  {`const notes = await fmp.company.getCompanyNotes({ symbol: 'AAPL' });`}
+  {`const notes = await fmp.company.getCompanyNotes('AAPL');`}
 </CodeBlock>
 
 <ParameterTable
@@ -200,7 +200,7 @@ Retrieve company notes and financial statement information.
 Retrieve historical employee count data over time.
 
 <CodeBlock language="typescript">
-  {`const employeeData = await fmp.company.getHistoricalEmployeeCount({ symbol: 'AAPL' });`}
+  {`const employeeData = await fmp.company.getHistoricalEmployeeCount('AAPL');`}
 </CodeBlock>
 
 <ParameterTable
@@ -240,7 +240,7 @@ Retrieve historical employee count data over time.
 Retrieve current shares float information including free float, float shares, and outstanding shares.
 
 <CodeBlock language="typescript">
-  {`const sharesFloat = await fmp.company.getSharesFloat({ symbol: 'AAPL' });`}
+  {`const sharesFloat = await fmp.company.getSharesFloat('AAPL');`}
 </CodeBlock>
 
 <ParameterTable
@@ -275,7 +275,7 @@ Retrieve current shares float information including free float, float shares, an
 Retrieve historical shares float data over time.
 
 <CodeBlock language="typescript">
-  {`const historicalSharesFloat = await fmp.company.getHistoricalSharesFloat({ symbol: 'AAPL' });`}
+  {`const historicalSharesFloat = await fmp.company.getHistoricalSharesFloat('AAPL');`}
 </CodeBlock>
 
 <ParameterTable
@@ -372,7 +372,7 @@ Retrieve earnings call transcripts for specific quarters and years.
 Retrieve available transcript dates and data for a company's earnings calls.
 
 <CodeBlock language="typescript">
-  {`const transcriptData = await fmp.company.getCompanyTranscriptData({ symbol: 'AAPL' });`}
+  {`const transcriptData = await fmp.company.getCompanyTranscriptData('AAPL');`}
 </CodeBlock>
 
 <ParameterTable
@@ -535,11 +535,11 @@ Company endpoints are subject to the same rate limits as other FMP API endpoints
 <CodeBlock language="typescript">
   {`// Get comprehensive company information
 const [profile, compensation, employeeData, sharesFloat, transcriptData] = await Promise.all([
-  fmp.company.getCompanyProfile({ symbol: 'AAPL' }),
-  fmp.company.getExecutiveCompensation({ symbol: 'AAPL' }),
-  fmp.company.getHistoricalEmployeeCount({ symbol: 'AAPL' }),
-  fmp.company.getSharesFloat({ symbol: 'AAPL' }),
-  fmp.company.getCompanyTranscriptData({ symbol: 'AAPL' })
+  fmp.company.getCompanyProfile('AAPL'),
+  fmp.company.getExecutiveCompensation('AAPL'),
+  fmp.company.getHistoricalEmployeeCount('AAPL'),
+  fmp.company.getSharesFloat('AAPL'),
+  fmp.company.getCompanyTranscriptData('AAPL')
 ]);
 
 // Analyze company metrics
@@ -564,8 +564,8 @@ console.log('Latest transcript:', \`Q\${latestTranscript[1]} \${latestTranscript
 <CodeBlock language="typescript">
   {`// Get historical data for analysis
 const [historicalEmployees, historicalShares] = await Promise.all([
-  fmp.company.getHistoricalEmployeeCount({ symbol: 'AAPL' }),
-  fmp.company.getHistoricalSharesFloat({ symbol: 'AAPL' })
+  fmp.company.getHistoricalEmployeeCount('AAPL'),
+  fmp.company.getHistoricalSharesFloat('AAPL')
 ]);
 
 // Analyze trends

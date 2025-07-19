@@ -3,8 +3,6 @@ export * from './common';
 export * from './quote';
 export * from './stock';
 export * from './financial';
-export * from './forex';
-export * from './crypto';
 export * from './etf';
 export * from './mutual-fund';
 export * from './economic';

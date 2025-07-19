@@ -16,6 +16,9 @@ export interface CodeBlockProps {
 
 // Minimal function to handle MDX template literal indentation stripping
 function handleIndentation(code: string): string {
+  if (typeof code !== 'string') {
+    return String(code);
+  }
   const lines = code.split('\n');
 
   // Find the minimum indentation (excluding empty lines)

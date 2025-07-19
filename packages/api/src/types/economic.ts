@@ -47,10 +47,3 @@ export type EconomicIndicatorName =
   | 'commercialBankInterestRateOnCreditCardPlansAllAccounts'
   | '30YearFixedRateMortgageAverage'
   | '15YearFixedRateMortgageAverage';
-
-// Parameters for economic indicators
-export interface EconomicIndicatorParams {
-  name: EconomicIndicatorName;
-  from?: string;
-  to?: string;
-}

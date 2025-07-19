@@ -32,10 +32,17 @@ pnpm add fmp-node-api
 ```typescript
 import { FMP } from 'fmp-node-api';
 
+// Option 1: Use environment variable (recommended)
+const fmp = new FMP(); // Automatically uses FMP_API_KEY from environment
+
+// Option 2: Provide API key directly
 const fmp = new FMP({ apiKey: 'your-api-key' });
 
+// Option 3: Provide partial config with environment variable fallback
+const fmp = new FMP({ timeout: 15000 }); // Uses FMP_API_KEY from environment
+
 // Get stock quote
-const quote = await fmp.stock.getQuote({ symbol: 'AAPL' });
+const quote = await fmp.quote.getQuote('AAPL');
 
 // Get financial statements
 const incomeStatement = await fmp.financial.getIncomeStatement({
@@ -44,7 +51,66 @@ const incomeStatement = await fmp.financial.getIncomeStatement({
 });
 
 // Get forex data
-const forexQuote = await fmp.forex.getQuote({ symbol: 'EURUSD' });
+const forexQuote = await fmp.quote.getQuote('EURUSD');
+```
+
+## Configuration
+
+The FMP client supports multiple ways to configure your API key:
+
+### Environment Variable (Recommended)
+
+Set the `FMP_API_KEY` environment variable in your `.env` file or system environment:
+
+```bash
+# .env file
+FMP_API_KEY=your-api-key-here
+
+# Or set in your system
+export FMP_API_KEY=your-api-key-here
+```
+
+Then initialize the client without any parameters:
+
+```typescript
+import { FMP } from 'fmp-node-api';
+
+const fmp = new FMP(); // Automatically uses FMP_API_KEY
+```
+
+### Direct Configuration
+
+Provide the API key directly in the constructor:
+
+```typescript
+import { FMP } from 'fmp-node-api';
+
+const fmp = new FMP({
+  apiKey: 'your-api-key-here',
+  timeout: 10000, // optional
+});
+```
+
+### Mixed Configuration
+
+You can provide partial configuration and let the client fall back to environment variables:
+
+```typescript
+import { FMP } from 'fmp-node-api';
+
+const fmp = new FMP({
+  timeout: 15000, // custom timeout
+  // apiKey will be loaded from FMP_API_KEY environment variable
+});
+```
+
+### Configuration Options
+
+```typescript
+interface FMPConfig {
+  apiKey?: string; // Optional: API key (falls back to FMP_API_KEY env var)
+  timeout?: number; // Optional: Request timeout in milliseconds (default: 10000)
+}
 ```
 
 ## API Structure
@@ -56,6 +122,10 @@ The library is organized into logical modules for easy navigation and usage:
 ```typescript
 import { FMP } from 'fmp-node-api';
 
+// Using environment variable (recommended)
+const fmp = new FMP();
+
+// Or with explicit configuration
 const fmp = new FMP({
   apiKey: 'your-api-key',
   timeout: 10000, // optional
@@ -65,40 +135,68 @@ const fmp = new FMP({
 ### Available Modules
 
 - **`fmp.quote`** - Quote data for stocks, forex, crypto, commodities, and ETFs
-- **`fmp.stock`** - Stock market data (quotes, profiles, historical prices, etc.)
+- **`fmp.stock`** - Stock market data (market cap, splits, dividends, real-time prices)
 - **`fmp.financial`** - Financial statements (income, balance sheet, cash flow)
-- **`fmp.crypto`** - Cryptocurrency data
+- **`fmp.company`** - Company information and profiles
 - **`fmp.etf`** - ETF data and holdings
 - **`fmp.mutualFund`** - Mutual fund data
 - **`fmp.economic`** - Economic indicators
 - **`fmp.market`** - Market-wide data and performance
 - **`fmp.list`** - Stock lists and indices
 - **`fmp.calendar`** - Earnings and economic calendar
-- **`fmp.company`** - Company information and search
+- **`fmp.senateHouse`** - Congressional trading data
+- **`fmp.institutional`** - Form 13F filings and institutional ownership
+- **`fmp.insider`** - Insider trading data
+- **`fmp.sec`** - SEC filings and industry classification
 
 ## Usage Examples
 
-### Stock Data
+### Quote Data
 
 ```typescript
-// Get real-time quote
-const quote = await fmp.stock.getQuote({ symbol: 'AAPL' });
+// Get real-time quote for any asset type
+const quote = await fmp.quote.getQuote('AAPL');
 
-// Get company profile
-const profile = await fmp.stock.getCompanyProfile({ symbol: 'AAPL' });
+// Get multiple quotes
+const quotes = await fmp.quote.getQuotes(['AAPL', 'MSFT', 'GOOGL']);
 
 // Get historical prices
-const historical = await fmp.stock.getHistoricalPrice({
+const historical = await fmp.quote.getHistoricalPrice({
   symbol: 'AAPL',
   from: '2024-01-01',
   to: '2024-12-31',
 });
 
+// Get intraday data
+const intraday = await fmp.quote.getIntraday({
+  symbol: 'AAPL',
+  interval: '1hour',
+  from: '2024-01-01',
+  to: '2024-01-02',
+});
+```
+
+### Stock Data
+
+```typescript
+// Get market capitalization
+const marketCap = await fmp.stock.getMarketCap('AAPL');
+
 // Get stock splits
-const splits = await fmp.stock.getStockSplits({ symbol: 'AAPL' });
+const splits = await fmp.stock.getStockSplits('AAPL');
 
 // Get dividend history
-const dividends = await fmp.stock.getDividendHistory({ symbol: 'AAPL' });
+const dividends = await fmp.stock.getDividendHistory('AAPL');
+
+// Get real-time price data
+const realTimePrice = await fmp.stock.getRealTimePrice(['AAPL', 'MSFT', 'GOOGL']);
+
+// Get full real-time price data
+const fullRealTimeData = await fmp.stock.getRealTimePriceForMultipleStocks([
+  'AAPL',
+  'MSFT',
+  'GOOGL',
+]);
 ```
 
 ### Financial Statements
@@ -176,12 +274,10 @@ const unemployment = await fmp.economic.getUnemployment();
 
 ```typescript
 // Forex
-const forexQuote = await fmp.forex.getQuote({ symbol: 'EURUSD' });
-const forexList = await fmp.forex.getForexList();
+const forexQuote = await fmp.quote.getQuote('EURUSD');
 
 // Cryptocurrency
-const cryptoQuote = await fmp.crypto.getQuote({ symbol: 'BTCUSD' });
-const cryptoList = await fmp.crypto.getCryptoList();
+const cryptoQuote = await fmp.quote.getQuote('BTCUSD');
 
 // Stock lists and indices
 const sp500 = await fmp.list.getSP500();
@@ -204,7 +300,7 @@ const economic = await fmp.calendar.getEconomicCalendar({
 const companies = await fmp.company.searchCompany({ query: 'Apple' });
 
 // Company profile
-const companyProfile = await fmp.company.getCompanyProfile({ symbol: 'AAPL' });
+const companyProfile = await fmp.company.getCompanyProfile('AAPL');
 ```
 
 ## Testing
@@ -244,7 +340,7 @@ pnpm test:integration
 pnpm test:stock
 pnpm test:financial
 pnpm test:market
-pnpm test:forex
+pnpm test:quote
 pnpm test:economic
 pnpm test:list
 pnpm test:calendar
@@ -267,9 +363,9 @@ All API methods return a standardized response format:
 ```typescript
 interface APIResponse<T> {
   success: boolean;
-  data?: T;
-  error?: string;
-  status?: number;
+  data: T | null;
+  error: string | null;
+  status: number;
 }
 ```
 
@@ -278,15 +374,14 @@ interface APIResponse<T> {
 ```typescript
 {
   success: true,
-  data: [
-    {
-      symbol: 'AAPL',
-      price: 150.25,
-      change: 2.15,
-      changePercent: 1.45,
-      // ... other fields
-    }
-  ],
+  data: {
+    symbol: 'AAPL',
+    price: 150.25,
+    change: 2.15,
+    changePercent: 1.45,
+    // ... other fields
+  },
+  error: null,
   status: 200
 }
 ```
@@ -295,14 +390,16 @@ interface APIResponse<T> {
 
 ```typescript
 try {
-  const quote = await fmp.stock.getQuote({ symbol: 'INVALID' });
+  const quote = await fmp.quote.getQuote('INVALID');
 
   if (!quote.success) {
     console.error('API Error:', quote.error);
     return;
   }
 
-  console.log('Quote:', quote.data);
+  if (quote.data) {
+    console.log('Quote:', quote.data);
+  }
 } catch (error) {
   console.error('Network Error:', error);
 }
@@ -313,15 +410,11 @@ try {
 The library provides full TypeScript support with comprehensive type definitions:
 
 ```typescript
-import { StockQuote, CompanyProfile, IncomeStatement } from 'fmp-node-api';
+import { Quote, MarketCap, IncomeStatement } from 'fmp-node-api';
 
 // All responses are properly typed
-const quote: APIResponse<StockQuote[]> = await fmp.stock.getQuote({
-  symbol: 'AAPL',
-});
-const profile: APIResponse<CompanyProfile[]> = await fmp.stock.getCompanyProfile({
-  symbol: 'AAPL',
-});
+const quote: APIResponse<Quote> = await fmp.quote.getQuote('AAPL');
+const marketCap: APIResponse<MarketCap> = await fmp.stock.getMarketCap('AAPL');
 const income: APIResponse<IncomeStatement[]> = await fmp.financial.getIncomeStatement({
   symbol: 'AAPL',
 });
@@ -359,6 +452,12 @@ const formattedTimestamp = formatTimestamp(1705276800); // "1/15/2024, 12:00:00 
 ```typescript
 import { FMPClient } from 'fmp-node-api';
 
+// Using environment variable
+const client = new FMPClient({
+  timeout: 15000, // optional, apiKey from FMP_API_KEY env var
+});
+
+// Or with explicit API key
 const client = new FMPClient({
   apiKey: 'your-api-key',
   timeout: 15000, // optional
@@ -366,7 +465,7 @@ const client = new FMPClient({
 
 // Use individual endpoint classes
 const stockEndpoints = new StockEndpoints(client);
-const quote = await stockEndpoints.getQuote({ symbol: 'AAPL' });
+const marketCap = await stockEndpoints.getMarketCap('AAPL');
 ```
 
 ### Direct API Calls
@@ -393,7 +492,7 @@ pnpm test:endpoints     # All endpoint tests
 pnpm test:stock         # Stock endpoint tests only
 pnpm test:financial     # Financial endpoint tests only
 pnpm test:market        # Market endpoint tests only
-pnpm test:forex         # Forex endpoint tests only
+pnpm test:quote         # Quote endpoint tests only
 pnpm test:economic      # Economic endpoint tests only
 pnpm test:list          # List endpoint tests only
 pnpm test:calendar      # Calendar endpoint tests only
@@ -458,7 +557,7 @@ pnpm test:endpoints     # Run all endpoint tests
 pnpm test:stock         # Run stock endpoint tests
 pnpm test:financial     # Run financial endpoint tests
 pnpm test:market        # Run market endpoint tests
-pnpm test:forex         # Run forex endpoint tests
+pnpm test:quote         # Run quote endpoint tests
 pnpm test:economic      # Run economic endpoint tests
 pnpm test:list          # Run list endpoint tests
 pnpm test:calendar      # Run calendar endpoint tests
@@ -488,28 +587,34 @@ src/
 │   ├── common.ts          # Common types
 │   ├── stock.ts           # Stock types
 │   ├── financial.ts       # Financial types
-│   ├── forex.ts           # Forex types
-│   ├── crypto.ts          # Crypto types
+│   ├── quote.ts           # Quote types
 │   ├── etf.ts             # ETF types
 │   ├── mutual-fund.ts     # Mutual fund types
 │   ├── economic.ts        # Economic types
 │   ├── market.ts          # Market types
 │   ├── list.ts            # List types
 │   ├── calendar.ts        # Calendar types
-│   └── company.ts         # Company types
+│   ├── company.ts         # Company types
+│   ├── senate-house.ts    # Senate house types
+│   ├── institutional.ts   # Institutional types
+│   ├── insider.ts         # Insider types
+│   └── sec.ts             # SEC types
 ├── endpoints/             # API endpoint classes
 │   ├── index.ts
 │   ├── stock.ts
 │   ├── financial.ts
-│   ├── forex.ts
-│   ├── crypto.ts
+│   ├── quote.ts
 │   ├── etf.ts
 │   ├── mutual-fund.ts
 │   ├── economic.ts
 │   ├── market.ts
 │   ├── list.ts
 │   ├── calendar.ts
-│   └── company.ts
+│   ├── company.ts
+│   ├── senate-house.ts
+│   ├── institutional.ts
+│   ├── insider.ts
+│   └── sec.ts
 ├── utils/                 # Utility functions
 │   ├── index.ts
 │   ├── validation.ts      # Input validation
@@ -523,9 +628,8 @@ src/
 │   │   ├── stock.test.ts
 │   │   ├── financial.test.ts
 │   │   ├── market.test.ts
-│   │   ├── forex.test.ts
+│   │   ├── quote.test.ts
 │   │   ├── economic.test.ts
-│   │   ├── crypto.test.ts
 │   │   ├── etf.test.ts
 │   │   ├── mutual-fund.test.ts
 │   │   ├── list.test.ts

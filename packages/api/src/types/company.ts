@@ -1,3 +1,5 @@
+// Company-related types for FMP API
+
 export interface CompanyProfile {
   symbol: string;
   price: number;
