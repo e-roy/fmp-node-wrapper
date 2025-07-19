@@ -59,12 +59,10 @@ describe('Common Types', () => {
     it('should require apiKey and allow optional properties', () => {
       const config: FMPConfig = {
         apiKey: 'testapikey123456789012345678901234567890',
-        baseURL: 'https://test.com',
         timeout: 5000,
       };
 
       expect(config.apiKey).toBe('testapikey123456789012345678901234567890');
-      expect(config.baseURL).toBe('https://test.com');
       expect(config.timeout).toBe(5000);
     });
 
@@ -74,7 +72,6 @@ describe('Common Types', () => {
       };
 
       expect(config.apiKey).toBe('testapikey123456789012345678901234567890');
-      expect(config.baseURL).toBeUndefined();
       expect(config.timeout).toBeUndefined();
     });
   });

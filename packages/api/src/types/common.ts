@@ -10,8 +10,7 @@ export interface APIResponse<T = unknown> {
 
 // FMP API configuration
 export interface FMPConfig {
-  apiKey: string;
-  baseURL?: string;
+  apiKey?: string; // Optional since we support FMP_API_KEY environment variable
   timeout?: number;
 }
 

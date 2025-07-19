@@ -9,10 +9,9 @@ The FMP Node Wrapper includes a comprehensive set of helper utilities to enhance
 Discover and explore the available API methods at runtime.
 
 <CodeBlock language="typescript">
-```typescript
-import { FMP, FMPHelpers } from 'fmp-node-api';
+{`import { FMP, FMPHelpers } from 'fmp-node-api';
 
-const fmp = new FMP({ apiKey: 'your-api-key' });
+const fmp = new FMP(); // Uses FMP_API_KEY environment variable
 
 // Get all endpoint categories
 const categories = FMPHelpers.getEndpointCategories(fmp);
@@ -36,9 +35,7 @@ console.log('Has getQuote method:', hasMethod); // true
 // Get method information
 const methodInfo = FMPHelpers.getMethodInfo(fmp, 'stock', 'getQuote');
 console.log('Method info:', methodInfo);
-// Output: { name: 'getQuote', type: 'function', async: true }
-
-````
+// Output: { name: 'getQuote', type: 'function', async: true }`}
 
 </CodeBlock>
 
@@ -47,8 +44,7 @@ console.log('Method info:', methodInfo);
 Validate parameters and API responses with comprehensive error checking.
 
 <CodeBlock language="typescript">
-```typescript
-import { FMPValidation } from 'fmp-node-api';
+{`import { FMPValidation } from 'fmp-node-api';
 
 // Validate symbols
 FMPValidation.isValidSymbol('AAPL'); // true
@@ -76,8 +72,7 @@ console.error('Validation errors:', errors);
 }
 
 // Throw validation errors
-FMPValidation.throwIfInvalid(errors, 'Quote Parameters');
-````
+FMPValidation.throwIfInvalid(errors, 'Quote Parameters');`}
 
 </CodeBlock>
 
@@ -86,8 +81,7 @@ FMPValidation.throwIfInvalid(errors, 'Quote Parameters');
 Format and process financial data with common utilities.
 
 <CodeBlock language="typescript">
-```typescript
-import { FMPUtils } from 'fmp-node-api';
+{`import { FMPUtils } from 'fmp-node-api';
 
 // Format currency values
 FMPUtils.formatCurrency(1234.56); // '$1,234.56'
@@ -134,9 +128,7 @@ const result = await FMPUtils.retryWithBackoff(
 
 // Debounce and throttle functions
 const debouncedFn = FMPUtils.debounce(() => console.log('Debounced'), 300);
-const throttledFn = FMPUtils.throttle(() => console.log('Throttled'), 1000);
-
-````
+const throttledFn = FMPUtils.throttle(() => console.log('Throttled'), 1000);`}
 
 </CodeBlock>
 
@@ -145,10 +137,9 @@ const throttledFn = FMPUtils.throttle(() => console.log('Throttled'), 1000);
 Enhanced debugging and development tools.
 
 <CodeBlock language="typescript">
-```typescript
-import { FMP, FMPDebug } from 'fmp-node-api';
+{`import { FMP, FMPDebug } from 'fmp-node-api';
 
-const fmp = new FMP({ apiKey: 'your-api-key' });
+const fmp = new FMP(); // Uses FMP_API_KEY environment variable
 
 // Enable debug mode
 FMPDebug.enableDebugMode();
@@ -178,8 +169,7 @@ const debugFmp = FMPDebug.createDebugWrapper(fmp);
 
 // Log specific API calls
 FMPDebug.logApiCall('quote.getQuote', { symbol: 'AAPL' }, { success: true }, 150);
-FMPDebug.logApiError('quote.getQuote', { symbol: 'INVALID' }, new Error('Symbol not found'));
-````
+FMPDebug.logApiError('quote.getQuote', { symbol: 'INVALID' }, new Error('Symbol not found'));`}
 
 </CodeBlock>
 
@@ -195,8 +185,7 @@ The debug helpers support the following environment variables:
 Combine validation and error handling for robust applications:
 
 <CodeBlock language="typescript">
-```typescript
-import { FMP, FMPValidation, FMPUtils } from 'fmp-node-api';
+{`import { FMP, FMPValidation, FMPUtils } from 'fmp-node-api';
 
 async function getStockQuote(symbol: string) {
 // Validate input
@@ -204,7 +193,7 @@ const errors = FMPValidation.validateQuoteParams({ symbol });
 FMPValidation.throwIfInvalid(errors, 'Stock Quote Parameters');
 
 try {
-const fmp = new FMP({ apiKey: process.env.FMP_API_KEY! });
+const fmp = new FMP(); // Uses FMP_API_KEY environment variable
 const response = await fmp.quote.getQuote({ symbol });
 
     if (!FMPValidation.isValidResponse(response)) {
@@ -232,9 +221,7 @@ throw error;
 // Usage
 const formattedQuote = await getStockQuote('AAPL');
 console.log(formattedQuote);
-// Output: { symbol: 'AAPL', price: '$150.25', change: '$2.15', changePercent: '1.45%' }
-
-````
+// Output: { symbol: 'AAPL', price: '$150.25', change: '$2.15', changePercent: '1.45%' }`}
 
 </CodeBlock>
 
@@ -243,16 +230,15 @@ console.log(formattedQuote);
 Use utilities for efficient batch processing:
 
 <CodeBlock language="typescript">
-```typescript
-import { FMP, FMPUtils, FMPValidation } from 'fmp-node-api';
+{`import { FMP, FMPUtils, FMPValidation } from 'fmp-node-api';
 
 async function analyzeMultipleStocks(symbols: string[]) {
-const fmp = new FMP({ apiKey: process.env.FMP_API_KEY! });
+const fmp = new FMP(); // Uses FMP_API_KEY environment variable
 
 // Validate all symbols
 const invalidSymbols = symbols.filter(s => !FMPValidation.isValidSymbol(s));
 if (invalidSymbols.length > 0) {
-throw new Error(`Invalid symbols: ${invalidSymbols.join(', ')}`);
+throw new Error(\`Invalid symbols: \${invalidSymbols.join(', ')}\`);
 }
 
 // Create batch calls
@@ -284,8 +270,7 @@ error: response.error
 
 // Usage
 const analysis = await analyzeMultipleStocks(['AAPL', 'GOOGL', 'MSFT', 'TSLA']);
-console.table(analysis);
-````
+console.table(analysis);`}
 
 </CodeBlock>
 
@@ -302,18 +287,18 @@ console.table(analysis);
 All helper utilities are fully typed and provide excellent TypeScript support:
 
 <CodeBlock language="typescript">
-```typescript
-import { FMP, FMPHelpers, FMPValidation, FMPUtils, FMPDebug } from 'fmp-node-api';
+{`import { FMP, FMPHelpers, FMPValidation, FMPUtils, FMPDebug } from 'fmp-node-api';
 
 // All helpers provide full type safety
 const categories: string[] = FMPHelpers.getEndpointCategories(fmp);
 const isValid: boolean = FMPValidation.isValidSymbol('AAPL');
 const formatted: string = FMPUtils.formatCurrency(1234.56);
-const debugMode: boolean = FMPDebug.isDebugMode();
-
-```
+const debugMode: boolean = FMPDebug.isDebugMode();`}
 
 </CodeBlock>
 
 The helper utilities enhance the FMP Node Wrapper with powerful tools for validation, formatting, debugging, and API exploration while maintaining the library's TypeScript-first approach.
+
+```
+
 ```

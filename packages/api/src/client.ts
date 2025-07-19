@@ -38,6 +38,10 @@ export class FMPClient {
   private apiKey: string;
 
   constructor(config: FMPConfig) {
+    // API key should be validated by the FMP class before calling this constructor
+    if (!config.apiKey) {
+      throw new Error('API key is required for FMPClient');
+    }
     this.apiKey = config.apiKey;
 
     // Create separate clients for each version

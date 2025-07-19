@@ -25,7 +25,14 @@ import { MutualFundEndpoints } from './endpoints/mutual-fund';
  * ```typescript
  * import { FMP } from 'fmp-node-api';
  *
+ * // Option 1: Provide API key directly
  * const fmp = new FMP({ apiKey: 'your-api-key' });
+ *
+ * // Option 2: Use environment variable (FMP_API_KEY)
+ * const fmp = new FMP();
+ *
+ * // Option 3: Provide partial config with environment variable fallback
+ * const fmp = new FMP({ timeout: 15000 });
  *
  * // Get quote for any asset type
  * const quote = await fmp.quote.getQuote({ symbol: 'AAPL' });
@@ -57,13 +64,22 @@ export class FMP {
   public readonly sec: SECEndpoints;
   public readonly mutualFund: MutualFundEndpoints;
 
-  constructor(config: FMPConfig) {
+  constructor(config: FMPConfig = {}) {
+    // Get API key from config or environment variable
+    const apiKey = config.apiKey || process.env.FMP_API_KEY;
+
+    if (!apiKey) {
+      throw new Error(
+        'FMP API key is required. Please provide it in the config or set the FMP_API_KEY environment variable.',
+      );
+    }
+
     // Validate API key at construction time
-    if (!FMPValidation.isValidApiKey(config.apiKey)) {
+    if (!FMPValidation.isValidApiKey(apiKey)) {
       throw new Error('Invalid API key format');
     }
 
-    const client = new FMPClient(config);
+    const client = new FMPClient({ ...config, apiKey });
 
     this.stock = new StockEndpoints(client);
     this.financial = new FinancialEndpoints(client);

@@ -11,9 +11,17 @@ First, initialize the client with your API key:
 <CodeBlock language="typescript">
 {`import { FMP } from 'fmp-node-api';
 
-// Initialize the client
+// Option 1: Use environment variable (recommended)
+const fmp = new FMP(); // Automatically uses FMP_API_KEY from environment
+
+// Option 2: Provide API key directly
 const fmp = new FMP({
 apiKey: 'your-api-key-here',
+});
+
+// Option 3: Mixed configuration
+const fmp = new FMP({
+timeout: 15000, // custom timeout, apiKey from FMP_API_KEY env var
 });`}
 
 </CodeBlock>

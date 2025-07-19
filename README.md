@@ -41,7 +41,11 @@ Sign up at [Financial Modeling Prep](https://site.financialmodelingprep.com/deve
 ```typescript
 import { FMP } from 'fmp-node-api';
 
-// Initialize the client
+// Option 1: Use environment variable (recommended)
+// Set FMP_API_KEY=your-api-key-here in your .env file or environment
+const fmp = new FMP();
+
+// Option 2: Provide API key directly
 const fmp = new FMP({
   apiKey: 'your-api-key-here',
 });

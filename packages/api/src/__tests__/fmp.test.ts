@@ -2,6 +2,56 @@ import { FMP } from '../fmp';
 import { FMPClient } from '../client';
 import { API_KEY } from './utils/test-setup';
 
+// Mock the environment variable
+const originalEnv = process.env.FMP_API_KEY;
+
+describe('FMP Class', () => {
+  beforeEach(() => {
+    // Clear any existing API key
+    delete process.env.FMP_API_KEY;
+  });
+
+  afterEach(() => {
+    // Restore original environment
+    if (originalEnv) {
+      process.env.FMP_API_KEY = originalEnv;
+    } else {
+      delete process.env.FMP_API_KEY;
+    }
+  });
+
+  describe('Constructor', () => {
+    it('should create instance with explicit API key', () => {
+      const fmp = new FMP({ apiKey: 'testapikey32characterslong123456789012345' });
+      expect(fmp).toBeInstanceOf(FMP);
+    });
+
+    it('should create instance with environment variable', () => {
+      process.env.FMP_API_KEY = 'envapikey32characterslong123456789012345';
+      const fmp = new FMP();
+      expect(fmp).toBeInstanceOf(FMP);
+    });
+
+    it('should create instance with partial config and environment variable', () => {
+      process.env.FMP_API_KEY = 'envapikey32characterslong123456789012345';
+      const fmp = new FMP({ timeout: 15000 });
+      expect(fmp).toBeInstanceOf(FMP);
+    });
+
+    it('should throw error when no API key is provided', () => {
+      expect(() => new FMP()).toThrow('FMP API key is required');
+    });
+
+    it('should throw error when empty API key is provided', () => {
+      expect(() => new FMP({ apiKey: '' })).toThrow('FMP API key is required');
+    });
+
+    it('should throw error when invalid API key format is provided', () => {
+      expect(() => new FMP({ apiKey: 'invalid' })).toThrow('Invalid API key format');
+    });
+  });
+});
+
 describe('FMP', () => {
   let fmp: FMP;
 
@@ -43,22 +93,27 @@ describe('FMP', () => {
   });
 
   describe('API Key Validation', () => {
+    beforeEach(() => {
+      // Ensure no environment variable is set for these tests
+      delete process.env.FMP_API_KEY;
+    });
+
     it('should throw error for empty API key', () => {
       expect(() => {
         new FMP({ apiKey: '' });
-      }).toThrow('Invalid API key format');
+      }).toThrow('FMP API key is required');
     });
 
     it('should throw error for undefined API key', () => {
       expect(() => {
         new FMP({ apiKey: undefined as any });
-      }).toThrow('Invalid API key format');
+      }).toThrow('FMP API key is required');
     });
 
     it('should throw error for null API key', () => {
       expect(() => {
         new FMP({ apiKey: null as any });
-      }).toThrow('Invalid API key format');
+      }).toThrow('FMP API key is required');
     });
 
     it('should accept valid API key', () => {

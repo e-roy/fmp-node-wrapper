@@ -19,18 +19,13 @@ Get started with the FMP Node Wrapper in just a few steps:
 <CodeBlock language="bash">{`npm install fmp-node-api`}</CodeBlock>
 
 <CodeBlock language="typescript">
-{`import { FMPClient, FMPEndpoints } from 'fmp-node-api';
+{`import { FMP } from 'fmp-node-api';
 
-// Initialize the client
-const client = new FMPClient({
-apiKey: 'your-api-key-here',
-});
-
-// Create endpoints instance
-const fmp = new FMPEndpoints(client);
+// Initialize the client (uses FMP_API_KEY environment variable)
+const fmp = new FMP();
 
 // Get a stock quote
-const quote = await fmp.getQuote({ symbol: 'AAPL' });`}
+const quote = await fmp.quote.getQuote({ symbol: 'AAPL' });`}
 
 </CodeBlock>
 
@@ -59,6 +54,10 @@ Access company profiles, ratios, and fundamental data.
 ## Getting Started
 
 Ready to dive in? Start with our [Getting Started Guide](/docs/getting-started) to learn how to set up and use the library.
+
+## Configuration
+
+Learn about different configuration options including environment variables, security best practices, and troubleshooting in our [Configuration Guide](/docs/configuration).
 
 ## API Reference
 

@@ -32,7 +32,14 @@ pnpm add fmp-node-api
 ```typescript
 import { FMP } from 'fmp-node-api';
 
+// Option 1: Use environment variable (recommended)
+const fmp = new FMP(); // Automatically uses FMP_API_KEY from environment
+
+// Option 2: Provide API key directly
 const fmp = new FMP({ apiKey: 'your-api-key' });
+
+// Option 3: Provide partial config with environment variable fallback
+const fmp = new FMP({ timeout: 15000 }); // Uses FMP_API_KEY from environment
 
 // Get stock quote
 const quote = await fmp.quote.getQuote({ symbol: 'AAPL' });
@@ -47,6 +54,65 @@ const incomeStatement = await fmp.financial.getIncomeStatement({
 const forexQuote = await fmp.quote.getQuote({ symbol: 'EURUSD' });
 ```
 
+## Configuration
+
+The FMP client supports multiple ways to configure your API key:
+
+### Environment Variable (Recommended)
+
+Set the `FMP_API_KEY` environment variable in your `.env` file or system environment:
+
+```bash
+# .env file
+FMP_API_KEY=your-api-key-here
+
+# Or set in your system
+export FMP_API_KEY=your-api-key-here
+```
+
+Then initialize the client without any parameters:
+
+```typescript
+import { FMP } from 'fmp-node-api';
+
+const fmp = new FMP(); // Automatically uses FMP_API_KEY
+```
+
+### Direct Configuration
+
+Provide the API key directly in the constructor:
+
+```typescript
+import { FMP } from 'fmp-node-api';
+
+const fmp = new FMP({
+  apiKey: 'your-api-key-here',
+  timeout: 10000, // optional
+});
+```
+
+### Mixed Configuration
+
+You can provide partial configuration and let the client fall back to environment variables:
+
+```typescript
+import { FMP } from 'fmp-node-api';
+
+const fmp = new FMP({
+  timeout: 15000, // custom timeout
+  // apiKey will be loaded from FMP_API_KEY environment variable
+});
+```
+
+### Configuration Options
+
+```typescript
+interface FMPConfig {
+  apiKey?: string; // Optional: API key (falls back to FMP_API_KEY env var)
+  timeout?: number; // Optional: Request timeout in milliseconds (default: 10000)
+}
+```
+
 ## API Structure
 
 The library is organized into logical modules for easy navigation and usage:
@@ -56,6 +122,10 @@ The library is organized into logical modules for easy navigation and usage:
 ```typescript
 import { FMP } from 'fmp-node-api';
 
+// Using environment variable (recommended)
+const fmp = new FMP();
+
+// Or with explicit configuration
 const fmp = new FMP({
   apiKey: 'your-api-key',
   timeout: 10000, // optional
@@ -386,6 +456,12 @@ const formattedTimestamp = formatTimestamp(1705276800); // "1/15/2024, 12:00:00 
 ```typescript
 import { FMPClient } from 'fmp-node-api';
 
+// Using environment variable
+const client = new FMPClient({
+  timeout: 15000, // optional, apiKey from FMP_API_KEY env var
+});
+
+// Or with explicit API key
 const client = new FMPClient({
   apiKey: 'your-api-key',
   timeout: 15000, // optional
