@@ -15,120 +15,255 @@ export class CompanyEndpoints {
   constructor(private client: FMPClient) {}
 
   /**
-   * Get company profile
-   * https://site.financialmodelingprep.com/developer/docs#company-profile-company-information
-   * @param symbol - The stock symbol to get the profile for
-   * @returns Get a comprehensive overview of a company with our Company Profile endpoint. This endpoint provides key information such as price, beta, market capitalization, description, headquarters, and more.
+   * Get comprehensive company profile and information
+   *
+   * Provides detailed company information including financial metrics, business description,
+   * headquarters location, and key performance indicators. Essential for fundamental analysis
+   * and understanding a company's business model and market position.
+   *
+   * @param symbol - The stock symbol to get the profile for (e.g., 'AAPL', 'MSFT', 'GOOGL')
+   *
+   * @returns Promise resolving to comprehensive company profile with financial and business information
+   *
+   * @example
+   * ```typescript
+   * // Get Apple's company profile
+   * const profile = await fmp.company.getCompanyProfile('AAPL');
+   * console.log(`Company: ${profile.data.companyName}`);
+   * console.log(`Industry: ${profile.data.industry}`);
+   * console.log(`Market Cap: $${profile.data.mktCap.toLocaleString()}`);
+   * console.log(`Description: ${profile.data.description.substring(0, 100)}...`);
+   *
+   * // Get Microsoft's profile
+   * const msftProfile = await fmp.company.getCompanyProfile('MSFT');
+   * ```
+   *
+   * @see {@link https://site.financialmodelingprep.com/developer/docs#company-profile-company-information|FMP Company Profile Documentation}
    */
-  async getCompanyProfile({ symbol }: { symbol: string }): Promise<APIResponse<CompanyProfile>> {
+  async getCompanyProfile(symbol: string): Promise<APIResponse<CompanyProfile>> {
     return this.client.getSingle(`/profile/${symbol}`, 'v3');
   }
 
   /**
-   * Get executive compensation
-   * https://site.financialmodelingprep.com/developer/docs#executive-compensation-company-information
-   * @param symbol - The stock symbol to get the executive compensation for
-   * @returns Understand how a company compensates its executives with our Executive Compensation endpoint. This endpoint provides information such as salary, bonus, and stock options for each executive.
+   * Get executive compensation and governance information
+   *
+   * Provides detailed compensation data for company executives including salary, bonuses,
+   * stock options, and other benefits. Essential for governance analysis and understanding
+   * executive pay structures and alignment with shareholder interests.
+   *
+   * @param symbol - The stock symbol to get executive compensation for (e.g., 'AAPL', 'MSFT', 'TSLA')
+   *
+   * @returns Promise resolving to array of executive compensation data with detailed pay information
+   *
+   * @example
+   * ```typescript
+   * // Get Apple's executive compensation
+   * const compensation = await fmp.company.getExecutiveCompensation('AAPL');
+   * compensation.data.forEach(exec => {
+   *   console.log(`${exec.name} (${exec.title}):`);
+   *   console.log(`  Salary: $${exec.salary.toLocaleString()}`);
+   *   console.log(`  Bonus: $${exec.bonus.toLocaleString()}`);
+   *   console.log(`  Stock Options: $${exec.stockAwards.toLocaleString()}`);
+   * });
+   *
+   * // Get Tesla's executive compensation
+   * const teslaComp = await fmp.company.getExecutiveCompensation('TSLA');
+   * ```
+   *
+   * @see {@link https://site.financialmodelingprep.com/developer/docs#executive-compensation-company-information|FMP Executive Compensation Documentation}
    */
-  async getExecutiveCompensation({
-    symbol,
-  }: {
-    symbol: string;
-  }): Promise<APIResponse<ExecutiveCompensation[]>> {
-    const params: { symbol: string } = { symbol };
-
-    return this.client.get(`/governance/executive_compensation`, 'v4', params);
+  async getExecutiveCompensation(symbol: string): Promise<APIResponse<ExecutiveCompensation[]>> {
+    return this.client.get(`/governance/executive_compensation`, 'v4', { symbol });
   }
 
   /**
-   * Get company notes
-   * https://site.financialmodelingprep.com/developer/docs#company-notes-company-information
-   * @param symbol - The stock symbol to get the notes for
-   * @returns Stay up-to-date on a company's financial condition, operations, and risks with our Company Notes endpoint. This endpoint provides information about notes reported by a company in their financial statements.
+   * Get company notes and financial disclosures
+   *
+   * Provides important notes and disclosures from company financial statements.
+   * These notes contain critical information about accounting policies, risks,
+   * contingencies, and other material information that affects financial analysis.
+   *
+   * @param symbol - The stock symbol to get notes for (e.g., 'AAPL', 'MSFT', 'JPM')
+   *
+   * @returns Promise resolving to array of company notes with detailed disclosure information
+   *
+   * @example
+   * ```typescript
+   * // Get Apple's company notes
+   * const notes = await fmp.company.getCompanyNotes('AAPL');
+   * notes.data.forEach(note => {
+   *   console.log(`Note ${note.noteNumber}: ${note.noteTitle}`);
+   *   console.log(`  Content: ${note.noteContent.substring(0, 100)}...`);
+   * });
+   *
+   * // Get JPMorgan's notes
+   * const jpmNotes = await fmp.company.getCompanyNotes('JPM');
+   * ```
+   *
+   * @see {@link https://site.financialmodelingprep.com/developer/docs#company-notes-company-information|FMP Company Notes Documentation}
    */
-  async getCompanyNotes({ symbol }: { symbol: string }): Promise<APIResponse<CompanyNotes[]>> {
-    const params: { symbol: string } = { symbol };
-
-    return this.client.get(`/company-notes`, 'v4', params);
+  async getCompanyNotes(symbol: string): Promise<APIResponse<CompanyNotes[]>> {
+    return this.client.get(`/company-notes`, 'v4', { symbol });
   }
 
   /**
-   * Get historical employee count
-   * https://site.financialmodelingprep.com/developer/docs#historical-employee-company-information
-   * @param symbol - The stock symbol to get the historical employee count for
-   * @returns Track a company's employee count over time with our Historical Employee Count endpoint. This endpoint provides information about the number of employees a company has had each year.
+   * Get historical employee count data
+   *
+   * Provides historical data on company employee counts over time.
+   * Useful for analyzing company growth, operational efficiency, and workforce trends.
+   * Employee count is often a key indicator of company expansion or contraction.
+   *
+   * @param symbol - The stock symbol to get historical employee count for (e.g., 'AAPL', 'MSFT', 'AMZN')
+   *
+   * @returns Promise resolving to array of historical employee count data with year-by-year information
+   *
+   * @example
+   * ```typescript
+   * // Get Apple's employee count history
+   * const employees = await fmp.company.getHistoricalEmployeeCount('AAPL');
+   * employees.data.forEach(year => {
+   *   console.log(`${year.year}: ${year.employeeCount.toLocaleString()} employees`);
+   * });
+   *
+   * // Get Amazon's employee growth
+   * const amazonEmployees = await fmp.company.getHistoricalEmployeeCount('AMZN');
+   * ```
+   *
+   * @see {@link https://site.financialmodelingprep.com/developer/docs#historical-employee-company-information|FMP Historical Employee Count Documentation}
    */
-  async getHistoricalEmployeeCount({
-    symbol,
-  }: {
-    symbol: string;
-  }): Promise<APIResponse<HistoricalEmployeeCount[]>> {
-    const params: { symbol: string } = { symbol };
-
-    return this.client.get(`/historical/employee_count`, 'v4', params);
+  async getHistoricalEmployeeCount(
+    symbol: string,
+  ): Promise<APIResponse<HistoricalEmployeeCount[]>> {
+    return this.client.get(`/historical/employee_count`, 'v4', { symbol });
   }
 
   /**
-   * Get shares float
-   * https://site.financialmodelingprep.com/developer/docs#company-share-float-share-float
-   * @param symbol - The stock symbol to get the shares float for
-   * @returns The FMP Company Share Float endpoint provides the total number of shares that are publicly traded for a given company. This is also known as the company's float. The float is calculated by subtracting the number of restricted shares from the total number of outstanding shares.
+   * Get current shares float information
+   *
+   * Provides the total number of shares that are publicly traded (float) for a company.
+   * The float is calculated by subtracting restricted shares from total outstanding shares.
+   * Important for understanding liquidity, volatility, and trading dynamics.
+   *
+   * @param symbol - The stock symbol to get shares float for (e.g., 'AAPL', 'TSLA', 'NVDA')
+   *
+   * @returns Promise resolving to shares float data with current float information
+   *
+   * @example
+   * ```typescript
+   * // Get Apple's shares float
+   * const float = await fmp.company.getSharesFloat('AAPL');
+   * console.log(`Float: ${float.data.sharesFloat.toLocaleString()} shares`);
+   * console.log(`Outstanding: ${float.data.sharesOutstanding.toLocaleString()} shares`);
+   * console.log(`Restricted: ${float.data.restrictedShares.toLocaleString()} shares`);
+   *
+   * // Get Tesla's float
+   * const teslaFloat = await fmp.company.getSharesFloat('TSLA');
+   * ```
+   *
+   * @see {@link https://site.financialmodelingprep.com/developer/docs#company-share-float-share-float|FMP Shares Float Documentation}
    */
-  async getSharesFloat({ symbol }: { symbol: string }): Promise<APIResponse<SharesFloat>> {
-    const params: { symbol: string } = { symbol };
-
-    return this.client.getSingle(`/shares_float`, 'v4', params);
+  async getSharesFloat(symbol: string): Promise<APIResponse<SharesFloat>> {
+    return this.client.getSingle(`/shares_float`, 'v4', { symbol });
   }
 
   /**
-   * Get historical shares float
-   * https://site.financialmodelingprep.com/developer/docs#company-historical-share-float
-   * @param symbol - The stock symbol to get the historical shares float for
-   * @returns The FMP Historical Share Float endpoint provides historical data on the number of shares that are publicly traded for a given company. This is also known as the company's float. The float is calculated by subtracting the number of restricted shares from the total number of outstanding shares.
+   * Get historical shares float data
+   *
+   * Provides historical data on company shares float over time.
+   * Useful for analyzing changes in liquidity, share issuance, and corporate actions
+   * that affect the number of publicly traded shares.
+   *
+   * @param symbol - The stock symbol to get historical shares float for (e.g., 'AAPL', 'TSLA', 'NVDA')
+   *
+   * @returns Promise resolving to array of historical shares float data with date-by-date information
+   *
+   * @example
+   * ```typescript
+   * // Get Apple's historical float
+   * const historicalFloat = await fmp.company.getHistoricalSharesFloat('AAPL');
+   * historicalFloat.data.forEach(entry => {
+   *   console.log(`${entry.date}: ${entry.sharesFloat.toLocaleString()} shares`);
+   * });
+   *
+   * // Get Tesla's float history
+   * const teslaHistory = await fmp.company.getHistoricalSharesFloat('TSLA');
+   * ```
+   *
+   * @see {@link https://site.financialmodelingprep.com/developer/docs#company-historical-share-float|FMP Historical Shares Float Documentation}
    */
-  async getHistoricalSharesFloat({
-    symbol,
-  }: {
-    symbol: string;
-  }): Promise<APIResponse<HistoricalSharesFloat[]>> {
-    const params: { symbol: string } = { symbol };
-
-    return this.client.get(`/historical/shares_float`, 'v4', params);
+  async getHistoricalSharesFloat(symbol: string): Promise<APIResponse<HistoricalSharesFloat[]>> {
+    return this.client.get(`/historical/shares_float`, 'v4', { symbol });
   }
 
   /**
-   * Get earnings call transcript
-   * https://site.financialmodelingprep.com/developer/docs#earnings-transcript-earnings-transcripts
-   * @param symbol - The stock symbol to get the earnings call transcript for
-   * @param year - The year of the earnings call
-   * @param quarter - The quarter of the earnings call
-   * @returns The FMP Earnings Call Transcript endpoint provides the transcript of a company's earnings call.
+   * Get earnings call transcript for specific quarter
+   *
+   * Provides the full transcript of a company's earnings conference call.
+   * Contains detailed Q&A sessions, management commentary, and insights into
+   * company performance, strategy, and future outlook.
+   *
+   * @param params - Earnings call transcript request parameters
+   * @param params.symbol - The stock symbol to get transcript for (e.g., 'AAPL', 'MSFT', 'TSLA')
+   * @param params.year - The year of the earnings call (e.g., 2024)
+   * @param params.quarter - The quarter of the earnings call (1, 2, 3, or 4)
+   *
+   * @returns Promise resolving to earnings call transcript with full text content
+   *
+   * @example
+   * ```typescript
+   * // Get Apple's Q1 2024 earnings call
+   * const transcript = await fmp.company.getEarningsCallTranscript({
+   *   symbol: 'AAPL',
+   *   year: 2024,
+   *   quarter: 1
+   * });
+   * console.log(`Transcript: ${transcript.data[0].content.substring(0, 200)}...`);
+   *
+   * // Get Tesla's Q4 2023 earnings call
+   * const teslaTranscript = await fmp.company.getEarningsCallTranscript({
+   *   symbol: 'TSLA',
+   *   year: 2023,
+   *   quarter: 4
+   * });
+   * ```
+   *
+   * @see {@link https://site.financialmodelingprep.com/developer/docs#earnings-transcript-earnings-transcripts|FMP Earnings Call Transcript Documentation}
    */
-  async getEarningsCallTranscript({
-    symbol,
-    year,
-    quarter,
-  }: {
+  async getEarningsCallTranscript(params: {
     symbol: string;
     year: number;
     quarter: number;
   }): Promise<APIResponse<EarningsCallTranscript[]>> {
-    const params: { year: number; quarter: number } = { year, quarter };
-    return this.client.getSingle(`/earning_call_transcript/${symbol}`, 'v3', params);
+    const { symbol, year, quarter } = params;
+    return this.client.getSingle(`/earning_call_transcript/${symbol}`, 'v3', { year, quarter });
   }
 
   /**
-   * Get company transcript dates
-   * https://site.financialmodelingprep.com/developer/docs#transcript-dates-earnings-transcripts
-   * @param symbol - The stock symbol to get the transcript data for
-   * @returns The FMP Company Transcript Data endpoint provides the transcript data for a company's earnings call.
+   * Get available earnings call transcript dates
+   *
+   * Provides a list of all available earnings call transcript dates for a company.
+   * Useful for discovering which quarters have transcripts available before
+   * requesting the full transcript content.
+   *
+   * @param symbol - The stock symbol to get transcript dates for (e.g., 'AAPL', 'MSFT', 'TSLA')
+   *
+   * @returns Promise resolving to array of available transcript dates with quarter information
+   *
+   * @example
+   * ```typescript
+   * // Get Apple's available transcript dates
+   * const transcriptDates = await fmp.company.getCompanyTranscriptData('AAPL');
+   * transcriptDates.data.forEach(date => {
+   *   console.log(`Q${date.quarter} ${date.year}: ${date.date}`);
+   * });
+   *
+   * // Get Microsoft's transcript availability
+   * const msftDates = await fmp.company.getCompanyTranscriptData('MSFT');
+   * ```
+   *
+   * @see {@link https://site.financialmodelingprep.com/developer/docs#transcript-dates-earnings-transcripts|FMP Company Transcript Data Documentation}
    */
-  async getCompanyTranscriptData({
-    symbol,
-  }: {
-    symbol: string;
-  }): Promise<APIResponse<CompanyTranscriptData[]>> {
-    const params: { symbol: string } = { symbol };
-    return this.client.getSingle(`/earning_call_transcript`, 'v4', params);
+  async getCompanyTranscriptData(symbol: string): Promise<APIResponse<CompanyTranscriptData[]>> {
+    return this.client.getSingle(`/earning_call_transcript`, 'v4', { symbol });
   }
 }

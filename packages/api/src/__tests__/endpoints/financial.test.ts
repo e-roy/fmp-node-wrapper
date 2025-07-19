@@ -900,9 +900,7 @@ describe('Financial Endpoints', () => {
 
   describe('getEarningsSurprises', () => {
     it('should fetch earnings surprises for AAPL', async () => {
-      const result = await fmp.financial.getEarningsSurprises({
-        symbol: 'AAPL',
-      });
+      const result = await fmp.financial.getEarningsSurprises('AAPL');
 
       expect(result.success).toBe(true);
       expect(result.data).toBeDefined();
@@ -921,9 +919,7 @@ describe('Financial Endpoints', () => {
     }, 15000);
 
     it('should fetch earnings surprises for TSLA', async () => {
-      const result = await fmp.financial.getEarningsSurprises({
-        symbol: 'TSLA',
-      });
+      const result = await fmp.financial.getEarningsSurprises('TSLA');
 
       expect(result.success).toBe(true);
       expect(result.data).toBeDefined();

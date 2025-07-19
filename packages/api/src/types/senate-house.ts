@@ -1,20 +1,5 @@
 // Senate and House trading types for FMP API
 
-// Parameter interfaces
-export interface SenateHouseTradingParams {
-  symbol: string;
-}
-
-// Senate & House trading RSS feed parameters
-export interface SenateHouseTradingRSSFeedParams {
-  page: number;
-}
-
-// Senate trading by name parameters
-export interface SenateHouseTradingByNameParams {
-  name: string;
-}
-
 // Senate trading response interface
 export interface SenateTradingResponse {
   firstName: string;

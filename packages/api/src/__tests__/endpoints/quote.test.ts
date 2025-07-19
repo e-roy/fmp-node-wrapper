@@ -23,7 +23,7 @@ describe('QuoteEndpoints', () => {
       };
       mockClient.getSingle.mockResolvedValue(mockResponse);
 
-      const result = await quoteEndpoints.getQuote({ symbol: 'AAPL' });
+      const result = await quoteEndpoints.getQuote('AAPL');
 
       expect(mockClient.getSingle).toHaveBeenCalledWith('/quote/AAPL', 'v3');
       expect(result).toEqual(mockResponse);
@@ -38,7 +38,7 @@ describe('QuoteEndpoints', () => {
       };
       mockClient.getSingle.mockResolvedValue(mockResponse);
 
-      const result = await quoteEndpoints.getQuote({ symbol: 'BTCUSD' });
+      const result = await quoteEndpoints.getQuote('BTCUSD');
 
       expect(mockClient.getSingle).toHaveBeenCalledWith('/quote/BTCUSD', 'v3');
       expect(result).toEqual(mockResponse);
@@ -53,7 +53,7 @@ describe('QuoteEndpoints', () => {
       };
       mockClient.getSingle.mockResolvedValue(mockResponse);
 
-      const result = await quoteEndpoints.getQuote({ symbol: 'EURUSD' });
+      const result = await quoteEndpoints.getQuote('EURUSD');
 
       expect(mockClient.getSingle).toHaveBeenCalledWith('/quote/EURUSD', 'v3');
       expect(result).toEqual(mockResponse);
@@ -68,7 +68,7 @@ describe('QuoteEndpoints', () => {
       };
       mockClient.getSingle.mockResolvedValue(mockResponse);
 
-      const result = await quoteEndpoints.getQuote({ symbol: 'ZOUSX' });
+      const result = await quoteEndpoints.getQuote('ZOUSX');
 
       expect(mockClient.getSingle).toHaveBeenCalledWith('/quote/ZOUSX', 'v3');
       expect(result).toEqual(mockResponse);

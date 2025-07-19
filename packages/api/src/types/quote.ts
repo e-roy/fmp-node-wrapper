@@ -1,23 +1,5 @@
 // Quote-related types for FMP API
 
-// Quote parameter interfaces
-export interface QuoteParams {
-  symbol: string;
-}
-
-export interface HistoricalPriceParams {
-  symbol: string;
-  from?: string;
-  to?: string;
-}
-
-export interface IntradayParams {
-  symbol: string;
-  interval: '1min' | '5min' | '15min' | '30min' | '1hour' | '4hour';
-  from?: string;
-  to?: string;
-}
-
 // Quote data structure - unified for all asset types
 export interface Quote {
   symbol: string;

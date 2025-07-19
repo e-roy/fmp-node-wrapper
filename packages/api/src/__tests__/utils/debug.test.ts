@@ -362,7 +362,7 @@ describe('FMPDebug', () => {
       };
       jest.spyOn(fmp.quote, 'getQuote').mockResolvedValue(mockResponse);
 
-      await wrapper.quote.getQuote({ symbol: 'AAPL' });
+      await wrapper.quote.getQuote('AAPL');
 
       expect(mockConsole.log).toHaveBeenCalledWith(
         '🔍 FMP API Call:',
@@ -381,7 +381,7 @@ describe('FMPDebug', () => {
 
       jest.spyOn(fmp.quote, 'getQuote').mockRejectedValue(testError);
 
-      await expect(wrapper.quote.getQuote({ symbol: 'AAPL' })).rejects.toThrow('Test error');
+      await expect(wrapper.quote.getQuote('AAPL')).rejects.toThrow('Test error');
 
       expect(mockConsole.error).toHaveBeenCalledWith(
         '❌ FMP API Error:',

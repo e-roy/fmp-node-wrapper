@@ -19,7 +19,7 @@ describe('Mutual Fund Endpoints', () => {
         return;
       }
 
-      const result = await fmp.mutualFund.getHolders({ symbol: 'VFINX' });
+      const result = await fmp.mutualFund.getHolders('VFINX');
 
       expect(result.success).toBe(true);
       expect(result.data).toBeDefined();

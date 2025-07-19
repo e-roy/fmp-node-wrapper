@@ -251,17 +251,31 @@ export class FMPDebug {
                   const startTime = Date.now();
                   const endpoint = `${String(prop)}.${String(methodName)}`;
 
+                  // Construct proper parameter object based on method signature
+                  let params: any;
+                  if (
+                    methodName === 'getQuote' &&
+                    args.length === 1 &&
+                    typeof args[0] === 'string'
+                  ) {
+                    params = { symbol: args[0] };
+                  } else if (args.length === 1 && typeof args[0] === 'object' && args[0] !== null) {
+                    params = args[0];
+                  } else {
+                    params = args;
+                  }
+
                   try {
-                    FMPDebug.logApiCall(endpoint, args[0], null);
+                    FMPDebug.logApiCall(endpoint, params, null);
                     const result = await (method as (...args: any[]) => any).apply(
                       endpointTarget,
                       args,
                     );
                     const duration = Date.now() - startTime;
-                    FMPDebug.logApiCall(endpoint, args[0], result, duration);
+                    FMPDebug.logApiCall(endpoint, params, result, duration);
                     return result;
                   } catch (error) {
-                    FMPDebug.logApiError(endpoint, args[0], error);
+                    FMPDebug.logApiError(endpoint, params, error);
                     throw error;
                   }
                 };

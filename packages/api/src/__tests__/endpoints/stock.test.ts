@@ -27,9 +27,7 @@ describe('Stock Endpoints', () => {
           console.log('Skipping market cap test - no API key available');
           return;
         }
-        const result = await fmp.stock.getMarketCap({
-          symbol: TEST_SYMBOLS.STOCK,
-        });
+        const result = await fmp.stock.getMarketCap(TEST_SYMBOLS.STOCK);
 
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
@@ -60,9 +58,7 @@ describe('Stock Endpoints', () => {
           console.log('Skipping stock splits test - no API key available');
           return;
         }
-        const result = await fmp.stock.getStockSplits({
-          symbol: TEST_SYMBOLS.STOCK,
-        });
+        const result = await fmp.stock.getStockSplits(TEST_SYMBOLS.STOCK);
 
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
@@ -105,9 +101,7 @@ describe('Stock Endpoints', () => {
           console.log('Skipping dividend history test - no API key available');
           return;
         }
-        const result = await fmp.stock.getDividendHistory({
-          symbol: TEST_SYMBOLS.STOCK,
-        });
+        const result = await fmp.stock.getDividendHistory(TEST_SYMBOLS.STOCK);
 
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
@@ -153,9 +147,7 @@ describe('Stock Endpoints', () => {
           console.log('Skipping real time price test - no API key available');
           return;
         }
-        const result = await fmp.stock.getRealTimePrice({
-          symbols: [TEST_SYMBOLS.STOCK],
-        });
+        const result = await fmp.stock.getRealTimePrice([TEST_SYMBOLS.STOCK]);
 
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
@@ -183,9 +175,7 @@ describe('Stock Endpoints', () => {
           return;
         }
         const symbols = [TEST_SYMBOLS.STOCK, 'MSFT', 'GOOGL'];
-        const result = await fmp.stock.getRealTimePrice({
-          symbols,
-        });
+        const result = await fmp.stock.getRealTimePrice(symbols);
 
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
@@ -216,9 +206,7 @@ describe('Stock Endpoints', () => {
           console.log('Skipping all stocks real time price test - no API key available');
           return;
         }
-        const result = await fmp.stock.getRealTimePrice({
-          symbols: [],
-        });
+        const result = await fmp.stock.getRealTimePrice([]);
 
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
@@ -250,9 +238,7 @@ describe('Stock Endpoints', () => {
           console.log('Skipping full real time price test - no API key available');
           return;
         }
-        const result = await fmp.stock.getRealTimePriceForMultipleStocks({
-          symbols: [TEST_SYMBOLS.STOCK],
-        });
+        const result = await fmp.stock.getRealTimePriceForMultipleStocks([TEST_SYMBOLS.STOCK]);
 
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
@@ -299,9 +285,7 @@ describe('Stock Endpoints', () => {
           return;
         }
         const symbols = [TEST_SYMBOLS.STOCK, 'MSFT', 'GOOGL'];
-        const result = await fmp.stock.getRealTimePriceForMultipleStocks({
-          symbols,
-        });
+        const result = await fmp.stock.getRealTimePriceForMultipleStocks(symbols);
 
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
@@ -337,9 +321,7 @@ describe('Stock Endpoints', () => {
           console.log('Skipping all stocks full real time price test - no API key available');
           return;
         }
-        const result = await fmp.stock.getRealTimePriceForMultipleStocks({
-          symbols: [],
-        });
+        const result = await fmp.stock.getRealTimePriceForMultipleStocks([]);
 
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
