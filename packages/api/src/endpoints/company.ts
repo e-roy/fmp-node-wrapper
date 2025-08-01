@@ -1,4 +1,4 @@
-import { APIResponse } from '@/types';
+import { APIResponse } from '@/types/common';
 import { FMPClient } from '@/client';
 import {
   CompanyNotes,

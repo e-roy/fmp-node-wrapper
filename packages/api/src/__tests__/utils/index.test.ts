@@ -1,4 +1,7 @@
-import { FMPHelpers, FMPValidation, FMPUtils, FMPDebug } from '../../utils';
+import { FMPHelpers } from '../../utils/helpers';
+import { FMPValidation } from '../../utils/validation';
+import { FMPUtils } from '../../utils/utils';
+import { FMPDebug } from '../../utils/debug';
 
 describe('Utils Index', () => {
   describe('Class Exports', () => {
