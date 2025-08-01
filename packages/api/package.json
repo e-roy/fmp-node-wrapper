@@ -11,6 +11,16 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs",
       "require": "./dist/index.js"
+    },
+    "./types": {
+      "types": "./dist/types-only.d.ts",
+      "import": "./dist/types-only.mjs",
+      "require": "./dist/types-only.js"
+    },
+    "./utils/validation": {
+      "types": "./dist/utils/validation.d.ts",
+      "import": "./dist/utils/validation.mjs",
+      "require": "./dist/utils/validation.js"
     }
   },
   "files": [
