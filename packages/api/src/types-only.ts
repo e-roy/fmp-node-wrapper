@@ -23,25 +23,62 @@ export type {
   CashFlowStatement,
   KeyMetrics,
   FinancialRatios,
+  EnterpriseValue,
+  CashflowGrowth,
+  IncomeGrowth,
+  BalanceSheetGrowth,
+  FinancialGrowth,
+  EarningsHistorical,
+  EarningsSurprises,
 } from './types/financial';
 
 // Company types
-export type { CompanyProfile } from './types/company';
+export type {
+  CompanyProfile,
+  ExecutiveCompensation,
+  CompanyNotes,
+  HistoricalEmployeeCount,
+  SharesFloat,
+  HistoricalSharesFloat,
+  EarningsCallTranscript,
+  CompanyTranscriptData,
+} from './types/company';
 
 // ETF types
-export type { ETFProfile, ETFHolding, ETFHolder } from './types/etf';
+export type {
+  ETFHoldingDates,
+  ETFHolding,
+  ETFHolder,
+  ETFProfile,
+  ETFWeighting,
+  ETFCountryWeighting,
+  ETFStockExposure,
+} from './types/etf';
 
 // Market types
-export type { MarketHours, MarketIndex } from './types/market';
+export type {
+  MarketHours,
+  MarketHoliday,
+  MarketPerformance,
+  MarketSectorPerformance,
+  MarketIndex,
+} from './types/market';
 
 // Economic types
-export type { EconomicIndicator } from './types/economic';
+export type { EconomicIndicator, TreasuryRate, EconomicIndicatorName } from './types/economic';
 
 // Calendar types
-export type { EarningsCalendar } from './types/calendar';
+export type {
+  EarningsCalendar,
+  EarningsConfirmed,
+  DividendsCalendar,
+  EconomicsCalendar,
+  IPOCalendar,
+  SplitsCalendar,
+} from './types/calendar';
 
 // List types
-export type { StockList } from './types/list';
+export type { StockList, ETFList, CryptoList, ForexList, AvailableIndexesList } from './types/list';
 
 // Senate/House types
 export type { SenateTradingResponse, HouseTradingResponse } from './types/senate-house';
@@ -54,3 +91,6 @@ export type { InsiderTradingSearchResponse } from './types/insider';
 
 // SEC types
 export type { RSSFeedItem } from './types/sec';
+
+// Mutual fund types
+export type { MutualFundHolding } from './types/mutual-fund';
