@@ -1,5 +1,11 @@
 # fmp-node-api
 
+## 0.1.2
+
+### Patch Changes
+
+- added missing types
+
 ## 0.1.1
 
 ### Patch Changes
