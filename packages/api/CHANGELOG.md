@@ -1,5 +1,11 @@
 # fmp-node-api
 
+## 0.1.1
+
+### Patch Changes
+
+- feat: optimize package size - remove source maps and unused entry points
+
 ## 0.1.0
 
 ### Minor Changes
