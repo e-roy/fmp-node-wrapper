@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import { FMPConfig, APIResponse } from './types';
+import { FMPConfig, APIResponse } from './types/common';
 
 /**
  * Utility function to unwrap single objects from arrays
