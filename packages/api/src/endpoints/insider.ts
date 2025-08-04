@@ -1,6 +1,6 @@
 import { FMPClient } from '@/client';
-import { APIResponse } from '@/types/common';
 import {
+  APIResponse,
   InsiderTradingRSSResponse,
   InsiderTradingSearchResponse,
   TransactionTypesResponse,
@@ -11,7 +11,7 @@ import {
   BeneficialOwnershipResponse,
   FailToDeliverResponse,
   TransactionType,
-} from '@/types/insider';
+} from '@fmp/types';
 
 export class InsiderEndpoints {
   constructor(private client: FMPClient) {}

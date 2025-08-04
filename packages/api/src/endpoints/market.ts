@@ -1,13 +1,13 @@
 // Market endpoints for FMP API
 
 import { FMPClient } from '@/client';
-import { APIResponse } from '@/types/common';
 import {
+  APIResponse,
   MarketHours,
   MarketPerformance,
   MarketSectorPerformance,
   MarketIndex,
-} from '@/types/market';
+} from '@fmp/types';
 
 export class MarketEndpoints {
   constructor(private client: FMPClient) {}

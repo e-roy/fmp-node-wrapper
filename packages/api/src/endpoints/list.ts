@@ -1,6 +1,12 @@
 import { FMPClient } from '@/client';
-import { APIResponse } from '@/types/common';
-import { StockList, ETFList, CryptoList, ForexList, AvailableIndexesList } from '@/types/list';
+import {
+  APIResponse,
+  StockList,
+  ETFList,
+  CryptoList,
+  ForexList,
+  AvailableIndexesList,
+} from '@fmp/types';
 
 export class ListEndpoints {
   constructor(private client: FMPClient) {}

@@ -1,6 +1,6 @@
 // Validation utilities for FMP API
 
-import { APIResponse } from '../types/common';
+import { APIResponse } from '@fmp/types';
 
 /**
  * Validation utilities for FMP API parameters and responses

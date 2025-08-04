@@ -1,8 +1,7 @@
 // Unified quote endpoints for FMP API - handles stocks, crypto, forex, commodities, and ETFs
 
 import { FMPClient } from '@/client';
-import { APIResponse } from '@/types/common';
-import { Quote, HistoricalPriceResponse, HistoricalPriceData } from '@/types/quote';
+import { APIResponse, Quote, HistoricalPriceResponse, HistoricalPriceData } from '@fmp/types';
 
 export class QuoteEndpoints {
   constructor(private client: FMPClient) {}

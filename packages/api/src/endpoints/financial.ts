@@ -1,6 +1,5 @@
-import { APIResponse } from '@/types/common';
-import { FMPClient } from '@/client';
 import {
+  APIResponse,
   KeyMetrics,
   FinancialRatios,
   EnterpriseValue,
@@ -13,7 +12,8 @@ import {
   CashFlowStatement,
   EarningsSurprises,
   EarningsHistorical,
-} from '@/types/financial';
+} from '@fmp/types';
+import { FMPClient } from '@/client';
 
 export class FinancialEndpoints {
   constructor(private client: FMPClient) {}

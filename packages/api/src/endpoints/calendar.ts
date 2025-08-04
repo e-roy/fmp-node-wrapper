@@ -1,13 +1,13 @@
-import { APIResponse } from '@/types/common';
-import { FMPClient } from '@/client';
 import {
+  APIResponse,
   EarningsCalendar,
   DividendsCalendar,
   EconomicsCalendar,
   IPOCalendar,
   SplitsCalendar,
   EarningsConfirmed,
-} from '@/types/calendar';
+} from '@fmp/types';
+import { FMPClient } from '@/client';
 
 export class CalendarEndpoints {
   constructor(private client: FMPClient) {}

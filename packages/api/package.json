@@ -73,7 +73,8 @@
   },
   "homepage": "https://fmp-node-wrapper-docs.vercel.app",
   "dependencies": {
-    "axios": "^1.6.2"
+    "axios": "^1.6.2",
+    "@fmp/types": "workspace:*"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",

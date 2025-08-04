@@ -1,5 +1,5 @@
 import { FMP } from '../../fmp';
-import { TransactionType } from '../../types/insider';
+import { TransactionType } from '@fmp/types';
 
 // Mock the client to avoid actual API calls during testing
 jest.mock('../../client');

@@ -1,12 +1,12 @@
 // Senate and House trading endpoints for FMP API
 
 import { FMPClient } from '@/client';
-import { APIResponse } from '@/types/common';
 import {
+  APIResponse,
   HouseTradingResponse,
   SenateTradingResponse,
   SenateHouseTradingByNameResponse,
-} from '@/types/senate-house';
+} from '@fmp/types';
 
 export class SenateHouseEndpoints {
   constructor(private client: FMPClient) {}

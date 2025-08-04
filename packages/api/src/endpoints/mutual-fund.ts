@@ -1,8 +1,7 @@
 // Mutual fund endpoints for FMP API
 
 import { FMPClient } from '@/client';
-import { APIResponse } from '@/types/common';
-import { MutualFundHolding } from '@/types/mutual-fund';
+import { APIResponse, MutualFundHolding } from '@fmp/types';
 
 export class MutualFundEndpoints {
   constructor(private client: FMPClient) {}
