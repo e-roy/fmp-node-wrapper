@@ -21,7 +21,7 @@ export class FMPUtils {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2,
       }).format(value);
-    } catch (error) {
+    } catch (_error) {
       // Fallback formatting
       return `${currency} ${value.toFixed(2)}`;
     }

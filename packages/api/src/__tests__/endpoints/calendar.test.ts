@@ -904,7 +904,7 @@ describe('Calendar Endpoints', () => {
         // Reversed dates might return empty array or error
         expect(Array.isArray(result.data) ? result.data.length >= 0 : true).toBe(true);
       },
-      FAST_TIMEOUT,
+      API_TIMEOUT,
     );
 
     it(

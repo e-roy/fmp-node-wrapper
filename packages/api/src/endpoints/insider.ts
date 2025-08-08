@@ -386,7 +386,7 @@ export class InsiderEndpoints {
    */
   async getInsiderTradesBySymbol(
     symbol: string,
-    page: number = 0,
+    page = 0,
   ): Promise<APIResponse<InsiderTradingSearchResponse[]>> {
     return this.searchInsiderTrading({ symbol, page });
   }
@@ -399,7 +399,7 @@ export class InsiderEndpoints {
    */
   async getInsiderTradesByType(
     transactionType: TransactionType | string,
-    page: number = 0,
+    page = 0,
   ): Promise<APIResponse<InsiderTradingSearchResponse[]>> {
     return this.searchInsiderTrading({ transactionType, page });
   }
@@ -412,7 +412,7 @@ export class InsiderEndpoints {
    */
   async getInsiderTradesByReportingCik(
     reportingCik: string,
-    page: number = 0,
+    page = 0,
   ): Promise<APIResponse<InsiderTradingSearchResponse[]>> {
     return this.searchInsiderTrading({ reportingCik, page });
   }
@@ -425,7 +425,7 @@ export class InsiderEndpoints {
    */
   async getInsiderTradesByCompanyCik(
     companyCik: string,
-    page: number = 0,
+    page = 0,
   ): Promise<APIResponse<InsiderTradingSearchResponse[]>> {
     return this.searchInsiderTrading({ companyCik, page });
   }
