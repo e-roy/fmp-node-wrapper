@@ -1,6 +1,6 @@
 import { openai } from '@ai-sdk/openai';
 import { streamText, convertToModelMessages, stepCountIs } from 'ai';
-import { fmpTools } from 'fmp-tools/vercel-ai';
+import { fmpTools } from 'fmp-ai-tools/vercel-ai';
 
 export async function POST(req: Request) {
   const { messages } = await req.json();

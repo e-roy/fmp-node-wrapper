@@ -1,6 +1,6 @@
 {
-  "name": "fmp-tools",
-  "version": "0.0.1",
+  "name": "fmp-ai-tools",
+  "version": "0.0.2",
   "description": "AI tools for FMP Node API - compatible with Vercel AI SDK, Langchain, OpenAI, and more",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

@@ -106,7 +106,7 @@ export default function Home() {
 
               <div className="bg-neutral-50 dark:bg-neutral-900 p-3 rounded-lg">
                 <code className="text-sm text-neutral-800 dark:text-neutral-200">
-                  npm install fmp-tools
+                  npm install fmp-ai-tools
                 </code>
               </div>
             </CardContent>
