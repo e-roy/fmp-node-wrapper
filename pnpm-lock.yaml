@@ -141,12 +141,12 @@ importers:
       ai:
         specifier: ^5.0.5
         version: 5.0.5(zod@3.25.76)
+      fmp-ai-tools:
+        specifier: workspace:*
+        version: link:../../../packages/tools
       fmp-node-api:
         specifier: workspace:*
         version: link:../../../packages/api
-      fmp-tools:
-        specifier: workspace:*
-        version: link:../../../packages/tools
       next:
         specifier: 15.0.0
         version: 15.0.0(@babel/core@7.27.7)(@opentelemetry/api@1.9.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
