@@ -1,0 +1,207 @@
+# Vercel AI SDK Integration
+
+Learn how to integrate FMP Tools with Vercel AI SDK to create AI-powered financial applications.
+
+## Overview
+
+The Vercel AI SDK integration provides a seamless way to add financial data capabilities to your AI applications. With just a few lines of code, you can enable your chatbots and assistants to access real-time financial data.
+
+## Installation
+
+First, install the required packages:
+
+<CodeBlock language="bash">{`npm install fmp-tools ai @ai-sdk/openai`}</CodeBlock>
+
+<CodeBlock language="bash">{`pnpm add fmp-tools ai @ai-sdk/openai`}</CodeBlock>
+
+## Basic Setup
+
+### 1. Set Environment Variables
+
+<CodeBlock language="bash" filename=".env.local">
+  {`FMP_API_KEY=your_fmp_api_key_here
+OPENAI_API_KEY=your_openai_api_key_here`}
+</CodeBlock>
+
+### 2. Create API Route
+
+<CodeBlock language="typescript" filename="app/api/chat/route.ts">
+{`import { openai } from '@ai-sdk/openai';
+import { streamText, convertToModelMessages, stepCountIs } from 'ai';
+import { fmpTools } from 'fmp-tools/vercel-ai';
+
+export async function POST(req: Request) {
+  const { messages } = await req.json();
+
+const result = streamText({
+model: openai('gpt-4o-mini'),
+messages: convertToModelMessages(messages),
+tools: fmpTools,
+stopWhen: stepCountIs(5),
+});
+
+return result.toUIMessageStreamResponse();
+}`}
+
+</CodeBlock>
+
+### 3. Create Chat Component
+
+<CodeBlock language="typescript" filename="components/chat.tsx">
+{`'use client';
+
+import { useChat } from 'ai/react';
+
+export function Chat() {
+  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
+    api: '/api/chat',
+  });
+
+return (
+
+<div className="max-w-2xl mx-auto p-4">
+<div className="space-y-4 mb-4">
+{messages.map((message) => (
+<div
+key={message.id}
+className={\`p-4 rounded-lg \${message.role === 'user'
+? 'bg-blue-100 dark:bg-blue-900'
+: 'bg-gray-100 dark:bg-gray-800'
+}\`} >
+<div className="font-semibold mb-2">
+{message.role === 'user' ? 'You' : 'Assistant'}
+</div>
+<div>{message.content}</div>
+</div>
+))}
+</div>
+
+      <form onSubmit={handleSubmit} className="flex gap-2">
+        <input
+          value={input}
+          onChange={handleInputChange}
+          placeholder="Ask about stocks, financial data, or market information..."
+          className="flex-1 p-2 border rounded-lg"
+          disabled={isLoading}
+        />
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+        >
+          Send
+        </button>
+      </form>
+    </div>
+
+);
+}`}
+
+</CodeBlock>
+
+### 4. Use in Your App
+
+<CodeBlock language="typescript" filename="app/page.tsx">
+{`import { Chat } from '@/components/chat';
+
+export default function HomePage() {
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="container mx-auto py-8">
+        <h1 className="text-3xl font-bold text-center mb-8">
+          Financial AI Assistant
+        </h1>
+        <Chat />
+      </div>
+    </div>
+  );
+}`}
+</CodeBlock>
+
+## Advanced Configuration
+
+### Custom Tool Selection
+
+You can select specific tools instead of using all available tools:
+
+<CodeBlock language="typescript" filename="app/api/chat/route.ts">
+{`import { openai } from '@ai-sdk/openai';
+import { streamText, convertToModelMessages } from 'ai';
+import { quoteTools, financialTools } from 'fmp-tools/vercel-ai';
+
+// Use only quote and financial tools
+const selectedTools = {
+...quoteTools,
+...financialTools,
+};
+
+export async function POST(req: Request) {
+  const { messages } = await req.json();
+
+const result = streamText({
+model: openai('gpt-4o-mini'),
+messages: convertToModelMessages(messages),
+tools: selectedTools,
+});
+
+return result.toUIMessageStreamResponse();
+}`}
+
+</CodeBlock>
+
+### Custom Model Configuration
+
+<CodeBlock language="typescript" filename="app/api/chat/route.ts">
+{`import { openai } from '@ai-sdk/openai';
+import { streamText, convertToModelMessages } from 'ai';
+import { fmpTools } from 'fmp-tools/vercel-ai';
+
+export async function POST(req: Request) {
+  const { messages } = await req.json();
+
+const result = streamText({
+model: openai('gpt-4o-mini', {
+temperature: 0.7,
+maxTokens: 1000,
+}),
+messages: convertToModelMessages(messages),
+tools: fmpTools,
+stopWhen: stepCountIs(3), // Limit tool usage
+system: \`You are a helpful financial assistant. Use the available tools to provide accurate financial information. Always cite your sources when providing data.\`,
+});
+
+return result.toUIMessageStreamResponse();
+}`}
+
+</CodeBlock>
+
+## Example Conversations
+
+Here are some example conversations you can have with your AI assistant:
+
+### Stock Analysis
+
+**User:** "What's the current stock price of Apple and show me their latest financial ratios?"
+
+**Assistant:** "Let me get that information for you. I'll check Apple's current stock quote and their latest financial ratios."
+
+### Market Research
+
+**User:** "What are the top gaining stocks today and what's the overall market performance?"
+
+**Assistant:** "I'll check the current market performance and identify the top gaining stocks for you today."
+
+### Economic Data
+
+**User:** "What are the current treasury rates and the latest GDP data?"
+
+**Assistant:** "Let me fetch the current treasury rates and the most recent GDP data for you."
+
+## Next Steps
+
+- [View Tool Categories](/docs/tools/categories) - Explore all available tools
+- [Check Examples](/docs/tools/examples) - See practical implementations
+- [Best Practices](/docs/tools/best-practices) - Learn best practices for building robust applications
+- [Error Handling](/docs/tools/error-handling) - Learn about comprehensive error handling
+- [API Documentation](/docs/api) - Learn about direct API access
+- [GitHub Repository](https://github.com/e-roy/fmp-node-wrapper) - Source code and issues

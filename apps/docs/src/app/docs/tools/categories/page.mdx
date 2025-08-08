@@ -1,0 +1,111 @@
+# Tool Categories
+
+A comprehensive overview of all available FMP Tools organized by category.
+
+## Overview
+
+FMP Tools are organized into logical categories based on the type of financial data they provide. These tools handle all the complexity internally, so you can focus on building your AI applications without worrying about API details.
+
+## Available Categories
+
+### Quote Tools
+
+Real-time and historical price data for stocks and other securities.
+
+### Company Tools
+
+Company profiles, descriptions, and basic information.
+
+### Financial Tools
+
+Financial statements, ratios, and detailed financial metrics.
+
+### Stock Tools
+
+Stock-specific data like market cap, splits, and dividends.
+
+### Market Tools
+
+Market-wide data including indices, sectors, gainers, losers, and trading activity.
+
+### Economic Tools
+
+Economic indicators, treasury rates, and macroeconomic data.
+
+### ETF Tools
+
+ETF profiles, holdings, and composition data.
+
+### Calendar Tools
+
+Earnings calendars and economic event schedules.
+
+### Senate & House Trading Tools
+
+Congressional trading activity and disclosures.
+
+### Institutional Tools
+
+Institutional ownership and holdings data.
+
+### Insider Trading Tools
+
+Insider trading transactions and disclosures.
+
+## How to Use These Tools
+
+### Import All Tools
+
+<CodeBlock language="typescript">{`import { fmpTools } from 'fmp-tools/vercel-ai';`}</CodeBlock>
+
+### Import Specific Categories
+
+<CodeBlock language="typescript">
+{`import { 
+  quoteTools, 
+  financialTools, 
+  marketTools,
+  economicTools,
+  etfTools,
+  calendarTools,
+  senateHouseTools,
+  institutionalTools,
+  insiderTools
+} from 'fmp-tools/vercel-ai';
+
+// Combine specific categories
+const selectedTools = {
+...quoteTools,
+...financialTools,
+...marketTools,
+};`}
+
+</CodeBlock>
+
+### Import Individual Tools
+
+<CodeBlock language="typescript">
+{`import { 
+  getStockQuote,
+  getCompanyProfile,
+  getBalanceSheet,
+  getMarketPerformance
+} from 'fmp-tools/vercel-ai';
+
+const customTools = {
+getStockQuote,
+getCompanyProfile,
+getBalanceSheet,
+getMarketPerformance,
+};`}
+
+</CodeBlock>
+
+## Next Steps
+
+- [Vercel AI SDK Integration](/docs/tools/vercel-ai) - Learn how to use these tools
+- [Examples](/docs/tools/examples) - See practical implementations
+- [Best Practices](/docs/tools/best-practices) - Learn best practices for building robust applications
+- [Error Handling](/docs/tools/error-handling) - Learn about comprehensive error handling
+- [API Documentation](/docs/api) - For direct API access (if you need more control)
+- [GitHub Repository](https://github.com/e-roy/fmp-node-wrapper) - Source code and issues

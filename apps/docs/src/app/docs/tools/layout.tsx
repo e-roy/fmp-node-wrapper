@@ -3,61 +3,51 @@ import { Card, CardContent } from '@/components/ui/card';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-const navigationGroups = [
+const toolsNavigationGroups = [
   {
     title: 'Documentation',
     items: [
-      { name: 'Getting Started', href: '/docs/getting-started' },
-      { name: 'Configuration', href: '/docs/configuration' },
-      { name: 'API Reference', href: '/docs/api' },
+      { name: 'Tools Overview', href: '/docs/tools' },
+      { name: 'Categories', href: '/docs/tools/categories' },
+      { name: 'Vercel AI SDK', href: '/docs/tools/vercel-ai' },
+      { name: 'Examples', href: '/docs/tools/examples' },
     ],
   },
   {
-    title: 'Quotes',
-    items: [{ name: 'Quote Endpoints', href: '/docs/api/quote' }],
-  },
-  {
-    title: 'Asset Classes',
+    title: 'Advanced',
     items: [
-      { name: 'Stock Endpoints', href: '/docs/api/stock' },
-      { name: 'Financial Endpoints', href: '/docs/api/financial' },
-      { name: 'ETF Endpoints', href: '/docs/api/etf' },
-      { name: 'Mutual Fund Endpoints', href: '/docs/api/mutual-fund' },
-    ],
-  },
-  {
-    title: 'Market Data',
-    items: [
-      { name: 'Market Endpoints', href: '/docs/api/market' },
-      { name: 'Economic Endpoints', href: '/docs/api/economic' },
-    ],
-  },
-  {
-    title: 'Information',
-    items: [
-      { name: 'List Endpoints', href: '/docs/api/list' },
-      { name: 'Calendar Endpoints', href: '/docs/api/calendar' },
-      { name: 'Company Endpoints', href: '/docs/api/company' },
-      { name: 'Senate & House Trading', href: '/docs/api/senate-house' },
-      { name: 'Institutional Endpoints', href: '/docs/api/institutional' },
-      { name: 'Insider Endpoints', href: '/docs/api/insider' },
-      { name: 'SEC Endpoints', href: '/docs/api/sec' },
-    ],
-  },
-  {
-    title: 'Resources',
-    items: [
-      { name: 'Examples', href: '/docs/examples' },
-      { name: 'Helper Utilities', href: '/docs/api/helpers' },
+      { name: 'Best Practices', href: '/docs/tools/best-practices' },
+      { name: 'Error Handling', href: '/docs/tools/error-handling' },
     ],
   },
 ];
 
-export default function DocsLayout({ children }: { children: React.ReactNode }) {
+export default function ToolsDocsLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   return (
     <div className="min-h-screen">
+      {/* Header */}
+      <div className="bg-purple-50 dark:bg-purple-950/20 border-b border-purple-200 dark:border-purple-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <Link
+                href="/"
+                className="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300"
+              >
+                ← Back to Home
+              </Link>
+              <div className="h-4 w-px bg-purple-300 dark:bg-purple-700"></div>
+              <h1 className="text-lg font-semibold text-purple-900 dark:text-purple-100">
+                FMP Tools Documentation
+              </h1>
+            </div>
+            <div className="text-sm text-purple-600 dark:text-purple-400">AI Tools for FMP API</div>
+          </div>
+        </div>
+      </div>
+
       {/* Main content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
@@ -65,7 +55,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
           <aside className="lg:w-64 flex-shrink-0">
             <nav className="sticky top-8">
               <div className="space-y-6">
-                {navigationGroups.map(group => (
+                {toolsNavigationGroups.map(group => (
                   <div key={group.title}>
                     <h3 className="text-xs font-semibold text-neutral-500 dark:text-neutral-400 uppercase tracking-wider mb-3">
                       {group.title}
@@ -79,7 +69,7 @@ export default function DocsLayout({ children }: { children: React.ReactNode }) 
                               href={item.href}
                               className={`px-3 py-2 text-sm block rounded-md transition-colors ${
                                 isActive
-                                  ? 'text-blue-600 bg-blue-50 dark:text-blue-400 dark:bg-blue-950/50 font-medium'
+                                  ? 'text-purple-600 bg-purple-50 dark:text-purple-400 dark:bg-purple-950/50 font-medium'
                                   : 'text-neutral-600 hover:text-neutral-900 dark:text-neutral-300 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800'
                               }`}
                             >
