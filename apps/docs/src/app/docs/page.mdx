@@ -1,80 +1,69 @@
-# FMP Node Wrapper Documentation
+# Documentation
 
-Welcome to the comprehensive documentation for the FMP Node Wrapper - a powerful Node.js library for interacting with the Financial Modeling Prep API.
+Welcome to the FMP Node Wrapper documentation. Choose the library that fits your needs:
 
-## What is FMP Node Wrapper?
+## FMP Node API
 
-The FMP Node Wrapper is a TypeScript-first Node.js library that provides a clean, intuitive interface for accessing financial data from the Financial Modeling Prep API. It offers:
+The core API wrapper for direct access to the Financial Modeling Prep API.
 
-- **Type Safety**: Full TypeScript support with comprehensive type definitions
-- **Easy Integration**: Simple setup and straightforward API calls
-- **Comprehensive Coverage**: Support for all major FMP API endpoints
-- **Error Handling**: Consistent error handling across all endpoints
-- **Performance**: Optimized for high-performance applications
-
-## Quick Start
-
-Get started with the FMP Node Wrapper in just a few steps:
+- **Complete TypeScript Support** - Full type safety for all API responses
+- **All FMP Endpoints** - Comprehensive coverage of the FMP API
+- **Built-in Validation** - Input validation and error handling
+- **Modular Design** - Import only what you need
 
 <CodeBlock language="bash">{`npm install fmp-node-api`}</CodeBlock>
 
 <CodeBlock language="typescript">
 {`import { FMP } from 'fmp-node-api';
 
-// Initialize the client (uses FMP_API_KEY environment variable)
-const fmp = new FMP();
+// Initialize with API key
+const fmp = new FMP({ apiKey: 'your-api-key' });
 
-// Get a stock quote
-const quote = await fmp.quote.getQuote({ symbol: 'AAPL' });`}
+// Get stock quote
+const quote = await fmp.quote.getQuote('AAPL');`}
 
 </CodeBlock>
 
-## Key Features
+[View API Documentation →](/docs/api)
 
-### 🚀 **Easy Setup**
+## FMP Tools
 
-Simple initialization with your API key and optional configuration.
+AI tools for integrating FMP data with AI frameworks like Vercel AI SDK.
 
-### 📊 **Stock Data**
+- **Vercel AI SDK Integration** - Ready-to-use tools for AI applications
+- **Multi-platform Support** - Compatible with various AI frameworks
+- **Easy Configuration** - Just set your API key and start building
+- **Chatbot Ready** - Perfect for financial chatbots and assistants
 
-Access real-time and historical stock data, quotes, and market information.
+<CodeBlock language="bash">{`npm install fmp-tools ai @ai-sdk/openai`}</CodeBlock>
 
-### 💰 **Financial Statements**
+<CodeBlock language="typescript">
+{`
+import { openai } from '@ai-sdk/openai';
+import { streamText, convertToModelMessages, stepCountIs } from 'ai';
+import { fmpTools } from 'fmp-tools/vercel-ai';
 
-Retrieve income statements, balance sheets, and cash flow statements.
+const result = streamText({
+model: openai('gpt-4o-mini'),
+messages: convertToModelMessages(messages),
+tools: fmpTools,
+stopWhen: stepCountIs(5),
+});
+`}
 
-### 📈 **Historical Data**
+</CodeBlock>
 
-Get historical price data with flexible date ranges and intervals.
-
-### 🏢 **Company Information**
-
-Access company profiles, ratios, and fundamental data.
+[View Tools Documentation →](/docs/tools)
 
 ## Getting Started
 
-Ready to dive in? Start with our [Getting Started Guide](/docs/getting-started) to learn how to set up and use the library.
+1. **Choose your library** - API wrapper for direct access or AI tools for AI integration
+2. **Install the package** - Use npm, yarn, or pnpm
+3. **Set up your API key** - Get your FMP API key from [Financial Modeling Prep](https://site.financialmodelingprep.com/developer/docs/stable)
+4. **Start building** - Follow the documentation for your chosen library
 
-## Configuration
+## Need Help?
 
-Learn about different configuration options including environment variables, security best practices, and troubleshooting in our [Configuration Guide](/docs/configuration).
-
-## API Reference
-
-Explore the complete [API Reference](/docs/api) to see all available endpoints and their usage.
-
-## Examples
-
-Check out our [Examples](/docs/examples) section for practical code samples and use cases.
-
-## Support
-
-If you need help or have questions:
-
-- Check the [API Reference](/docs/api) for detailed endpoint documentation
-- Review the [Examples](/docs/examples) for common use cases
-- Open an issue on our GitHub repository
-
----
-
-**Ready to get started?** [Install the package](/docs/getting-started) and begin building with financial data today!
+- [GitHub Repository](https://github.com/e-roy/fmp-node-wrapper) - Source code and issues
+- [FMP Official Documentation](https://site.financialmodelingprep.com/developer/docs/stable) - API reference
+- [Examples](/docs/api/examples) - Code samples and use cases

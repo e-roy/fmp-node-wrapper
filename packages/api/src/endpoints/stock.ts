@@ -1,6 +1,6 @@
 import { FMPClient } from '@/client';
-import { APIResponse } from '@/types/common';
 import {
+  APIResponse,
   MarketCap,
   StockSplitResponse,
   StockDividendResponse,
@@ -8,7 +8,7 @@ import {
   StockRealTimePriceFull,
   StockListResponse,
   CompaniesPriceListResponse,
-} from '@/types/stock';
+} from '@fmp/types';
 
 export class StockEndpoints {
   constructor(private client: FMPClient) {}

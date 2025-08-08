@@ -1,6 +1,5 @@
-import { APIResponse } from '@/types/common';
-import { FMPClient } from '@/client';
 import {
+  APIResponse,
   CompanyNotes,
   CompanyProfile,
   CompanyTranscriptData,
@@ -9,7 +8,8 @@ import {
   HistoricalEmployeeCount,
   HistoricalSharesFloat,
   SharesFloat,
-} from '@/types/company';
+} from '@fmp/types';
+import { FMPClient } from '@/client';
 
 export class CompanyEndpoints {
   constructor(private client: FMPClient) {}

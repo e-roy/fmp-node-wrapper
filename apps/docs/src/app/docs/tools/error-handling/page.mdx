@@ -1,0 +1,326 @@
+# Error Handling
+
+Comprehensive guide to error handling in FMP Tools.
+
+## Overview
+
+FMP Tools provide consistent error handling across all tools. When something goes wrong, you'll get clear, actionable error messages.
+
+## How Errors Work
+
+All tools return a standardized response format:
+
+<CodeBlock language="typescript">
+{`// Success response
+{
+  success: true,
+  data: { /* tool data */ },
+  error: null,
+  status: 200
+}
+
+// Error response
+{
+success: false,
+data: null,
+error: "Error message",
+status: 400
+}`}
+
+</CodeBlock>
+
+## Common Error Scenarios
+
+### API Key Issues
+
+- **"API key not found"** - Ensure `FMP_API_KEY` is set in your environment
+- **"Invalid API key"** - Check that your API key is correct and active
+
+### Data Issues
+
+- **"Symbol not found"** - The stock/ETF symbol doesn't exist or is invalid
+- **"No data available"** - The requested data isn't available for this symbol/date
+
+### Rate Limiting
+
+- **"Rate limit exceeded"** - You've hit the API rate limit
+- **"Too many requests"** - Slow down your requests
+
+### Network Issues
+
+- **"Network error"** - Connection problems
+- **"Timeout"** - Request took too long
+
+## Error Handling in Vercel AI SDK
+
+### Basic Error Handling
+
+<CodeBlock language="typescript" filename="app/api/chat/route.ts">
+{`import { openai } from '@ai-sdk/openai';
+import { streamText, convertToModelMessages } from 'ai';
+import { fmpTools } from 'fmp-tools/vercel-ai';
+
+export async function POST(req: Request) {
+  try {
+    const { messages } = await req.json();
+
+    const result = streamText({
+      model: openai('gpt-4o-mini'),
+      messages: convertToModelMessages(messages),
+      tools: fmpTools,
+    });
+
+    return result.toUIMessageStreamResponse();
+
+} catch (error) {
+console.error('Chat API error:', error);
+return new Response(
+JSON.stringify({ error: 'Failed to process chat request' }),
+{ status: 500, headers: { 'Content-Type': 'application/json' } }
+);
+}
+}`}
+
+</CodeBlock>
+
+### Advanced Error Handling
+
+<CodeBlock language="typescript" filename="app/api/chat/route.ts">
+{`import { openai } from '@ai-sdk/openai';
+import { streamText, convertToModelMessages } from 'ai';
+import { fmpTools } from 'fmp-tools/vercel-ai';
+
+export async function POST(req: Request) {
+  try {
+    const { messages } = await req.json();
+
+    const result = streamText({
+      model: openai('gpt-4o-mini'),
+      messages: convertToModelMessages(messages),
+      tools: fmpTools,
+      onError: (error) => {
+        console.error('Tool execution error:', error);
+        // Log errors for monitoring
+      },
+    });
+
+    return result.toUIMessageStreamResponse();
+
+} catch (error) {
+console.error('Chat API error:', error);
+return new Response(
+JSON.stringify({
+error: 'Failed to process request',
+details: error instanceof Error ? error.message : 'Unknown error'
+}),
+{
+status: 500,
+headers: { 'Content-Type': 'application/json' }
+}
+);
+}
+}`}
+
+</CodeBlock>
+
+## React Error Boundaries
+
+### Error Boundary Component
+
+<CodeBlock language="typescript">
+{`import React from 'react';
+
+interface ErrorBoundaryState {
+hasError: boolean;
+error?: Error;
+}
+
+export class ErrorBoundary extends React.Component<
+  React.PropsWithChildren<{}>,
+  ErrorBoundaryState
+> {
+  constructor(props: React.PropsWithChildren<{}>) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+static getDerivedStateFromError(error: Error): ErrorBoundaryState {
+return { hasError: true, error };
+}
+
+componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+console.error('Error caught by boundary:', error, errorInfo);
+}
+
+render() {
+if (this.state.hasError) {
+return (
+
+<div className="p-6 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-lg">
+  <h2 className="text-lg font-semibold text-red-800 dark:text-red-200 mb-2">
+    Something went wrong
+  </h2>
+  <p className="text-red-600 dark:text-red-300 mb-4">
+    {this.state.error?.message || 'An unexpected error occurred'}
+  </p>
+  <button
+    onClick={() => this.setState({ hasError: false })}
+    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+  >
+    Try again
+  </button>
+</div>
+); }
+
+    return this.props.children;
+
+}
+}`}
+
+</CodeBlock>
+
+### Using Error Boundaries
+
+<CodeBlock language="typescript">
+{`import { ErrorBoundary } from './ErrorBoundary';
+import { Chat } from './Chat';
+
+export default function App() {
+  return (
+    <ErrorBoundary>
+      <Chat />
+    </ErrorBoundary>
+  );
+}`}
+</CodeBlock>
+
+## User-Facing Error Handling
+
+### Loading and Error States
+
+<CodeBlock language="typescript">
+{`'use client';
+
+import { useChat } from 'ai/react';
+import { useState } from 'react';
+
+export function RobustChat() {
+  const [error, setError] = useState<string | null>(null);
+  const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
+    api: '/api/chat',
+    onError: (error) => {
+      setError(error.message);
+    },
+    onFinish: () => {
+      setError(null);
+    },
+  });
+
+return (
+
+<div className="max-w-2xl mx-auto p-4">
+{error && (
+<div className="mb-4 p-4 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-lg">
+<p className="text-red-600 dark:text-red-300">{error}</p>
+</div>
+)}
+
+      <div className="space-y-4 mb-4">
+        {messages.map((message) => (
+          <div
+            key={message.id}
+            className={\`p-4 rounded-lg \${
+              message.role === 'user'
+                ? 'bg-blue-100 dark:bg-blue-900'
+                : 'bg-gray-100 dark:bg-gray-800'
+            }\`}
+          >
+            <div className="font-semibold mb-2">
+              {message.role === 'user' ? 'You' : 'Assistant'}
+            </div>
+            <div>{message.content}</div>
+          </div>
+        ))}
+      </div>
+
+      {isLoading && (
+        <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+          <p className="text-blue-600 dark:text-blue-300">Processing your request...</p>
+        </div>
+      )}
+
+      <form onSubmit={handleSubmit} className="flex gap-2">
+        <input
+          value={input}
+          onChange={handleInputChange}
+          placeholder="Ask about financial data..."
+          className="flex-1 p-2 border rounded-lg"
+          disabled={isLoading}
+        />
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+        >
+          Send
+        </button>
+      </form>
+    </div>
+
+);
+}`}
+
+</CodeBlock>
+
+## Debugging Tips
+
+### Enable Debug Mode
+
+<CodeBlock language="typescript" filename="app/api/chat/route.ts">
+{`import { openai } from '@ai-sdk/openai';
+import { streamText, convertToModelMessages } from 'ai';
+import { fmpTools } from 'fmp-tools/vercel-ai';
+
+export async function POST(req: Request) {
+  const { messages } = await req.json();
+
+const result = streamText({
+model: openai('gpt-4o-mini'),
+messages: convertToModelMessages(messages),
+tools: fmpTools,
+experimental_onToolCall: ({ toolCall }) => {
+console.log('Tool call:', toolCall);
+},
+});
+
+return result.toUIMessageStreamResponse();
+}`}
+
+</CodeBlock>
+
+### Check Environment Variables
+
+<CodeBlock language="bash">
+{`# Verify your API key is set
+echo $FMP_API_KEY
+
+# Check if it's accessible in your app
+
+console.log('API Key:', process.env.FMP_API_KEY);`}
+
+</CodeBlock>
+
+## Best Practices
+
+1. **Always implement error boundaries** in React applications
+2. **Log errors** for debugging and monitoring
+3. **Provide user-friendly error messages** instead of technical details
+4. **Handle loading states** to improve user experience
+5. **Implement retry logic** for transient errors
+6. **Monitor error rates** in production
+
+## Next Steps
+
+- [Best Practices](/docs/tools/best-practices) - Learn more about building robust applications
+- [Examples](/docs/tools/examples) - See error handling in action
+- [Vercel AI SDK Integration](/docs/tools/vercel-ai) - Learn about the integration

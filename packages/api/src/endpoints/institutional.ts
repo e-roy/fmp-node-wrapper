@@ -1,8 +1,7 @@
 // Institutional trading endpoints for FMP API
 
 import { FMPClient } from '@/client';
-import { APIResponse } from '@/types/common';
-import { Form13FResponse, InstitutionalHolderResponse } from '@/types/institutional';
+import { APIResponse, Form13FResponse, InstitutionalHolderResponse } from '@fmp/types';
 
 export class InstitutionalEndpoints {
   constructor(private client: FMPClient) {}

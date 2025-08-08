@@ -1,6 +1,6 @@
 import { FMP } from '../../fmp';
 import { shouldSkipTests, createTestClient, API_TIMEOUT } from '../utils/test-setup';
-import { StockList, ETFList, CryptoList, ForexList, AvailableIndexesList } from '../../types/list';
+import { StockList, ETFList, CryptoList, ForexList, AvailableIndexesList } from '@fmp/types';
 
 describe('List Endpoints', () => {
   let fmp: FMP;

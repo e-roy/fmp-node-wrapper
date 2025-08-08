@@ -6,7 +6,7 @@ import {
   FAST_TIMEOUT,
   TEST_SYMBOLS,
 } from '../utils/test-setup';
-import { StockSplitResponse } from '../../types/stock';
+import { StockSplitResponse } from '@fmp/types';
 
 describe('Stock Endpoints', () => {
   let fmp: FMP;

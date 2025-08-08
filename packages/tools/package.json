@@ -1,0 +1,77 @@
+{
+  "name": "fmp-tools",
+  "version": "0.0.1",
+  "description": "AI tools for FMP Node API - compatible with Vercel AI SDK, Langchain, OpenAI, and more",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./vercel-ai": {
+      "types": "./dist/providers/vercel-ai/index.d.ts",
+      "import": "./dist/providers/vercel-ai/index.mjs",
+      "require": "./dist/providers/vercel-ai/index.js"
+    }
+  },
+  "sideEffects": false,
+  "files": [
+    "dist/**"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:tool": "tsx scripts/test-tools-simple.ts",
+    "lint": "npx eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "type-check": "tsc --noEmit --skipLibCheck",
+    "format": "prettier --write src/**/*.ts",
+    "format:check": "prettier --check src/**/*.ts",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "ai",
+    "tools",
+    "financial",
+    "fmp",
+    "financial-modeling-prep",
+    "vercel-ai",
+    "langchain",
+    "openai",
+    "chatbot",
+    "assistant"
+  ],
+  "author": "Eric <https://github.com/e-roy>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/e-roy/fmp-node-wrapper.git"
+  },
+  "homepage": "https://fmp-node-wrapper-docs.vercel.app",
+  "dependencies": {
+    "@fmp/types": "workspace:*",
+    "ai": "^5.0.5",
+    "fmp-node-api": "workspace:*",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "@types/node": "^20.11.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "dotenv": "^16.5.0",
+    "eslint": "^9.0.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.2.5",
+    "ts-jest": "^29.1.0",
+    "tsup": "^8.0.0",
+    "tsx": "^4.20.3",
+    "typescript": "^5.3.3"
+  }
+}

@@ -1,7 +1,7 @@
 // Main FMP API client that combines all endpoints
 
 import { FMPClient } from './client';
-import { FMPConfig } from './types/common';
+import { FMPConfig } from '@fmp/types';
 import { FMPValidation } from './utils/validation';
 import { StockEndpoints } from './endpoints/stock';
 import { FinancialEndpoints } from './endpoints/financial';

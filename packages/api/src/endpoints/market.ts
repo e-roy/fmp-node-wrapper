@@ -1,13 +1,13 @@
 // Market endpoints for FMP API
 
 import { FMPClient } from '@/client';
-import { APIResponse } from '@/types/common';
 import {
+  APIResponse,
   MarketHours,
   MarketPerformance,
   MarketSectorPerformance,
   MarketIndex,
-} from '@/types/market';
+} from '@fmp/types';
 
 export class MarketEndpoints {
   constructor(private client: FMPClient) {}
@@ -72,10 +72,10 @@ export class MarketEndpoints {
    * console.log(`Gaining indices: ${gainers.length}, Losing indices: ${losers.length}`);
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#market-performance|FMP Market Performance Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs#market-index-market-overview|FMP Market Performance Documentation}
    */
   async getMarketPerformance(): Promise<APIResponse<MarketPerformance[]>> {
-    return this.client.get('/market-performance', 'v3');
+    return this.client.get('/quotes/index', 'v3');
   }
 
   /**

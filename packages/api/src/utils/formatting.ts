@@ -3,7 +3,7 @@
 /**
  * Format currency value
  */
-export function formatCurrency(value: number, currency: string = 'USD'): string {
+export function formatCurrency(value: number, currency = 'USD'): string {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: currency,
@@ -13,7 +13,7 @@ export function formatCurrency(value: number, currency: string = 'USD'): string 
 /**
  * Format percentage value
  */
-export function formatPercentage(value: number, decimals: number = 2): string {
+export function formatPercentage(value: number, decimals = 2): string {
   return `${value.toFixed(decimals)}%`;
 }
 
@@ -64,7 +64,7 @@ export function formatTimestamp(timestamp: number): string {
 /**
  * Format number with specified decimal places
  */
-export function formatNumber(value: number, decimals: number = 2): string {
+export function formatNumber(value: number, decimals = 2): string {
   return value.toFixed(decimals);
 }
 

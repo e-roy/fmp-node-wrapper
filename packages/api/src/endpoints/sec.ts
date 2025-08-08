@@ -1,6 +1,6 @@
 import { FMPClient } from '@/client';
-import { APIResponse } from '@/types/common';
 import {
+  APIResponse,
   RSSFeedItem,
   RSSFeedV3Item,
   RSSFeed8KItem,
@@ -8,7 +8,7 @@ import {
   IndustryClassification,
   IndustryClassificationCode,
   RSSFeedAllItem,
-} from '@/types/sec';
+} from '@fmp/types';
 
 export class SECEndpoints {
   constructor(private client: FMPClient) {}

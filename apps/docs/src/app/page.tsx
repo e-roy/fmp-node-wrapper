@@ -14,195 +14,150 @@ export default function Home() {
   return (
     <main className="min-h-screen p-8">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-4xl font-bold mb-6 text-neutral-900 dark:text-white">
-          FMP Node Wrapper Documentation
-        </h1>
-        <p className="text-lg text-neutral-600 dark:text-neutral-300 mb-8">
-          A comprehensive Node.js wrapper for the Financial Modeling Prep API
-        </p>
+        <div className="text-center mb-12">
+          <h1 className="text-5xl font-bold mb-6 text-neutral-900 dark:text-white">
+            FMP Node Wrapper
+          </h1>
+          <p className="text-xl text-neutral-600 dark:text-neutral-300 mb-4">
+            Choose the library that fits your needs
+          </p>
+          <p className="text-lg text-neutral-500 dark:text-neutral-400">
+            A comprehensive Node.js ecosystem for the Financial Modeling Prep API
+          </p>
+        </div>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <Link href="/docs/getting-started" className="block">
-            <Card className="h-full hover:shadow-md transition-shadow">
-              <CardHeader>
-                <CardTitle className="text-2xl text-neutral-900 dark:text-white">
-                  🚀 Quick Start
-                </CardTitle>
-                <CardDescription className="text-neutral-600 dark:text-neutral-300">
-                  Get started with the FMP API wrapper in minutes.
-                </CardDescription>
-              </CardHeader>
-              <CardFooter>
-                <div className="text-blue-600 dark:text-blue-400 hover:underline">
-                  Get Started →
-                </div>
-              </CardFooter>
-            </Card>
-          </Link>
-
-          <Link href="/docs/api" className="block">
-            <Card className="h-full hover:shadow-md transition-shadow">
-              <CardHeader>
-                <CardTitle className="text-2xl text-neutral-900 dark:text-white">
-                  📚 API Reference
-                </CardTitle>
-                <CardDescription className="text-neutral-600 dark:text-neutral-300">
-                  Complete API documentation and examples.
-                </CardDescription>
-              </CardHeader>
-              <CardFooter>
-                <div className="text-blue-600 dark:text-blue-400 hover:underline">
-                  View API Docs →
-                </div>
-              </CardFooter>
-            </Card>
-          </Link>
-
-          <Link href="/docs/examples" className="block">
-            <Card className="h-full hover:shadow-md transition-shadow">
-              <CardHeader>
-                <CardTitle className="text-2xl text-neutral-900 dark:text-white">
-                  💡 Examples
-                </CardTitle>
-                <CardDescription className="text-neutral-600 dark:text-neutral-300">
-                  Practical code samples and use cases.
-                </CardDescription>
-              </CardHeader>
-              <CardFooter>
-                <div className="text-blue-600 dark:text-blue-400 hover:underline">
-                  View Examples →
-                </div>
-              </CardFooter>
-            </Card>
-          </Link>
-
-          <Link href="/docs/api/stock" className="block">
-            <Card className="h-full hover:shadow-md transition-shadow">
-              <CardHeader>
-                <CardTitle className="text-2xl text-neutral-900 dark:text-white">
-                  📊 Stock Data
-                </CardTitle>
-                <CardDescription className="text-neutral-600 dark:text-neutral-300">
-                  Real-time and historical stock data endpoints.
-                </CardDescription>
-              </CardHeader>
-              <CardFooter>
-                <div className="text-blue-600 dark:text-blue-400 hover:underline">
-                  Stock Endpoints →
-                </div>
-              </CardFooter>
-            </Card>
-          </Link>
-
-          <Link href="/docs/api/financial" className="block">
-            <Card className="h-full hover:shadow-md transition-shadow">
-              <CardHeader>
-                <CardTitle className="text-2xl text-neutral-900 dark:text-white">
-                  💰 Financial Data
-                </CardTitle>
-                <CardDescription className="text-neutral-600 dark:text-neutral-300">
-                  Financial statements and ratios endpoints.
-                </CardDescription>
-              </CardHeader>
-              <CardFooter>
-                <div className="text-blue-600 dark:text-blue-400 hover:underline">
-                  Financial Endpoints →
-                </div>
-              </CardFooter>
-            </Card>
-          </Link>
-
-          <Link href="/docs/api/etf" className="block">
-            <Card className="h-full hover:shadow-md transition-shadow">
-              <CardHeader>
-                <CardTitle className="text-2xl text-neutral-900 dark:text-white">
-                  📈 ETF Data
-                </CardTitle>
-                <CardDescription className="text-neutral-600 dark:text-neutral-300">
-                  ETF quotes, profiles, and holdings data.
-                </CardDescription>
-              </CardHeader>
-              <CardFooter>
-                <div className="text-blue-600 dark:text-blue-400 hover:underline">
-                  ETF Endpoints →
-                </div>
-              </CardFooter>
-            </Card>
-          </Link>
-
-          <Link href="/docs/api/market" className="block">
-            <Card className="h-full hover:shadow-md transition-shadow">
-              <CardHeader>
-                <CardTitle className="text-2xl text-neutral-900 dark:text-white">
-                  📊 Market Data
-                </CardTitle>
-                <CardDescription className="text-neutral-600 dark:text-neutral-300">
-                  Market performance, hours, and sector data.
-                </CardDescription>
-              </CardHeader>
-              <CardFooter>
-                <div className="text-blue-600 dark:text-blue-400 hover:underline">
-                  Market Endpoints →
-                </div>
-              </CardFooter>
-            </Card>
-          </Link>
-
-          <Card className="h-full">
-            <CardHeader>
-              <CardTitle className="text-2xl text-neutral-900 dark:text-white">
-                ⚡ Installation
+        {/* Main Library Selection */}
+        <div className="grid gap-8 md:grid-cols-2 mb-16">
+          {/* FMP Node API */}
+          <Card className="h-full hover:shadow-lg transition-all duration-300 border-2 hover:border-blue-200 dark:hover:border-blue-800">
+            <CardHeader className="text-center">
+              <div className="text-4xl mb-4">🚀</div>
+              <CardTitle className="text-3xl text-neutral-900 dark:text-white">
+                FMP Node API
               </CardTitle>
-              <CardDescription className="text-neutral-600 dark:text-neutral-300">
-                Install the package and start building.
+              <CardDescription className="text-lg text-neutral-600 dark:text-neutral-300">
+                Core API wrapper for direct FMP API access
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <code className="bg-neutral-950 dark:bg-neutral-900 text-white p-2 rounded text-sm block">
-                pnpm add fmp-node-api
-              </code>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <div className="flex items-center text-sm text-neutral-600 dark:text-neutral-300">
+                  <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                  Complete TypeScript support
+                </div>
+                <div className="flex items-center text-sm text-neutral-600 dark:text-neutral-300">
+                  <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                  All FMP endpoints covered
+                </div>
+                <div className="flex items-center text-sm text-neutral-600 dark:text-neutral-300">
+                  <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                  Built-in validation & error handling
+                </div>
+                <div className="flex items-center text-sm text-neutral-600 dark:text-neutral-300">
+                  <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                  Modular design for flexibility
+                </div>
+              </div>
+
+              <div className="bg-neutral-50 dark:bg-neutral-900 p-3 rounded-lg">
+                <code className="text-sm text-neutral-800 dark:text-neutral-200">
+                  npm install fmp-node-api
+                </code>
+              </div>
             </CardContent>
+            <CardFooter className="justify-center">
+              <Link
+                href="/docs/api"
+                className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+              >
+                View API Documentation →
+              </Link>
+            </CardFooter>
+          </Card>
+
+          {/* FMP Tools */}
+          <Card className="h-full hover:shadow-lg transition-all duration-300 border-2 hover:border-purple-200 dark:hover:border-purple-800">
+            <CardHeader className="text-center">
+              <div className="text-4xl mb-4">🤖</div>
+              <CardTitle className="text-3xl text-neutral-900 dark:text-white">FMP Tools</CardTitle>
+              <CardDescription className="text-lg text-neutral-600 dark:text-neutral-300">
+                AI tools for Vercel AI SDK and LLM integrations
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <div className="flex items-center text-sm text-neutral-600 dark:text-neutral-300">
+                  <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
+                  Vercel AI SDK integration
+                </div>
+                <div className="flex items-center text-sm text-neutral-600 dark:text-neutral-300">
+                  <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
+                  Ready-to-use AI tools
+                </div>
+                <div className="flex items-center text-sm text-neutral-600 dark:text-neutral-300">
+                  <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
+                  Multi-platform AI support
+                </div>
+                <div className="flex items-center text-sm text-neutral-600 dark:text-neutral-300">
+                  <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
+                  Chatbot & assistant ready
+                </div>
+              </div>
+
+              <div className="bg-neutral-50 dark:bg-neutral-900 p-3 rounded-lg">
+                <code className="text-sm text-neutral-800 dark:text-neutral-200">
+                  npm install fmp-tools
+                </code>
+              </div>
+            </CardContent>
+            <CardFooter className="justify-center">
+              <Link
+                href="/docs/tools"
+                className="inline-flex items-center px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium"
+              >
+                View Tools Documentation →
+              </Link>
+            </CardFooter>
           </Card>
         </div>
 
-        <Card className="mt-12 bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
+        {/* Features Overview */}
+        <Card className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-blue-200 dark:border-blue-800">
           <CardHeader>
-            <CardTitle className="text-2xl text-neutral-900 dark:text-white">
-              Key Features
+            <CardTitle className="text-2xl text-neutral-900 dark:text-white text-center">
+              Why Choose FMP Node Wrapper?
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-4 md:grid-cols-2">
-              <div>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+              <div className="text-center">
+                <div className="text-3xl mb-2">⚡</div>
                 <h3 className="font-semibold mb-2 text-neutral-900 dark:text-white">
-                  ✅ TypeScript Support
+                  High Performance
                 </h3>
-                <p className="text-neutral-600 dark:text-neutral-300">
-                  Full TypeScript support with comprehensive type definitions
+                <p className="text-sm text-neutral-600 dark:text-neutral-300">
+                  Optimized for speed and efficiency
                 </p>
               </div>
-              <div>
-                <h3 className="font-semibold mb-2 text-neutral-900 dark:text-white">
-                  🔄 Consistent API
-                </h3>
-                <p className="text-neutral-600 dark:text-neutral-300">
-                  Uniform response format across all endpoints
+              <div className="text-center">
+                <div className="text-3xl mb-2">🛡️</div>
+                <h3 className="font-semibold mb-2 text-neutral-900 dark:text-white">Type Safe</h3>
+                <p className="text-sm text-neutral-600 dark:text-neutral-300">
+                  Full TypeScript support throughout
                 </p>
               </div>
-              <div>
-                <h3 className="font-semibold mb-2 text-neutral-900 dark:text-white">
-                  🛡️ Error Handling
-                </h3>
-                <p className="text-neutral-600 dark:text-neutral-300">
-                  Built-in error handling and retry mechanisms
+              <div className="text-center">
+                <div className="text-3xl mb-2">🔧</div>
+                <h3 className="font-semibold mb-2 text-neutral-900 dark:text-white">Easy to Use</h3>
+                <p className="text-sm text-neutral-600 dark:text-neutral-300">
+                  Simple, intuitive API design
                 </p>
               </div>
-              <div>
-                <h3 className="font-semibold mb-2 text-neutral-900 dark:text-white">
-                  ⚡ Performance
-                </h3>
-                <p className="text-neutral-600 dark:text-neutral-300">
-                  Optimized for high-performance applications
+              <div className="text-center">
+                <div className="text-3xl mb-2">🤖</div>
+                <h3 className="font-semibold mb-2 text-neutral-900 dark:text-white">AI Ready</h3>
+                <p className="text-sm text-neutral-600 dark:text-neutral-300">
+                  Built-in AI tool integrations
                 </p>
               </div>
             </div>

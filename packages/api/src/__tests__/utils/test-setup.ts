@@ -27,7 +27,7 @@ export function createTestClient(): FMP {
 /**
  * Common test timeout for API calls
  */
-export const API_TIMEOUT = 15000;
+export const API_TIMEOUT = 30000;
 
 /**
  * Common test timeout for faster operations

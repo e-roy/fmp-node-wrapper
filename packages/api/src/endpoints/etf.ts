@@ -1,8 +1,8 @@
 // ETF endpoints for FMP API
 
 import { FMPClient } from '@/client';
-import { APIResponse } from '@/types/common';
 import {
+  APIResponse,
   ETFProfile,
   ETFHolding,
   ETFHoldingDates,
@@ -10,7 +10,7 @@ import {
   ETFStockExposure,
   ETFWeighting,
   ETFCountryWeighting,
-} from '@/types/etf';
+} from '@fmp/types';
 
 export class ETFEndpoints {
   constructor(private client: FMPClient) {}

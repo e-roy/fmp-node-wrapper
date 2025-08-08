@@ -1,9 +1,3 @@
----
-description: File structure of entire project
-globs:
-alwaysApply: true
----
-
 # FMP Node Wrapper - Project Structure Rules
 
 ## Project Overview
@@ -21,9 +15,13 @@ This is a monorepo for a Financial Modeling Prep (FMP) API Node.js wrapper, orga
 ```
 fmp-node-wrapper/
 ├── apps/                    # Application packages
-│   └── docs/               # Next.js documentation site
+│   ├── docs/               # Next.js documentation site
+│   └── examples/           # Example applications
+│       └── vercel-ai/      # Vercel AI SDK integration example
 ├── packages/               # Library packages
-│   └── api/               # Main FMP API wrapper (includes all types)
+│   ├── api/               # Main FMP API wrapper
+│   ├── tools/             # AI tools for FMP API integrations
+│   └── types/             # Shared TypeScript types
 ├── scripts/               # Build and utility scripts
 ├── package.json           # Root package.json with workspace scripts
 ├── pnpm-workspace.yaml    # Workspace configuration
@@ -47,6 +45,7 @@ fmp-node-wrapper/
 ### Apps
 
 - **`apps/docs/`**: Next.js documentation site
+
   - Uses `fmp-node-api` as workspace dependency
   - Built with Next.js 15, React 19, and Tailwind CSS
   - MDX support for rich documentation with `@mdx-js/react`, `@next/mdx`, and `remark-gfm`
@@ -77,9 +76,17 @@ fmp-node-wrapper/
       - `insider/` - Insider trading data
       - `sec/` - SEC filings and industry data
 
+- **`apps/examples/`**: Example applications demonstrating FMP API usage
+  - **`vercel-ai/`**: Vercel AI SDK integration example
+    - Chat interface using FMP tools with OpenAI
+    - Demonstrates AI tool integration patterns
+    - Built with Next.js 15, React 19, and Tailwind CSS
+    - Uses `fmp-tools` and `fmp-node-api` as workspace dependencies
+
 ### Packages
 
 - **`packages/api/`**: Main FMP API wrapper (`fmp-node-api`)
+
   - Core API client implementation
   - Endpoint modules for different API categories:
     - `quote.ts` - Unified quotes for all asset types
@@ -96,9 +103,23 @@ fmp-node-wrapper/
     - `institutional.ts` - Form 13F filings
     - `insider.ts` - Insider trading data
     - `sec.ts` - SEC filings and industry data
-  - All TypeScript types and interfaces (including shared types)
   - Shared utilities and constants
   - Jest tests and manual testing scripts
+  - Built with tsup for multiple output formats
+
+- **`packages/tools/`**: AI tools for FMP API integrations (`fmp-tools`)
+
+  - AI tool implementations compatible with Vercel AI SDK, Langchain, OpenAI, and more
+  - Provider-specific implementations:
+    - `providers/vercel-ai/` - Vercel AI SDK tool providers
+  - Tool wrapper utilities and type definitions
+  - Built with tsup for multiple output formats
+  - Uses `@fmp/types` and `fmp-node-api` as workspace dependencies
+
+- **`packages/types/`**: Shared TypeScript types (`@fmp/types`)
+  - Internal package containing all TypeScript interfaces and types
+  - Organized by endpoint category (quote, stock, financial, etc.)
+  - Used by both `fmp-node-api` and `fmp-tools` packages
   - Built with tsup for multiple output formats
 
 ## Build System
@@ -119,6 +140,8 @@ fmp-node-wrapper/
 - `pnpm dev`: Start development mode for all packages
 - `pnpm docs:dev`: Start docs development server
 - `pnpm api:dev`: Start API package development mode
+- `pnpm tools:dev`: Start tools package development mode
+- `pnpm types:dev`: Start types package development mode
 - `pnpm build`: Build all packages
 - `pnpm clean`: Clean build artifacts
 - `pnpm clean:install`: Clean all node_modules and reinstall
@@ -146,6 +169,8 @@ fmp-node-wrapper/
 - `pnpm test:institutional`: Run institutional endpoint tests
 - `pnpm test:insider`: Run insider endpoint tests
 - `pnpm test:sec`: Run SEC endpoint tests
+- `pnpm test:tools`: Run tools package tests
+- `pnpm test:tool`: Run specific tool test
 
 ### Code Quality
 
@@ -169,10 +194,13 @@ fmp-node-wrapper/
 
 1. **Always start from the root directory** (`fmp-node-wrapper/`)
 2. Use `pnpm` for all package operations
-3. API implementation and types are in `packages/api/`
-4. Documentation site consumes the API package
-5. Turbo handles build dependencies and caching
-6. Changesets manages versioning and publishing
+3. API implementation is in `packages/api/`
+4. Shared types are in `packages/types/`
+5. AI tools are in `packages/tools/`
+6. Documentation site consumes the API package
+7. Examples demonstrate usage patterns
+8. Turbo handles build dependencies and caching
+9. Changesets manages versioning and publishing
 
 ## File Naming Conventions
 
@@ -183,10 +211,14 @@ fmp-node-wrapper/
 
 ## Import Patterns
 
-- Internal packages use workspace dependencies: `"fmp-node-api": "workspace:*"`
+- Internal packages use workspace dependencies:
+  - `"fmp-node-api": "workspace:*"`
+  - `"fmp-tools": "workspace:*"`
+  - `"@fmp/types": "workspace:*"`
 - External dependencies are managed at the package level
-- All types are included in the main API package
+- Types are centralized in `@fmp/types` package
 - API client is imported from `fmp-node-api`
+- AI tools are imported from `fmp-tools`
 
 ## API Structure
 
@@ -206,3 +238,12 @@ The API is organized into logical endpoint categories:
 - **Institutional Endpoints**: Form 13F filings and institutional ownership
 - **Insider Endpoints**: Insider trading data and transactions
 - **SEC Endpoints**: SEC filings, RSS feeds, industry classification
+
+## AI Tools Structure
+
+The AI tools package provides integrations for various AI platforms:
+
+- **Vercel AI SDK**: Tool providers for Vercel AI SDK integration
+- **Provider-specific implementations**: Organized by AI platform
+- **Tool wrappers**: Utilities for creating and managing AI tools
+- **Type definitions**: Shared types for tool implementations

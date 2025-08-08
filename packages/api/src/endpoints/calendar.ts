@@ -1,16 +1,16 @@
-import { APIResponse } from '@/types/common';
-import { FMPClient } from '@/client';
 import {
+  APIResponse,
   EarningsCalendar,
   DividendsCalendar,
   EconomicsCalendar,
   IPOCalendar,
   SplitsCalendar,
   EarningsConfirmed,
-} from '@/types/calendar';
+} from '@fmp/types';
+import { FMPClient } from '@/client';
 
 export class CalendarEndpoints {
-  constructor(private client: FMPClient) {}
+  constructor(private _client: FMPClient) {}
 
   /**
    * Get earnings calendar data
@@ -56,7 +56,7 @@ export class CalendarEndpoints {
     if (from) queryParams.from = from;
     if (to) queryParams.to = to;
 
-    return this.client.get('/earning_calendar', 'v3', queryParams);
+    return this._client.get('/earning_calendar', 'v3', queryParams);
   }
 
   /**
@@ -103,7 +103,7 @@ export class CalendarEndpoints {
     if (from) queryParams.from = from;
     if (to) queryParams.to = to;
 
-    return this.client.get('/earning-calendar-confirmed', 'v4', queryParams);
+    return this._client.get('/earning-calendar-confirmed', 'v4', queryParams);
   }
 
   /**
@@ -150,7 +150,7 @@ export class CalendarEndpoints {
     if (from) queryParams.from = from;
     if (to) queryParams.to = to;
 
-    return this.client.get('/stock_dividend_calendar', 'v3', queryParams);
+    return this._client.get('/stock_dividend_calendar', 'v3', queryParams);
   }
 
   /**
@@ -197,7 +197,7 @@ export class CalendarEndpoints {
     if (from) queryParams.from = from;
     if (to) queryParams.to = to;
 
-    return this.client.get('/economic_calendar', 'v3', queryParams);
+    return this._client.get('/economic_calendar', 'v3', queryParams);
   }
 
   /**
@@ -244,7 +244,7 @@ export class CalendarEndpoints {
     if (from) queryParams.from = from;
     if (to) queryParams.to = to;
 
-    return this.client.get('/ipo_calendar', 'v3', queryParams);
+    return this._client.get('/ipo_calendar', 'v3', queryParams);
   }
 
   /**
@@ -291,6 +291,6 @@ export class CalendarEndpoints {
     if (from) queryParams.from = from;
     if (to) queryParams.to = to;
 
-    return this.client.get('/stock_split_calendar', 'v3', queryParams);
+    return this._client.get('/stock_split_calendar', 'v3', queryParams);
   }
 }

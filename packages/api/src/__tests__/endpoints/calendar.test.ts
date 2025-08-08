@@ -13,7 +13,7 @@ import type {
   IPOCalendar,
   SplitsCalendar,
   EarningsConfirmed,
-} from '@/types/calendar';
+} from '@fmp/types';
 
 // Helper function to safely access data that could be an array or single object
 function getFirstItem<T>(data: T | T[]): T {
@@ -904,7 +904,7 @@ describe('Calendar Endpoints', () => {
         // Reversed dates might return empty array or error
         expect(Array.isArray(result.data) ? result.data.length >= 0 : true).toBe(true);
       },
-      FAST_TIMEOUT,
+      API_TIMEOUT,
     );
 
     it(

@@ -226,6 +226,9 @@ async function testEndpoint() {
       case 'market-hours':
         result = await fmp.market.getMarketHours();
         break;
+      case 'market-performance':
+        result = await fmp.market.getMarketPerformance();
+        break;
       case 'gainers':
         result = await fmp.market.getGainers();
         break;

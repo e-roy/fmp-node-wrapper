@@ -1,0 +1,363 @@
+# Best Practices
+
+Essential best practices for building robust applications with FMP Tools.
+
+## Overview
+
+Follow these best practices to build reliable, performant, and user-friendly applications with FMP Tools.
+
+## Tool Selection
+
+### Choose Only What You Need
+
+Import only the tools you need to reduce bundle size and improve performance:
+
+<CodeBlock language="typescript">
+{`// ❌ Don't import everything if you only need quotes
+import { fmpTools } from 'fmp-tools/vercel-ai';
+
+// ✅ Import only what you need
+import { quoteTools } from 'fmp-tools/vercel-ai';
+
+const selectedTools = {
+...quoteTools,
+};`}
+
+</CodeBlock>
+
+### Group Related Tools
+
+Combine tools that work well together:
+
+<CodeBlock language="typescript">
+{`// Stock analysis tools
+const stockAnalysisTools = {
+  ...quoteTools,
+  ...financialTools,
+  ...companyTools,
+};
+
+// Market research tools
+const marketResearchTools = {
+...marketTools,
+...economicTools,
+};`}
+
+</CodeBlock>
+
+## Rate Limiting
+
+### Set Appropriate Limits
+
+Use `maxSteps` or `stopWhen` to prevent excessive API calls:
+
+<CodeBlock language="typescript" filename="app/api/chat/route.ts">
+{`import { openai } from '@ai-sdk/openai';
+import { streamText, convertToModelMessages, stepCountIs } from 'ai';
+import { fmpTools } from 'fmp-tools/vercel-ai';
+
+export async function POST(req: Request) {
+  const { messages } = await req.json();
+
+const result = streamText({
+model: openai('gpt-4o-mini'),
+messages: convertToModelMessages(messages),
+tools: fmpTools,
+stopWhen: stepCountIs(5), // Limit to 5 tool calls
+});
+
+return result.toUIMessageStreamResponse();
+}`}
+
+</CodeBlock>
+
+### Implement Caching
+
+Cache frequently requested data to reduce API calls:
+
+<CodeBlock language="typescript">
+{`// Simple in-memory cache
+const cache = new Map();
+
+function getCachedData(key: string, ttl: number = 5 _ 60 _ 1000) {
+const cached = cache.get(key);
+if (cached && Date.now() - cached.timestamp < ttl) {
+return cached.data;
+}
+return null;
+}
+
+function setCachedData(key: string, data: any) {
+cache.set(key, {
+data,
+timestamp: Date.now(),
+});
+}`}
+
+</CodeBlock>
+
+## Error Handling
+
+### Always Implement Error Boundaries
+
+Wrap your chat components with error boundaries:
+
+<CodeBlock language="typescript">
+{`import { ErrorBoundary } from './ErrorBoundary';
+import { Chat } from './Chat';
+
+export default function App() {
+  return (
+    <ErrorBoundary>
+      <Chat />
+    </ErrorBoundary>
+  );
+}`}
+</CodeBlock>
+
+### Provide User-Friendly Messages
+
+Show clear, actionable error messages:
+
+<CodeBlock language="typescript">
+  {`const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
+  api: '/api/chat',
+  onError: (error) => {
+    // Show user-friendly error message
+    setError('Unable to fetch financial data. Please try again.');
+  },
+});`}
+</CodeBlock>
+
+## User Experience
+
+### Loading States
+
+Always show loading indicators during tool execution:
+
+<CodeBlock language="typescript">
+  {`{isLoading && (
+  <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+    <p className="text-blue-600">Analyzing financial data...</p>
+  </div>
+)}`}
+</CodeBlock>
+
+### Clear Feedback
+
+Let users know when tools are being used:
+
+<CodeBlock language="typescript">
+  {`const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
+  api: '/api/chat',
+  onToolCall: ({ toolCall }) => {
+    // Show which tool is being used
+    setToolStatus(\`Using \${toolCall.toolName}...\`);
+  },
+});`}
+</CodeBlock>
+
+## Performance Optimization
+
+### Lazy Load Tools
+
+Load tools only when needed:
+
+<CodeBlock language="typescript">
+  {`// Load tools dynamically based on user needs
+const loadTools = async (category: string) => {
+  switch (category) {
+    case 'stocks':
+      return await import('fmp-tools/vercel-ai').then(m => m.stockTools);
+    case 'market':
+      return await import('fmp-tools/vercel-ai').then(m => m.marketTools);
+    default:
+      return await import('fmp-tools/vercel-ai').then(m => m.fmpTools);
+  }
+};`}
+</CodeBlock>
+
+### Optimize Model Configuration
+
+Use appropriate model settings:
+
+<CodeBlock language="typescript" filename="app/api/chat/route.ts">
+  {`  const result = streamText({
+    model: openai('gpt-4o-mini', {
+      temperature: 0.7, // Balance creativity and accuracy
+      maxTokens: 1000,  // Limit response length
+    }),
+    messages: convertToModelMessages(messages),
+    tools: fmpTools,
+    stopWhen: stepCountIs(3), // Limit tool usage
+  });`}
+</CodeBlock>
+
+## Security
+
+### Validate Inputs
+
+Always validate user inputs before passing to tools:
+
+<CodeBlock language="typescript">
+{`function validateSymbol(symbol: string): boolean {
+  // Basic validation
+  return /^[A-Z]{1,5}$/.test(symbol);
+}
+
+// Use in your application
+if (!validateSymbol(userInput)) {
+throw new Error('Invalid stock symbol');
+}`}
+
+</CodeBlock>
+
+### Secure API Keys
+
+Never expose API keys in client-side code:
+
+<CodeBlock language="bash" filename=".env.local">
+  {`# ✅ Keep API keys server-side only
+FMP_API_KEY=your_api_key_here
+OPENAI_API_KEY=your_openai_key_here`}
+</CodeBlock>
+
+## Monitoring and Debugging
+
+### Log Tool Usage
+
+Track which tools are being used:
+
+<CodeBlock language="typescript" filename="app/api/chat/route.ts">
+  {`const result = streamText({
+  model: openai('gpt-4o-mini'),
+  messages: convertToModelMessages(messages),
+  tools: fmpTools,
+  experimental_onToolCall: ({ toolCall }) => {
+    console.log('Tool used:', toolCall.toolName);
+    // Log to your analytics service
+    analytics.track('tool_used', { tool: toolCall.toolName });
+  },
+});`}
+</CodeBlock>
+
+### Monitor Error Rates
+
+Track errors to identify issues:
+
+<CodeBlock language="typescript">
+  {`const { messages, input, handleInputChange, handleSubmit, isLoading } = useChat({
+  api: '/api/chat',
+  onError: (error) => {
+    // Log error for monitoring
+    console.error('Chat error:', error);
+    analytics.track('chat_error', { error: error.message });
+  },
+});`}
+</CodeBlock>
+
+## Production Considerations
+
+### Environment Configuration
+
+Use different settings for development and production:
+
+<CodeBlock language="typescript" filename="app/api/chat/route.ts">
+{`const isProduction = process.env.NODE_ENV === 'production';
+
+const result = streamText({
+model: openai('gpt-4o-mini'),
+messages: convertToModelMessages(messages),
+tools: fmpTools,
+stopWhen: isProduction ? stepCountIs(3) : stepCountIs(5), // Stricter limits in production
+temperature: isProduction ? 0.5 : 0.7, // More conservative in production
+});`}
+
+</CodeBlock>
+
+### Health Checks
+
+Implement health checks for your API routes:
+
+<CodeBlock language="typescript" filename="app/api/health/route.ts">
+  {`export async function GET() {
+  try {
+    // Test basic functionality
+    const testResult = await fetch('https://api.example.com/health');
+    
+    return new Response(JSON.stringify({ 
+      status: 'healthy',
+      timestamp: new Date().toISOString()
+    }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  } catch (error) {
+    return new Response(JSON.stringify({ 
+      status: 'unhealthy',
+      error: error.message 
+    }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+}`}
+</CodeBlock>
+
+## Testing
+
+### Unit Tests
+
+Test your tool integration:
+
+<CodeBlock language="typescript">
+{`import { describe, it, expect } from 'vitest';
+import { fmpTools } from 'fmp-tools/vercel-ai';
+
+describe('FMP Tools', () => {
+it('should have required tools', () => {
+expect(fmpTools.getStockQuote).toBeDefined();
+expect(fmpTools.getCompanyProfile).toBeDefined();
+});
+});`}
+
+</CodeBlock>
+
+### Integration Tests
+
+Test the full chat flow:
+
+<CodeBlock language="typescript">
+{`import { describe, it, expect } from 'vitest';
+
+describe('Chat API', () => {
+it('should handle stock quote requests', async () => {
+const response = await fetch('/api/chat', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({
+messages: [{ role: 'user', content: 'What is the price of AAPL?' }]
+})
+});
+
+    expect(response.status).toBe(200);
+
+});
+});`}
+
+</CodeBlock>
+
+## Summary
+
+1. **Choose the right tools** for your use case
+2. **Implement proper rate limiting** to avoid API limits
+3. **Handle errors gracefully** with user-friendly messages
+4. **Optimize for performance** with caching and lazy loading
+5. **Monitor your application** to identify issues early
+6. **Test thoroughly** before deploying to production
+
+## Next Steps
+
+- [Error Handling](/docs/tools/error-handling) - Learn about comprehensive error handling
+- [Examples](/docs/tools/examples) - See these practices in action
+- [Vercel AI SDK Integration](/docs/tools/vercel-ai) - Learn about the integration
