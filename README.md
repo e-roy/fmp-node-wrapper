@@ -301,7 +301,10 @@ _This section is for developers working on the library itself._
 This is a monorepo containing:
 
 - **`packages/api/`**: Main FMP API wrapper (`fmp-node-api`)
+- **`packages/tools/`**: FMP tools for AI frameworks (`fmp-tools`)
+- **`packages/types/`**: Shared TypeScript types (`@fmp/types`)
 - **`apps/docs/`**: Next.js documentation site
+- **`apps/examples/vercel-ai/`**: Vercel AI SDK integration example
 
 ### Development Setup
 
@@ -325,6 +328,7 @@ pnpm test
 pnpm dev              # All packages
 pnpm docs:dev         # Just docs
 pnpm api:dev          # Just API
+pnpm example:dev      # Just Vercel AI example
 pnpm build            # Build all packages
 pnpm clean            # Clean build artifacts
 pnpm clean:install    # Clean all node_modules and reinstall

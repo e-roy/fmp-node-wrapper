@@ -1,4 +1,6 @@
 packages:
   - 'apps/*'
-  - 'packages/api'
+  - 'apps/examples/*'
+  - 'packages/*'
   - 'packages/types'
+  - 'packages/tools'
