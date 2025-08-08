@@ -19,6 +19,7 @@ A modern, comprehensive Node.js wrapper for the Financial Modeling Prep (FMP) AP
 - 🛡️ **Input Validation** - Built-in validation for all parameters
 - 🎯 **Modular Design** - Import only what you need
 - 🧪 **Comprehensive Testing** - Full test suite with 45+ tests covering all endpoints
+- 📋 **Shared Types** - Internal types package for consistent type definitions
 
 ## Installation
 
@@ -237,6 +238,23 @@ try {
 }
 ```
 
+## TypeScript Support
+
+The library provides full TypeScript support with comprehensive type definitions included in the main package:
+
+```typescript
+import { FMP } from 'fmp-node-api';
+
+// All responses are properly typed
+const quote = await fmp.quote.getQuote('AAPL'); // TypeScript knows this returns APIResponse<Quote>
+const marketCap = await fmp.stock.getMarketCap('AAPL'); // TypeScript knows this returns APIResponse<MarketCap>
+const income = await fmp.financial.getIncomeStatement({
+  symbol: 'AAPL',
+}); // TypeScript knows this returns APIResponse<IncomeStatement[]>
+```
+
+All API responses and parameters are fully typed for complete type safety.
+
 ## Available Modules
 
 - **`fmp.quote`** - Quote data for stocks, forex, crypto, commodities, and ETFs
@@ -254,10 +272,51 @@ try {
 - **`fmp.insider`** - Insider trading data
 - **`fmp.sec`** - SEC filings and industry classification
 
+## AI Tools Integration
+
+For AI/LLM integrations, we also provide the `fmp-tools` package:
+
+```bash
+npm install fmp-tools
+# or
+pnpm add fmp-tools
+```
+
+### AI Tools Features
+
+- **Vercel AI SDK Integration** - Ready-to-use tools for Vercel AI SDK with `fmpTools`
+- **Comprehensive Coverage** - Tools for quotes, financial statements, market data, economic indicators, and more
+- **Easy Configuration** - Just set `FMP_API_KEY` environment variable
+- **Error Handling** - Graceful error handling with informative messages
+- **Modular Design** - Import specific tool categories as needed
+
+### Quick AI Tools Example
+
+```typescript
+import { openai } from '@ai-sdk/openai';
+import { streamText, convertToModelMessages } from 'ai';
+import { fmpTools } from 'fmp-tools/vercel-ai';
+
+export async function POST(req: Request) {
+  const { messages } = await req.json();
+
+  const result = streamText({
+    model: openai('gpt-4o-mini'),
+    messages: convertToModelMessages(messages),
+    tools: fmpTools,
+  });
+
+  return result.toUIMessageStreamResponse();
+}
+```
+
+See the [Vercel AI example](apps/examples/vercel-ai/) for a complete implementation.
+
 ## Documentation
 
 - **📚 [Full Documentation](https://fmp-node-wrapper-docs.vercel.app)** - Complete API reference and examples
 - **📦 [NPM Package](https://www.npmjs.com/package/fmp-node-api)** - Package information and downloads
+
 - **🐛 [Issues](https://github.com/e-roy/fmp-node-wrapper/issues)** - Report bugs or request features
 
 ## Support
@@ -301,10 +360,11 @@ _This section is for developers working on the library itself._
 This is a monorepo containing:
 
 - **`packages/api/`**: Main FMP API wrapper (`fmp-node-api`)
-- **`packages/tools/`**: FMP tools for AI frameworks (`fmp-tools`)
+- **`packages/tools/`**: AI tools for FMP API integrations (`fmp-tools`)
 - **`packages/types/`**: Shared TypeScript types (`@fmp/types`)
 - **`apps/docs/`**: Next.js documentation site
-- **`apps/examples/vercel-ai/`**: Vercel AI SDK integration example
+- **`apps/examples/`**: Example applications
+  - **`vercel-ai/`**: Vercel AI SDK integration example
 
 ### Development Setup
 
@@ -328,6 +388,8 @@ pnpm test
 pnpm dev              # All packages
 pnpm docs:dev         # Just docs
 pnpm api:dev          # Just API
+pnpm tools:dev        # Just tools package
+pnpm types:dev        # Just types package
 pnpm example:dev      # Just Vercel AI example
 pnpm build            # Build all packages
 pnpm clean            # Clean build artifacts
@@ -350,6 +412,14 @@ pnpm test:economic    # Run economic endpoint tests
 pnpm test:list        # Run list endpoint tests
 pnpm test:calendar    # Run calendar endpoint tests
 pnpm test:company     # Run company endpoint tests
+pnpm test:etf         # Run ETF endpoint tests
+pnpm test:mutual-fund # Run mutual fund endpoint tests
+pnpm test:senate-house # Run senate house endpoint tests
+pnpm test:institutional # Run institutional endpoint tests
+pnpm test:insider     # Run insider endpoint tests
+pnpm test:sec         # Run SEC endpoint tests
+pnpm test:tools       # Run tools package tests
+pnpm test:tool        # Run specific tool test
 
 # Code Quality
 pnpm lint             # Check linting

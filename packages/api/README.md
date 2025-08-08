@@ -407,7 +407,7 @@ try {
 
 ## Type Safety
 
-The library provides full TypeScript support with comprehensive type definitions:
+The library provides full TypeScript support with comprehensive type definitions included in the main package:
 
 ```typescript
 import { Quote, MarketCap, IncomeStatement } from 'fmp-node-api';
@@ -419,6 +419,8 @@ const income: APIResponse<IncomeStatement[]> = await fmp.financial.getIncomeStat
   symbol: 'AAPL',
 });
 ```
+
+All API responses and parameters are fully typed for complete type safety.
 
 ## Utilities
 
@@ -582,23 +584,6 @@ src/
 ├── fmp.ts                 # Main FMP class
 ├── index.ts               # Main exports
 ├── shared.ts              # Shared types and utilities
-├── types/                 # Type definitions
-│   ├── index.ts
-│   ├── common.ts          # Common types
-│   ├── stock.ts           # Stock types
-│   ├── financial.ts       # Financial types
-│   ├── quote.ts           # Quote types
-│   ├── etf.ts             # ETF types
-│   ├── mutual-fund.ts     # Mutual fund types
-│   ├── economic.ts        # Economic types
-│   ├── market.ts          # Market types
-│   ├── list.ts            # List types
-│   ├── calendar.ts        # Calendar types
-│   ├── company.ts         # Company types
-│   ├── senate-house.ts    # Senate house types
-│   ├── institutional.ts   # Institutional types
-│   ├── insider.ts         # Insider types
-│   └── sec.ts             # SEC types
 ├── endpoints/             # API endpoint classes
 │   ├── index.ts
 │   ├── stock.ts
@@ -635,10 +620,6 @@ src/
 │   │   ├── list.test.ts
 │   │   ├── calendar.test.ts
 │   │   └── company.test.ts
-│   ├── types/             # Type definition tests
-│   │   ├── common.test.ts
-│   │   ├── stock.test.ts
-│   │   └── financial.test.ts
 │   └── utils/             # Test utilities
 │       ├── formatting.test.ts
 │       ├── validation.test.ts
