@@ -95,7 +95,7 @@ src/
 ```typescript
 import { openai } from '@ai-sdk/openai';
 import { streamText, convertToModelMessages, stepCountIs } from 'ai';
-import { fmpTools } from 'fmp-tools/vercel-ai';
+import { fmpTools } from 'fmp-ai-tools/vercel-ai';
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
@@ -131,7 +131,7 @@ const { messages, sendMessage, status, stop } = useChat({
 
 You can easily customize this example by:
 
-- **Adding more tools** - Import additional tool categories from `fmp-tools/vercel-ai`
+- **Adding more tools** - Import additional tool categories from `fmp-ai-tools/vercel-ai`
 - **Changing the model** - Use different AI models supported by the Vercel AI SDK
 - **Modifying the UI** - Update the components to match your design
 - **Adding features** - Implement user authentication, conversation history, etc.

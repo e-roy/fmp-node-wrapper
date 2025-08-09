@@ -1,12 +1,19 @@
 # FMP Node Wrapper
 
+**FMP Node API:**
 [![npm version](https://img.shields.io/npm/v/fmp-node-api.svg)](https://www.npmjs.com/package/fmp-node-api)
 [![npm downloads](https://img.shields.io/npm/dm/fmp-node-api.svg)](https://www.npmjs.com/package/fmp-node-api)
+
+**FMP AI Tools:**
+[![npm version](https://img.shields.io/npm/v/fmp-ai-tools.svg)](https://www.npmjs.com/package/fmp-ai-tools)
+[![npm downloads](https://img.shields.io/npm/dm/fmp-ai-tools.svg)](https://www.npmjs.com/package/fmp-ai-tools)
+
+**Project:**
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue.svg)](https://www.typescriptlang.org/)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)](https://nodejs.org/)
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](https://github.com/e-roy/fmp-node-wrapper)
-[![Test Coverage](https://img.shields.io/badge/tests-45+-brightgreen.svg)](https://github.com/e-roy/fmp-node-wrapper)
+[![Test Coverage](https://img.shields.io/badge/tests-passing-brightgreen.svg)](https://github.com/e-roy/fmp-node-wrapper)
 
 A modern, comprehensive Node.js wrapper for the Financial Modeling Prep (FMP) API with full TypeScript support.
 
@@ -274,12 +281,12 @@ All API responses and parameters are fully typed for complete type safety.
 
 ## AI Tools Integration
 
-For AI/LLM integrations, we also provide the `fmp-tools` package:
+For AI/LLM integrations, we also provide the `fmp-ai-tools` package:
 
 ```bash
-npm install fmp-tools
+npm install fmp-ai-tools
 # or
-pnpm add fmp-tools
+pnpm add fmp-ai-tools
 ```
 
 ### AI Tools Features
@@ -295,7 +302,7 @@ pnpm add fmp-tools
 ```typescript
 import { openai } from '@ai-sdk/openai';
 import { streamText, convertToModelMessages } from 'ai';
-import { fmpTools } from 'fmp-tools/vercel-ai';
+import { fmpTools } from 'fmp-ai-tools/vercel-ai';
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
@@ -360,7 +367,7 @@ _This section is for developers working on the library itself._
 This is a monorepo containing:
 
 - **`packages/api/`**: Main FMP API wrapper (`fmp-node-api`)
-- **`packages/tools/`**: AI tools for FMP API integrations (`fmp-tools`)
+- **`packages/tools/`**: AI tools for FMP API integrations (`fmp-ai-tools`)
 - **`packages/types/`**: Shared TypeScript types (`@fmp/types`)
 - **`apps/docs/`**: Next.js documentation site
 - **`apps/examples/`**: Example applications

@@ -1,4 +1,4 @@
-# FMP Tools
+# FMP AI Tools
 
 AI tools for Financial Modeling Prep (FMP) Node API - compatible with Vercel AI SDK, Langchain, OpenAI, and more.
 
@@ -7,11 +7,11 @@ This package provides pre-built AI tools that can be used with various AI framew
 ## Installation
 
 ```bash
-npm install fmp-tools
+npm install fmp-ai-tools
 # or
-pnpm add fmp-tools
+pnpm add fmp-ai-tools
 # or
-yarn add fmp-tools
+yarn add fmp-ai-tools
 ```
 
 ## Quick Start
@@ -21,7 +21,7 @@ yarn add fmp-tools
 ```typescript
 import { openai } from '@ai-sdk/openai';
 import { streamText, convertToModelMessages, stepCountIs } from 'ai';
-import { fmpTools } from 'fmp-tools/vercel-ai';
+import { fmpTools } from 'fmp-ai-tools/vercel-ai';
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
@@ -117,7 +117,7 @@ You can import and use specific tool categories or individual tools:
 ### Import Specific Categories
 
 ```typescript
-import { quoteTools, financialTools, marketTools } from 'fmp-tools/vercel-ai';
+import { quoteTools, financialTools, marketTools } from 'fmp-ai-tools/vercel-ai';
 
 // Use only quote and financial tools
 const selectedTools = {

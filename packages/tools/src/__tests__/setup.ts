@@ -1,4 +1,4 @@
-// Test setup for fmp-tools package
+// Test setup for fmp-ai-tools package
 // This file is automatically loaded by Jest before running tests
 
 // Global test utilities can be added here

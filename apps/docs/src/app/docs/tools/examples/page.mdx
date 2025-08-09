@@ -15,7 +15,7 @@ A simple financial chatbot using Vercel AI SDK.
 <CodeBlock language="typescript" filename="app/api/chat/route.ts">
 {`import { openai } from '@ai-sdk/openai';
 import { streamText, convertToModelMessages } from 'ai';
-import { fmpTools } from 'fmp-tools/vercel-ai';
+import { fmpTools } from 'fmp-ai-tools/vercel-ai';
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
@@ -108,7 +108,7 @@ import {
   getCompanyProfile, 
   getFinancialRatios,
   getBalanceSheet 
-} from 'fmp-tools/vercel-ai';
+} from 'fmp-ai-tools/vercel-ai';
 
 const stockAnalysisTools = {
 getStockQuote,
@@ -241,7 +241,7 @@ import {
   getGainers, 
   getLosers,
   getMostActive 
-} from 'fmp-tools/vercel-ai';
+} from 'fmp-ai-tools/vercel-ai';
 
 const marketResearchTools = {
 getMarketPerformance,
@@ -375,7 +375,7 @@ import {
   getETFProfile, 
   getETFHoldings,
   getStockQuote 
-} from 'fmp-tools/vercel-ai';
+} from 'fmp-ai-tools/vercel-ai';
 
 const etfAnalysisTools = {
 getETFProfile,

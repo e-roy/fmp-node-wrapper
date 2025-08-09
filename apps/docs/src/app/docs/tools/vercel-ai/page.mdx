@@ -28,7 +28,7 @@ OPENAI_API_KEY=your_openai_api_key_here`}
 <CodeBlock language="typescript" filename="app/api/chat/route.ts">
 {`import { openai } from '@ai-sdk/openai';
 import { streamText, convertToModelMessages, stepCountIs } from 'ai';
-import { fmpTools } from 'fmp-tools/vercel-ai';
+import { fmpTools } from 'fmp-ai-tools/vercel-ai';
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
@@ -127,7 +127,7 @@ You can select specific tools instead of using all available tools:
 <CodeBlock language="typescript" filename="app/api/chat/route.ts">
 {`import { openai } from '@ai-sdk/openai';
 import { streamText, convertToModelMessages } from 'ai';
-import { quoteTools, financialTools } from 'fmp-tools/vercel-ai';
+import { quoteTools, financialTools } from 'fmp-ai-tools/vercel-ai';
 
 // Use only quote and financial tools
 const selectedTools = {
@@ -154,7 +154,7 @@ return result.toUIMessageStreamResponse();
 <CodeBlock language="typescript" filename="app/api/chat/route.ts">
 {`import { openai } from '@ai-sdk/openai';
 import { streamText, convertToModelMessages } from 'ai';
-import { fmpTools } from 'fmp-tools/vercel-ai';
+import { fmpTools } from 'fmp-ai-tools/vercel-ai';
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
