@@ -1,0 +1,262 @@
+# OpenAI Provider
+
+The OpenAI provider for FMP Tools allows you to use Financial Modeling Prep data with OpenAI Agents and other OpenAI-compatible frameworks.
+
+## Installation
+
+The OpenAI provider is included in the main `fmp-ai-tools` package:
+
+<CodeBlock language="bash">{`npm install fmp-ai-tools`}</CodeBlock>
+
+## Quick Start
+
+### Basic Usage with OpenAI Agents
+
+<CodeBlock language="typescript" filename="app/api/chat/route.ts">
+{`import { Agent } from '@openai/agents';
+import { fmpTools } from 'fmp-ai-tools/openai';
+
+const agent = new Agent({
+name: 'Financial Analyst',
+instructions: 'You are a financial analyst with access to real-time market data. Use the available tools to provide accurate financial information.',
+tools: fmpTools,
+});
+
+const result = await agent.run({
+messages: [
+{
+role: 'user',
+content: 'Get the current stock quote for Apple (AAPL) and show me their latest balance sheet',
+},
+],
+});`}
+
+</CodeBlock>
+
+### Using Specific Tool Categories
+
+<CodeBlock language="typescript">
+{`import { 
+  companyTools, 
+  financialTools, 
+  marketTools 
+} from 'fmp-ai-tools/openai';
+
+// Combine specific tool categories
+const selectedTools = [
+...companyTools,
+...financialTools,
+...marketTools,
+];
+
+const agent = new Agent({
+name: 'Financial Analyst',
+instructions: 'You are a financial analyst with access to company, financial, and market data.',
+tools: selectedTools,
+});`}
+
+</CodeBlock>
+
+### Using Individual Tools
+
+<CodeBlock language="typescript">
+{`import { 
+  getCompanyProfile, 
+  getStockQuote, 
+  getBalanceSheet 
+} from 'fmp-ai-tools/openai';
+
+// Use only specific tools
+const customTools = [
+getCompanyProfile,
+getStockQuote,
+getBalanceSheet,
+];
+
+const agent = new Agent({
+name: 'Company Analyst',
+instructions: 'You are a company analyst focused on company profiles, stock quotes, and financial statements.',
+tools: customTools,
+});`}
+
+</CodeBlock>
+
+## Available Tools
+
+The OpenAI provider includes all the same tools as the Vercel AI provider, organized into logical categories:
+
+### Company Tools
+
+- `getCompanyProfile` - Get comprehensive company profile and information
+
+### Financial Tools
+
+- `getBalanceSheet` - Get balance sheet statements (annual/quarterly)
+- `getIncomeStatement` - Get income statements (annual/quarterly)
+- `getCashFlowStatement` - Get cash flow statements (annual/quarterly)
+- `getFinancialRatios` - Get financial ratios and metrics (annual/quarterly)
+
+### Market Tools
+
+- `getMarketPerformance` - Get overall market performance data
+- `getSectorPerformance` - Get sector performance data
+- `getGainers` - Get top gaining stocks
+- `getLosers` - Get top losing stocks
+- `getMostActive` - Get most actively traded stocks
+
+### Quote Tools
+
+- `getStockQuote` - Get real-time stock quote for a company
+
+### Stock Tools
+
+- `getMarketCap` - Get market capitalization for a company
+- `getStockSplits` - Get historical stock splits for a company
+- `getDividendHistory` - Get dividend history and payments for a company
+
+### Economic Tools
+
+- `getTreasuryRates` - Get treasury rates and yields
+- `getEconomicIndicators` - Get economic indicators (GDP, CPI, unemployment, etc.)
+
+### ETF Tools
+
+- `getETFHoldings` - Get holdings for a specific ETF
+- `getETFProfile` - Get ETF profile and information
+
+### Calendar Tools
+
+- `getEarningsCalendar` - Get upcoming earnings calendar
+- `getEconomicCalendar` - Get economic calendar events
+
+### Senate & House Trading Tools
+
+- `getSenateTrading` - Get recent Senate trading activity
+- `getHouseTrading` - Get recent House trading activity
+- `getSenateTradingByName` - Get Senate trading by politician name
+- `getHouseTradingByName` - Get House trading by politician name
+- `getSenateTradingRSSFeed` - Get Senate trading RSS feed
+- `getHouseTradingRSSFeed` - Get House trading RSS feed
+
+### Institutional Tools
+
+- `getInstitutionalHolders` - Get institutional holders for a company
+
+### Insider Trading Tools
+
+- `getInsiderTrading` - Get insider trading data for a company
+
+## Tool Structure
+
+All tools in the OpenAI provider are structured as arrays, making them easy to combine and filter:
+
+<CodeBlock language="typescript">
+{`// Tool groups are arrays
+export const companyTools = [getCompanyProfile] as Tool[];
+export const financialTools = [
+  getBalanceSheet,
+  getIncomeStatement,
+  getCashFlowStatement,
+  getFinancialRatios,
+] as Tool[];
+
+// Combine all tools into a single array
+export const fmpTools = [
+...companyTools,
+...financialTools,
+...marketTools,
+// ... all other tools
+] as Tool[];`}
+
+</CodeBlock>
+
+## Configuration
+
+### Environment Variables
+
+Set your FMP API key as an environment variable:
+
+<CodeBlock language="bash">{`FMP_API_KEY=your_api_key_here`}</CodeBlock>
+
+### OpenAI Configuration
+
+Make sure you have the OpenAI Agents package installed:
+
+<CodeBlock language="bash">{`npm install @openai/agents`}</CodeBlock>
+
+## Example Use Cases
+
+### Financial Analysis Assistant
+
+<CodeBlock language="typescript">
+  {`const financialAgent = new Agent({
+  name: 'Financial Analysis Assistant',
+  instructions: \`You are a financial analysis assistant. You can:
+  - Get company profiles and stock quotes
+  - Retrieve financial statements and ratios
+  - Analyze market performance and trends
+  - Provide insights on economic indicators
+  
+  Always use the appropriate tools to get real-time data before providing analysis.\`,
+  tools: fmpTools,
+});`}
+</CodeBlock>
+
+### Market Research Bot
+
+<CodeBlock language="typescript">
+  {`const marketBot = new Agent({
+  name: 'Market Research Bot',
+  instructions: 'You are a market research bot focused on market performance, sector analysis, and trading activity.',
+  tools: [
+    ...marketTools,
+    ...economicTools,
+    ...calendarTools,
+  ],
+});`}
+</CodeBlock>
+
+### Company Research Specialist
+
+<CodeBlock language="typescript">
+  {`const companySpecialist = new Agent({
+  name: 'Company Research Specialist',
+  instructions: 'You are a company research specialist who provides comprehensive company analysis.',
+  tools: [
+    ...companyTools,
+    ...financialTools,
+    ...stockTools,
+    ...institutionalTools,
+    ...insiderTools,
+  ],
+});`}
+</CodeBlock>
+
+## Error Handling
+
+The tools include built-in error handling and validation:
+
+- **Input Validation**: All tools use Zod schemas to validate input parameters
+- **API Error Handling**: Graceful handling of FMP API errors and rate limits
+- **User-Friendly Messages**: Clear error messages for debugging and user feedback
+
+## Performance Considerations
+
+- **Tool Selection**: Only include the tools you need to reduce agent complexity
+- **Rate Limiting**: Be mindful of FMP API rate limits in production
+- **Caching**: Consider implementing caching for frequently requested data
+
+## Migration from Vercel AI
+
+If you're migrating from the Vercel AI provider:
+
+1. **Import Changes**: Change from `fmp-ai-tools/vercel-ai` to `fmp-ai-tools/openai`
+2. **Tool Usage**: Tools are now arrays instead of objects
+3. **Framework**: Use OpenAI Agents instead of Vercel AI SDK
+
+## Next Steps
+
+- [View Vercel AI Provider](/docs/tools/vercel-ai) - For Vercel AI SDK usage
+- [Check out Examples](/docs/tools/examples) - See practical implementations
+- [Explore Tool Categories](/docs/tools/categories) - Detailed tool documentation
+- [Error Handling Guide](/docs/tools/error-handling) - Best practices for error handling

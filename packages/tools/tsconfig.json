@@ -13,7 +13,8 @@
       "@/*": ["./src/*"],
       "@/types": ["./src/types"],
       "@/providers/*": ["./src/providers/*"],
-      "@/providers/vercel-ai/*": ["./src/providers/vercel-ai/*"]
+      "@/providers/vercel-ai/*": ["./src/providers/vercel-ai/*"],
+      "@/providers/openai/*": ["./src/providers/openai/*"]
     }
   },
   "include": ["src/**/*"],

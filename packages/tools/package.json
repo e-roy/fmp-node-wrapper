@@ -15,6 +15,11 @@
       "types": "./dist/providers/vercel-ai/index.d.ts",
       "import": "./dist/providers/vercel-ai/index.mjs",
       "require": "./dist/providers/vercel-ai/index.js"
+    },
+    "./openai": {
+      "types": "./dist/providers/openai/index.d.ts",
+      "import": "./dist/providers/openai/index.mjs",
+      "require": "./dist/providers/openai/index.js"
     }
   },
   "sideEffects": false,
@@ -55,6 +60,7 @@
   },
   "homepage": "https://fmp-node-wrapper-docs.vercel.app",
   "dependencies": {
+    "@openai/agents": "^0.0.15",
     "ai": "^5.0.5",
     "fmp-node-api": "workspace:*",
     "zod": "^3.25.76"

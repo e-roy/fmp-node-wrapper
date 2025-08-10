@@ -1,6 +1,6 @@
 # FMP AI Tools
 
-AI tools for Financial Modeling Prep (FMP) Node API - compatible with Vercel AI SDK, Langchain, OpenAI, and more.
+AI tools for Financial Modeling Prep (FMP) Node API - compatible with Vercel AI SDK, OpenAI Agents, and more.
 
 This package provides pre-built AI tools that can be used with various AI frameworks. For direct API access, use the `fmp-node-api` package.
 
@@ -35,6 +35,29 @@ export async function POST(req: Request) {
 
   return result.toUIMessageStreamResponse();
 }
+```
+
+### OpenAI Agents
+
+```typescript
+import { Agent } from '@openai/agents';
+import { fmpTools } from 'fmp-ai-tools/openai';
+
+const agent = new Agent({
+  name: 'Financial Analyst',
+  instructions: 'You are a financial analyst with access to real-time market data.',
+  tools: fmpTools,
+});
+
+const result = await agent.run({
+  messages: [
+    {
+      role: 'user',
+      content:
+        'Get the current stock quote for Apple (AAPL) and show me their latest balance sheet',
+    },
+  ],
+});
 ```
 
 ## Configuration
@@ -112,9 +135,9 @@ The tools internally use the `fmp-node-api` library, which reads this environmen
 
 ## Using Individual Tools
 
-You can import and use specific tool categories or individual tools:
+You can import and use specific tool categories or individual tools from either provider:
 
-### Import Specific Categories
+### Import Specific Categories (Vercel AI)
 
 ```typescript
 import { quoteTools, financialTools, marketTools } from 'fmp-ai-tools/vercel-ai';
@@ -133,7 +156,33 @@ const result = streamText({
 });
 ```
 
-### Example Tool Usage
+### Import Specific Categories (OpenAI)
+
+```typescript
+import { quoteTools, financialTools, marketTools } from 'fmp-ai-tools/openai';
+
+// Use only quote and financial tools
+const selectedTools = [...quoteTools, ...financialTools];
+
+// Use with OpenAI Agents
+const agent = new Agent({
+  name: 'Financial Analyst',
+  instructions: 'You are a financial analyst with access to real-time market data.',
+  tools: selectedTools,
+});
+```
+
+### Import Individual Tools
+
+```typescript
+// Vercel AI SDK
+import { getStockQuote, getCompanyProfile } from 'fmp-ai-tools/vercel-ai';
+
+// OpenAI Agents
+import { getStockQuote, getCompanyProfile } from 'fmp-ai-tools/openai';
+```
+
+## Example Tool Usage
 
 Here are some example prompts you can use with the tools:
 

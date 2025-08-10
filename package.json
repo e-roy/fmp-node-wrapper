@@ -9,6 +9,7 @@
     "docs:dev": "turbo run dev --filter=fmp-docs",
     "api:dev": "turbo run dev --filter=fmp-node-api",
     "example:dev": "turbo run dev --filter=fmp-ai-tools-vercel-ai-example",
+    "example:openai:dev": "turbo run dev --filter=fmp-ai-tools-openai-example",
     "test:endpoint": "cd packages/api && pnpm test:endpoint",
     "test": "turbo run test",
     "test:watch": "turbo run test:watch",
