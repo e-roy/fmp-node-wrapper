@@ -4,6 +4,7 @@ export default defineConfig({
   entry: {
     index: 'src/index.ts',
     'providers/vercel-ai/index': 'src/providers/vercel-ai/index.ts',
+    'providers/openai/index': 'src/providers/openai/index.ts',
   },
   format: ['cjs', 'esm'],
   dts: true,
@@ -18,6 +19,7 @@ export default defineConfig({
       '@/types': './src/types',
       '@/providers': './src/providers',
       '@/providers/vercel-ai': './src/providers/vercel-ai',
+      '@/providers/openai': './src/providers/openai',
     };
   },
 });

@@ -1,0 +1,11 @@
+{
+  "extends": ["next/core-web-vitals", "next/typescript"],
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "rules": {
+    "no-undef": "off",
+    "@typescript-eslint/no-undef": "off"
+  }
+}

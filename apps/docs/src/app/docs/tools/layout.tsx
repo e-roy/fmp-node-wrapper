@@ -10,7 +10,7 @@ const toolsNavigationGroups = [
       { name: 'Tools Overview', href: '/docs/tools' },
       { name: 'Categories', href: '/docs/tools/categories' },
       { name: 'Vercel AI SDK', href: '/docs/tools/vercel-ai' },
-      { name: 'Examples', href: '/docs/tools/examples' },
+      { name: 'OpenAI Provider', href: '/docs/tools/openai' },
     ],
   },
   {

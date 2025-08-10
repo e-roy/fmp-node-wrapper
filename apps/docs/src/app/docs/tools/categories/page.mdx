@@ -54,11 +54,13 @@ Insider trading transactions and disclosures.
 
 ## How to Use These Tools
 
-### Import All Tools
+### Vercel AI SDK
+
+#### Import All Tools
 
 <CodeBlock language="typescript">{`import { fmpTools } from 'fmp-ai-tools/vercel-ai';`}</CodeBlock>
 
-### Import Specific Categories
+#### Import Specific Categories
 
 <CodeBlock language="typescript">
 {`import { 
@@ -82,7 +84,7 @@ const selectedTools = {
 
 </CodeBlock>
 
-### Import Individual Tools
+#### Import Individual Tools
 
 <CodeBlock language="typescript">
 {`import { 
@@ -101,9 +103,59 @@ getMarketPerformance,
 
 </CodeBlock>
 
+### OpenAI Agents
+
+#### Import All Tools
+
+<CodeBlock language="typescript">{`import { fmpTools } from 'fmp-ai-tools/openai';`}</CodeBlock>
+
+#### Import Specific Categories
+
+<CodeBlock language="typescript">
+{`import { 
+  quoteTools, 
+  financialTools, 
+  marketTools,
+  economicTools,
+  etfTools,
+  calendarTools,
+  senateHouseTools,
+  institutionalTools,
+  insiderTools
+} from 'fmp-ai-tools/openai';
+
+// Combine specific categories
+const selectedTools = [
+...quoteTools,
+...financialTools,
+...marketTools,
+];`}
+
+</CodeBlock>
+
+#### Import Individual Tools
+
+<CodeBlock language="typescript">
+{`import { 
+  getStockQuote,
+  getCompanyProfile,
+  getBalanceSheet,
+  getMarketPerformance
+} from 'fmp-ai-tools/openai';
+
+const customTools = [
+getStockQuote,
+getCompanyProfile,
+getBalanceSheet,
+getMarketPerformance,
+];`}
+
+</CodeBlock>
+
 ## Next Steps
 
 - [Vercel AI SDK Integration](/docs/tools/vercel-ai) - Learn how to use these tools
+- [OpenAI Provider](/docs/tools/openai) - Learn about OpenAI Agents integration
 - [Examples](/docs/tools/examples) - See practical implementations
 - [Best Practices](/docs/tools/best-practices) - Learn best practices for building robust applications
 - [Error Handling](/docs/tools/error-handling) - Learn about comprehensive error handling
