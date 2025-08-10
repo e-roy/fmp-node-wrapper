@@ -32,13 +32,14 @@
     "test:insider": "turbo run test:insider --filter=fmp-node-api",
     "test:sec": "turbo run test:sec --filter=fmp-node-api",
     "lint": "pnpm exec eslint packages/api/src/**/*.ts apps/docs/src/**/*.ts",
+    "lint:all": "turbo run lint",
     "lint:fix": "turbo run lint:fix",
     "clean": "turbo run clean",
     "clean:install": "npx rimraf node_modules packages/api/node_modules apps/docs/node_modules pnpm-lock.yaml && pnpm install",
     "type-check": "turbo run type-check",
     "format": "turbo run format",
     "format:check": "turbo run format:check",
-    "publish-packages": "turbo run build lint test && changeset version && changeset publish"
+    "publish-packages": "turbo run build lint test --filter=./packages/* && changeset version && changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
