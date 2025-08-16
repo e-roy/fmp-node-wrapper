@@ -125,7 +125,7 @@ export default function Home() {
         <Card className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-blue-200 dark:border-blue-800">
           <CardHeader>
             <CardTitle className="text-2xl text-neutral-900 dark:text-white text-center">
-              Why Choose FMP Node Wrapper?
+              <h2>Why Choose FMP Node Wrapper?</h2>
             </CardTitle>
           </CardHeader>
           <CardContent>

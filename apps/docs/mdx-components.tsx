@@ -35,18 +35,14 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ol: (props: React.ComponentProps<'ol'>) => (
       <ol className="list-decimal list-inside mb-4" {...props} />
     ),
-    li: (props: React.ComponentProps<'li'>) => (
-      <li className="mb-1" {...props} />
-    ),
+    li: (props: React.ComponentProps<'li'>) => <li className="mb-1" {...props} />,
     code: (props: React.ComponentProps<'code'>) => (
       <code
         className="bg-neutral-100 dark:bg-neutral-800 px-1 py-0.5 rounded text-sm font-mono"
         {...props}
       />
     ),
-    pre: (props: React.ComponentProps<'pre'>) => (
-      <pre className="mb-4" {...props} />
-    ),
+    pre: (props: React.ComponentProps<'pre'>) => <pre className="mb-4" {...props} />,
     blockquote: (props: React.ComponentProps<'blockquote'>) => (
       <blockquote
         className="border-l-4 border-blue-500 pl-4 italic text-neutral-600 dark:text-neutral-400 mb-4"
@@ -64,10 +60,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     thead: (props: React.ComponentProps<'thead'>) => <thead {...props} />,
     tbody: (props: React.ComponentProps<'tbody'>) => <tbody {...props} />,
     tr: (props: React.ComponentProps<'tr'>) => (
-      <tr
-        className="hover:bg-neutral-50 dark:hover:bg-neutral-700"
-        {...props}
-      />
+      <tr className="hover:bg-neutral-50 dark:hover:bg-neutral-700" {...props} />
     ),
     th: (props: React.ComponentProps<'th'>) => (
       <th

@@ -1,8 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import dynamic from 'next/dynamic';
+
+type LazyHighlighterProps = {
+  language?: string;
+  filename?: string;
+  code: string;
+};
 import { Copy, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -89,18 +94,11 @@ export function CodeBlock({
         </div>
       )}
       <div className="relative">
-        <SyntaxHighlighter
-          language={language}
-          style={oneDark}
-          customStyle={{
-            margin: 0,
-            borderRadius: filename ? '0 0 0.5rem 0.5rem' : '0.5rem',
-            fontSize: '0.875rem',
-          }}
-          showLineNumbers
-        >
-          {processedCode}
-        </SyntaxHighlighter>
+        <LazyHighlighter
+          language={normalizeLanguage(language)}
+          filename={filename}
+          code={processedCode}
+        />
         {showCopyButton && !filename && (
           <Button
             variant="ghost"
@@ -118,3 +116,19 @@ export function CodeBlock({
     </div>
   );
 }
+
+function normalizeLanguage(lang?: string): string | undefined {
+  if (!lang) return undefined;
+  const lower = lang.toLowerCase();
+  // Map a few common aliases used in docs to registered languages
+  if (lower === 'env' || lower === 'sh' || lower === 'shell') return 'bash';
+  if (lower === 'ts') return 'typescript';
+  if (lower === 'js') return 'javascript';
+  if (lower === 'gitignore') return 'bash';
+  return lower;
+}
+
+const LazyHighlighter = dynamic<LazyHighlighterProps>(
+  () => import('@/components/mdx/lazy-highlighter').then(m => m.LazyHighlighter),
+  { ssr: false },
+);
