@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { createTool } from '@/utils/tool-wrapper';
+import { createTool } from '@/utils/aisdk-tool-wrapper';
 import { getFMPClient } from '@/types';
 
 export const insiderTools = {
