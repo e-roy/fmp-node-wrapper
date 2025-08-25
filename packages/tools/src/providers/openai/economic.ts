@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { createOpenAITool } from '@/utils/openai-tool-wrapper';
-import { getFMPClient } from '@/types';
+import { getFMPClient } from '@/client';
 
 // Input schema for treasury rates with date range
 const treasuryRatesInputSchema = z.object({

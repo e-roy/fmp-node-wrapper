@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { createOpenAITool } from '@/utils/openai-tool-wrapper';
-import { getFMPClient } from '@/types';
+import { getFMPClient } from '@/client';
 
 // Empty schema for tools that don't require parameters
 const emptyInputSchema = z.object({});

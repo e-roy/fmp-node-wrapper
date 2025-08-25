@@ -12,7 +12,7 @@ const mockFinancial = {
   getFinancialRatios: jest.fn(),
 };
 
-jest.mock('@/types', () => ({
+jest.mock('@/client', () => ({
   getFMPClient: jest.fn(() => ({
     financial: mockFinancial,
   })),

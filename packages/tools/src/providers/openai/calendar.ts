@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { createOpenAITool } from '@/utils/openai-tool-wrapper';
-import { getFMPClient } from '@/types';
+import { getFMPClient } from '@/client';
 
 // Common input schema for calendar date range
 const calendarInputSchema = z.object({

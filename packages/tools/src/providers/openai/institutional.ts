@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { createOpenAITool } from '@/utils/openai-tool-wrapper';
-import { getFMPClient } from '@/types';
+import { getFMPClient } from '@/client';
 
 // Input schema for institutional holders with symbol
 const institutionalHoldersInputSchema = z.object({

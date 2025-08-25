@@ -5,7 +5,7 @@ const mockETF = {
   getProfile: jest.fn(),
 };
 
-jest.mock('@/types', () => ({
+jest.mock('@/client', () => ({
   getFMPClient: jest.fn(() => ({
     etf: mockETF,
   })),

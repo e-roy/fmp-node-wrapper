@@ -5,7 +5,7 @@ const mockCalendar = {
   getEconomicsCalendar: jest.fn(),
 };
 
-jest.mock('@/types', () => ({
+jest.mock('@/client', () => ({
   getFMPClient: jest.fn(() => ({
     calendar: mockCalendar,
   })),

@@ -4,7 +4,7 @@ const mockQuote = {
   getQuote: jest.fn(),
 };
 
-jest.mock('@/types', () => ({
+jest.mock('@/client', () => ({
   getFMPClient: jest.fn(() => ({
     quote: mockQuote,
   })),

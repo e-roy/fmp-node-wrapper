@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { getFMPClient } from '@/types';
+import { getFMPClient } from '@/client';
 import { createTool } from '@/utils/aisdk-tool-wrapper';
 
 export const quoteTools = {

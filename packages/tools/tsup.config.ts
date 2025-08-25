@@ -2,7 +2,6 @@ import { defineConfig } from 'tsup';
 
 export default defineConfig({
   entry: {
-    index: 'src/index.ts',
     'providers/vercel-ai/index': 'src/providers/vercel-ai/index.ts',
     'providers/openai/index': 'src/providers/openai/index.ts',
   },
@@ -16,7 +15,7 @@ export default defineConfig({
   esbuildOptions(options) {
     options.alias = {
       '@': './src',
-      '@/types': './src/types',
+      '@/client': './src/client',
       '@/providers': './src/providers',
       '@/providers/vercel-ai': './src/providers/vercel-ai',
       '@/providers/openai': './src/providers/openai',
