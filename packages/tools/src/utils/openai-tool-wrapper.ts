@@ -1,14 +1,14 @@
 import { z } from 'zod';
 import { tool } from '@openai/agents';
 
-export interface OpenAIToolConfig<T extends z.ZodType> {
+export interface OpenAIToolConfig<T extends z.ZodObject<any>> {
   name: string;
   description: string;
   inputSchema: T;
   execute: (args: z.infer<T>) => Promise<string>;
 }
 
-export function createOpenAITool<T extends z.ZodType>(config: OpenAIToolConfig<T>) {
+export function createOpenAITool<T extends z.ZodObject<any>>(config: OpenAIToolConfig<T>) {
   const { name, description, inputSchema, execute } = config;
 
   const properties: Record<string, any> = {};
@@ -95,13 +95,8 @@ export function createOpenAITool<T extends z.ZodType>(config: OpenAIToolConfig<T
   return tool({
     name,
     description,
-    parameters: {
-      type: 'object',
-      properties,
-      required,
-      additionalProperties: false,
-    },
-    strict: false,
+    parameters: inputSchema as any,
+    strict: true,
     execute: async (input: unknown) => {
       try {
         const validatedInput = inputSchema.parse(input);
@@ -113,5 +108,5 @@ export function createOpenAITool<T extends z.ZodType>(config: OpenAIToolConfig<T
         return `Error executing ${name}: ${error instanceof Error ? error.message : String(error)}`;
       }
     },
-  } as any);
+  });
 }

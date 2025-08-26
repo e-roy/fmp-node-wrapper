@@ -5,7 +5,11 @@ import { getFMPClient } from '@/client';
 // Input schema for ETF holdings with optional date
 const etfHoldingsInputSchema = z.object({
   symbol: z.string().min(1, 'ETF symbol is required').describe('ETF symbol (e.g., SPY, QQQ, VTI)'),
-  date: z.string().optional().describe('Date for holdings in YYYY-MM-DD format (optional)'),
+  date: z
+    .string()
+    .optional()
+    .nullable()
+    .describe('Date for holdings in YYYY-MM-DD format (optional)'),
 });
 
 // Input schema for ETF profile

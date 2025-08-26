@@ -4,8 +4,8 @@ import { getFMPClient } from '@/client';
 
 // Input schema for treasury rates with date range
 const treasuryRatesInputSchema = z.object({
-  from: z.string().optional().describe('Start date in YYYY-MM-DD format (optional)'),
-  to: z.string().optional().describe('End date in YYYY-MM-DD format (optional)'),
+  from: z.string().optional().nullable().describe('Start date in YYYY-MM-DD format (optional)'),
+  to: z.string().optional().nullable().describe('End date in YYYY-MM-DD format (optional)'),
 });
 
 // Economic indicators enum and schema
@@ -37,8 +37,8 @@ const economicIndicatorNames = [
 
 const economicIndicatorsInputSchema = z.object({
   name: z.enum(economicIndicatorNames).describe('The name of the economic indicator'),
-  from: z.string().optional().describe('Start date in YYYY-MM-DD format (optional)'),
-  to: z.string().optional().describe('End date in YYYY-MM-DD format (optional)'),
+  from: z.string().optional().nullable().describe('Start date in YYYY-MM-DD format (optional)'),
+  to: z.string().optional().nullable().describe('End date in YYYY-MM-DD format (optional)'),
 });
 
 export const getTreasuryRates = createOpenAITool({
@@ -47,7 +47,10 @@ export const getTreasuryRates = createOpenAITool({
   inputSchema: treasuryRatesInputSchema,
   execute: async ({ from, to }) => {
     const fmp = getFMPClient();
-    const treasuryRates = await fmp.economic.getTreasuryRates({ from, to });
+    const treasuryRates = await fmp.economic.getTreasuryRates({
+      from: from ?? undefined,
+      to: to ?? undefined,
+    });
     return JSON.stringify(treasuryRates.data, null, 2);
   },
 });
@@ -58,7 +61,11 @@ export const getEconomicIndicators = createOpenAITool({
   inputSchema: economicIndicatorsInputSchema,
   execute: async ({ name, from, to }) => {
     const fmp = getFMPClient();
-    const economicIndicators = await fmp.economic.getEconomicIndicators({ name, from, to });
+    const economicIndicators = await fmp.economic.getEconomicIndicators({
+      name,
+      from: from ?? undefined,
+      to: to ?? undefined,
+    });
     return JSON.stringify(economicIndicators.data, null, 2);
   },
 });

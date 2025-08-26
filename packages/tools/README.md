@@ -14,6 +14,18 @@ pnpm add fmp-ai-tools
 yarn add fmp-ai-tools
 ```
 
+## Version Compatibility
+
+### OpenAI Agents Compatibility
+
+**⚠️ Important**: This package requires `@openai/agents` version `^0.0.17` or higher due to breaking changes in the API.
+
+If you're using an older version, you'll encounter errors like:
+
+```
+Zod field uses .optional() without .nullable() which is not supported by the API
+```
+
 ## Quick Start
 
 ### Vercel AI SDK (Recommended)

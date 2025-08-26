@@ -4,8 +4,8 @@ import { getFMPClient } from '@/client';
 
 // Common input schema for calendar date range
 const calendarInputSchema = z.object({
-  from: z.string().optional().describe('Start date in YYYY-MM-DD format (optional)'),
-  to: z.string().optional().describe('End date in YYYY-MM-DD format (optional)'),
+  from: z.string().optional().nullable().describe('Start date in YYYY-MM-DD format (optional)'),
+  to: z.string().optional().nullable().describe('End date in YYYY-MM-DD format (optional)'),
 });
 
 export const getEarningsCalendar = createOpenAITool({
@@ -14,7 +14,10 @@ export const getEarningsCalendar = createOpenAITool({
   inputSchema: calendarInputSchema,
   execute: async ({ from, to }) => {
     const fmp = getFMPClient();
-    const earningsCalendar = await fmp.calendar.getEarningsCalendar({ from, to });
+    const earningsCalendar = await fmp.calendar.getEarningsCalendar({
+      from: from ?? undefined,
+      to: to ?? undefined,
+    });
     return JSON.stringify(earningsCalendar.data, null, 2);
   },
 });
@@ -25,7 +28,10 @@ export const getEconomicCalendar = createOpenAITool({
   inputSchema: calendarInputSchema,
   execute: async ({ from, to }) => {
     const fmp = getFMPClient();
-    const economicCalendar = await fmp.calendar.getEconomicsCalendar({ from, to });
+    const economicCalendar = await fmp.calendar.getEconomicsCalendar({
+      from: from ?? undefined,
+      to: to ?? undefined,
+    });
     return JSON.stringify(economicCalendar.data, null, 2);
   },
 });
