@@ -22,15 +22,6 @@ export function Header() {
             </Link>
           </div>
 
-          <nav className="hidden md:flex space-x-8">
-            <Link
-              href="/docs"
-              className="text-neutral-600 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
-            >
-              Documentation
-            </Link>
-          </nav>
-
           <div className="flex items-center space-x-4">
             <Button
               asChild

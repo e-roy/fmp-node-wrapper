@@ -20,7 +20,16 @@ First, install the required packages:
 
 <CodeBlock language="bash" filename=".env.local">
   {`FMP_API_KEY=your_fmp_api_key_here
-OPENAI_API_KEY=your_openai_api_key_here`}
+OPENAI_API_KEY=your_openai_api_key_here
+
+# To enable detailed logging of API calls and responses - default is false
+
+FMP_TOOLS_LOG_API_RESULTS=false
+
+# To enable logging of data from API calls - default is false
+
+FMP_TOOLS_LOG_DATA_ONLY=false`}
+
 </CodeBlock>
 
 ### 2. Create API Route
