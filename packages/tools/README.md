@@ -82,6 +82,45 @@ FMP_API_KEY=your_api_key_here
 
 The tools internally use the `fmp-node-api` library, which reads this environment variable to authenticate with the Financial Modeling Prep API.
 
+### Debugging and Logging
+
+**⚠️ Development Only**: These logging features are intended for debugging and development, not production use.
+
+Two logging modes controlled by environment variables:
+
+#### Full Logging Mode
+
+```bash
+FMP_TOOLS_LOG_API_RESULTS=true
+```
+
+Logs: tool name, input parameters, result summary with token count, execution time.
+
+#### Data-Only Logging Mode
+
+```bash
+FMP_TOOLS_LOG_DATA_ONLY=true
+```
+
+Logs: result summary and formatted JSON response data.
+
+#### Example Output
+
+**Full Logging:**
+
+```
+🔧 getStockQuote: object (~28 tokens)
+⏱️ Execution Time: 245ms
+```
+
+**Data-Only Logging:**
+
+```
+📤 Result: { "symbol": "AAPL", "price": 150.25, ... }
+```
+
+**Note**: Both modes are disabled by default. Use only during development.
+
 ## Available Tools
 
 ### Quote Tools

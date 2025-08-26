@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { tool } from 'ai';
+import { logApiExecutionWithTiming } from './logger';
 
 // Tool configuration interface for AI SDK v2
 export interface ToolConfig<T extends z.ZodType> {
@@ -18,6 +19,8 @@ export function createTool<T extends z.ZodType>(config: ToolConfig<T>) {
     name,
     description,
     inputSchema,
-    execute,
+    execute: async (args: z.infer<T>) => {
+      return await logApiExecutionWithTiming(name, args, () => execute(args));
+    },
   } as any); // Use type assertion to avoid deep type inference issues
 }
