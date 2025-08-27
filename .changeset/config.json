@@ -7,5 +7,5 @@
   "access": "public",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": ["fmp-docs", "apps/*", "apps/examples/*"]
+  "ignore": ["fmp-docs", "fmp-ai-tools-openai-example", "fmp-ai-tools-vercel-ai-example"]
 }
