@@ -237,9 +237,6 @@ importers:
         specifier: ^1.6.2
         version: 1.10.0
     devDependencies:
-      '@fmp/types':
-        specifier: workspace:*
-        version: link:../types
       '@types/jest':
         specifier: ^29.5.12
         version: 29.5.14
@@ -249,6 +246,9 @@ importers:
       dotenv:
         specifier: ^16.3.1
         version: 16.6.1
+      fmp-node-types:
+        specifier: workspace:*
+        version: link:../types
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.19.2)
