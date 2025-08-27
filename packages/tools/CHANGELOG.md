@@ -1,5 +1,13 @@
 # fmp-ai-tools
 
+## 0.0.10
+
+### Patch Changes
+
+- publish seperate library for types
+- Updated dependencies
+  - fmp-node-api@0.1.7
+
 ## 0.0.9
 
 ### Patch Changes
