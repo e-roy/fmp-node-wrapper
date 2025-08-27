@@ -1,5 +1,11 @@
 # fmp-node-api
 
+## 0.1.6
+
+### Patch Changes
+
+- fix publish errors
+
 ## 0.1.5
 
 ### Patch Changes

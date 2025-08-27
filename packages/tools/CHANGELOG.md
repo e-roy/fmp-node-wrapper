@@ -1,5 +1,13 @@
 # fmp-ai-tools
 
+## 0.0.9
+
+### Patch Changes
+
+- fix publish errors
+- Updated dependencies
+  - fmp-node-api@0.1.6
+
 ## 0.0.8
 
 ### Patch Changes
