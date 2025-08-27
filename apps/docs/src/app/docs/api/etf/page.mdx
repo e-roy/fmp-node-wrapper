@@ -12,37 +12,37 @@ The ETF endpoints provide access to ETF market data, including fund profiles, ho
   endpoints={[
     {
       method: 'GET',
-      path: '/etf-info',
+      path: 'stable/etf/info?symbol={symbol}',
       description: 'Get ETF profile information',
     },
     {
       method: 'GET',
-      path: '/etf-holdings/portfolio-date',
+      path: 'v4/etf-holdings/portfolio-date',
       description: 'Get ETF holding dates',
     },
     {
       method: 'GET',
-      path: '/etf-holdings',
+      path: 'v4/etf-holdings',
       description: 'Get ETF holdings data',
     },
     {
       method: 'GET',
-      path: '/etf-holder/{symbol}',
+      path: 'v3/etf-holder/{symbol}',
       description: 'Get ETF holder information',
     },
     {
       method: 'GET',
-      path: '/etf-sector-weightings/{symbol}',
+      path: 'stable/etf/sector-weightings?symbol={symbol}',
       description: 'Get ETF sector weightings',
     },
     {
       method: 'GET',
-      path: '/etf-country-weightings/{symbol}',
+      path: 'stable/etf/country-weightings?symbol={symbol}',
       description: 'Get ETF country weightings',
     },
     {
       method: 'GET',
-      path: '/etf-stock-exposure/{symbol}',
+      path: 'v3/etf-stock-exposure/{symbol}',
       description: 'Get ETF stock exposure',
     },
   ]}
