@@ -1,6 +1,6 @@
 {
   "name": "@fmp/types",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Shared TypeScript types for FMP Node Wrapper ecosystem (internal package)",
   "main": "./dist/index.js",

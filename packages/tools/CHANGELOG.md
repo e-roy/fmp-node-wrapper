@@ -1,5 +1,13 @@
 # fmp-ai-tools
 
+## 0.0.6
+
+### Patch Changes
+
+- update some of the endpoints to stable api, update tools to use v0.0.17 openai agents, added logger for tools
+- Updated dependencies
+  - fmp-node-api@0.1.3
+
 ## 0.0.4
 
 ### Patch Changes
