@@ -1,5 +1,12 @@
 # fmp-ai-tools-vercel-ai-example
 
+## 0.1.3
+
+### Patch Changes
+
+- Updated dependencies
+  - fmp-ai-tools@0.0.7
+
 ## 0.1.2
 
 ### Patch Changes

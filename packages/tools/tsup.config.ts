@@ -12,6 +12,7 @@ export default defineConfig({
   clean: true,
   treeshake: true,
   minify: false,
+  external: ['@openai/agents', 'ai', 'zod'],
   esbuildOptions(options) {
     options.alias = {
       '@': './src',
