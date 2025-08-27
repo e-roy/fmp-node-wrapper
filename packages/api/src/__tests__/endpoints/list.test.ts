@@ -46,8 +46,9 @@ describe('List Endpoints', () => {
       console.log('List test data pre-fetched successfully');
     } catch (error) {
       console.warn('Failed to pre-fetch test data:', error);
+      // Continue with tests - they will fetch data individually if needed
     }
-  });
+  }, API_TIMEOUT); // Add timeout to beforeAll hook
 
   describe('getStockList', () => {
     it(

@@ -82,7 +82,7 @@ describe('Calendar Endpoints', () => {
         to: '2024-01-21',
       };
 
-      // Fetch all calendar data in parallel
+      // Fetch all calendar data in parallel with timeout
       const [earnings, earningsConfirmed, dividends, economics, ipo, splits] = await Promise.all([
         fmp.calendar.getEarningsCalendar(testDateRange),
         fmp.calendar.getEarningsConfirmed(testDateRange),
@@ -104,8 +104,9 @@ describe('Calendar Endpoints', () => {
       console.log('Calendar test data pre-fetched successfully');
     } catch (error) {
       console.warn('Failed to pre-fetch test data:', error);
+      // Continue with tests - they will fetch data individually if needed
     }
-  });
+  }, API_TIMEOUT); // Add timeout to beforeAll hook
 
   describe('getEarningsCalendar', () => {
     it(
