@@ -114,9 +114,9 @@ fmp-node-wrapper/
     - `providers/vercel-ai/` - Vercel AI SDK tool providers
   - Tool wrapper utilities and type definitions
   - Built with tsup for multiple output formats
-  - Uses `@fmp/types` and `fmp-node-api` as workspace dependencies
+  - Uses `fmp-node-types` and `fmp-node-api` as workspace dependencies
 
-- **`packages/types/`**: Shared TypeScript types (`@fmp/types`)
+- **`packages/types/`**: Shared TypeScript types (`fmp-node-types`)
   - Internal package containing all TypeScript interfaces and types
   - Organized by endpoint category (quote, stock, financial, etc.)
   - Used by both `fmp-node-api` and `fmp-tools` packages
@@ -214,9 +214,9 @@ fmp-node-wrapper/
 - Internal packages use workspace dependencies:
   - `"fmp-node-api": "workspace:*"`
   - `"fmp-tools": "workspace:*"`
-  - `"@fmp/types": "workspace:*"`
+  - `"fmp-node-types": "workspace:*"`
 - External dependencies are managed at the package level
-- Types are centralized in `@fmp/types` package
+- Types are centralized in `fmp-node-types` package
 - API client is imported from `fmp-node-api`
 - AI tools are imported from `fmp-tools`
 

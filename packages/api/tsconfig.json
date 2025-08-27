@@ -10,7 +10,8 @@
     "baseUrl": ".",
     "types": ["jest", "node"],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "fmp-node-types": ["../types/dist"]
     }
   },
   "include": ["src/**/*"],

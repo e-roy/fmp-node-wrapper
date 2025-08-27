@@ -11,7 +11,7 @@ import {
   BeneficialOwnershipResponse,
   FailToDeliverResponse,
   TransactionType,
-} from '@fmp/types';
+} from 'fmp-node-types';
 
 export class InsiderEndpoints {
   constructor(private client: FMPClient) {}

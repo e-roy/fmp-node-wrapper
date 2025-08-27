@@ -1,4 +1,4 @@
-# @fmp/types
+# fmp-node-types
 
 ## 0.1.1
 

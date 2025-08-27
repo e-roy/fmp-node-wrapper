@@ -6,7 +6,7 @@ import {
   HouseTradingResponse,
   SenateTradingResponse,
   SenateHouseTradingByNameResponse,
-} from '@fmp/types';
+} from 'fmp-node-types';
 
 export class SenateHouseEndpoints {
   constructor(private client: FMPClient) {}

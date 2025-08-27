@@ -368,7 +368,7 @@ This is a monorepo containing:
 
 - **`packages/api/`**: Main FMP API wrapper (`fmp-node-api`)
 - **`packages/tools/`**: AI tools for FMP API integrations (`fmp-ai-tools`)
-- **`packages/types/`**: Shared TypeScript types (`@fmp/types`)
+- **`packages/types/`**: Shared TypeScript types (`fmp-node-types`)
 - **`apps/docs/`**: Next.js documentation site
 - **`apps/examples/`**: Example applications
   - **`vercel-ai/`**: Vercel AI SDK integration example

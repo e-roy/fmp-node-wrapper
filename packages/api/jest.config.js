@@ -13,7 +13,9 @@ module.exports = {
   transform: {
     '^.+\\.ts$': 'ts-jest',
   },
-  moduleNameMapper: {},
+  moduleNameMapper: {
+    '^fmp-node-types$': '<rootDir>/../types/dist/index.js',
+  },
   collectCoverageFrom: ['src/**/*.ts', '!src/**/*.d.ts', '!src/**/*.test.ts'],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
 };

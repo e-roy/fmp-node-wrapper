@@ -1,6 +1,6 @@
 // Validation utilities for FMP API
 
-import { APIResponse } from '@fmp/types';
+import { APIResponse } from 'fmp-node-types';
 
 /**
  * Validation utilities for FMP API parameters and responses

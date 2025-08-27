@@ -6,7 +6,7 @@ import {
   CryptoList,
   ForexList,
   AvailableIndexesList,
-} from '@fmp/types';
+} from 'fmp-node-types';
 
 export class ListEndpoints {
   constructor(private client: FMPClient) {}

@@ -10,7 +10,7 @@ import {
   ETFStockExposure,
   ETFWeighting,
   ETFCountryWeighting,
-} from '@fmp/types';
+} from 'fmp-node-types';
 
 export class ETFEndpoints {
   constructor(private client: FMPClient) {}

@@ -12,7 +12,7 @@ import {
   CashFlowStatement,
   EarningsSurprises,
   EarningsHistorical,
-} from '@fmp/types';
+} from 'fmp-node-types';
 import { FMPClient } from '@/client';
 
 export class FinancialEndpoints {

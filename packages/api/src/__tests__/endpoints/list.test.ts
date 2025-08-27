@@ -1,6 +1,6 @@
 import { FMP } from '../../fmp';
 import { shouldSkipTests, createTestClient, API_TIMEOUT } from '../utils/test-setup';
-import { StockList, ETFList, CryptoList, ForexList, AvailableIndexesList } from '@fmp/types';
+import { StockList, ETFList, CryptoList, ForexList, AvailableIndexesList } from 'fmp-node-types';
 
 // Test data cache to avoid duplicate API calls
 interface ListTestDataCache {

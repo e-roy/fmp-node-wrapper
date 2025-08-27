@@ -7,7 +7,7 @@ import {
   MarketPerformance,
   MarketSectorPerformance,
   MarketIndex,
-} from '@fmp/types';
+} from 'fmp-node-types';
 
 export class MarketEndpoints {
   constructor(private client: FMPClient) {}

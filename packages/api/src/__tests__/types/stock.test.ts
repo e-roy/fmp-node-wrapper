@@ -1,5 +1,5 @@
-import { StockSplit, StockDividend, MarketCap } from '@fmp/types';
-import { HistoricalPriceData, HistoricalPriceResponse } from '@fmp/types';
+import { StockSplit, StockDividend, MarketCap } from 'fmp-node-types';
+import { HistoricalPriceData, HistoricalPriceResponse } from 'fmp-node-types';
 
 describe('Stock Types', () => {
   describe('StockSplit Interface', () => {

@@ -7,8 +7,8 @@ import {
   PeriodParams,
   Period,
   Exchange,
-} from '@fmp/types';
-import { Quote } from '@fmp/types';
+} from 'fmp-node-types';
+import { Quote } from 'fmp-node-types';
 
 describe('Common Types', () => {
   describe('APIResponse', () => {

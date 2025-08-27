@@ -7,7 +7,7 @@ export { FMP } from './fmp';
 export { FMPClient } from './client';
 
 // Re-export all types from the shared types package
-export type * from '@fmp/types';
+export type * from 'fmp-node-types';
 
 // Export endpoint classes for tree-shaking
 export { QuoteEndpoints } from './endpoints/quote';

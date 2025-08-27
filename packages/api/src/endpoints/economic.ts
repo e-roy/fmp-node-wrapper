@@ -1,7 +1,7 @@
 // Economic endpoints for FMP API
 
 import { FMPClient } from '@/client';
-import { APIResponse, TreasuryRate, EconomicIndicator } from '@fmp/types';
+import { APIResponse, TreasuryRate, EconomicIndicator } from 'fmp-node-types';
 
 export class EconomicEndpoints {
   constructor(private client: FMPClient) {}

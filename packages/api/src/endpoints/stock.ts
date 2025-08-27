@@ -8,7 +8,7 @@ import {
   StockRealTimePriceFull,
   StockListResponse,
   CompaniesPriceListResponse,
-} from '@fmp/types';
+} from 'fmp-node-types';
 
 export class StockEndpoints {
   constructor(private client: FMPClient) {}

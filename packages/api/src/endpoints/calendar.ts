@@ -6,7 +6,7 @@ import {
   IPOCalendar,
   SplitsCalendar,
   EarningsConfirmed,
-} from '@fmp/types';
+} from 'fmp-node-types';
 import { FMPClient } from '@/client';
 
 export class CalendarEndpoints {

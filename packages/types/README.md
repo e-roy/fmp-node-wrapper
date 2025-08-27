@@ -1,4 +1,4 @@
-# @fmp/types
+# fmp-node-types
 
 **Internal package** - Shared TypeScript types for the FMP Node Wrapper ecosystem.
 

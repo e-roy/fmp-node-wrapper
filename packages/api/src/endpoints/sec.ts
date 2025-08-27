@@ -8,7 +8,7 @@ import {
   IndustryClassification,
   IndustryClassificationCode,
   RSSFeedAllItem,
-} from '@fmp/types';
+} from 'fmp-node-types';
 
 export class SECEndpoints {
   constructor(private client: FMPClient) {}

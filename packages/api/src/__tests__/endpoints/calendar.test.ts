@@ -13,7 +13,7 @@ import type {
   IPOCalendar,
   SplitsCalendar,
   EarningsConfirmed,
-} from '@fmp/types';
+} from 'fmp-node-types';
 
 // Helper function to safely access data that could be an array or single object
 function getFirstItem<T>(data: T | T[]): T {
