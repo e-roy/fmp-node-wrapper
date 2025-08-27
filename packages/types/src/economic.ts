@@ -2,6 +2,7 @@
 
 // Economic data interfaces
 export interface EconomicIndicator {
+  name: string;
   date: string;
   value: number;
 }

@@ -130,10 +130,10 @@ export class ETFEndpoints {
    * const vooProfile = await fmp.etf.getProfile('VOO');
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#etf-information-etf-holdings|FMP ETF Information Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#information|FMP ETF Information Documentation}
    */
   async getProfile(symbol: string): Promise<APIResponse<ETFProfile>> {
-    return this.client.getSingle('/etf-info', 'v4', { symbol });
+    return this.client.getSingle('/etf/info', 'stable', { symbol });
   }
 
   /**
@@ -159,10 +159,10 @@ export class ETFEndpoints {
    * const qqqSectors = await fmp.etf.getSectorWeighting('QQQ');
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#etf-sector-weighting-etf-holdings|FMP ETF Sector Weighting Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#sector-weighting|FMP ETF Sector Weighting Documentation}
    */
   async getSectorWeighting(symbol: string): Promise<APIResponse<ETFWeighting[]>> {
-    return this.client.get(`/etf-sector-weightings/${symbol}`, 'v3');
+    return this.client.get(`/etf/sector-weightings`, 'stable', { symbol });
   }
 
   /**
@@ -188,10 +188,10 @@ export class ETFEndpoints {
    * const efaCountries = await fmp.etf.getCountryWeighting('EFA');
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#etf-country-weighting-etf-holdings|FMP ETF Country Weighting Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#country-weighting|FMP ETF Country Weighting Documentation}
    */
   async getCountryWeighting(symbol: string): Promise<APIResponse<ETFCountryWeighting[]>> {
-    return this.client.get(`/etf-country-weightings/${symbol}`, 'v3');
+    return this.client.get(`/etf/country-weightings`, 'stable', { symbol });
   }
 
   /**

@@ -45,7 +45,7 @@ const mockClient = {
   },
 };
 
-jest.mock('@/types', () => ({
+jest.mock('@/client', () => ({
   getFMPClient: jest.fn(() => mockClient),
 }));
 

@@ -3,19 +3,21 @@
 export interface CompanyProfile {
   symbol: string;
   price: number;
+  marketCap: number;
   beta: number;
-  volAvg: number;
-  mktCap: number;
-  lastDiv: number;
+  lastDividend: number;
   range: string;
-  changes: number;
+  change: number;
+  changePercentage: number;
+  volume: number;
+  averageVolume: number;
   companyName: string;
   currency: string;
   cik: string;
   isin: string;
   cusip: string;
+  exchangeFullName: string;
   exchange: string;
-  exchangeShortName: string;
   industry: string;
   website: string;
   description: string;
@@ -28,8 +30,6 @@ export interface CompanyProfile {
   city: string;
   state: string;
   zip: string;
-  dcfDiff: number;
-  dcf: number;
   image: string;
   ipoDate: string;
   defaultImage: boolean;
@@ -43,18 +43,18 @@ export interface ExecutiveCompensation {
   cik: string;
   symbol: string;
   companyName: string;
-  industryTitle: string;
-  acceptedDate: string;
   filingDate: string;
+  acceptedDate: string;
   nameAndPosition: string;
   year: number;
   salary: number;
   bonus: number;
-  stock_award: number;
-  incentive_plan_compensation: number;
-  all_other_compensation: number;
+  stockAward: number;
+  optionAward: number;
+  incentivePlanCompensation: number;
+  allOtherCompensation: number;
   total: number;
-  url: string;
+  link: string;
 }
 
 export interface CompanyNotes {

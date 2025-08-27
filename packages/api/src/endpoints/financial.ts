@@ -44,7 +44,7 @@ export class FinancialEndpoints {
    * const quarterlyIncome = await fmp.financial.getIncomeStatement({ symbol: 'MSFT', period: 'quarter', limit: 8 });
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#income-statements-financial-statements|FMP Income Statement Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#income-statement|FMP Income Statement Documentation}
    */
   async getIncomeStatement(params: {
     symbol: string;
@@ -52,7 +52,10 @@ export class FinancialEndpoints {
     limit?: number;
   }): Promise<APIResponse<IncomeStatement[]>> {
     const { symbol, period = 'annual', limit = 5 } = params;
-    return this.client.get(`/income-statement/${symbol}?period=${period}&limit=${limit}`, 'v3');
+    return this.client.get(
+      `/income-statement?symbol=${symbol}&period=${period}&limit=${limit}`,
+      'stable',
+    );
   }
 
   /**
@@ -81,7 +84,7 @@ export class FinancialEndpoints {
    * const quarterlyBalance = await fmp.financial.getBalanceSheet({ symbol: 'MSFT', period: 'quarter', limit: 8 });
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#balance-sheet-statements-financial-statements|FMP Balance Sheet Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#balance-sheet-statement|FMP Balance Sheet Documentation}
    */
   async getBalanceSheet(params: {
     symbol: string;
@@ -90,8 +93,8 @@ export class FinancialEndpoints {
   }): Promise<APIResponse<BalanceSheet[]>> {
     const { symbol, period = 'annual', limit = 5 } = params;
     return this.client.get(
-      `/balance-sheet-statement/${symbol}?period=${period}&limit=${limit}`,
-      'v3',
+      `/balance-sheet-statement?symbol=${symbol}&period=${period}&limit=${limit}`,
+      'stable',
     );
   }
 
@@ -121,7 +124,7 @@ export class FinancialEndpoints {
    * const quarterlyCashFlow = await fmp.financial.getCashFlowStatement({ symbol: 'MSFT', period: 'quarter', limit: 8 });
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#cashflow-statements-financial-statements|FMP Cash Flow Statement Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#cashflow-statement|FMP Cash Flow Statement Documentation}
    */
   async getCashFlowStatement(params: {
     symbol: string;
@@ -129,7 +132,10 @@ export class FinancialEndpoints {
     limit?: number;
   }): Promise<APIResponse<CashFlowStatement[]>> {
     const { symbol, period = 'annual', limit = 5 } = params;
-    return this.client.get(`/cash-flow-statement/${symbol}?period=${period}&limit=${limit}`, 'v3');
+    return this.client.get(
+      `/cash-flow-statement?symbol=${symbol}&period=${period}&limit=${limit}`,
+      'stable',
+    );
   }
 
   /**
@@ -158,7 +164,7 @@ export class FinancialEndpoints {
    * const quarterlyMetrics = await fmp.financial.getKeyMetrics({ symbol: 'MSFT', period: 'quarter', limit: 8 });
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#key-metrics-statement-analysis|FMP Key Metrics Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#key-metrics|FMP Key Metrics Documentation}
    */
   async getKeyMetrics(params: {
     symbol: string;
@@ -166,7 +172,10 @@ export class FinancialEndpoints {
     limit?: number;
   }): Promise<APIResponse<KeyMetrics[]>> {
     const { symbol, period = 'annual', limit = 5 } = params;
-    return this.client.get(`/key-metrics/${symbol}?period=${period}&limit=${limit}`, 'v3');
+    return this.client.get(
+      `/key-metrics?symbol=${symbol}&period=${period}&limit=${limit}`,
+      'stable',
+    );
   }
 
   /**
@@ -195,7 +204,7 @@ export class FinancialEndpoints {
    * const quarterlyRatios = await fmp.financial.getFinancialRatios({ symbol: 'MSFT', period: 'quarter', limit: 8 });
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#ratios-statement-analysis|FMP Financial Ratios Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#metrics-ratios|FMP Financial Ratios Documentation}
    */
   async getFinancialRatios(params: {
     symbol: string;
@@ -203,7 +212,7 @@ export class FinancialEndpoints {
     limit?: number;
   }): Promise<APIResponse<FinancialRatios[]>> {
     const { symbol, period = 'annual', limit = 5 } = params;
-    return this.client.get(`/ratios/${symbol}?period=${period}&limit=${limit}`, 'v3');
+    return this.client.get(`/ratios?symbol=${symbol}&period=${period}&limit=${limit}`, 'stable');
   }
 
   /**
@@ -232,7 +241,7 @@ export class FinancialEndpoints {
    * const quarterlyEV = await fmp.financial.getEnterpriseValue({ symbol: 'MSFT', period: 'quarter', limit: 8 });
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#enterprise-values-statement-analysis|FMP Enterprise Value Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#enterprise-values|FMP Enterprise Value Documentation}
    */
   async getEnterpriseValue(params: {
     symbol: string;
@@ -240,7 +249,10 @@ export class FinancialEndpoints {
     limit?: number;
   }): Promise<APIResponse<EnterpriseValue[]>> {
     const { symbol, period = 'annual', limit = 5 } = params;
-    return this.client.get(`/enterprise-value/${symbol}?period=${period}&limit=${limit}`, 'v3');
+    return this.client.get(
+      `/enterprise-values?symbol=${symbol}&period=${period}&limit=${limit}`,
+      'stable',
+    );
   }
 
   /**
@@ -269,7 +281,7 @@ export class FinancialEndpoints {
    * const quarterlyGrowth = await fmp.financial.getCashflowGrowth({ symbol: 'MSFT', period: 'quarter', limit: 8 });
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#cashflow-growth-statement-analysis|FMP Cash Flow Growth Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#cashflow-statement-growth|FMP Cash Flow Growth Documentation}
    */
   async getCashflowGrowth(params: {
     symbol: string;
@@ -278,8 +290,8 @@ export class FinancialEndpoints {
   }): Promise<APIResponse<CashflowGrowth[]>> {
     const { symbol, period = 'annual', limit = 5 } = params;
     return this.client.get(
-      `/cash-flow-statement-growth/${symbol}?period=${period}&limit=${limit}`,
-      'v3',
+      `/cash-flow-statement-growth?symbol=${symbol}&period=${period}&limit=${limit}`,
+      'stable',
     );
   }
 
@@ -309,7 +321,7 @@ export class FinancialEndpoints {
    * const quarterlyGrowth = await fmp.financial.getIncomeGrowth({ symbol: 'MSFT', period: 'quarter', limit: 8 });
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#income-growth-statement-analysis|FMP Income Growth Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#income-statement-growth|FMP Income Growth Documentation}
    */
   async getIncomeGrowth(params: {
     symbol: string;
@@ -318,8 +330,8 @@ export class FinancialEndpoints {
   }): Promise<APIResponse<IncomeGrowth[]>> {
     const { symbol, period = 'annual', limit = 5 } = params;
     return this.client.get(
-      `/income-statement-growth/${symbol}?period=${period}&limit=${limit}`,
-      'v3',
+      `/income-statement-growth?symbol=${symbol}&period=${period}&limit=${limit}`,
+      'stable',
     );
   }
 
@@ -349,7 +361,7 @@ export class FinancialEndpoints {
    * const quarterlyGrowth = await fmp.financial.getBalanceSheetGrowth({ symbol: 'MSFT', period: 'quarter', limit: 8 });
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#balance-sheet-growth-statement-analysis|FMP Balance Sheet Growth Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#balance-sheet-statement-growth|FMP Balance Sheet Growth Documentation}
    */
   async getBalanceSheetGrowth(params: {
     symbol: string;
@@ -358,8 +370,8 @@ export class FinancialEndpoints {
   }): Promise<APIResponse<BalanceSheetGrowth[]>> {
     const { symbol, period = 'annual', limit = 5 } = params;
     return this.client.get(
-      `/balance-sheet-statement-growth/${symbol}?period=${period}&limit=${limit}`,
-      'v3',
+      `/balance-sheet-statement-growth?symbol=${symbol}&period=${period}&limit=${limit}`,
+      'stable',
     );
   }
 
@@ -389,7 +401,7 @@ export class FinancialEndpoints {
    * const quarterlyGrowth = await fmp.financial.getFinancialGrowth({ symbol: 'MSFT', period: 'quarter', limit: 8 });
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#financial-growth-statement-analysis|FMP Financial Growth Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#financial-statement-growth|FMP Financial Growth Documentation}
    */
   async getFinancialGrowth(params: {
     symbol: string;
@@ -397,7 +409,10 @@ export class FinancialEndpoints {
     limit?: number;
   }): Promise<APIResponse<FinancialGrowth[]>> {
     const { symbol, period = 'annual', limit = 5 } = params;
-    return this.client.get(`/financial-growth/${symbol}?period=${period}&limit=${limit}`, 'v3');
+    return this.client.get(
+      `/financial-growth?symbol=${symbol}&period=${period}&limit=${limit}`,
+      'stable',
+    );
   }
 
   /**
@@ -425,14 +440,14 @@ export class FinancialEndpoints {
    * const msftEarnings = await fmp.financial.getEarningsHistorical({ symbol: 'MSFT', limit: 8 });
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#earnings-historical-earnings|FMP Earnings Historical Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#earnings-company|FMP Earnings Historical Documentation}
    */
   async getEarningsHistorical(params: {
     symbol: string;
     limit?: number;
   }): Promise<APIResponse<EarningsHistorical[]>> {
     const { symbol, limit = 5 } = params;
-    return this.client.get(`/historical/earning_calendar/${symbol}?limit=${limit}`, 'v3');
+    return this.client.get(`/earnings?symbol=${symbol}&limit=${limit}`, 'stable');
   }
 
   /**

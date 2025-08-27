@@ -4,11 +4,29 @@ The OpenAI provider for FMP Tools allows you to use Financial Modeling Prep data
 
 ## Installation
 
-The OpenAI provider is included in the main `fmp-ai-tools` package:
+Install the required packages:
 
-<CodeBlock language="bash">{`npm install fmp-ai-tools`}</CodeBlock>
+<CodeBlock language="bash">{`npm install fmp-ai-tools @openai/agents`}</CodeBlock>
+
+<CodeBlock language="bash">{`pnpm add fmp-ai-tools @openai/agents`}</CodeBlock>
 
 ## Quick Start
+
+### Set Environment Variables
+
+<CodeBlock language="bash" filename=".env.local">
+  {`FMP_API_KEY=your_fmp_api_key_here
+OPENAI_API_KEY=your_openai_api_key_here
+
+# To enable detailed logging of API calls and responses - default is false
+
+FMP_TOOLS_LOG_API_RESULTS=false
+
+# To enable logging of data from API calls - default is false
+
+FMP_TOOLS_LOG_DATA_ONLY=false`}
+
+</CodeBlock>
 
 ### Basic Usage with OpenAI Agents
 

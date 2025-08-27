@@ -9,23 +9,23 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@openai/agents": "^0.0.17",
+    "fmp-ai-tools": "workspace:*",
     "next": "15.0.0",
+    "openai": "^4.63.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "@openai/agents": "^0.0.15",
-    "openai": "^4.63.0",
-    "fmp-ai-tools": "workspace:*",
     "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "typescript": "^5.0.0",
-    "tailwindcss": "^3.4.0",
     "autoprefixer": "^10.4.0",
-    "postcss": "^8.4.0",
     "eslint": "^8.0.0",
-    "eslint-config-next": "15.0.0"
+    "eslint-config-next": "15.0.0",
+    "postcss": "^8.4.0",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.0.0"
   }
 }

@@ -42,7 +42,7 @@ export function ChatInput({ onSendMessage, onStop, isLoading }: ChatInputProps) 
           onCompositionEnd={() => setIsComposing(false)}
           onKeyDown={handleKeyDown}
           placeholder="Ask about stocks, financial data, or market information..."
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none text-black"
           rows={1}
           style={{ minHeight: '48px', maxHeight: '120px' }}
           disabled={isLoading}

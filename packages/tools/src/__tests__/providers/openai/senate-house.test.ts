@@ -16,7 +16,7 @@ const mockSenateHouse = {
   getHouseTradingRSSFeed: jest.fn(),
 };
 
-jest.mock('@/types', () => ({
+jest.mock('@/client', () => ({
   getFMPClient: jest.fn(() => ({
     senateHouse: mockSenateHouse,
   })),

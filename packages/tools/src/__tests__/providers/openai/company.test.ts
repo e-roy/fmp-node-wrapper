@@ -4,7 +4,7 @@ const mockCompany = {
   getCompanyProfile: jest.fn(),
 };
 
-jest.mock('@/types', () => ({
+jest.mock('@/client', () => ({
   getFMPClient: jest.fn(() => ({
     company: mockCompany,
   })),

@@ -8,42 +8,42 @@ The Company Endpoints provide access to comprehensive company information includ
   endpoints={[
     {
       method: 'GET',
-      path: '/profile/{symbol}',
+      path: 'stable/profile?symbol={symbol}',
       description: 'Get comprehensive company profile information',
     },
     {
       method: 'GET',
-      path: '/governance/executive_compensation',
+      path: 'stable/governance-executive-compensation?symbol={symbol}',
       description: 'Get executive compensation data',
     },
     {
       method: 'GET',
-      path: '/company-notes',
+      path: 'stable/company-notes?symbol={symbol}',
       description: 'Get company notes and financial statements',
     },
     {
       method: 'GET',
-      path: '/historical/employee_count',
+      path: 'stable/historical-employee-count?symbol={symbol}',
       description: 'Get historical employee count data',
     },
     {
       method: 'GET',
-      path: '/shares_float',
+      path: 'stable/shares-float?symbol={symbol}',
       description: 'Get current shares float information',
     },
     {
       method: 'GET',
-      path: '/historical/shares_float',
+      path: 'v4/historical/shares_float?symbol={symbol}',
       description: 'Get historical shares float data',
     },
     {
       method: 'GET',
-      path: '/earning_call_transcript/{symbol}',
+      path: 'v3/earning_call_transcript/{symbol}',
       description: 'Get earnings call transcripts',
     },
     {
       method: 'GET',
-      path: '/earning_call_transcript',
+      path: 'v3/earning_call_transcript/{symbol}',
       description: 'Get company transcript dates and data',
     },
   ]}

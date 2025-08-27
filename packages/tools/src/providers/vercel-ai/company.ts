@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { createTool } from '@/utils/tool-wrapper';
-import { getFMPClient } from '@/types';
+import { createTool } from '@/utils/aisdk-tool-wrapper';
+import { getFMPClient } from '@/client';
 
 export const companyTools = {
   getCompanyProfile: createTool({

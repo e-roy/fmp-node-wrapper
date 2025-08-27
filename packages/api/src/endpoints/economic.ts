@@ -37,7 +37,7 @@ export class EconomicEndpoints {
    * });
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#treasury-rates-economics-data|FMP Treasury Rates Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#treasury-rates|FMP Treasury Rates Documentation}
    */
   async getTreasuryRates(params: {
     from?: string;
@@ -48,7 +48,7 @@ export class EconomicEndpoints {
     const queryParams: { from?: string; to?: string } = {};
     if (from) queryParams.from = from;
     if (to) queryParams.to = to;
-    return this.client.get('/treasury', 'v4', queryParams);
+    return this.client.get('/treasury-rates', 'stable', queryParams);
   }
 
   /**
@@ -128,6 +128,6 @@ export class EconomicEndpoints {
     if (from) queryParams.from = from;
     if (to) queryParams.to = to;
 
-    return this.client.get(`/economic`, 'v4', queryParams);
+    return this.client.get(`/economic-indicators`, 'stable', queryParams);
   }
 }

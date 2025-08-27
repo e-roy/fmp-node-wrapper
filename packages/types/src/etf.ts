@@ -43,28 +43,30 @@ export interface ETFHolder {
 
 export interface ETFProfile {
   symbol: string;
-  assetClass: string;
-  aum: number;
-  avgVolume: number;
-  cusip: string;
+  name: string;
   description: string;
+  isin: string;
+  assetClass: string;
+  securityCusip: string;
   domicile: string;
+  website: string;
   etfCompany: string;
   expenseRatio: number;
+  assetsUnderManagement: number;
+  avgVolume: number;
   inceptionDate: string;
-  isin: string;
-  name: string;
   nav: number;
   navCurrency: string;
+  holdingsCount: number;
+  updatedAt: string;
   sectorsList: {
     exposure: string;
     industry: string;
   }[];
-  website: string;
-  holdingsCount: number;
 }
 
 export interface ETFWeighting {
+  symbol: string;
   sector: string;
   weightPercentage: string;
 }

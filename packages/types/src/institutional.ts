@@ -7,7 +7,7 @@ export interface Form13FResponse {
   acceptedDate: string;
   cik: string;
   cusip: string;
-  tickerCusip: string;
+  tickercusip: string;
   nameOfIssuer: string;
   shares: number;
   titleOfClass: string;

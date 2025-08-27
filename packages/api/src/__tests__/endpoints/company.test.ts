@@ -29,15 +29,14 @@ describe('Company Endpoints', () => {
         const result = await fmp.company.getCompanyProfile(TEST_SYMBOLS.STOCK);
 
         expect(result.success).toBe(true);
-        expect(result.data).toBeDefined();
-        expect(Object.keys(result.data || {}).length).toBeGreaterThan(0);
+        expect(result.data).toBeTruthy();
 
         if (result.data) {
           const profile = result.data;
           expect(profile.symbol).toBe(TEST_SYMBOLS.STOCK);
           expect(profile.companyName).toBeDefined();
           expect(profile.price).toBeGreaterThan(0);
-          expect(profile.mktCap).toBeGreaterThan(0);
+          expect(profile.marketCap).toBeGreaterThan(0);
           expect(profile.industry).toBeDefined();
           expect(profile.sector).toBeDefined();
           expect(profile.country).toBeDefined();
@@ -154,7 +153,7 @@ describe('Company Endpoints', () => {
         const result = await fmp.company.getSharesFloat(TEST_SYMBOLS.STOCK);
 
         expect(result.success).toBe(true);
-        expect(result.data).toBeDefined();
+        expect(result.data).toBeTruthy();
 
         if (result.data) {
           const sharesFloat = Array.isArray(result.data) ? result.data[0] : result.data;
@@ -215,11 +214,10 @@ describe('Company Endpoints', () => {
         });
 
         expect(result.success).toBe(true);
-        expect(result.data).toBeDefined();
+        expect(result.data).toBeTruthy();
 
-        if (result.data && Array.isArray(result.data)) {
-          expect(result.data.length).toBeGreaterThan(0);
-          const transcript = result.data[0];
+        if (result.data) {
+          const transcript = result.data;
           expect(transcript.symbol).toBe(TEST_SYMBOLS.STOCK);
           expect(transcript.quarter).toBe(1);
           expect(transcript.year).toBe(2024);

@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { getFMPClient } from '@/types';
-import { createTool } from '@/utils/tool-wrapper';
+import { getFMPClient } from '@/client';
+import { createTool } from '@/utils/aisdk-tool-wrapper';
 
 export const etfTools = {
   getETFHoldings: createTool({
