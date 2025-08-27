@@ -1,33 +1,40 @@
 // Financial statement types for FMP API
 
 // Base interface for common fields across all financial statements
-export interface FinancialStatementBase {
+// export interface FinancialStatementBase {
+//   date: string;
+//   symbol: string;
+//   reportedCurrency: string;
+//   cik: string;
+//   fillingDate: string;
+//   acceptedDate: string;
+//   calendarYear: string;
+//   period: string;
+//   link: string;
+//   finalLink: string;
+// }
+
+// Base interface for growth statements
+// export interface GrowthStatementBase {
+//   date: string;
+//   symbol: string;
+//   calendarYear: string;
+//   period: string;
+// }
+
+// Income Statement
+export interface IncomeStatement {
   date: string;
   symbol: string;
   reportedCurrency: string;
   cik: string;
-  fillingDate: string;
+  filingDate: string;
   acceptedDate: string;
-  calendarYear: string;
+  fiscalYear: string;
   period: string;
-  link: string;
-  finalLink: string;
-}
-
-// Base interface for growth statements
-export interface GrowthStatementBase {
-  date: string;
-  symbol: string;
-  calendarYear: string;
-  period: string;
-}
-
-// Income Statement
-export interface IncomeStatement extends FinancialStatementBase {
   revenue: number;
   costOfRevenue: number;
   grossProfit: number;
-  grossProfitRatio: number;
   researchAndDevelopmentExpenses: number;
   generalAndAdministrativeExpenses: number;
   sellingAndMarketingExpenses: number;
@@ -35,32 +42,47 @@ export interface IncomeStatement extends FinancialStatementBase {
   otherExpenses: number;
   operatingExpenses: number;
   costAndExpenses: number;
+  netInterestIncome: number;
   interestIncome: number;
   interestExpense: number;
   depreciationAndAmortization: number;
   ebitda: number;
-  ebitdaratio: number;
+  ebit: number;
+  nonOperatingIncomeExcludingInterest: number;
   operatingIncome: number;
-  operatingIncomeRatio: number;
   totalOtherIncomeExpensesNet: number;
   incomeBeforeTax: number;
-  incomeBeforeTaxRatio: number;
   incomeTaxExpense: number;
+  netIncomeFromContinuingOperations: number;
+  netIncomeFromDiscontinuedOperations: number;
+  otherAdjustmentsToNetIncome: number;
   netIncome: number;
-  netIncomeRatio: number;
+  netIncomeDeductions: number;
+  bottomLineNetIncome: number;
   eps: number;
-  epsdiluted: number;
+  epsDiluted: number;
   weightedAverageShsOut: number;
   weightedAverageShsOutDil: number;
 }
 
 // Balance Sheet
-export interface BalanceSheet extends FinancialStatementBase {
+export interface BalanceSheet {
+  date: string;
+  symbol: string;
+  reportedCurrency: string;
+  cik: string;
+  filingDate: string;
+  acceptedDate: string;
+  fiscalYear: string;
+  period: string;
   cashAndCashEquivalents: number;
   shortTermInvestments: number;
   cashAndShortTermInvestments: number;
   netReceivables: number;
+  accountsReceivables: number;
+  otherReceivables: number;
   inventory: number;
+  prepaids: number;
   otherCurrentAssets: number;
   totalCurrentAssets: number;
   propertyPlantEquipmentNet: number;
@@ -73,8 +95,12 @@ export interface BalanceSheet extends FinancialStatementBase {
   totalNonCurrentAssets: number;
   otherAssets: number;
   totalAssets: number;
+  totalPayables: number;
   accountPayables: number;
+  otherPayables: number;
+  accruedExpenses: number;
   shortTermDebt: number;
+  capitalLeaseObligationsCurrent: number;
   taxPayables: number;
   deferredRevenue: number;
   otherCurrentLiabilities: number;
@@ -87,14 +113,15 @@ export interface BalanceSheet extends FinancialStatementBase {
   otherLiabilities: number;
   capitalLeaseObligations: number;
   totalLiabilities: number;
+  treasuryStock: number;
   preferredStock: number;
   commonStock: number;
   retainedEarnings: number;
+  additionalPaidInCapital: number;
   accumulatedOtherComprehensiveIncomeLoss: number;
-  othertotalStockholdersEquity: number;
+  otherTotalStockholdersEquity: number;
   totalStockholdersEquity: number;
   totalEquity: number;
-  totalLiabilitiesAndStockholdersEquity: number;
   minorityInterest: number;
   totalLiabilitiesAndTotalEquity: number;
   totalInvestments: number;
@@ -103,7 +130,15 @@ export interface BalanceSheet extends FinancialStatementBase {
 }
 
 // Cash Flow Statement
-export interface CashFlowStatement extends FinancialStatementBase {
+export interface CashFlowStatement {
+  date: string;
+  symbol: string;
+  reportedCurrency: string;
+  cik: string;
+  filingDate: string;
+  acceptedDate: string;
+  fiscalYear: string;
+  period: string;
   netIncome: number;
   depreciationAndAmortization: number;
   deferredIncomeTax: number;
@@ -119,14 +154,21 @@ export interface CashFlowStatement extends FinancialStatementBase {
   acquisitionsNet: number;
   purchasesOfInvestments: number;
   salesMaturitiesOfInvestments: number;
-  otherInvestingActivites: number;
-  netCashUsedForInvestingActivites: number;
-  debtRepayment: number;
-  commonStockIssued: number;
+  otherInvestingActivities: number;
+  netCashProvidedByInvestingActivities: number;
+  netDebtIssuance: number;
+  longTermNetDebtIssuance: number;
+  shortTermNetDebtIssuance: number;
+  netStockIssuance: number;
+  netCommonStockIssuance: number;
+  commonStockIssuance: number;
   commonStockRepurchased: number;
-  dividendsPaid: number;
-  otherFinancingActivites: number;
-  netCashUsedProvidedByFinancingActivities: number;
+  netPreferredStockIssuance: number;
+  netDividendsPaid: number;
+  commonDividendsPaid: number;
+  preferredDividendsPaid: number;
+  otherFinancingActivities: number;
+  netCashProvidedByFinancingActivities: number;
   effectOfForexChangesOnCash: number;
   netChangeInCash: number;
   cashAtEndOfPeriod: number;
@@ -134,131 +176,126 @@ export interface CashFlowStatement extends FinancialStatementBase {
   operatingCashFlow: number;
   capitalExpenditure: number;
   freeCashFlow: number;
+  incomeTaxesPaid: number;
+  interestPaid: number;
 }
 
 // Key Metrics
 export interface KeyMetrics {
   symbol: string;
   date: string;
+  fiscalYear: string;
   period: string;
-  revenuePerShare: number;
-  netIncomePerShare: number;
-  operatingCashFlowPerShare: number;
-  freeCashFlowPerShare: number;
-  cashPerShare: number;
-  bookValuePerShare: number;
-  tangibleBookValuePerShare: number;
-  shareholdersEquityPerShare: number;
-  interestDebtPerShare: number;
+  reportedCurrency: string;
   marketCap: number;
   enterpriseValue: number;
-  peRatio: number;
-  priceToSalesRatio: number;
-  pocfratio: number;
-  pfcfRatio: number;
-  pbRatio: number;
-  ptbRatio: number;
   evToSales: number;
-  enterpriseValueOverEBITDA: number;
   evToOperatingCashFlow: number;
   evToFreeCashFlow: number;
-  earningsYield: number;
-  freeCashFlowYield: number;
-  debtToEquity: number;
-  debtToAssets: number;
+  evToEBITDA: number;
   netDebtToEBITDA: number;
   currentRatio: number;
-  interestCoverage: number;
   incomeQuality: number;
-  dividendYield: number;
-  payoutRatio: number;
-  salesGeneralAndAdministrativeToRevenue: number;
-  researchAndDevelopmentToRevenue: number;
-  intangiblesToTotalAssets: number;
-  capexToOperatingCashFlow: number;
-  capexToRevenue: number;
-  capexToDepreciation: number;
-  stockBasedCompensationToRevenue: number;
   grahamNumber: number;
-  roic: number;
-  returnOnTangibleAssets: number;
   grahamNetNet: number;
+  taxBurden: number;
+  interestBurden: number;
   workingCapital: number;
-  tangibleAssetValue: number;
-  netCurrentAssetValue: number;
   investedCapital: number;
+  returnOnAssets: number;
+  operatingReturnOnAssets: number;
+  returnOnTangibleAssets: number;
+  returnOnEquity: number;
+  returnOnInvestedCapital: number;
+  returnOnCapitalEmployed: number;
+  earningsYield: number;
+  freeCashFlowYield: number;
+  capexToOperatingCashFlow: number;
+  capexToDepreciation: number;
+  capexToRevenue: number;
+  salesGeneralAndAdministrativeToRevenue: number;
+  researchAndDevelopementToRevenue: number;
+  stockBasedCompensationToRevenue: number;
+  intangiblesToTotalAssets: number;
   averageReceivables: number;
   averagePayables: number;
   averageInventory: number;
-  daysSalesOutstanding: number;
-  daysPayablesOutstanding: number;
-  daysOfInventoryOnHand: number;
-  receivablesTurnover: number;
-  payablesTurnover: number;
-  inventoryTurnover: number;
-  roe: number;
-  capexPerShare: number;
+  daysOfSalesOutstanding: number;
+  daysOfPayablesOutstanding: number;
+  daysOfInventoryOutstanding: number;
+  operatingCycle: number;
+  cashConversionCycle: number;
+  freeCashFlowToEquity: number;
+  freeCashFlowToFirm: number;
+  tangibleAssetValue: number;
+  netCurrentAssetValue: number;
 }
 
 // Financial Ratios
 export interface FinancialRatios {
   symbol: string;
   date: string;
+  fiscalYear: string;
   period: string;
-  currentRatio: number;
-  quickRatio: number;
-  cashRatio: number;
-  daysOfSalesOutstanding: number;
-  daysOfInventoryOutstanding: number;
-  operatingCycle: number;
-  daysOfPayablesOutstanding: number;
-  cashConversionCycle: number;
+  reportedCurrency: string;
   grossProfitMargin: number;
+  ebitMargin: number;
+  ebitdaMargin: number;
   operatingProfitMargin: number;
   pretaxProfitMargin: number;
+  continuousOperationsProfitMargin: number;
   netProfitMargin: number;
-  effectiveTaxRate: number;
-  returnOnAssets: number;
-  returnOnEquity: number;
-  returnOnCapitalEmployed: number;
-  netIncomePerEBT: number;
-  ebtPerEbit: number;
-  ebitPerRevenue: number;
-  debtRatio: number;
-  debtEquityRatio: number;
-  longTermDebtToCapitalization: number;
-  totalDebtToCapitalization: number;
-  interestCoverage: number;
-  cashFlowToDebtRatio: number;
-  companyEquityMultiplier: number;
+  bottomLineProfitMargin: number;
   receivablesTurnover: number;
   payablesTurnover: number;
   inventoryTurnover: number;
   fixedAssetTurnover: number;
   assetTurnover: number;
-  operatingCashFlowPerShare: number;
-  freeCashFlowPerShare: number;
-  cashPerShare: number;
-  payoutRatio: number;
+  currentRatio: number;
+  quickRatio: number;
+  solvencyRatio: number;
+  cashRatio: number;
+  priceToEarningsRatio: number;
+  priceToEarningsGrowthRatio: number;
+  forwardPriceToEarningsGrowthRatio: number;
+  priceToBookRatio: number;
+  priceToSalesRatio: number;
+  priceToFreeCashFlowRatio: number;
+  priceToOperatingCashFlowRatio: number;
+  debtToAssetsRatio: number;
+  debtToEquityRatio: number;
+  debtToCapitalRatio: number;
+  longTermDebtToCapitalRatio: number;
+  financialLeverageRatio: number;
+  workingCapitalTurnoverRatio: number;
+  operatingCashFlowRatio: number;
   operatingCashFlowSalesRatio: number;
   freeCashFlowOperatingCashFlowRatio: number;
-  cashFlowCoverageRatios: number;
-  shortTermCoverageRatios: number;
+  debtServiceCoverageRatio: number;
+  interestCoverageRatio: number;
+  shortTermOperatingCashFlowCoverageRatio: number;
+  operatingCashFlowCoverageRatio: number;
   capitalExpenditureCoverageRatio: number;
   dividendPaidAndCapexCoverageRatio: number;
   dividendPayoutRatio: number;
-  priceBookValueRatio: number;
-  priceToBookRatio: number;
-  priceToSalesRatio: number;
-  priceEarningsRatio: number;
-  priceToFreeCashFlowsRatio: number;
-  priceToOperatingCashFlowsRatio: number;
-  priceCashFlowRatio: number;
-  priceEarningsToGrowthRatio: number;
-  priceSalesRatio: number;
   dividendYield: number;
+  dividendYieldPercentage: number;
+  revenuePerShare: number;
+  netIncomePerShare: number;
+  interestDebtPerShare: number;
+  cashPerShare: number;
+  bookValuePerShare: number;
+  tangibleBookValuePerShare: number;
+  shareholdersEquityPerShare: number;
+  operatingCashFlowPerShare: number;
+  capexPerShare: number;
+  freeCashFlowPerShare: number;
+  netIncomePerEBT: number;
+  ebtPerEbit: number;
+  priceToFairValue: number;
+  debtToMarketCap: number;
+  effectiveTaxRate: number;
   enterpriseValueMultiple: number;
-  priceFairValue: number;
 }
 
 // Enterprise Value
@@ -274,7 +311,12 @@ export interface EnterpriseValue {
 }
 
 // Cashflow Growth
-export interface CashflowGrowth extends GrowthStatementBase {
+export interface CashflowGrowth {
+  symbol: string;
+  date: string;
+  fiscalYear: string;
+  period: string;
+  reportedCurrency: string;
   growthNetIncome: number;
   growthDepreciationAndAmortization: number;
   growthDeferredIncomeTax: number;
@@ -305,10 +347,22 @@ export interface CashflowGrowth extends GrowthStatementBase {
   growthOperatingCashFlow: number;
   growthCapitalExpenditure: number;
   growthFreeCashFlow: number;
+  growthNetDebtIssuance: number;
+  growthLongTermNetDebtIssuance: number;
+  growthShortTermNetDebtIssuance: number;
+  growthNetStockIssuance: number;
+  growthPreferredDividendsPaid: number;
+  growthIncomeTaxesPaid: number;
+  growthInterestPaid: number;
 }
 
 // Income Growth
-export interface IncomeGrowth extends GrowthStatementBase {
+export interface IncomeGrowth {
+  symbol: string;
+  date: string;
+  fiscalYear: string;
+  period: string;
+  reportedCurrency: string;
   growthRevenue: number;
   growthCostOfRevenue: number;
   growthGrossProfit: number;
@@ -319,26 +373,34 @@ export interface IncomeGrowth extends GrowthStatementBase {
   growthOtherExpenses: number;
   growthOperatingExpenses: number;
   growthCostAndExpenses: number;
+  growthInterestIncome: number;
   growthInterestExpense: number;
   growthDepreciationAndAmortization: number;
   growthEBITDA: number;
-  growthEBITDARatio: number;
   growthOperatingIncome: number;
-  growthOperatingIncomeRatio: number;
-  growthTotalOtherIncomeExpensesNet: number;
   growthIncomeBeforeTax: number;
-  growthIncomeBeforeTaxRatio: number;
   growthIncomeTaxExpense: number;
   growthNetIncome: number;
-  growthNetIncomeRatio: number;
   growthEPS: number;
   growthEPSDiluted: number;
   growthWeightedAverageShsOut: number;
   growthWeightedAverageShsOutDil: number;
+  growthEBIT: number;
+  growthNonOperatingIncomeExcludingInterest: number;
+  growthNetInterestIncome: number;
+  growthTotalOtherIncomeExpensesNet: number;
+  growthNetIncomeFromContinuingOperations: number;
+  growthOtherAdjustmentsToNetIncome: number;
+  growthNetIncomeDeductions: number;
 }
 
 // Balance Sheet Growth
-export interface BalanceSheetGrowth extends GrowthStatementBase {
+export interface BalanceSheetGrowth {
+  symbol: string;
+  date: string;
+  fiscalYear: string;
+  period: string;
+  reportedCurrency: string;
   growthCashAndCashEquivalents: number;
   growthShortTermInvestments: number;
   growthCashAndShortTermInvestments: number;
@@ -364,24 +426,41 @@ export interface BalanceSheetGrowth extends GrowthStatementBase {
   growthTotalCurrentLiabilities: number;
   growthLongTermDebt: number;
   growthDeferredRevenueNonCurrent: number;
-  growthDeferrredTaxLiabilitiesNonCurrent: number;
+  growthDeferredTaxLiabilitiesNonCurrent: number;
   growthOtherNonCurrentLiabilities: number;
   growthTotalNonCurrentLiabilities: number;
   growthOtherLiabilities: number;
   growthTotalLiabilities: number;
+  growthPreferredStock: number;
   growthCommonStock: number;
   growthRetainedEarnings: number;
   growthAccumulatedOtherComprehensiveIncomeLoss: number;
   growthOthertotalStockholdersEquity: number;
   growthTotalStockholdersEquity: number;
+  growthMinorityInterest: number;
+  growthTotalEquity: number;
   growthTotalLiabilitiesAndStockholdersEquity: number;
   growthTotalInvestments: number;
   growthTotalDebt: number;
   growthNetDebt: number;
+  growthAccountsReceivables: number;
+  growthOtherReceivables: number;
+  growthPrepaids: number;
+  growthTotalPayables: number;
+  growthOtherPayables: number;
+  growthAccruedExpenses: number;
+  growthCapitalLeaseObligationsCurrent: number;
+  growthAdditionalPaidInCapital: number;
+  growthTreasuryStock: number;
 }
 
 // Financial Growth
-export interface FinancialGrowth extends GrowthStatementBase {
+export interface FinancialGrowth {
+  symbol: string;
+  date: string;
+  fiscalYear: string;
+  period: string;
+  reportedCurrency: string;
   revenueGrowth: number;
   grossProfitGrowth: number;
   ebitgrowth: number;
@@ -391,8 +470,15 @@ export interface FinancialGrowth extends GrowthStatementBase {
   epsdilutedGrowth: number;
   weightedAverageSharesGrowth: number;
   weightedAverageSharesDilutedGrowth: number;
-  dividendsperShareGrowth: number;
+  dividendsPerShareGrowth: number;
   operatingCashFlowGrowth: number;
+  receivablesGrowth: number;
+  inventoryGrowth: number;
+  assetGrowth: number;
+  bookValueperShareGrowth: number;
+  debtGrowth: number;
+  rdexpenseGrowth: number;
+  sgaexpensesGrowth: number;
   freeCashFlowGrowth: number;
   tenYRevenueGrowthPerShare: number;
   fiveYRevenueGrowthPerShare: number;
@@ -409,26 +495,22 @@ export interface FinancialGrowth extends GrowthStatementBase {
   tenYDividendperShareGrowthPerShare: number;
   fiveYDividendperShareGrowthPerShare: number;
   threeYDividendperShareGrowthPerShare: number;
-  receivablesGrowth: number;
-  inventoryGrowth: number;
-  assetGrowth: number;
-  bookValueperShareGrowth: number;
-  debtGrowth: number;
-  rdexpenseGrowth: number;
-  sgaexpensesGrowth: number;
+  ebitdaGrowth: number;
+  growthCapitalExpenditure: number;
+  tenYBottomLineNetIncomeGrowthPerShare: number;
+  fiveYBottomLineNetIncomeGrowthPerShare: number;
+  threeYBottomLineNetIncomeGrowthPerShare: number;
 }
 
 // Earnings Historical
 export interface EarningsHistorical {
   date: string;
   symbol: string;
-  eps: number;
+  epsActual: number;
   epsEstimated: number;
-  time: string;
-  revenue: number;
+  revenueActual: number;
   revenueEstimated: number;
-  updatedFromDate: string;
-  fiscalDateEnding: string;
+  lastUpdated: string;
 }
 
 // Earnings Surprises
