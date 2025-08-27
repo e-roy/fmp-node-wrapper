@@ -1,5 +1,11 @@
 # fmp-node-api
 
+## 0.1.5
+
+### Patch Changes
+
+- fix dependency error
+
 ## 0.1.4
 
 ### Patch Changes

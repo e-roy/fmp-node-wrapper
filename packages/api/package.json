@@ -1,6 +1,6 @@
 {
   "name": "fmp-node-api",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A comprehensive Node.js wrapper for Financial Modeling Prep API",
   "disclaimer": "This package is not affiliated with, endorsed by, or sponsored by Financial Modeling Prep (FMP). This is an independent, community-developed wrapper.",
   "main": "./dist/index.js",
@@ -73,12 +73,12 @@
   },
   "homepage": "https://fmp-node-wrapper-docs.vercel.app",
   "dependencies": {
-    "axios": "^1.6.2",
-    "@fmp/types": "workspace:*"
+    "axios": "^1.6.2"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.0",
+    "@fmp/types": "workspace:*",
     "dotenv": "^16.3.1",
     "jest": "^29.7.0",
     "prettier": "^3.2.5",
