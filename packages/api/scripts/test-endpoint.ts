@@ -61,8 +61,8 @@ async function testEndpoint() {
       // Calendar endpoints
       case 'earnings-calendar':
         result = await fmp.calendar.getEarningsCalendar({
-          from: '2024-01-01',
-          to: '2024-01-31',
+          from: '2024-01-15',
+          to: '2024-01-21',
         });
         break;
       case 'earnings-confirmed':

@@ -2,30 +2,68 @@ import { FMP } from '../../fmp';
 import { shouldSkipTests, createTestClient, API_TIMEOUT } from '../utils/test-setup';
 import { StockList, ETFList, CryptoList, ForexList, AvailableIndexesList } from '@fmp/types';
 
+// Test data cache to avoid duplicate API calls
+interface ListTestDataCache {
+  stocks?: any;
+  etfs?: any;
+  crypto?: any;
+  forex?: any;
+  indexes?: any;
+}
+
 describe('List Endpoints', () => {
   let fmp: FMP;
+  let testDataCache: ListTestDataCache = {};
 
-  beforeAll(() => {
+  beforeAll(async () => {
     if (shouldSkipTests()) {
       console.log('Skipping list tests - no API key available');
       return;
     }
     fmp = createTestClient();
+
+    // Pre-fetch all list data once to avoid duplicate API calls
+    console.log('Pre-fetching list test data...');
+
+    try {
+      // Fetch all list data in parallel
+      const [stocks, etfs, crypto, forex, indexes] = await Promise.all([
+        fmp.list.getStockList(),
+        fmp.list.getETFList(),
+        fmp.list.getCryptoList(),
+        fmp.list.getForexList(),
+        fmp.list.getAvailableIndexes(),
+      ]);
+
+      testDataCache = {
+        stocks,
+        etfs,
+        crypto,
+        forex,
+        indexes,
+      };
+
+      console.log('List test data pre-fetched successfully');
+    } catch (error) {
+      console.warn('Failed to pre-fetch test data:', error);
+    }
   });
 
   describe('getStockList', () => {
     it(
-      'should fetch stock list with valid data structure',
+      'should fetch stock list with valid data structure and return non-empty array',
       async () => {
         if (shouldSkipTests()) {
           console.log('Skipping stock list test - no API key available');
           return;
         }
-        const result = await fmp.list.getStockList();
+
+        const result = testDataCache.stocks || (await fmp.list.getStockList());
 
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
         expect(Array.isArray(result.data)).toBe(true);
+        expect(result.data!.length).toBeGreaterThan(0);
 
         if (result.data && result.data.length > 0) {
           const stock = result.data[0] as StockList;
@@ -55,38 +93,23 @@ describe('List Endpoints', () => {
       },
       API_TIMEOUT,
     );
-
-    it(
-      'should return a non-empty array of stocks',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping stock list length test - no API key available');
-          return;
-        }
-        const result = await fmp.list.getStockList();
-
-        expect(result.success).toBe(true);
-        expect(result.data).toBeDefined();
-        expect(Array.isArray(result.data)).toBe(true);
-        expect(result.data!.length).toBeGreaterThan(0);
-      },
-      API_TIMEOUT,
-    );
   });
 
   describe('getETFList', () => {
     it(
-      'should fetch ETF list with valid data structure',
+      'should fetch ETF list with valid data structure and return non-empty array',
       async () => {
         if (shouldSkipTests()) {
           console.log('Skipping ETF list test - no API key available');
           return;
         }
-        const result = await fmp.list.getETFList();
+
+        const result = testDataCache.etfs || (await fmp.list.getETFList());
 
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
         expect(Array.isArray(result.data)).toBe(true);
+        expect(result.data!.length).toBeGreaterThan(0);
 
         if (result.data && result.data.length > 0) {
           const etf = result.data[0] as ETFList;
@@ -113,38 +136,23 @@ describe('List Endpoints', () => {
       },
       API_TIMEOUT,
     );
-
-    it(
-      'should return a non-empty array of ETFs',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping ETF list length test - no API key available');
-          return;
-        }
-        const result = await fmp.list.getETFList();
-
-        expect(result.success).toBe(true);
-        expect(result.data).toBeDefined();
-        expect(Array.isArray(result.data)).toBe(true);
-        expect(result.data!.length).toBeGreaterThan(0);
-      },
-      API_TIMEOUT,
-    );
   });
 
   describe('getCryptoList', () => {
     it(
-      'should fetch crypto list with valid data structure',
+      'should fetch crypto list with valid data structure, return non-empty array, and contain major cryptocurrencies',
       async () => {
         if (shouldSkipTests()) {
           console.log('Skipping crypto list test - no API key available');
           return;
         }
-        const result = await fmp.list.getCryptoList();
+
+        const result = testDataCache.crypto || (await fmp.list.getCryptoList());
 
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
         expect(Array.isArray(result.data)).toBe(true);
+        expect(result.data!.length).toBeGreaterThan(0);
 
         if (result.data && result.data.length > 0) {
           const crypto = result.data[0] as CryptoList;
@@ -166,48 +174,12 @@ describe('List Endpoints', () => {
 
           expect(crypto.exchangeShortName).toBeDefined();
           expect(typeof crypto.exchangeShortName).toBe('string');
-        }
-      },
-      API_TIMEOUT,
-    );
 
-    it(
-      'should return a non-empty array of cryptocurrencies',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping crypto list length test - no API key available');
-          return;
-        }
-        const result = await fmp.list.getCryptoList();
-
-        expect(result.success).toBe(true);
-        expect(result.data).toBeDefined();
-        expect(Array.isArray(result.data)).toBe(true);
-        expect(result.data!.length).toBeGreaterThan(0);
-      },
-      API_TIMEOUT,
-    );
-
-    it(
-      'should contain major cryptocurrencies',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping major crypto test - no API key available');
-          return;
-        }
-        const result = await fmp.list.getCryptoList();
-
-        expect(result.success).toBe(true);
-        expect(result.data).toBeDefined();
-        expect(Array.isArray(result.data)).toBe(true);
-
-        if (result.data && result.data.length > 0) {
+          // Check for major cryptocurrencies
           const symbols = result.data.map((crypto: CryptoList) => crypto.symbol);
-
-          // Check for common major cryptocurrencies
           const majorCryptos = ['BTCUSD', 'ETHUSD', 'USDTUSD', 'BNBUSD', 'ADAUSD'];
           const foundMajorCryptos = majorCryptos.filter(symbol =>
-            symbols.some(s => s.includes(symbol.replace('USD', '')) || s === symbol),
+            symbols.some((s: string) => s.includes(symbol.replace('USD', '')) || s === symbol),
           );
 
           // Should find at least some major cryptocurrencies
@@ -220,17 +192,19 @@ describe('List Endpoints', () => {
 
   describe('getForexList', () => {
     it(
-      'should fetch forex list with valid data structure',
+      'should fetch forex list with valid data structure, return non-empty array, and contain major forex pairs',
       async () => {
         if (shouldSkipTests()) {
           console.log('Skipping forex list test - no API key available');
           return;
         }
-        const result = await fmp.list.getForexList();
+
+        const result = testDataCache.forex || (await fmp.list.getForexList());
 
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
         expect(Array.isArray(result.data)).toBe(true);
+        expect(result.data!.length).toBeGreaterThan(0);
 
         if (result.data && result.data.length > 0) {
           const forex = result.data[0] as ForexList;
@@ -252,45 +226,9 @@ describe('List Endpoints', () => {
 
           expect(forex.exchangeShortName).toBeDefined();
           expect(typeof forex.exchangeShortName).toBe('string');
-        }
-      },
-      API_TIMEOUT,
-    );
 
-    it(
-      'should return a non-empty array of forex pairs',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping forex list length test - no API key available');
-          return;
-        }
-        const result = await fmp.list.getForexList();
-
-        expect(result.success).toBe(true);
-        expect(result.data).toBeDefined();
-        expect(Array.isArray(result.data)).toBe(true);
-        expect(result.data!.length).toBeGreaterThan(0);
-      },
-      API_TIMEOUT,
-    );
-
-    it(
-      'should contain major forex pairs',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping major forex test - no API key available');
-          return;
-        }
-        const result = await fmp.list.getForexList();
-
-        expect(result.success).toBe(true);
-        expect(result.data).toBeDefined();
-        expect(Array.isArray(result.data)).toBe(true);
-
-        if (result.data && result.data.length > 0) {
+          // Check for major forex pairs
           const symbols = result.data.map((forex: ForexList) => forex.symbol);
-
-          // Check for common major forex pairs
           const majorPairs = ['EURUSD', 'GBPUSD', 'USDJPY', 'USDCHF', 'AUDUSD', 'USDCAD'];
           const foundMajorPairs = majorPairs.filter(symbol => symbols.includes(symbol));
 
@@ -304,17 +242,19 @@ describe('List Endpoints', () => {
 
   describe('getAvailableIndexes', () => {
     it(
-      'should fetch available indexes with valid data structure',
+      'should fetch available indexes with valid data structure, return non-empty array, and contain major market indexes',
       async () => {
         if (shouldSkipTests()) {
           console.log('Skipping available indexes test - no API key available');
           return;
         }
-        const result = await fmp.list.getAvailableIndexes();
+
+        const result = testDataCache.indexes || (await fmp.list.getAvailableIndexes());
 
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
         expect(Array.isArray(result.data)).toBe(true);
+        expect(result.data!.length).toBeGreaterThan(0);
 
         if (result.data && result.data.length > 0) {
           const index = result.data[0] as AvailableIndexesList;
@@ -336,45 +276,9 @@ describe('List Endpoints', () => {
 
           expect(index.exchangeShortName).toBeDefined();
           expect(typeof index.exchangeShortName).toBe('string');
-        }
-      },
-      API_TIMEOUT,
-    );
 
-    it(
-      'should return a non-empty array of indexes',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping indexes list length test - no API key available');
-          return;
-        }
-        const result = await fmp.list.getAvailableIndexes();
-
-        expect(result.success).toBe(true);
-        expect(result.data).toBeDefined();
-        expect(Array.isArray(result.data)).toBe(true);
-        expect(result.data!.length).toBeGreaterThan(0);
-      },
-      API_TIMEOUT,
-    );
-
-    it(
-      'should contain major market indexes',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping major indexes test - no API key available');
-          return;
-        }
-        const result = await fmp.list.getAvailableIndexes();
-
-        expect(result.success).toBe(true);
-        expect(result.data).toBeDefined();
-        expect(Array.isArray(result.data)).toBe(true);
-
-        if (result.data && result.data.length > 0) {
+          // Check for major market indexes
           const symbols = result.data.map((index: AvailableIndexesList) => index.symbol);
-
-          // Check for common major indexes
           const majorIndexes = ['^GSPC', '^DJI', '^IXIC', '^RUT', '^VIX'];
           const foundMajorIndexes = majorIndexes.filter(symbol => symbols.includes(symbol));
 
@@ -395,15 +299,12 @@ describe('List Endpoints', () => {
           return;
         }
 
-        // Test all endpoints
-        const [stockResult, etfResult, cryptoResult, forexResult, indexesResult] =
-          await Promise.all([
-            fmp.list.getStockList(),
-            fmp.list.getETFList(),
-            fmp.list.getCryptoList(),
-            fmp.list.getForexList(),
-            fmp.list.getAvailableIndexes(),
-          ]);
+        // Use cached data if available, otherwise make minimal API calls
+        const stockResult = testDataCache.stocks || (await fmp.list.getStockList());
+        const etfResult = testDataCache.etfs || (await fmp.list.getETFList());
+        const cryptoResult = testDataCache.crypto || (await fmp.list.getCryptoList());
+        const forexResult = testDataCache.forex || (await fmp.list.getForexList());
+        const indexesResult = testDataCache.indexes || (await fmp.list.getAvailableIndexes());
 
         // All should be successful
         expect(stockResult.success).toBe(true);
