@@ -38,10 +38,10 @@ export class CompanyEndpoints {
    * const msftProfile = await fmp.company.getCompanyProfile('MSFT');
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#company-profile-company-information|FMP Company Profile Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#profile-symbol|FMP Company Profile Documentation}
    */
   async getCompanyProfile(symbol: string): Promise<APIResponse<CompanyProfile>> {
-    return this.client.getSingle(`/profile/${symbol}`, 'v3');
+    return this.client.getSingle(`/profile`, 'stable', { symbol });
   }
 
   /**
@@ -70,10 +70,10 @@ export class CompanyEndpoints {
    * const teslaComp = await fmp.company.getExecutiveCompensation('TSLA');
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#executive-compensation-company-information|FMP Executive Compensation Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#executive-compensation|FMP Executive Compensation Documentation}
    */
   async getExecutiveCompensation(symbol: string): Promise<APIResponse<ExecutiveCompensation[]>> {
-    return this.client.get(`/governance/executive_compensation`, 'v4', { symbol });
+    return this.client.get(`/governance-executive-compensation`, 'stable', { symbol });
   }
 
   /**
@@ -100,10 +100,10 @@ export class CompanyEndpoints {
    * const jpmNotes = await fmp.company.getCompanyNotes('JPM');
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#company-notes-company-information|FMP Company Notes Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#company-notes|FMP Company Notes Documentation}
    */
   async getCompanyNotes(symbol: string): Promise<APIResponse<CompanyNotes[]>> {
-    return this.client.get(`/company-notes`, 'v4', { symbol });
+    return this.client.get(`/company-notes`, 'stable', { symbol });
   }
 
   /**
@@ -129,12 +129,12 @@ export class CompanyEndpoints {
    * const amazonEmployees = await fmp.company.getHistoricalEmployeeCount('AMZN');
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#historical-employee-company-information|FMP Historical Employee Count Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#historical-employee-count|FMP Historical Employee Count Documentation}
    */
   async getHistoricalEmployeeCount(
     symbol: string,
   ): Promise<APIResponse<HistoricalEmployeeCount[]>> {
-    return this.client.get(`/historical/employee_count`, 'v4', { symbol });
+    return this.client.get(`/historical-employee-count`, 'stable', { symbol });
   }
 
   /**
@@ -160,10 +160,10 @@ export class CompanyEndpoints {
    * const teslaFloat = await fmp.company.getSharesFloat('TSLA');
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#company-share-float-share-float|FMP Shares Float Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#shares-float|FMP Shares Float Documentation}
    */
   async getSharesFloat(symbol: string): Promise<APIResponse<SharesFloat>> {
-    return this.client.getSingle(`/shares_float`, 'v4', { symbol });
+    return this.client.getSingle(`/shares-float`, 'stable', { symbol });
   }
 
   /**
@@ -233,7 +233,7 @@ export class CompanyEndpoints {
     symbol: string;
     year: number;
     quarter: number;
-  }): Promise<APIResponse<EarningsCallTranscript[]>> {
+  }): Promise<APIResponse<EarningsCallTranscript>> {
     const { symbol, year, quarter } = params;
     return this.client.getSingle(`/earning_call_transcript/${symbol}`, 'v3', { year, quarter });
   }
