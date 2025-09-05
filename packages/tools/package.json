@@ -1,6 +1,6 @@
 {
   "name": "fmp-ai-tools",
-  "version": "0.0.11-beta.3",
+  "version": "0.0.11-beta.4",
   "description": "AI tools for FMP Node API - compatible with Vercel AI SDK, Langchain, OpenAI, and more",
   "exports": {
     "./vercel-ai": {
@@ -52,7 +52,7 @@
   },
   "homepage": "https://fmp-node-wrapper-docs.vercel.app",
   "dependencies": {
-    "@openai/agents": "^0.0.17",
+    "@openai/agents": "^0.1.0",
     "ai": "^5.0.5",
     "fmp-node-api": "workspace:*",
     "zod": "^3.25.76"
