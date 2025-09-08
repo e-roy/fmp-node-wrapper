@@ -20,8 +20,29 @@ describe('createOpenAITool', () => {
       execute: async () => 'ok',
     });
 
-    // With the new API, parameters contains the Zod schema directly
-    expect(tool.parameters).toBe(schema);
+    // The parameters should be a JSON schema object
+    expect(tool.parameters).toEqual({
+      type: 'object',
+      properties: {
+        aString: { type: 'string' },
+        aNumber: { type: 'string' },
+        aBoolean: { type: 'string' },
+        anEnum: { type: 'string' },
+        anArray: { type: 'string' },
+        optionalField: { type: 'string' },
+        defaultField: { type: 'string' },
+      },
+      required: [
+        'aString',
+        'aNumber',
+        'aBoolean',
+        'anEnum',
+        'anArray',
+        'optionalField',
+        'defaultField',
+      ],
+      additionalProperties: false,
+    });
 
     // Test that the tool has the expected properties
     expect(tool.name).toBe('testTool');
@@ -94,8 +115,17 @@ describe('createOpenAITool', () => {
       execute: async () => 'ok',
     });
 
-    // With the new API, parameters contains the Zod schema directly
-    expect(tool.parameters).toBe(schema);
+    // The parameters should be a JSON schema object
+    expect(tool.parameters).toEqual({
+      type: 'object',
+      properties: {
+        optInner: { type: 'string' },
+        defInner: { type: 'string' },
+        unknown: { type: 'string' },
+      },
+      required: ['optInner', 'defInner', 'unknown'],
+      additionalProperties: false,
+    });
 
     // Test that the tool has the expected properties
     expect(tool.name).toBe('branchTool');

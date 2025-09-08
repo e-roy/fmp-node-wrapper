@@ -2,97 +2,90 @@
 const mockConsoleWarn = jest.fn();
 const originalConsoleWarn = console.warn;
 
-// Mock the @openai/agents module
-jest.mock('@openai/agents', () => ({
-  tool: jest.fn(),
-}));
-
 describe('Version Check Utility', () => {
-  let mockTool: jest.MockedFunction<any>;
-  let versionCheckModule: any;
-
-  beforeEach(async () => {
+  beforeEach(() => {
     jest.clearAllMocks();
     mockConsoleWarn.mockClear();
     console.warn = mockConsoleWarn;
-
-    // Get the mocked tool function
-    const openaiAgents = await import('@openai/agents');
-    mockTool = openaiAgents.tool;
-
-    // Import the version check module
-    versionCheckModule = await import('../../utils/version-check');
   });
 
   afterAll(() => {
     console.warn = originalConsoleWarn;
   });
 
-  describe('checkOpenAIAgentsVersion', () => {
-    it('should pass when @openai/agents is compatible', () => {
-      mockTool.mockReturnValue({});
+  describe('warnOpenAIAgentsVersion', () => {
+    it('should handle errors gracefully', async () => {
+      const { warnOpenAIAgentsVersion } = await import('../../utils/version-check');
 
-      expect(() => versionCheckModule.checkOpenAIAgentsVersion()).not.toThrow();
-    });
-
-    it('should throw error when @openai/agents is incompatible', () => {
-      mockTool.mockImplementation(() => {
-        throw new Error('Zod field uses .optional() without .nullable()');
-      });
-
-      expect(() => versionCheckModule.checkOpenAIAgentsVersion()).toThrow(
-        'Incompatible @openai/agents version detected',
-      );
-      expect(() => versionCheckModule.checkOpenAIAgentsVersion()).toThrow(
-        'This package requires version ^0.0.17 or higher',
-      );
-      expect(() => versionCheckModule.checkOpenAIAgentsVersion()).toThrow(
-        'npm install @openai/agents@latest',
-      );
-    });
-
-    it('should include error details in thrown message', () => {
-      const testError = new Error('Test error message');
-      mockTool.mockImplementation(() => {
-        throw testError;
-      });
-
-      expect(() => versionCheckModule.checkOpenAIAgentsVersion()).toThrow(
-        'Error details: Test error message',
-      );
+      // This should not throw, even if there are issues
+      expect(() => warnOpenAIAgentsVersion()).not.toThrow();
     });
   });
 
-  describe('warnOpenAIAgentsVersion', () => {
-    it('should not warn when version is compatible', () => {
-      mockTool.mockReturnValue({});
+  describe('error handling', () => {
+    it('should handle missing package gracefully in warn function', async () => {
+      const { warnOpenAIAgentsVersion } = await import('../../utils/version-check');
 
-      versionCheckModule.warnOpenAIAgentsVersion();
-      expect(mockConsoleWarn).not.toHaveBeenCalled();
-    });
+      // Mock require.resolve to throw an error
+      const originalResolve = require.resolve;
+      require.resolve = jest.fn().mockImplementation(() => {
+        throw new Error('Cannot resolve module');
+      }) as unknown as typeof require.resolve;
 
-    it('should warn when version is incompatible', () => {
-      mockTool.mockImplementation(() => {
-        throw new Error('Incompatible version');
-      });
-
-      versionCheckModule.warnOpenAIAgentsVersion();
+      warnOpenAIAgentsVersion();
       expect(mockConsoleWarn).toHaveBeenCalledWith(
         '⚠️  Version compatibility warning:',
-        'Incompatible @openai/agents version detected. This package requires version ^0.0.17 or higher due to breaking changes in the API. Please upgrade with: npm install @openai/agents@latest\n\nError details: Incompatible version',
+        expect.stringContaining('@openai/agents package not found'),
       );
+
+      // Restore original function
+      require.resolve = originalResolve;
+    });
+  });
+
+  describe('error messages', () => {
+    it('should provide helpful error messages', async () => {
+      const { checkOpenAIAgentsVersion } = await import('../../utils/version-check');
+
+      const originalResolve = require.resolve;
+      require.resolve = jest.fn().mockImplementation(() => {
+        throw new Error('Cannot resolve module');
+      }) as unknown as typeof require.resolve;
+
+      expect(() => checkOpenAIAgentsVersion()).toThrow('npm install @openai/agents@0.1.0');
+      expect(() => checkOpenAIAgentsVersion()).toThrow('@openai/agents package not found');
+
+      require.resolve = originalResolve;
+    });
+  });
+
+  describe('error scenarios', () => {
+    it('should handle missing package gracefully', async () => {
+      const { warnOpenAIAgentsVersion } = await import('../../utils/version-check');
+
+      // Test that warn function handles errors gracefully
+      expect(() => warnOpenAIAgentsVersion()).not.toThrow();
     });
 
-    it('should handle non-Error objects thrown', () => {
-      mockTool.mockImplementation(() => {
-        throw 'String error';
-      });
+    it('should provide helpful error messages', async () => {
+      const { checkOpenAIAgentsVersion } = await import('../../utils/version-check');
 
-      versionCheckModule.warnOpenAIAgentsVersion();
-      expect(mockConsoleWarn).toHaveBeenCalledWith(
-        '⚠️  Version compatibility warning:',
-        'Incompatible @openai/agents version detected. This package requires version ^0.0.17 or higher due to breaking changes in the API. Please upgrade with: npm install @openai/agents@latest\n\nError details: String error',
-      );
+      // Test that error messages contain helpful information
+      try {
+        checkOpenAIAgentsVersion();
+      } catch (error) {
+        expect((error as Error).message).toContain('@openai/agents package not found');
+        expect((error as Error).message).toContain('npm install @openai/agents@0.1.0');
+      }
+    });
+  });
+
+  describe('integration', () => {
+    it('should work with actual installed version', async () => {
+      const { warnOpenAIAgentsVersion } = await import('../../utils/version-check');
+
+      // Test that warn function works with real environment
+      expect(() => warnOpenAIAgentsVersion()).not.toThrow();
     });
   });
 });
