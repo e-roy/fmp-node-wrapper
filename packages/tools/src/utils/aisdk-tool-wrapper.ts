@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { tool } from 'ai';
 import { logApiExecutionWithTiming } from './logger';
 
 // Tool configuration interface for AI SDK v2
@@ -10,17 +9,25 @@ export interface ToolConfig<T extends z.ZodType> {
   execute: (args: z.infer<T>) => Promise<string>;
 }
 
-// AI SDK v2 compatible tool creator using the ai library's tool function
-export function createTool<T extends z.ZodType>(config: ToolConfig<T>) {
+// Simple tool interface that's compatible with AI SDK ToolSet
+export interface SimpleTool {
+  name: string;
+  description: string;
+  inputSchema: z.ZodType;
+  execute: (args: any) => Promise<string>;
+}
+
+// AI SDK v2 compatible tool creator that returns a simple tool object
+// This avoids the complex type inference issues with the AI SDK's Tool type
+export function createTool<T extends z.ZodType>(config: ToolConfig<T>): SimpleTool {
   const { name, description, inputSchema, execute } = config;
 
-  // Use the AI SDK's tool function to create a compatible tool
-  return tool({
+  return {
     name,
     description,
     inputSchema,
     execute: async (args: z.infer<T>) => {
       return await logApiExecutionWithTiming(name, args, () => execute(args));
     },
-  } as any); // Use type assertion to avoid deep type inference issues
+  };
 }

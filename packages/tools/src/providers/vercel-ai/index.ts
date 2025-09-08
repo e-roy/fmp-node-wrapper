@@ -1,4 +1,3 @@
-/* istanbul ignore file */
 import { quoteTools } from './quote';
 import { companyTools } from './company';
 import { financialTools } from './financial';
@@ -72,6 +71,3 @@ export {
   senateHouseTools,
   stockTools,
 };
-
-// Re-export types
-export type { ToolSet } from 'ai';

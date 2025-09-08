@@ -16,7 +16,7 @@
     "@ai-sdk/openai": "^2.0.3",
     "@ai-sdk/react": "^2.0.3",
     "fmp-ai-tools": "workspace:*",
-    "zod": "^3.22.4"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
