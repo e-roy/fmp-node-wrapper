@@ -70,7 +70,7 @@ export function checkOpenAIAgentsVersion(): void {
   }
 
   if (!matchesExactVersion(installedVersion, REQUIRED_VERSION)) {
-    throw new Error(
+    console.warn(
       `Incompatible @openai/agents version detected. ` +
         `Installed version: ${installedVersion}, Required: ${REQUIRED_VERSION} ` +
         `This package requires exactly version ${REQUIRED_VERSION} due to API compatibility. ` +
