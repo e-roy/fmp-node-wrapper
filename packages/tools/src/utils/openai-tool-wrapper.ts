@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { tool } from '@openai/agents';
-import { logApiExecutionWithTiming } from './logger';
+// import { logApiExecutionWithTiming } from './logger';
 
 export interface OpenAIToolConfig<T extends z.ZodObject<any>> {
   name: string;
@@ -29,18 +29,22 @@ export function createOpenAITool<T extends z.ZodObject<any>>(config: OpenAIToolC
       properties,
       required,
       additionalProperties: false,
-    },
+    } as any,
     strict: true,
-    execute: async (input: unknown) => {
-      try {
-        const validatedInput = inputSchema.parse(input);
-        return await logApiExecutionWithTiming(name, validatedInput, () => execute(validatedInput));
-      } catch (error) {
-        if (error instanceof z.ZodError) {
-          return `Invalid input: ${error.errors.map(e => e.message).join(', ')}`;
-        }
-        return `Error executing ${name}: ${error instanceof Error ? error.message : String(error)}`;
-      }
+    execute: async (args: z.TypeOf<T>) => {
+      console.log(`🔧 Tool: ${name}`);
+      const result = await execute(args);
+      console.log(`🔧 Tool Result: ${name}`, result);
+      return result;
+      // try {
+      //   const validatedInput = inputSchema.parse(input);
+      //   return await logApiExecutionWithTiming(name, validatedInput, () => execute(validatedInput));
+      // } catch (error) {
+      //   if (error instanceof z.ZodError) {
+      //     return `Invalid input: ${error.errors.map(e => e.message).join(', ')}`;
+      //   }
+      //   return `Error executing ${name}: ${error instanceof Error ? error.message : String(error)}`;
+      // }
     },
   });
 }
