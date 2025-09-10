@@ -48,10 +48,10 @@ function compareVersions(v1: string, v2: string): number {
 }
 
 /**
- * Checks if a version exactly matches the required version
+ * Checks if the installed version is less than the required version
  */
-function matchesExactVersion(installedVersion: string, requiredVersion: string): boolean {
-  return compareVersions(installedVersion, requiredVersion) === 0;
+function isVersionLessThan(installedVersion: string, requiredVersion: string): boolean {
+  return compareVersions(installedVersion, requiredVersion) < 0;
 }
 
 /**
@@ -65,28 +65,14 @@ export function checkOpenAIAgentsVersion(): void {
     throw new Error(
       `@openai/agents package not found. ` +
         `This package requires @openai/agents to be installed. ` +
-        `Please install with: npm install @openai/agents@${REQUIRED_VERSION}`,
+        `Please install with: npm install @openai/agents`,
     );
   }
 
-  if (!matchesExactVersion(installedVersion, REQUIRED_VERSION)) {
+  if (isVersionLessThan(installedVersion, REQUIRED_VERSION)) {
     console.warn(
       `Incompatible @openai/agents version detected. ` +
-        `Installed version: ${installedVersion}, Required: ${REQUIRED_VERSION} ` +
-        `This package requires exactly version ${REQUIRED_VERSION} due to API compatibility. ` +
-        `Please install with: npm install @openai/agents@${REQUIRED_VERSION}`,
+        `Installed version: ${installedVersion}, Required: ${REQUIRED_VERSION} or higher.`,
     );
-  }
-}
-
-/**
- * Logs a warning if the version check fails but doesn't throw
- */
-export function warnOpenAIAgentsVersion(): void {
-  try {
-    checkOpenAIAgentsVersion();
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : String(error);
-    console.warn('⚠️  Version compatibility warning:', errorMessage);
   }
 }

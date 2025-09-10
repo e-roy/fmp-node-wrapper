@@ -1,3 +1,4 @@
+import { ToolSet } from 'ai';
 import { quoteTools } from './quote';
 import { companyTools } from './company';
 import { financialTools } from './financial';
@@ -43,7 +44,7 @@ export const {
 export const { getMarketCap, getStockSplits, getDividendHistory } = stockTools;
 
 // Combine all tools into a single object for AI SDK v2
-export const fmpTools = {
+export const fmpTools: ToolSet = {
   ...quoteTools,
   ...companyTools,
   ...financialTools,
@@ -55,7 +56,7 @@ export const fmpTools = {
   ...marketTools,
   ...senateHouseTools,
   ...stockTools,
-} as const;
+};
 
 // Re-export individual tool groups
 export {

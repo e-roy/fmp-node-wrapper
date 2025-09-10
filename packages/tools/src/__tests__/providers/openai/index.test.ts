@@ -3,7 +3,6 @@ import type { Tool } from '@openai/agents';
 // Mock the version check to prevent it from running during import
 jest.mock('@/utils/version-check', () => ({
   checkOpenAIAgentsVersion: jest.fn(),
-  warnOpenAIAgentsVersion: jest.fn(),
 }));
 
 import * as OpenAIProviders from '@/providers/openai';
