@@ -36,7 +36,7 @@ FMP_TOOLS_LOG_DATA_ONLY=false`}
 
 <CodeBlock language="typescript" filename="app/api/chat/route.ts">
 {`import { openai } from '@ai-sdk/openai';
-import { streamText, convertToModelMessages, stepCountIs } from 'ai';
+import { streamText, convertToModelMessages, stepCountIs, ToolSet } from 'ai';
 import { fmpTools } from 'fmp-ai-tools/vercel-ai';
 
 export async function POST(req: Request) {
@@ -45,7 +45,7 @@ export async function POST(req: Request) {
 const result = streamText({
 model: openai('gpt-4o-mini'),
 messages: convertToModelMessages(messages),
-tools: fmpTools,
+tools: fmpTools as ToolSet,
 stopWhen: stepCountIs(5),
 });
 
@@ -135,7 +135,7 @@ You can select specific tools instead of using all available tools:
 
 <CodeBlock language="typescript" filename="app/api/chat/route.ts">
 {`import { openai } from '@ai-sdk/openai';
-import { streamText, convertToModelMessages } from 'ai';
+import { streamText, convertToModelMessages, ToolSet } from 'ai';
 import { quoteTools, financialTools } from 'fmp-ai-tools/vercel-ai';
 
 // Use only quote and financial tools
@@ -150,7 +150,7 @@ export async function POST(req: Request) {
 const result = streamText({
 model: openai('gpt-4o-mini'),
 messages: convertToModelMessages(messages),
-tools: selectedTools,
+tools: selectedTools as ToolSet,
 });
 
 return result.toUIMessageStreamResponse();
@@ -162,7 +162,7 @@ return result.toUIMessageStreamResponse();
 
 <CodeBlock language="typescript" filename="app/api/chat/route.ts">
 {`import { openai } from '@ai-sdk/openai';
-import { streamText, convertToModelMessages } from 'ai';
+import { streamText, convertToModelMessages, ToolSet } from 'ai';
 import { fmpTools } from 'fmp-ai-tools/vercel-ai';
 
 export async function POST(req: Request) {
@@ -174,7 +174,7 @@ temperature: 0.7,
 maxTokens: 1000,
 }),
 messages: convertToModelMessages(messages),
-tools: fmpTools,
+tools: fmpTools as ToolSet,
 stopWhen: stepCountIs(3), // Limit tool usage
 system: \`You are a helpful financial assistant. Use the available tools to provide accurate financial information. Always cite your sources when providing data.\`,
 });

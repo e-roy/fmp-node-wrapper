@@ -26,7 +26,7 @@ The example includes access to all FMP tools:
 
 ### Prerequisites
 
-1. **FMP API Key** - Get your API key from [Financial Modeling Prep](https://financialmodelingprep.com/developer/docs/)
+1. **FMP API Key** - Get your API key from [Financial Modeling Prep](https://site.financialmodelingprep.com/pricing-plans?couponCode=eroy) - Link for 10% off
 2. **OpenAI API Key** - Get your API key from [OpenAI](https://platform.openai.com/api-keys)
 
 **Note**: This example uses the Vercel AI SDK v5.0.5 with AI SDK providers v2.0.3.

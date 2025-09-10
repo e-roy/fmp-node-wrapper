@@ -24,6 +24,26 @@ export default function Home() {
           <p className="text-lg text-neutral-500 dark:text-neutral-400">
             A comprehensive Node.js ecosystem for the Financial Modeling Prep API
           </p>
+          <Card className="h-full hover:shadow-lg transition-all duration-300 border-2 hover:border-orange-200 dark:hover:border-orange-800 mt-4">
+            <CardHeader className="text-center">
+              <CardTitle className="text-3xl text-neutral-900 dark:text-white">
+                Financial Modeling Prep API Key
+              </CardTitle>
+              <CardDescription className="text-lg text-orange-600 dark:text-orange-400">
+                Link for 10% off
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <a
+                href="https://site.financialmodelingprep.com/pricing-plans?couponCode=eroy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-lg text-neutral-500 dark:text-neutral-400 hover:underline"
+              >
+                https://site.financialmodelingprep.com/pricing-plans?couponCode=eroy
+              </a>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Main Library Selection */}
