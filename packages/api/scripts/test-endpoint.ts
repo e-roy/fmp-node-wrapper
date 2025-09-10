@@ -204,7 +204,7 @@ async function testEndpoint() {
       case 'key-metrics':
         result = await fmp.financial.getKeyMetrics({
           symbol: 'AAPL',
-          period: 'annual',
+          period: 'quarter',
           limit: 2,
         });
         break;
@@ -550,6 +550,7 @@ async function testEndpoint() {
       }
     } else {
       console.log('❌ Failed:');
+      console.log(result);
       console.log(result.error);
     }
   } catch (error) {

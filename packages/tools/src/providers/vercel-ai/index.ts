@@ -20,8 +20,19 @@ export const { getTreasuryRates, getEconomicIndicators } = economicTools;
 
 export const { getETFHoldings, getETFProfile } = etfTools;
 
-export const { getBalanceSheet, getIncomeStatement, getCashFlowStatement, getFinancialRatios } =
-  financialTools;
+export const {
+  getBalanceSheet,
+  getIncomeStatement,
+  getCashFlowStatement,
+  getKeyMetrics,
+  getFinancialRatios,
+  getEnterpriseValue,
+  getCashflowGrowth,
+  getIncomeGrowth,
+  getBalanceSheetGrowth,
+  getFinancialGrowth,
+  getEarningsHistorical,
+} = financialTools;
 
 export const { getInsiderTrading } = insiderTools;
 
