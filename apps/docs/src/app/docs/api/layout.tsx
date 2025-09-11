@@ -39,6 +39,7 @@ const apiNavigationGroups = [
       { name: 'List Endpoints', href: '/docs/api/list' },
       { name: 'Calendar Endpoints', href: '/docs/api/calendar' },
       { name: 'Company Endpoints', href: '/docs/api/company' },
+      { name: 'Screener Endpoints', href: '/docs/api/screener' },
       { name: 'Senate & House Trading', href: '/docs/api/senate-house' },
       { name: 'Institutional Endpoints', href: '/docs/api/institutional' },
       { name: 'Insider Endpoints', href: '/docs/api/insider' },

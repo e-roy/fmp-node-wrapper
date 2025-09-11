@@ -3,20 +3,22 @@
 import { FMPClient } from './client';
 import { FMPConfig } from 'fmp-node-types';
 import { FMPValidation } from './utils/validation';
-import { StockEndpoints } from './endpoints/stock';
-import { FinancialEndpoints } from './endpoints/financial';
-import { ETFEndpoints } from './endpoints/etf';
-import { EconomicEndpoints } from './endpoints/economic';
-import { MarketEndpoints } from './endpoints/market';
-import { ListEndpoints } from './endpoints/list';
+
 import { CalendarEndpoints } from './endpoints/calendar';
 import { CompanyEndpoints } from './endpoints/company';
-import { QuoteEndpoints } from './endpoints/quote';
-import { SenateHouseEndpoints } from './endpoints/senate-house';
-import { InstitutionalEndpoints } from './endpoints/institutional';
+import { EconomicEndpoints } from './endpoints/economic';
+import { ETFEndpoints } from './endpoints/etf';
+import { FinancialEndpoints } from './endpoints/financial';
 import { InsiderEndpoints } from './endpoints/insider';
-import { SECEndpoints } from './endpoints/sec';
+import { InstitutionalEndpoints } from './endpoints/institutional';
+import { ListEndpoints } from './endpoints/list';
+import { MarketEndpoints } from './endpoints/market';
 import { MutualFundEndpoints } from './endpoints/mutual-fund';
+import { QuoteEndpoints } from './endpoints/quote';
+import { ScreenerEndpoints } from './endpoints/screener';
+import { SECEndpoints } from './endpoints/sec';
+import { SenateHouseEndpoints } from './endpoints/senate-house';
+import { StockEndpoints } from './endpoints/stock';
 
 /**
  * Main FMP API client that provides access to all endpoints
@@ -49,20 +51,21 @@ import { MutualFundEndpoints } from './endpoints/mutual-fund';
  * ```
  */
 export class FMP {
-  public readonly stock: StockEndpoints;
-  public readonly financial: FinancialEndpoints;
-  public readonly etf: ETFEndpoints;
-  public readonly economic: EconomicEndpoints;
-  public readonly market: MarketEndpoints;
-  public readonly list: ListEndpoints;
   public readonly calendar: CalendarEndpoints;
   public readonly company: CompanyEndpoints;
-  public readonly quote: QuoteEndpoints;
-  public readonly senateHouse: SenateHouseEndpoints;
-  public readonly institutional: InstitutionalEndpoints;
+  public readonly economic: EconomicEndpoints;
+  public readonly etf: ETFEndpoints;
+  public readonly financial: FinancialEndpoints;
   public readonly insider: InsiderEndpoints;
-  public readonly sec: SECEndpoints;
+  public readonly institutional: InstitutionalEndpoints;
+  public readonly list: ListEndpoints;
+  public readonly market: MarketEndpoints;
   public readonly mutualFund: MutualFundEndpoints;
+  public readonly quote: QuoteEndpoints;
+  public readonly screener: ScreenerEndpoints;
+  public readonly sec: SECEndpoints;
+  public readonly senateHouse: SenateHouseEndpoints;
+  public readonly stock: StockEndpoints;
 
   constructor(config: FMPConfig = {}) {
     // Get API key from config or environment variable
@@ -81,20 +84,21 @@ export class FMP {
 
     const client = new FMPClient({ ...config, apiKey });
 
-    this.stock = new StockEndpoints(client);
-    this.financial = new FinancialEndpoints(client);
-    this.etf = new ETFEndpoints(client);
-    this.economic = new EconomicEndpoints(client);
-    this.market = new MarketEndpoints(client);
-    this.list = new ListEndpoints(client);
     this.calendar = new CalendarEndpoints(client);
     this.company = new CompanyEndpoints(client);
-    this.quote = new QuoteEndpoints(client);
-    this.senateHouse = new SenateHouseEndpoints(client);
-    this.institutional = new InstitutionalEndpoints(client);
+    this.economic = new EconomicEndpoints(client);
+    this.etf = new ETFEndpoints(client);
+    this.financial = new FinancialEndpoints(client);
     this.insider = new InsiderEndpoints(client);
-    this.sec = new SECEndpoints(client);
+    this.institutional = new InstitutionalEndpoints(client);
+    this.list = new ListEndpoints(client);
+    this.market = new MarketEndpoints(client);
     this.mutualFund = new MutualFundEndpoints(client);
+    this.quote = new QuoteEndpoints(client);
+    this.screener = new ScreenerEndpoints(client);
+    this.sec = new SECEndpoints(client);
+    this.senateHouse = new SenateHouseEndpoints(client);
+    this.stock = new StockEndpoints(client);
   }
 
   /**

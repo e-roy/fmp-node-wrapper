@@ -18,19 +18,13 @@ export default function Home() {
           <h1 className="text-5xl font-bold mb-6 text-neutral-900 dark:text-white">
             FMP Node Wrapper
           </h1>
-          <p className="text-xl text-neutral-600 dark:text-neutral-300 mb-4">
-            Choose the library that fits your needs
-          </p>
           <p className="text-lg text-neutral-500 dark:text-neutral-400">
             A comprehensive Node.js ecosystem for the Financial Modeling Prep API
           </p>
           <Card className="h-full hover:shadow-lg transition-all duration-300 border-2 hover:border-orange-200 dark:hover:border-orange-800 mt-4">
             <CardHeader className="text-center">
-              <CardTitle className="text-3xl text-neutral-900 dark:text-white">
-                Financial Modeling Prep API Key
-              </CardTitle>
               <CardDescription className="text-lg text-orange-600 dark:text-orange-400">
-                Link for 10% off
+                Financial Modeling Prep API Key - Link for 10% off
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -38,10 +32,17 @@ export default function Home() {
                 href="https://site.financialmodelingprep.com/pricing-plans?couponCode=eroy"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-lg text-neutral-500 dark:text-neutral-400 hover:underline"
+                className="text-lg text-blue-500 dark:text-blue-400 hover:underline"
               >
                 https://site.financialmodelingprep.com/pricing-plans?couponCode=eroy
               </a>
+              <div className="text-sm text-neutral-600 dark:text-neutral-300 italic">
+                I don't get paid for the working on this project. Using this link helps support the
+                project with affiliate earnings.
+              </div>
+              <div className="text-sm text-neutral-600 dark:text-neutral-300">
+                If this project helps you, consider giving it a star on GitHub.
+              </div>
             </CardContent>
           </Card>
         </div>
