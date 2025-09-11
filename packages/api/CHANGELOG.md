@@ -1,5 +1,11 @@
 # fmp-node-api
 
+## 0.1.8
+
+### Patch Changes
+
+- working tools without helper functions, expand financial tools, added screener in api wrapper
+
 ## 0.1.7
 
 ### Patch Changes
