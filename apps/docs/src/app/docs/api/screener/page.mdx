@@ -1,0 +1,600 @@
+# Screener Endpoints
+
+The Screener Endpoints provide powerful tools for filtering and searching companies based on various financial metrics, market data, and company characteristics. Perfect for finding investment opportunities, conducting market research, or building custom stock filters.
+
+## Available Methods
+
+<ApiTable
+  endpoints={[
+    {
+      method: 'GET',
+      path: 'stable/company-screener',
+      description: 'Screen companies based on customizable financial criteria',
+    },
+    {
+      method: 'GET',
+      path: 'stable/available-exchanges',
+      description: 'Get list of available stock exchanges for screening',
+    },
+    {
+      method: 'GET',
+      path: 'stable/available-sectors',
+      description: 'Get list of available business sectors for screening',
+    },
+    {
+      method: 'GET',
+      path: 'stable/available-industries',
+      description: 'Get list of available industries for screening',
+    },
+    {
+      method: 'GET',
+      path: 'stable/available-countries',
+      description: 'Get list of available countries for screening',
+    },
+  ]}
+/>
+
+## Get Company Screener
+
+Screen companies based on customizable financial criteria. This endpoint allows you to filter and search for companies based on various financial metrics, market data, and company characteristics.
+
+<CodeBlock language="typescript">
+  {`const companies = await fmp.screener.getScreener({
+  marketCapMoreThan: 1000000000, // $1B+
+  sector: 'Technology',
+  isActivelyTrading: true,
+  limit: 50
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'marketCapMoreThan',
+      type: 'number',
+      required: false,
+      description: 'Minimum market capitalization',
+    },
+    {
+      name: 'marketCapLowerThan',
+      type: 'number',
+      required: false,
+      description: 'Maximum market capitalization',
+    },
+    {
+      name: 'priceMoreThan',
+      type: 'number',
+      required: false,
+      description: 'Minimum stock price',
+    },
+    {
+      name: 'priceLowerThan',
+      type: 'number',
+      required: false,
+      description: 'Maximum stock price',
+    },
+    {
+      name: 'betaMoreThan',
+      type: 'number',
+      required: false,
+      description: 'Minimum beta value',
+    },
+    {
+      name: 'betaLowerThan',
+      type: 'number',
+      required: false,
+      description: 'Maximum beta value',
+    },
+    {
+      name: 'volumeMoreThan',
+      type: 'number',
+      required: false,
+      description: 'Minimum trading volume',
+    },
+    {
+      name: 'volumeLowerThan',
+      type: 'number',
+      required: false,
+      description: 'Maximum trading volume',
+    },
+    {
+      name: 'dividendMoreThan',
+      type: 'number',
+      required: false,
+      description: 'Minimum dividend yield',
+    },
+    {
+      name: 'dividendLowerThan',
+      type: 'number',
+      required: false,
+      description: 'Maximum dividend yield',
+    },
+    {
+      name: 'isEtf',
+      type: 'boolean',
+      required: false,
+      description: 'Filter for ETFs only',
+    },
+    {
+      name: 'isActivelyTrading',
+      type: 'boolean',
+      required: false,
+      description: 'Filter for actively trading stocks',
+    },
+    {
+      name: 'sector',
+      type: 'string',
+      required: false,
+      description: 'Filter by specific sector',
+    },
+    {
+      name: 'industry',
+      type: 'string',
+      required: false,
+      description: 'Filter by specific industry',
+    },
+    {
+      name: 'country',
+      type: 'string',
+      required: false,
+      description: 'Filter by specific country',
+    },
+    {
+      name: 'exchange',
+      type: 'string',
+      required: false,
+      description: 'Filter by specific exchange',
+    },
+    {
+      name: 'limit',
+      type: 'number',
+      required: false,
+      description: 'Maximum number of results to return',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        symbol: 'AAPL',
+        companyName: 'Apple Inc.',
+        marketCap: 2375000000000,
+        sector: 'Technology',
+        industry: 'Consumer Electronics',
+        beta: 1.28,
+        price: 150.25,
+        lastAnnualDividend: 0.24,
+        volume: 52345600,
+        exchange: 'NASDAQ',
+        exchangeShortName: 'NASDAQ',
+        country: 'US',
+        isEtf: false,
+        isFund: false,
+        isActivelyTrading: true
+      },
+      {
+        symbol: 'MSFT',
+        companyName: 'Microsoft Corporation',
+        marketCap: 2100000000000,
+        sector: 'Technology',
+        industry: 'Software—Infrastructure',
+        beta: 0.95,
+        price: 280.15,
+        lastAnnualDividend: 0.68,
+        volume: 23456700,
+        exchange: 'NASDAQ',
+        exchangeShortName: 'NASDAQ',
+        country: 'US',
+        isEtf: false,
+        isFund: false,
+        isActivelyTrading: true
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Available Exchanges
+
+Retrieve all supported stock exchanges that can be used as filters in the company screener.
+
+<CodeBlock language="typescript">
+  {`const exchanges = await fmp.screener.getAvailableExchanges();`}
+</CodeBlock>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        exchange: 'NASDAQ',
+        name: 'NASDAQ',
+        countryName: 'United States',
+        countryCode: 'US',
+        symbolSuffix: '',
+        delay: '15'
+      },
+      {
+        exchange: 'NYSE',
+        name: 'New York Stock Exchange',
+        countryName: 'United States',
+        countryCode: 'US',
+        symbolSuffix: '',
+        delay: '15'
+      },
+      {
+        exchange: 'LSE',
+        name: 'London Stock Exchange',
+        countryName: 'United Kingdom',
+        countryCode: 'GB',
+        symbolSuffix: '.L',
+        delay: '15'
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Available Sectors
+
+Retrieve all supported business sectors that can be used as filters in the company screener.
+
+<CodeBlock language="typescript">
+  {`const sectors = await fmp.screener.getAvailableSectors();`}
+</CodeBlock>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        sector: 'Technology'
+      },
+      {
+        sector: 'Healthcare'
+      },
+      {
+        sector: 'Financial Services'
+      },
+      {
+        sector: 'Consumer Cyclical'
+      },
+      {
+        sector: 'Industrials'
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Available Industries
+
+Retrieve all supported industries that can be used as filters in the company screener. Provides more granular filtering than sectors.
+
+<CodeBlock language="typescript">
+  {`const industries = await fmp.screener.getAvailableIndustries();`}
+</CodeBlock>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        industry: 'Software—Application'
+      },
+      {
+        industry: 'Software—Infrastructure'
+      },
+      {
+        industry: 'Consumer Electronics'
+      },
+      {
+        industry: 'Pharmaceuticals'
+      },
+      {
+        industry: 'Banks—Diversified'
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Available Countries
+
+Retrieve all supported countries that can be used as filters in the company screener.
+
+<CodeBlock language="typescript">
+  {`const countries = await fmp.screener.getAvailableCountries();`}
+</CodeBlock>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        country: 'US'
+      },
+      {
+        country: 'CA'
+      },
+      {
+        country: 'GB'
+      },
+      {
+        country: 'DE'
+      },
+      {
+        country: 'JP'
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Data Types
+
+### Screener
+
+<CodeBlock language="typescript">
+  {`interface Screener {
+  symbol: string;
+  companyName: string;
+  marketCap: number;
+  sector: string;
+  industry: string;
+  beta: number;
+  price: number;
+  lastAnnualDividend: number;
+  volume: number;
+  exchange: string;
+  exchangeShortName: string;
+  country: string;
+  isEtf: boolean;
+  isFund: boolean;
+  isActivelyTrading: boolean;
+}`}
+</CodeBlock>
+
+### AvailableExchanges
+
+<CodeBlock language="typescript">
+  {`interface AvailableExchanges {
+  exchange: string;
+  name: string;
+  countryName: string;
+  countryCode: string;
+  symbolSuffix: string;
+  delay: string;
+}`}
+</CodeBlock>
+
+### AvailableSectors
+
+<CodeBlock language="typescript">
+  {`interface AvailableSectors {
+  sector: string;
+}`}
+</CodeBlock>
+
+### AvailableIndustries
+
+<CodeBlock language="typescript">
+  {`interface AvailableIndustries {
+  industry: string;
+}`}
+</CodeBlock>
+
+### AvailableCountries
+
+<CodeBlock language="typescript">
+  {`interface AvailableCountries {
+  country: string;
+}`}
+</CodeBlock>
+
+### ScreenerParams
+
+<CodeBlock language="typescript">
+  {`interface ScreenerParams {
+  marketCapMoreThan?: number;
+  marketCapLowerThan?: number;
+  sector?: string;
+  industry?: string;
+  betaMoreThan?: number;
+  betaLowerThan?: number;
+  priceMoreThan?: number;
+  priceLowerThan?: number;
+  dividendMoreThan?: number;
+  dividendLowerThan?: number;
+  volumeMoreThan?: number;
+  volumeLowerThan?: number;
+  exchange?: string;
+  country?: string;
+  isEtf?: boolean;
+  isFund?: boolean;
+  isActivelyTrading?: boolean;
+  limit?: number;
+  includeAllShareClasses?: boolean;
+}`}
+</CodeBlock>
+
+## Error Handling
+
+All screener endpoints return a standardized response format with error handling:
+
+<CodeBlock language="typescript">
+  {`interface UnwrappedAPIResponse<T> {
+  success: boolean;
+  data: T | null;
+  error?: string;
+}`}
+</CodeBlock>
+
+When an error occurs, the response will include:
+
+- `success: false`
+- `data: null`
+- `error: string` - Description of the error
+
+## Rate Limits
+
+Screener endpoints are subject to the same rate limits as other FMP API endpoints. Please refer to your subscription plan for specific limits.
+
+## Examples
+
+### Basic Company Screening
+
+<CodeBlock language="typescript">
+  {`// Find large-cap tech stocks
+const techStocks = await fmp.screener.getScreener({
+  marketCapMoreThan: 10000000000, // $10B+
+  sector: 'Technology',
+  isActivelyTrading: true,
+  limit: 50
+});
+
+// Find dividend-paying stocks
+const dividendStocks = await fmp.screener.getScreener({
+dividendMoreThan: 0.03, // 3%+ dividend yield
+marketCapMoreThan: 1000000000, // $1B+ market cap
+isActivelyTrading: true
+});
+
+// Find small-cap value stocks
+const smallCapValue = await fmp.screener.getScreener({
+marketCapLowerThan: 2000000000, // Under $2B
+priceMoreThan: 5, // Above $5
+betaLowerThan: 1.2, // Lower volatility
+limit: 100
+});`}
+
+</CodeBlock>
+
+### Dynamic Filtering
+
+<CodeBlock language="typescript">
+  {`// Get available sectors first
+const sectorsResult = await fmp.screener.getAvailableSectors();
+if (sectorsResult.success && sectorsResult.data) {
+  const healthcareSector = sectorsResult.data.find(s => s.sector === 'Healthcare');
+  
+  if (healthcareSector) {
+    // Use the sector in screening
+    const healthcareStocks = await fmp.screener.getScreener({
+      sector: healthcareSector.sector,
+      marketCapMoreThan: 5000000000,
+      isActivelyTrading: true,
+      limit: 25
+    });
+  }
+}`}
+</CodeBlock>
+
+### Multi-Criteria Analysis
+
+<CodeBlock language="typescript">
+  {`// Complex screening with multiple criteria
+const growthStocks = await fmp.screener.getScreener({
+  marketCapMoreThan: 1000000000, // $1B+ market cap
+  marketCapLowerThan: 100000000000, // Under $100B
+  priceMoreThan: 10, // Above $10
+  betaMoreThan: 1.0, // Higher volatility
+  volumeMoreThan: 1000000, // High volume
+  isActivelyTrading: true,
+  limit: 100
+});
+
+// Analyze results
+if (growthStocks.success && growthStocks.data) {
+console.log('Found ' + growthStocks.data.length + ' growth stocks');
+
+const avgMarketCap = growthStocks.data.reduce((sum, stock) =>
+sum + stock.marketCap, 0) / growthStocks.data.length;
+
+console.log('Average market cap:', avgMarketCap);
+}`}
+
+</CodeBlock>
+
+### Sector Analysis
+
+<CodeBlock language="typescript">
+  {`// Analyze different sectors
+const sectors = ['Technology', 'Healthcare', 'Financial Services'];
+
+for (const sector of sectors) {
+const sectorStocks = await fmp.screener.getScreener({
+sector: sector,
+marketCapMoreThan: 10000000000, // $10B+
+isActivelyTrading: true,
+limit: 20
+});
+
+if (sectorStocks.success && sectorStocks.data) {
+console.log(sector + ': ' + sectorStocks.data.length + ' companies');
+
+    const avgPrice = sectorStocks.data.reduce((sum, stock) =>
+      sum + stock.price, 0) / sectorStocks.data.length;
+
+    console.log('Average price: $' + avgPrice.toFixed(2));
+
+}
+}`}
+
+</CodeBlock>
+
+### Portfolio Screening
+
+<CodeBlock language="typescript">
+  {`// Build a diversified portfolio
+const portfolioCriteria = [
+  {
+    name: 'Large Cap Tech',
+    criteria: {
+      sector: 'Technology',
+      marketCapMoreThan: 50000000000, // $50B+
+      isActivelyTrading: true,
+      limit: 5
+    }
+  },
+  {
+    name: 'Dividend Stocks',
+    criteria: {
+      dividendMoreThan: 0.02, // 2%+ dividend
+      marketCapMoreThan: 5000000000, // $5B+
+      isActivelyTrading: true,
+      limit: 5
+    }
+  },
+  {
+    name: 'Growth Stocks',
+    criteria: {
+      marketCapMoreThan: 1000000000, // $1B+
+      marketCapLowerThan: 20000000000, // Under $20B
+      betaMoreThan: 1.2, // Higher volatility
+      isActivelyTrading: true,
+      limit: 5
+    }
+  }
+];
+
+const portfolio = {};
+
+for (const category of portfolioCriteria) {
+const result = await fmp.screener.getScreener(category.criteria);
+if (result.success && result.data) {
+portfolio[category.name] = result.data;
+}
+}
+
+console.log('Portfolio built:', Object.keys(portfolio));`}
+
+</CodeBlock>

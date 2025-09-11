@@ -1,4 +1,10 @@
 import type { Tool } from '@openai/agents';
+
+// Mock the version check to prevent it from running during import
+jest.mock('@/utils/version-check', () => ({
+  checkOpenAIAgentsVersion: jest.fn(),
+}));
+
 import * as OpenAIProviders from '@/providers/openai';
 
 describe('OpenAI providers index exports', () => {
@@ -14,7 +20,14 @@ describe('OpenAI providers index exports', () => {
       'getBalanceSheet',
       'getIncomeStatement',
       'getCashFlowStatement',
+      'getKeyMetrics',
       'getFinancialRatios',
+      'getEnterpriseValue',
+      'getCashflowGrowth',
+      'getIncomeGrowth',
+      'getBalanceSheetGrowth',
+      'getFinancialGrowth',
+      'getEarningsHistorical',
       'getInsiderTrading',
       'getInstitutionalHolders',
       'getMarketPerformance',

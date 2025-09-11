@@ -1,5 +1,13 @@
 # fmp-ai-tools
 
+## 0.0.11
+
+### Patch Changes
+
+- working tools without helper functions, expand financial tools, added screener in api wrapper
+- Updated dependencies
+  - fmp-node-api@0.1.8
+
 ## 0.0.10
 
 ### Patch Changes

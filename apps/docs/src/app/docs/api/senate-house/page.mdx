@@ -8,32 +8,32 @@ The Senate & House Trading endpoints provide access to congressional trading dat
   endpoints={[
     {
       method: 'GET',
-      path: '/senate-trading',
+      path: '/stable/senate-trades',
       description: 'Get senate trading data for a specific stock symbol',
     },
     {
       method: 'GET',
-      path: '/senate-trading-rss-feed',
+      path: '/stable/senate-latest',
       description: 'Get senate trading RSS feed with pagination',
     },
     {
       method: 'GET',
-      path: '/senate-trades-by-name',
+      path: '/stable/senate-trades-by-name',
       description: 'Get senate trading data by senator name',
     },
     {
       method: 'GET',
-      path: '/senate-disclosure',
+      path: '/stable/house-trades',
       description: 'Get house trading data for a specific stock symbol',
     },
     {
       method: 'GET',
-      path: '/senate-disclosure-rss-feed',
+      path: '/stable/house-latest',
       description: 'Get house trading RSS feed with pagination',
     },
     {
       method: 'GET',
-      path: '/house-trades-by-name',
+      path: '/stable/house-trades-by-name',
       description: 'Get house trading data by representative name',
     },
   ]}
@@ -69,19 +69,21 @@ Retrieve senate trading data for a specific stock symbol.
   success: true,
   data: [
     {
-      firstName: "John",
-      lastName: "Doe",
-      office: "Senator",
-      link: "https://disclosures-clerk.house.gov/...",
-      dateRecieved: "2024-01-15",
-      transactionDate: "2024-01-10",
-      owner: "Self",
-      assetDescription: "Apple Inc. Common Stock",
-      assetType: "Stock",
-      type: "Purchase",
-      amount: "$1,001 - $15,000",
-      comment: "Purchase of Apple stock",
-      symbol: "AAPL"
+      "symbol": "AAPL",
+      "disclosureDate": "2014-02-27",
+      "transactionDate": "2014-02-10",
+      "firstName": "Sheldon",
+      "lastName": "Whitehouse",
+      "office": "Sheldon Whitehouse",
+      "district": "RI",
+      "owner": "Joint",
+      "assetDescription": "Apple Inc. (NASDAQ)",
+      "assetType": "",
+      "type": "Sale (Partial)",
+      "amount": "$15,001 - $50,000",
+      "capitalGainsOver200USD": "False",
+      "comment": "--",
+      "link": "https://efdsearch.senate.gov/search/view/ptr/1237c9ae-5171-4e3c-aa4d-41bd4789ce8d/"
     }
   ]
 }`}
@@ -107,6 +109,12 @@ Retrieve senate trading data through RSS feed with pagination.
       required: true,
       description: 'Page number for pagination (0-based)',
     },
+    {
+      name: 'limit',
+      type: 'number',
+      required: false,
+      description: 'Number of results (default 100)',
+    },
   ]}
 />
 
@@ -117,19 +125,21 @@ Retrieve senate trading data through RSS feed with pagination.
   success: true,
   data: [
     {
-      firstName: "Jane",
-      lastName: "Smith",
-      office: "Senator",
-      link: "https://disclosures-clerk.house.gov/...",
-      dateRecieved: "2024-01-20",
-      transactionDate: "2024-01-15",
-      owner: "Spouse",
-      assetDescription: "Microsoft Corporation Common Stock",
-      assetType: "Stock",
-      type: "Sale",
-      amount: "$15,001 - $50,000",
-      comment: "Sale of Microsoft stock",
-      symbol: "MSFT"
+      "symbol": "AAPL",
+      "disclosureDate": "2014-02-27",
+      "transactionDate": "2014-02-10",
+      "firstName": "Sheldon",
+      "lastName": "Whitehouse",
+      "office": "Sheldon Whitehouse",
+      "district": "RI",
+      "owner": "Joint",
+      "assetDescription": "Apple Inc. (NASDAQ)",
+      "assetType": "",
+      "type": "Sale (Partial)",
+      "amount": "$15,001 - $50,000",
+      "capitalGainsOver200USD": "False",
+      "comment": "--",
+      "link": "https://efdsearch.senate.gov/search/view/ptr/1237c9ae-5171-4e3c-aa4d-41bd4789ce8d/"
     }
   ]
 }`}
@@ -215,18 +225,21 @@ Retrieve house trading data for a specific stock symbol.
   success: true,
   data: [
     {
-      disclosureYear: "2024",
-      disclosureDate: "2024-01-15",
-      transactionDate: "2024-01-10",
-      owner: "Self",
-      ticker: "GOOGL",
-      assetDescription: "Alphabet Inc. Class C Capital Stock",
-      type: "Purchase",
-      amount: "$1,001 - $15,000",
-      representative: "John Representative",
-      district: "CA-12",
-      link: "https://disclosures-clerk.house.gov/...",
-      capitalGainsOver200USD: "No"
+      "symbol": "AAPL",
+      "disclosureDate": "2018-07-09",
+      "transactionDate": "2017-06-27",
+      "firstName": "K. Michael",
+      "lastName": "Conaway",
+      "office": "K. Michael Conaway",
+      "district": "TX11",
+      "owner": "",
+      "assetDescription": "Apple Inc.",
+      "assetType": "",
+      "type": "Purchase",
+      "amount": "$15,001 - $50,000",
+      "capitalGainsOver200USD": "False",
+      "comment": "",
+      "link": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2018/20009819.pdf"
     }
   ]
 }`}
@@ -252,6 +265,12 @@ Retrieve house trading data through RSS feed with pagination.
       required: true,
       description: 'Page number for pagination (0-based)',
     },
+    {
+      name: 'limit',
+      type: 'number',
+      required: false,
+      description: 'Number of results (default 100)',
+    },
   ]}
 />
 
@@ -262,18 +281,21 @@ Retrieve house trading data through RSS feed with pagination.
   success: true,
   data: [
     {
-      disclosureYear: "2024",
-      disclosureDate: "2024-01-20",
-      transactionDate: "2024-01-15",
-      owner: "Spouse",
-      ticker: "TSLA",
-      assetDescription: "Tesla, Inc. Common Stock",
-      type: "Sale",
-      amount: "$15,001 - $50,000",
-      representative: "Jane Representative",
-      district: "NY-14",
-      link: "https://disclosures-clerk.house.gov/...",
-      capitalGainsOver200USD: "Yes"
+      "symbol": "AAPL",
+      "disclosureDate": "2018-07-09",
+      "transactionDate": "2017-06-27",
+      "firstName": "K. Michael",
+      "lastName": "Conaway",
+      "office": "K. Michael Conaway",
+      "district": "TX11",
+      "owner": "",
+      "assetDescription": "Apple Inc.",
+      "assetType": "",
+      "type": "Purchase",
+      "amount": "$15,001 - $50,000",
+      "capitalGainsOver200USD": "False",
+      "comment": "",
+      "link": "https://disclosures-clerk.house.gov/public_disc/ptr-pdfs/2018/20009819.pdf"
     }
   ]
 }`}
@@ -337,19 +359,21 @@ Retrieve house trading data for a specific representative by name.
 
 <CodeBlock language="typescript">
   {`interface SenateTradingResponse {
+  symbol: string;
+  disclosureDate: string;
+  transactionDate: string;
   firstName: string;
   lastName: string;
   office: string;
-  link: string;
-  dateRecieved: string;
-  transactionDate: string;
+  district: string;
   owner: string;
   assetDescription: string;
   assetType: string;
   type: string;
   amount: string;
+  capitalGainsOver200USD: string;
   comment: string;
-  symbol: string;
+  link: string;
 }`}
 </CodeBlock>
 
@@ -357,18 +381,21 @@ Retrieve house trading data for a specific representative by name.
 
 <CodeBlock language="typescript">
   {`interface HouseTradingResponse {
-  disclosureYear: string;
+  symbol: string;
   disclosureDate: string;
   transactionDate: string;
+  firstName: string;
+  lastName: string;
+  office: string;
+  district: string;
   owner: string;
-  ticker: string;
   assetDescription: string;
+  assetType: string;
   type: string;
   amount: string;
-  representative: string;
-  district: string;
-  link: string;
   capitalGainsOver200USD: string;
+  comment: string;
+  link: string;
 }`}
 </CodeBlock>
 

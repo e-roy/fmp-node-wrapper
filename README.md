@@ -42,7 +42,7 @@ pnpm add fmp-node-api
 
 ### 1. Get Your API Key
 
-Sign up at [Financial Modeling Prep](https://site.financialmodelingprep.com/developer/docs/stable) and get your API key.
+Sign up at [Financial Modeling Prep](https://site.financialmodelingprep.com/pricing-plans?couponCode=eroy) and get your API key. This link will get you 10% off.
 
 ### 2. Basic Usage
 

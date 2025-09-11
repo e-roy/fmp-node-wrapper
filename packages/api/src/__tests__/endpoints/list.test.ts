@@ -22,9 +22,6 @@ describe('List Endpoints', () => {
     }
     fmp = createTestClient();
 
-    // Pre-fetch all list data once to avoid duplicate API calls
-    console.log('Pre-fetching list test data...');
-
     try {
       // Fetch all list data in parallel
       const [stocks, etfs, crypto, forex, indexes] = await Promise.all([
@@ -42,8 +39,6 @@ describe('List Endpoints', () => {
         forex,
         indexes,
       };
-
-      console.log('List test data pre-fetched successfully');
     } catch (error) {
       console.warn('Failed to pre-fetch test data:', error);
       // Continue with tests - they will fetch data individually if needed

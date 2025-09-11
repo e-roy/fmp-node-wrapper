@@ -109,10 +109,10 @@ export class MarketEndpoints {
    * console.log(`High volume gainers (>1M shares): ${highVolumeGainers.length}`);
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#market-biggest-gainers-market-overview|FMP Market Biggest Gainers Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#biggest-gainers|FMP Market Biggest Gainers Documentation}
    */
   async getGainers(): Promise<APIResponse<MarketPerformance[]>> {
-    return this.client.get('/stock_market/gainers', 'v3');
+    return this.client.get('/biggest-gainers', 'stable');
   }
 
   /**
@@ -151,10 +151,10 @@ export class MarketEndpoints {
    * );
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#market-biggest-losers-market-overview|FMP Market Biggest Losers Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#biggest-losers|FMP Market Biggest Losers Documentation}
    */
   async getLosers(): Promise<APIResponse<MarketPerformance[]>> {
-    return this.client.get('/stock_market/losers', 'v3');
+    return this.client.get('/biggest-losers', 'stable');
   }
 
   /**
@@ -198,10 +198,10 @@ export class MarketEndpoints {
    * );
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#market-most-actives|FMP Market Most Actives Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#most-active|FMP Market Most Actives Documentation}
    */
   async getMostActive(): Promise<APIResponse<MarketPerformance[]>> {
-    return this.client.get('/stock_market/actives', 'v3');
+    return this.client.get('/most-actives', 'stable');
   }
 
   /**

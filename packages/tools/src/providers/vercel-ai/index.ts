@@ -1,4 +1,4 @@
-/* istanbul ignore file */
+import { ToolSet } from 'ai';
 import { quoteTools } from './quote';
 import { companyTools } from './company';
 import { financialTools } from './financial';
@@ -20,8 +20,19 @@ export const { getTreasuryRates, getEconomicIndicators } = economicTools;
 
 export const { getETFHoldings, getETFProfile } = etfTools;
 
-export const { getBalanceSheet, getIncomeStatement, getCashFlowStatement, getFinancialRatios } =
-  financialTools;
+export const {
+  getBalanceSheet,
+  getIncomeStatement,
+  getCashFlowStatement,
+  getKeyMetrics,
+  getFinancialRatios,
+  getEnterpriseValue,
+  getCashflowGrowth,
+  getIncomeGrowth,
+  getBalanceSheetGrowth,
+  getFinancialGrowth,
+  getEarningsHistorical,
+} = financialTools;
 
 export const { getInsiderTrading } = insiderTools;
 
@@ -44,7 +55,7 @@ export const {
 export const { getMarketCap, getStockSplits, getDividendHistory } = stockTools;
 
 // Combine all tools into a single object for AI SDK v2
-export const fmpTools = {
+export const fmpTools: ToolSet = {
   ...quoteTools,
   ...companyTools,
   ...financialTools,
@@ -56,7 +67,7 @@ export const fmpTools = {
   ...marketTools,
   ...senateHouseTools,
   ...stockTools,
-} as const;
+};
 
 // Re-export individual tool groups
 export {
@@ -72,6 +83,3 @@ export {
   senateHouseTools,
   stockTools,
 };
-
-// Re-export types
-export type { ToolSet } from 'ai';

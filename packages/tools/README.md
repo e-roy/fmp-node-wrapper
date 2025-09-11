@@ -14,6 +14,26 @@ pnpm add fmp-ai-tools
 yarn add fmp-ai-tools
 ```
 
+### Peer Dependencies
+
+This package requires the following peer dependencies to be installed in your project:
+
+```bash
+# For Vercel AI SDK
+npm install ai zod
+# or
+pnpm add ai zod
+# or
+yarn add ai zod
+```
+
+**Required versions:**
+
+- `ai`: ^5.0.0
+- `zod`: ^3.25.76 || ^4.0.0
+
+**⚠️ Common Issue**: If you encounter the error `Invalid schema for function 'getStockQuote': schema must be a JSON Schema of 'type: "object"', got 'type: "None"'`, it means you have a version mismatch between `ai` and `zod`. Make sure you're using compatible versions as listed above.
+
 ## Version Compatibility
 
 ### OpenAI Agents Compatibility

@@ -53,7 +53,7 @@ Use `maxSteps` or `stopWhen` to prevent excessive API calls:
 
 <CodeBlock language="typescript" filename="app/api/chat/route.ts">
 {`import { openai } from '@ai-sdk/openai';
-import { streamText, convertToModelMessages, stepCountIs } from 'ai';
+import { streamText, convertToModelMessages, stepCountIs, ToolSet } from 'ai';
 import { fmpTools } from 'fmp-ai-tools/vercel-ai';
 
 export async function POST(req: Request) {
@@ -62,7 +62,7 @@ export async function POST(req: Request) {
 const result = streamText({
 model: openai('gpt-4o-mini'),
 messages: convertToModelMessages(messages),
-tools: fmpTools,
+tools: fmpTools as ToolSet,
 stopWhen: stepCountIs(5), // Limit to 5 tool calls
 });
 
@@ -188,7 +188,7 @@ Use appropriate model settings:
       maxTokens: 1000,  // Limit response length
     }),
     messages: convertToModelMessages(messages),
-    tools: fmpTools,
+    tools: fmpTools as ToolSet,
     stopWhen: stepCountIs(3), // Limit tool usage
   });`}
 </CodeBlock>
@@ -228,17 +228,14 @@ OPENAI_API_KEY=your_openai_key_here`}
 
 Track which tools are being used:
 
-<CodeBlock language="typescript" filename="app/api/chat/route.ts">
-  {`const result = streamText({
-  model: openai('gpt-4o-mini'),
-  messages: convertToModelMessages(messages),
-  tools: fmpTools,
-  experimental_onToolCall: ({ toolCall }) => {
-    console.log('Tool used:', toolCall.toolName);
-    // Log to your analytics service
-    analytics.track('tool_used', { tool: toolCall.toolName });
-  },
-});`}
+<CodeBlock language="bash" filename=".env.local">
+  {`# To enable detailed logging of API calls and responses - default is false
+FMP_TOOLS_LOG_API_RESULTS=true
+
+# To enable logging of data from API calls - default is false
+
+FMP_TOOLS_LOG_DATA_ONLY=true`}
+
 </CodeBlock>
 
 ### Monitor Error Rates
@@ -254,97 +251,6 @@ Track errors to identify issues:
     analytics.track('chat_error', { error: error.message });
   },
 });`}
-</CodeBlock>
-
-## Production Considerations
-
-### Environment Configuration
-
-Use different settings for development and production:
-
-<CodeBlock language="typescript" filename="app/api/chat/route.ts">
-{`const isProduction = process.env.NODE_ENV === 'production';
-
-const result = streamText({
-model: openai('gpt-4o-mini'),
-messages: convertToModelMessages(messages),
-tools: fmpTools,
-stopWhen: isProduction ? stepCountIs(3) : stepCountIs(5), // Stricter limits in production
-temperature: isProduction ? 0.5 : 0.7, // More conservative in production
-});`}
-
-</CodeBlock>
-
-### Health Checks
-
-Implement health checks for your API routes:
-
-<CodeBlock language="typescript" filename="app/api/health/route.ts">
-  {`export async function GET() {
-  try {
-    // Test basic functionality
-    const testResult = await fetch('https://api.example.com/health');
-    
-    return new Response(JSON.stringify({ 
-      status: 'healthy',
-      timestamp: new Date().toISOString()
-    }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  } catch (error) {
-    return new Response(JSON.stringify({ 
-      status: 'unhealthy',
-      error: error.message 
-    }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
-}`}
-</CodeBlock>
-
-## Testing
-
-### Unit Tests
-
-Test your tool integration:
-
-<CodeBlock language="typescript">
-{`import { describe, it, expect } from 'vitest';
-import { fmpTools } from 'fmp-ai-tools/vercel-ai';
-
-describe('FMP Tools', () => {
-it('should have required tools', () => {
-expect(fmpTools.getStockQuote).toBeDefined();
-expect(fmpTools.getCompanyProfile).toBeDefined();
-});
-});`}
-
-</CodeBlock>
-
-### Integration Tests
-
-Test the full chat flow:
-
-<CodeBlock language="typescript">
-{`import { describe, it, expect } from 'vitest';
-
-describe('Chat API', () => {
-it('should handle stock quote requests', async () => {
-const response = await fetch('/api/chat', {
-method: 'POST',
-headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({
-messages: [{ role: 'user', content: 'What is the price of AAPL?' }]
-})
-});
-
-    expect(response.status).toBe(200);
-
-});
-});`}
-
 </CodeBlock>
 
 ## Summary

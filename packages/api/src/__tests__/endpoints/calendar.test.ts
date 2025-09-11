@@ -72,9 +72,6 @@ describe('Calendar Endpoints', () => {
     }
     fmp = createTestClient();
 
-    // Pre-fetch all test data once to avoid duplicate API calls
-    console.log('Pre-fetching calendar test data...');
-
     try {
       // Use smaller, focused date ranges to reduce API usage
       const testDateRange = {
@@ -100,8 +97,6 @@ describe('Calendar Endpoints', () => {
         ipo,
         splits,
       };
-
-      console.log('Calendar test data pre-fetched successfully');
     } catch (error) {
       console.warn('Failed to pre-fetch test data:', error);
       // Continue with tests - they will fetch data individually if needed

@@ -204,7 +204,7 @@ async function testEndpoint() {
       case 'key-metrics':
         result = await fmp.financial.getKeyMetrics({
           symbol: 'AAPL',
-          period: 'annual',
+          period: 'quarter',
           limit: 2,
         });
         break;
@@ -511,6 +511,25 @@ async function testEndpoint() {
         });
         break;
 
+      // Screener endpoints
+      case 'screener':
+        result = await fmp.screener.getScreener({
+          limit: 10,
+        });
+        break;
+      case 'available-exchanges':
+        result = await fmp.screener.getAvailableExchanges();
+        break;
+      case 'available-sectors':
+        result = await fmp.screener.getAvailableSectors();
+        break;
+      case 'available-industries':
+        result = await fmp.screener.getAvailableIndustries();
+        break;
+      case 'available-countries':
+        result = await fmp.screener.getAvailableCountries();
+        break;
+
       // Stock endpoints
       case 'market-cap':
         result = await fmp.stock.getMarketCap('AAPL');
@@ -550,6 +569,7 @@ async function testEndpoint() {
       }
     } else {
       console.log('❌ Failed:');
+      console.log(result);
       console.log(result.error);
     }
   } catch (error) {
