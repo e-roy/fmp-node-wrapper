@@ -2,35 +2,40 @@
 
 // Senate trading response interface
 export interface SenateTradingResponse {
+  symbol: string;
+  disclosureDate: string;
+  transactionDate: string;
   firstName: string;
   lastName: string;
   office: string;
-  link: string;
-  dateRecieved: string;
-  transactionDate: string;
+  district: string;
   owner: string;
   assetDescription: string;
   assetType: string;
   type: string;
   amount: string;
+  capitalGainsOver200USD: string;
   comment: string;
-  symbol: string;
+  link: string;
 }
 
 // House trading response interface
 export interface HouseTradingResponse {
-  disclosureYear: string;
+  symbol: string;
   disclosureDate: string;
   transactionDate: string;
+  firstName: string;
+  lastName: string;
+  office: string;
+  district: string;
   owner: string;
-  ticker: string;
   assetDescription: string;
+  assetType: string;
   type: string;
   amount: string;
-  representative: string;
-  district: string;
-  link: string;
   capitalGainsOver200USD: string;
+  comment: string;
+  link: string;
 }
 
 export interface SenateHouseTradingByNameResponse {

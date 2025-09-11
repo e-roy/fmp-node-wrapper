@@ -37,13 +37,13 @@ export class SenateHouseEndpoints {
    * const teslaSenateTrading = await fmp.senateHouse.getSenateTrading({ symbol: 'TSLA' });
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#senate-trading|FMP Senate Trading Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#senate-trading|FMP Senate Trading Documentation}
    */
   async getSenateTrading(params: {
     symbol: string;
   }): Promise<APIResponse<SenateTradingResponse[]>> {
     const { symbol } = params;
-    return this.client.get(`/senate-trading`, 'v4', { symbol });
+    return this.client.get(`/senate-trades`, 'stable', { symbol });
   }
 
   /**
@@ -75,13 +75,14 @@ export class SenateHouseEndpoints {
    * });
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#senate-trading-rss-feed-senate|FMP Senate Trading RSS Feed Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#senate-latest|FMP Senate Trading RSS Feed Documentation}
    */
   async getSenateTradingRSSFeed(params: {
     page: number;
+    limit?: number;
   }): Promise<APIResponse<SenateTradingResponse[]>> {
-    const { page } = params;
-    return this.client.get('/senate-trading-rss-feed', 'v4', { page });
+    const { page, limit } = params;
+    return this.client.get('/senate-latest', 'stable', { page, limit: limit ?? 100 });
   }
 
   /**
@@ -147,12 +148,12 @@ export class SenateHouseEndpoints {
    * console.log(`Microsoft house trading activities: ${msftHouseTrading.data.length}`);
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#house-disclosure|FMP House Trading Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#house-trading|FMP House Trading Documentation}
    */
   async getHouseTrading(params: { symbol: string }): Promise<APIResponse<HouseTradingResponse[]>> {
     const { symbol } = params;
 
-    return this.client.get('/senate-disclosure', 'v4', { symbol });
+    return this.client.get('/house-trades', 'stable', { symbol });
   }
 
   /**
@@ -184,13 +185,14 @@ export class SenateHouseEndpoints {
    * });
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#house-disclosure-rss-feed-senate|FMP House Trading RSS Feed Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#house-latest|FMP House Trading RSS Feed Documentation}
    */
   async getHouseTradingRSSFeed(params: {
     page: number;
+    limit?: number;
   }): Promise<APIResponse<HouseTradingResponse[]>> {
-    const { page } = params;
-    return this.client.get('/senate-disclosure-rss-feed', 'v4', { page });
+    const { page, limit } = params;
+    return this.client.get('/house-latest', 'stable', { page, limit: limit ?? 100 });
   }
 
   /**

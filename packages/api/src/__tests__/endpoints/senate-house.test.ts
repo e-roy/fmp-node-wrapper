@@ -1,13 +1,10 @@
 import { FMP } from '../../fmp';
 
-// Mock API key for testing
-const API_KEY = 'testapikey123456789012345678901234567890';
-
 describe('SenateHouseEndpoints', () => {
   let fmp: FMP;
 
   beforeEach(() => {
-    fmp = new FMP({ apiKey: API_KEY });
+    fmp = new FMP();
   });
 
   describe('getSenateTrading', () => {
@@ -30,7 +27,7 @@ describe('SenateHouseEndpoints', () => {
           expect(firstItem).toHaveProperty('firstName');
           expect(firstItem).toHaveProperty('lastName');
           expect(firstItem).toHaveProperty('office');
-          expect(firstItem).toHaveProperty('dateRecieved');
+          expect(firstItem).toHaveProperty('disclosureDate');
           expect(firstItem).toHaveProperty('transactionDate');
           expect(firstItem).toHaveProperty('owner');
           expect(firstItem).toHaveProperty('assetDescription');
@@ -39,11 +36,7 @@ describe('SenateHouseEndpoints', () => {
           expect(firstItem).toHaveProperty('amount');
           expect(firstItem).toHaveProperty('comment');
           expect(firstItem).toHaveProperty('symbol');
-          // Should NOT have HouseTradingResponse specific fields
-          expect(firstItem).not.toHaveProperty('disclosureYear');
-          expect(firstItem).not.toHaveProperty('representative');
-          expect(firstItem).not.toHaveProperty('district');
-          expect(firstItem).not.toHaveProperty('capitalGainsOver200USD');
+          // Note: Both Senate and House now have similar fields in unified structure
         }
       }
     });
@@ -62,6 +55,7 @@ describe('SenateHouseEndpoints', () => {
     it('should get senate trading RSS feed for page 0', async () => {
       const result = await fmp.senateHouse.getSenateTradingRSSFeed({
         page: 0,
+        limit: 5,
       });
 
       expect(result).toBeDefined();
@@ -78,11 +72,8 @@ describe('SenateHouseEndpoints', () => {
           expect(firstItem).toHaveProperty('firstName');
           expect(firstItem).toHaveProperty('lastName');
           expect(firstItem).toHaveProperty('office');
-          expect(firstItem).toHaveProperty('dateRecieved');
-          // Should NOT have HouseTradingResponse specific fields
-          expect(firstItem).not.toHaveProperty('disclosureYear');
-          expect(firstItem).not.toHaveProperty('representative');
-          expect(firstItem).not.toHaveProperty('district');
+          expect(firstItem).toHaveProperty('disclosureDate');
+          // Note: Both Senate and House now have similar fields in unified structure
         }
       }
     });
@@ -123,24 +114,19 @@ describe('SenateHouseEndpoints', () => {
         if (houseData.length > 0) {
           const firstItem = houseData[0];
           // Check for HouseTradingResponse specific fields
-          expect(firstItem).toHaveProperty('disclosureYear');
           expect(firstItem).toHaveProperty('disclosureDate');
           expect(firstItem).toHaveProperty('transactionDate');
           expect(firstItem).toHaveProperty('owner');
-          expect(firstItem).toHaveProperty('ticker');
+          expect(firstItem).toHaveProperty('symbol');
           expect(firstItem).toHaveProperty('assetDescription');
           expect(firstItem).toHaveProperty('type');
           expect(firstItem).toHaveProperty('amount');
-          expect(firstItem).toHaveProperty('representative');
+          expect(firstItem).toHaveProperty('firstName');
+          expect(firstItem).toHaveProperty('lastName');
           expect(firstItem).toHaveProperty('district');
           expect(firstItem).toHaveProperty('link');
           expect(firstItem).toHaveProperty('capitalGainsOver200USD');
-          // Should NOT have SenateTradingResponse specific fields
-          expect(firstItem).not.toHaveProperty('firstName');
-          expect(firstItem).not.toHaveProperty('lastName');
-          expect(firstItem).not.toHaveProperty('office');
-          expect(firstItem).not.toHaveProperty('dateRecieved');
-          expect(firstItem).not.toHaveProperty('comment');
+          // Note: Both Senate and House now have office field in unified structure
         }
       }
     });
@@ -159,6 +145,7 @@ describe('SenateHouseEndpoints', () => {
     it('should get house trading RSS feed for page 0', async () => {
       const result = await fmp.senateHouse.getHouseTradingRSSFeed({
         page: 0,
+        limit: 5,
       });
 
       expect(result).toBeDefined();
@@ -173,15 +160,12 @@ describe('SenateHouseEndpoints', () => {
         if (houseData.length > 0) {
           const firstItem = houseData[0];
           // Check for HouseTradingResponse specific fields
-          expect(firstItem).toHaveProperty('disclosureYear');
           expect(firstItem).toHaveProperty('disclosureDate');
-          expect(firstItem).toHaveProperty('representative');
+          expect(firstItem).toHaveProperty('firstName');
+          expect(firstItem).toHaveProperty('lastName');
           expect(firstItem).toHaveProperty('district');
           expect(firstItem).toHaveProperty('capitalGainsOver200USD');
-          // Should NOT have SenateTradingResponse specific fields
-          expect(firstItem).not.toHaveProperty('firstName');
-          expect(firstItem).not.toHaveProperty('lastName');
-          expect(firstItem).not.toHaveProperty('office');
+          // Note: Both Senate and House now have office field in unified structure
         }
       }
     });
@@ -220,7 +204,6 @@ describe('SenateHouseEndpoints', () => {
         expect(Array.isArray(senateData)).toBe(true);
 
         if (senateData.length > 0) {
-          console.log(`✅ Senate trading by name "Jerry" returned ${senateData.length} records`);
           const firstItem = senateData[0];
           // Check for SenateHouseTradingByNameResponse specific fields
           expect(firstItem).toHaveProperty('symbol');
@@ -238,8 +221,6 @@ describe('SenateHouseEndpoints', () => {
           expect(firstItem).toHaveProperty('capitalGainsOver200USD');
           expect(firstItem).toHaveProperty('comment');
           expect(firstItem).toHaveProperty('link');
-        } else {
-          console.log('⚠️ Senate trading by name "Jerry" returned empty array');
         }
       }
     });
@@ -255,9 +236,9 @@ describe('SenateHouseEndpoints', () => {
       if (result.success && result.data) {
         expect(Array.isArray(result.data)).toBe(true);
         if (result.data.length > 0) {
-          console.log(`✅ Senate trading by name "John" returned ${result.data.length} records`);
+          // Data found as expected
         } else {
-          console.log('⚠️ Senate trading by name "John" returned empty array');
+          // No data found as expected
         }
       }
     });
@@ -274,7 +255,6 @@ describe('SenateHouseEndpoints', () => {
       if (result.success && result.data) {
         expect(Array.isArray(result.data)).toBe(true);
         expect(result.data.length).toBe(0);
-        console.log('✅ Non-existent name correctly returned empty array');
       }
     });
   });
@@ -294,7 +274,6 @@ describe('SenateHouseEndpoints', () => {
         expect(Array.isArray(houseData)).toBe(true);
 
         if (houseData.length > 0) {
-          console.log(`✅ House trading by name "Nancy" returned ${houseData.length} records`);
           const firstItem = houseData[0];
           // Check for SenateHouseTradingByNameResponse specific fields
           expect(firstItem).toHaveProperty('symbol');
@@ -312,8 +291,6 @@ describe('SenateHouseEndpoints', () => {
           expect(firstItem).toHaveProperty('capitalGainsOver200USD');
           expect(firstItem).toHaveProperty('comment');
           expect(firstItem).toHaveProperty('link');
-        } else {
-          console.log('⚠️ House trading by name "Nancy" returned empty array');
         }
       }
     });
@@ -329,9 +306,9 @@ describe('SenateHouseEndpoints', () => {
       if (result.success && result.data) {
         expect(Array.isArray(result.data)).toBe(true);
         if (result.data.length > 0) {
-          console.log(`✅ House trading by name "Kevin" returned ${result.data.length} records`);
+          // Data found as expected
         } else {
-          console.log('⚠️ House trading by name "Kevin" returned empty array');
+          // No data found as expected
         }
       }
     });
@@ -348,7 +325,6 @@ describe('SenateHouseEndpoints', () => {
       if (result.success && result.data) {
         expect(Array.isArray(result.data)).toBe(true);
         expect(result.data.length).toBe(0);
-        console.log('✅ Non-existent name correctly returned empty array');
       }
     });
   });
