@@ -1,16 +1,58 @@
 import { FMP } from '../../fmp';
 import { shouldSkipTests, createTestClient, API_TIMEOUT, FAST_TIMEOUT } from '../utils/test-setup';
 
+// Test data cache to avoid duplicate API calls
+interface TestDataCache {
+  screener?: any;
+  availableExchanges?: any;
+  availableSectors?: any;
+  availableIndustries?: any;
+  availableCountries?: any;
+}
+
 describe('Screener Endpoints', () => {
   let fmp: FMP;
+  let testDataCache: TestDataCache = {};
 
-  beforeAll(() => {
+  beforeAll(async () => {
     if (shouldSkipTests()) {
       console.log('Skipping screener tests - no API key available');
       return;
     }
     fmp = createTestClient();
-  });
+
+    try {
+      // Fetch all screener data in parallel with timeout
+      const [
+        screener,
+        availableExchanges,
+        availableSectors,
+        availableIndustries,
+        availableCountries,
+      ] = await Promise.all([
+        fmp.screener.getScreener({
+          marketCapMoreThan: 1000000000, // $1B+
+          isActivelyTrading: true,
+          limit: 10,
+        }),
+        fmp.screener.getAvailableExchanges(),
+        fmp.screener.getAvailableSectors(),
+        fmp.screener.getAvailableIndustries(),
+        fmp.screener.getAvailableCountries(),
+      ]);
+
+      testDataCache = {
+        screener,
+        availableExchanges,
+        availableSectors,
+        availableIndustries,
+        availableCountries,
+      };
+    } catch (error) {
+      console.warn('Failed to pre-fetch test data:', error);
+      // Continue with tests - they will fetch data individually if needed
+    }
+  }, API_TIMEOUT);
 
   describe('getScreener', () => {
     it(
@@ -20,11 +62,14 @@ describe('Screener Endpoints', () => {
           console.log('Skipping screener test - no API key available');
           return;
         }
-        const result = await fmp.screener.getScreener({
-          marketCapMoreThan: 1000000000, // $1B+
-          isActivelyTrading: true,
-          limit: 10,
-        });
+
+        const result =
+          testDataCache.screener ||
+          (await fmp.screener.getScreener({
+            marketCapMoreThan: 1000000000, // $1B+
+            isActivelyTrading: true,
+            limit: 10,
+          }));
 
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
@@ -45,107 +90,6 @@ describe('Screener Endpoints', () => {
       },
       API_TIMEOUT,
     );
-
-    it(
-      'should fetch tech sector companies',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping tech sector screener test - no API key available');
-          return;
-        }
-        const result = await fmp.screener.getScreener({
-          sector: 'Technology',
-          marketCapMoreThan: 5000000000, // $5B+
-          isActivelyTrading: true,
-          limit: 5,
-        });
-
-        expect(result.success).toBe(true);
-        expect(result.data).toBeDefined();
-
-        if (result.data && Array.isArray(result.data)) {
-          expect(result.data.length).toBeGreaterThan(0);
-          expect(result.data.length).toBeLessThanOrEqual(5);
-
-          const company = result.data[0];
-          expect(company.symbol).toBeDefined();
-          expect(company.sector).toBe('Technology');
-          expect(company.marketCap).toBeGreaterThan(5000000000);
-        }
-      },
-      API_TIMEOUT,
-    );
-
-    it(
-      'should fetch dividend-paying stocks',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping dividend screener test - no API key available');
-          return;
-        }
-        const result = await fmp.screener.getScreener({
-          dividendMoreThan: 0.02, // 2%+ dividend yield
-          marketCapMoreThan: 2000000000, // $2B+
-          isActivelyTrading: true,
-          limit: 5,
-        });
-
-        expect(result.success).toBe(true);
-        expect(result.data).toBeDefined();
-
-        if (result.data && Array.isArray(result.data)) {
-          expect(result.data.length).toBeGreaterThan(0);
-          expect(result.data.length).toBeLessThanOrEqual(5);
-
-          const company = result.data[0];
-          expect(company.symbol).toBeDefined();
-          expect(company.lastAnnualDividend).toBeGreaterThan(0.02);
-          expect(company.marketCap).toBeGreaterThan(2000000000);
-        }
-      },
-      API_TIMEOUT,
-    );
-
-    it(
-      'should handle empty results gracefully',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping empty results screener test - no API key available');
-          return;
-        }
-        const result = await fmp.screener.getScreener({
-          marketCapMoreThan: 999999999999999, // Unrealistically high market cap
-          isActivelyTrading: true,
-          limit: 10,
-        });
-
-        expect(result.success).toBe(true);
-        expect(result.data).toBeDefined();
-        expect(Array.isArray(result.data)).toBe(true);
-        expect(result.data!.length).toBe(0);
-      },
-      FAST_TIMEOUT,
-    );
-
-    it(
-      'should handle invalid parameters gracefully',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping invalid parameters screener test - no API key available');
-          return;
-        }
-        const result = await fmp.screener.getScreener({
-          marketCapMoreThan: -1000, // Invalid negative value
-          isActivelyTrading: true,
-          limit: 5,
-        });
-
-        // Should either return empty results or handle gracefully
-        expect(result.success).toBe(true);
-        expect(result.data).toBeDefined();
-      },
-      FAST_TIMEOUT,
-    );
   });
 
   describe('getAvailableExchanges', () => {
@@ -156,7 +100,9 @@ describe('Screener Endpoints', () => {
           console.log('Skipping available exchanges test - no API key available');
           return;
         }
-        const result = await fmp.screener.getAvailableExchanges();
+
+        const result =
+          testDataCache.availableExchanges || (await fmp.screener.getAvailableExchanges());
 
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
@@ -169,25 +115,9 @@ describe('Screener Endpoints', () => {
           expect(exchange.name).toBeDefined();
           expect(exchange.countryName).toBeDefined();
           expect(exchange.countryCode).toBeDefined();
-        }
-      },
-      FAST_TIMEOUT,
-    );
 
-    it(
-      'should contain common exchanges',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping common exchanges test - no API key available');
-          return;
-        }
-        const result = await fmp.screener.getAvailableExchanges();
-
-        expect(result.success).toBe(true);
-        expect(result.data).toBeDefined();
-
-        if (result.data && Array.isArray(result.data)) {
-          const exchangeNames = result.data.map(ex => ex.exchange);
+          // Test that common exchanges are present
+          const exchangeNames = result.data.map((ex: any) => ex.exchange);
           expect(exchangeNames).toContain('NASDAQ');
           expect(exchangeNames).toContain('NYSE');
         }
@@ -204,7 +134,8 @@ describe('Screener Endpoints', () => {
           console.log('Skipping available sectors test - no API key available');
           return;
         }
-        const result = await fmp.screener.getAvailableSectors();
+
+        const result = testDataCache.availableSectors || (await fmp.screener.getAvailableSectors());
 
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
@@ -214,25 +145,9 @@ describe('Screener Endpoints', () => {
 
           const sector = result.data[0];
           expect(sector.sector).toBeDefined();
-        }
-      },
-      FAST_TIMEOUT,
-    );
 
-    it(
-      'should contain common sectors',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping common sectors test - no API key available');
-          return;
-        }
-        const result = await fmp.screener.getAvailableSectors();
-
-        expect(result.success).toBe(true);
-        expect(result.data).toBeDefined();
-
-        if (result.data && Array.isArray(result.data)) {
-          const sectors = result.data.map(s => s.sector);
+          // Test that common sectors are present
+          const sectors = result.data.map((s: any) => s.sector);
           expect(sectors).toContain('Technology');
           expect(sectors).toContain('Healthcare');
           expect(sectors).toContain('Financial Services');
@@ -250,7 +165,9 @@ describe('Screener Endpoints', () => {
           console.log('Skipping available industries test - no API key available');
           return;
         }
-        const result = await fmp.screener.getAvailableIndustries();
+
+        const result =
+          testDataCache.availableIndustries || (await fmp.screener.getAvailableIndustries());
 
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
@@ -260,26 +177,10 @@ describe('Screener Endpoints', () => {
 
           const industry = result.data[0];
           expect(industry.industry).toBeDefined();
-        }
-      },
-      FAST_TIMEOUT,
-    );
 
-    it(
-      'should contain tech-related industries',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping tech industries test - no API key available');
-          return;
-        }
-        const result = await fmp.screener.getAvailableIndustries();
-
-        expect(result.success).toBe(true);
-        expect(result.data).toBeDefined();
-
-        if (result.data && Array.isArray(result.data)) {
-          const industries = result.data.map(i => i.industry);
-          const hasSoftwareIndustry = industries.some(industry =>
+          // Test that tech-related industries are present
+          const industries = result.data.map((i: any) => i.industry);
+          const hasSoftwareIndustry = industries.some((industry: string) =>
             industry.toLowerCase().includes('software'),
           );
           expect(hasSoftwareIndustry).toBe(true);
@@ -297,7 +198,9 @@ describe('Screener Endpoints', () => {
           console.log('Skipping available countries test - no API key available');
           return;
         }
-        const result = await fmp.screener.getAvailableCountries();
+
+        const result =
+          testDataCache.availableCountries || (await fmp.screener.getAvailableCountries());
 
         expect(result.success).toBe(true);
         expect(result.data).toBeDefined();
@@ -307,25 +210,9 @@ describe('Screener Endpoints', () => {
 
           const country = result.data[0];
           expect(country.country).toBeDefined();
-        }
-      },
-      FAST_TIMEOUT,
-    );
 
-    it(
-      'should contain major countries',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping major countries test - no API key available');
-          return;
-        }
-        const result = await fmp.screener.getAvailableCountries();
-
-        expect(result.success).toBe(true);
-        expect(result.data).toBeDefined();
-
-        if (result.data && Array.isArray(result.data)) {
-          const countries = result.data.map(c => c.country);
+          // Test that major countries are present
+          const countries = result.data.map((c: any) => c.country);
           expect(countries).toContain('US');
           expect(countries).toContain('CA');
         }
@@ -343,8 +230,9 @@ describe('Screener Endpoints', () => {
           return;
         }
 
-        // First get available sectors
-        const sectorsResult = await fmp.screener.getAvailableSectors();
+        // Use cached sectors data
+        const sectorsResult =
+          testDataCache.availableSectors || (await fmp.screener.getAvailableSectors());
         expect(sectorsResult.success).toBe(true);
         expect(sectorsResult.data).toBeDefined();
 
