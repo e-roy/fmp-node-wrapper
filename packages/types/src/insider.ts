@@ -2,12 +2,22 @@
 
 // RSS Feed Response
 export interface InsiderTradingRSSResponse {
-  title: string;
-  fillingDate: string;
   symbol: string;
-  link: string;
+  filingDate: string;
+  transactionDate: string;
   reportingCik: string;
-  issuerCik: string;
+  companyCik: string;
+  transactionType: string;
+  securitiesOwned: number;
+  reportingName: string;
+  typeOfOwner: string;
+  acquisitionOrDisposition: string;
+  directOrIndirect: string;
+  formType: string;
+  securitiesTransacted: number;
+  price: number;
+  securityName: string;
+  url: string;
 }
 
 // Insider Trading Search Response
@@ -16,21 +26,22 @@ export interface InsiderTradingSearchResponse {
   filingDate: string;
   transactionDate: string;
   reportingCik: string;
+  companyCik: string;
   transactionType: string;
   securitiesOwned: number;
-  securitiesTransacted: number;
-  companyCik: string;
   reportingName: string;
   typeOfOwner: string;
-  link: string;
-  securityName: string;
-  price: number;
+  acquisitionOrDisposition: string;
+  directOrIndirect: string;
   formType: string;
-  acquistionOrDisposition: string;
+  securitiesTransacted: number;
+  price: number;
+  securityName: string;
+  url: string;
 }
 
 // Transaction Types Response
-export type TransactionTypesResponse = string[];
+export type TransactionTypesResponse = { transactionType: string }[];
 
 // Insiders By Symbol Response
 export interface InsidersBySymbolResponse {
@@ -45,15 +56,15 @@ export interface InsiderTradeStatisticsResponse {
   cik: string;
   year: number;
   quarter: number;
-  purchases: number;
-  sales: number;
-  buySellRatio: number;
-  totalBought: number;
-  totalSold: number;
-  averageBought: number;
-  averageSold: number;
-  pPurchases: number;
-  sSales: number;
+  acquiredTransactions: number;
+  disposedTransactions: number;
+  acquiredDisposedRatio: number;
+  totalAcquired: number;
+  totalDisposed: number;
+  averageAcquired: number;
+  averageDisposed: number;
+  totalPurchases: number;
+  totalSales: number;
 }
 
 // CIK Mapper Response

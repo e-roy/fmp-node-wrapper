@@ -264,12 +264,14 @@ async function testEndpoint() {
       case 'insider-trading-rss':
         result = await fmp.insider.getInsiderTradingRSS({
           page: 0,
+          limit: 10,
         });
         break;
       case 'insider-trading-search':
         result = await fmp.insider.searchInsiderTrading({
           symbol: 'AAPL',
           page: 0,
+          limit: 10,
         });
         break;
       case 'insider-trading-search-by-type':
@@ -310,6 +312,7 @@ async function testEndpoint() {
       case 'beneficial-ownership':
         result = await fmp.insider.getBeneficialOwnership({
           symbol: 'AAPL',
+          limit: 10,
         });
         break;
       case 'fail-to-deliver':

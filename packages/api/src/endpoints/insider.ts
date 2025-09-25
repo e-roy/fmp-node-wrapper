@@ -25,6 +25,7 @@ export class InsiderEndpoints {
    *
    * @param params - RSS feed request parameters
    * @param params.page - Page number for pagination (default: 0)
+   * @param params.limit - Limit number of results (default: 100)
    *
    * @returns Promise resolving to array of insider trading RSS feed data
    *
@@ -40,13 +41,14 @@ export class InsiderEndpoints {
    * const nextPage = await fmp.insider.getInsiderTradingRSS({ page: 1 });
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#insider-trades-rss-insider-trading|FMP Insider Trading RSS Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs#latest-insider-trade|FMP Insider Trading RSS Documentation}
    */
   async getInsiderTradingRSS(params: {
     page?: number;
+    limit?: number;
   }): Promise<APIResponse<InsiderTradingRSSResponse[]>> {
-    const { page = 0 } = params;
-    return this.client.get(`/insider-trading-rss-feed`, 'v4', { page });
+    const { page = 0, limit = 100 } = params;
+    return this.client.get(`/insider-trading/latest`, 'stable', { page, limit });
   }
 
   /**
@@ -62,6 +64,7 @@ export class InsiderEndpoints {
    * @param params.companyCik - Company CIK to filter by (optional)
    * @param params.transactionType - Transaction type to filter by (optional)
    * @param params.page - Page number for pagination (default: 0)
+   * @param params.limit - Limit number of results (default: 100)
    *
    * @returns Promise resolving to array of insider trading search results
    *
@@ -89,7 +92,7 @@ export class InsiderEndpoints {
    * });
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#insider-trades-search-insider-trading|FMP Insider Trading Search Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs#search-insider-trades|FMP Insider Trading Search Documentation}
    */
   async searchInsiderTrading(params: {
     symbol?: string;
@@ -97,16 +100,17 @@ export class InsiderEndpoints {
     companyCik?: string;
     transactionType?: string;
     page?: number;
+    limit?: number;
   }): Promise<APIResponse<InsiderTradingSearchResponse[]>> {
-    const { symbol, reportingCik, companyCik, transactionType, page = 0 } = params;
-    const queryParams: Record<string, string | number> = { page };
+    const { symbol, reportingCik, companyCik, transactionType, page = 0, limit = 100 } = params;
+    const queryParams: Record<string, string | number> = { page, limit };
 
     if (symbol) queryParams.symbol = symbol;
     if (reportingCik) queryParams.reportingCik = reportingCik;
     if (companyCik) queryParams.companyCik = companyCik;
     if (transactionType) queryParams.transactionType = transactionType;
 
-    return this.client.get(`/insider-trading`, 'v4', queryParams);
+    return this.client.get(`/insider-trading/search`, 'stable', queryParams);
   }
 
   /**
@@ -127,10 +131,10 @@ export class InsiderEndpoints {
    * });
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#transaction-types-insider-trading|FMP Transaction Types Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs#all-transaction-types|FMP Transaction Types Documentation}
    */
   async getTransactionTypes(): Promise<APIResponse<TransactionTypesResponse>> {
-    return this.client.get(`/insider-trading-transaction-type`, 'v4');
+    return this.client.get(`/insider-trading-transaction-type`, 'stable');
   }
 
   /**
@@ -139,6 +143,8 @@ export class InsiderEndpoints {
    * Provides a list of all insiders (officers, directors, and beneficial owners)
    * for a specific company. Essential for understanding corporate governance
    * structure and identifying key personnel.
+   *
+   * @deprecated This endpoint uses API version v4 which will be deprecated.
    *
    * @param params - Insiders request parameters
    * @param params.symbol - Stock symbol to get insiders for
@@ -190,13 +196,13 @@ export class InsiderEndpoints {
    * const msftStats = await fmp.insider.getInsiderTradeStatistics({ symbol: 'MSFT' });
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#insider-trade-statistics-insider-trading|FMP Insider Trade Statistics Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs#insider-trade-statistics|FMP Insider Trade Statistics Documentation}
    */
   async getInsiderTradeStatistics(params: {
     symbol: string;
   }): Promise<APIResponse<InsiderTradeStatisticsResponse[]>> {
     const { symbol } = params;
-    return this.client.get(`/insider-roaster-statistic`, 'v4', { symbol });
+    return this.client.get(`/insider-trading/statistics`, 'stable', { symbol });
   }
 
   /**
@@ -205,6 +211,8 @@ export class InsiderEndpoints {
    * Provides a mapping between CIK (Central Index Key) numbers and company
    * names. Essential for converting between CIK numbers and company
    * identifiers in insider trading analysis.
+   *
+   * @deprecated This endpoint uses API version v4 which will be deprecated.
    *
    * @param params - CIK mapper request parameters
    * @param params.page - Page number for pagination (default: 0)
@@ -236,6 +244,8 @@ export class InsiderEndpoints {
    * Provides CIK numbers and company names matching a search term.
    * Useful for finding companies by partial name matches and
    * converting company names to CIK numbers.
+   *
+   * @deprecated This endpoint uses API version v4 which will be deprecated.
    *
    * @param params - CIK mapper by name request parameters
    * @param params.name - Company name or partial name to search for
@@ -278,6 +288,8 @@ export class InsiderEndpoints {
    * Essential for converting stock symbols to CIK numbers for use
    * in insider trading searches and analysis.
    *
+   * @deprecated This endpoint uses API version v4 which will be deprecated.
+   *
    * @param params - CIK mapper by symbol request parameters
    * @param params.symbol - Stock symbol to get CIK for
    *
@@ -311,6 +323,7 @@ export class InsiderEndpoints {
    *
    * @param params - Beneficial ownership request parameters
    * @param params.symbol - Stock symbol to get beneficial ownership data for
+   * @param params.limit - Limit number of results (default: 100)
    *
    * @returns Promise resolving to array of beneficial ownership acquisition data
    *
@@ -330,10 +343,12 @@ export class InsiderEndpoints {
    */
   async getBeneficialOwnership(params: {
     symbol: string;
+    limit?: number;
   }): Promise<APIResponse<BeneficialOwnershipResponse[]>> {
-    const { symbol } = params;
-    return this.client.get(`/insider/ownership/acquisition_of_beneficial_ownership`, 'v4', {
+    const { symbol, limit = 100 } = params;
+    return this.client.get(`/acquisition-of-beneficial-ownership`, 'stable', {
       symbol,
+      limit,
     });
   }
 
@@ -343,6 +358,8 @@ export class InsiderEndpoints {
    * Provides fail to deliver data for a specific company, which indicates
    * when market participants fail to deliver securities on settlement date.
    * Important for understanding market mechanics and potential short interest.
+   *
+   * @deprecated This endpoint uses API version v4 which will be deprecated.
    *
    * @param params - Fail to deliver request parameters
    * @param params.symbol - Stock symbol to get fail to deliver data for
