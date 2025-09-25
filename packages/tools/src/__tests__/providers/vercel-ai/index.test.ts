@@ -2,7 +2,11 @@ import { fmpTools } from '../../../providers/vercel-ai';
 
 const mockClient = {
   quote: { getQuote: jest.fn().mockResolvedValue({ data: {} }) },
-  company: { getCompanyProfile: jest.fn().mockResolvedValue({ data: {} }) },
+  company: {
+    getCompanyProfile: jest.fn().mockResolvedValue({ data: {} }),
+    getSharesFloat: jest.fn().mockResolvedValue({ data: {} }),
+    getExecutiveCompensation: jest.fn().mockResolvedValue({ data: [] }),
+  },
   financial: {
     getBalanceSheet: jest.fn().mockResolvedValue({ data: [] }),
     getIncomeStatement: jest.fn().mockResolvedValue({ data: [] }),

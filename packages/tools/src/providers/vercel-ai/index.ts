@@ -12,7 +12,8 @@ import { senateHouseTools } from './senate-house';
 import { stockTools } from './stock';
 
 // Export individual tools for Vercel AI
-export const { getCompanyProfile } = companyTools;
+export const { getCompanyProfile, getCompanySharesFloat, getCompanyExecutiveCompensation } =
+  companyTools;
 
 export const { getEarningsCalendar, getEconomicCalendar } = calendarTools;
 
