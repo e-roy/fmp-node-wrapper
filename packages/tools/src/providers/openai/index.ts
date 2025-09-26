@@ -1,6 +1,10 @@
 import type { Tool } from '@openai/agents';
 import { checkOpenAIAgentsVersion } from '@/utils/version-check';
-import { getCompanyProfile } from './company';
+import {
+  getCompanyProfile,
+  getCompanySharesFloat,
+  getCompanyExecutiveCompensation,
+} from './company';
 import { getEarningsCalendar, getEconomicCalendar } from './calendar';
 import { getTreasuryRates, getEconomicIndicators } from './economic';
 import { getETFHoldings, getETFProfile } from './etf';
@@ -40,6 +44,8 @@ import { getMarketCap, getStockSplits, getDividendHistory } from './stock';
 // Export individual tools for OpenAI agents
 export {
   getCompanyProfile,
+  getCompanySharesFloat,
+  getCompanyExecutiveCompensation,
   getEarningsCalendar,
   getEconomicCalendar,
   getTreasuryRates,
@@ -77,7 +83,11 @@ export {
 };
 
 // Export tool groups as arrays for OpenAI Agents
-export const companyTools = [getCompanyProfile] as Tool<unknown>[];
+export const companyTools = [
+  getCompanyProfile,
+  getCompanySharesFloat,
+  getCompanyExecutiveCompensation,
+] as Tool<unknown>[];
 export const calendarTools = [getEarningsCalendar, getEconomicCalendar] as Tool<unknown>[];
 export const economicTools = [getTreasuryRates, getEconomicIndicators] as Tool<unknown>[];
 export const etfTools = [getETFHoldings, getETFProfile] as Tool<unknown>[];
@@ -117,6 +127,8 @@ export const stockTools = [getMarketCap, getStockSplits, getDividendHistory] as 
 // Combine all tools into a single array for convenience
 export const fmpTools: Tool<unknown>[] = [
   getCompanyProfile,
+  getCompanySharesFloat,
+  getCompanyExecutiveCompensation,
   getEarningsCalendar,
   getEconomicCalendar,
   getTreasuryRates,

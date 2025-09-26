@@ -11,6 +11,8 @@ describe('OpenAI providers index exports', () => {
   it('exports individual tools', () => {
     const keys = [
       'getCompanyProfile',
+      'getCompanySharesFloat',
+      'getCompanyExecutiveCompensation',
       'getEarningsCalendar',
       'getEconomicCalendar',
       'getTreasuryRates',

@@ -228,29 +228,6 @@ console.log('Latest Unemployment:', unemployment.data[0]);`}
 
 </CodeBlock>
 
-## Error Handling
-
-Always check the success property before accessing data:
-
-<CodeBlock language="typescript">
-{`const rates = await fmp.economic.getTreasuryRates({
-  from: '2024-01-01',
-  to: '2024-01-31'
-});
-
-if (rates.success && rates.data) {
-console.log('Treasury Rates:', rates.data[0]);
-} else {
-console.error('Error:', rates.error);
-console.error('Status:', rates.status);
-}`}
-
-</CodeBlock>
-
-## Rate Limiting
-
-Economic endpoints are subject to FMP's rate limits. For production applications, implement appropriate rate limiting and caching strategies.
-
 ## Data Frequency
 
 Economic data is typically updated:
@@ -269,7 +246,3 @@ Explore other endpoint categories:
 - [Calendar Endpoints](/docs/api/calendar) - Earnings and economic calendars
 - [List Endpoints](/docs/api/list) - Available symbols and instruments
 - [Examples](/docs/examples) - Practical code samples
-
----
-
-**Ready to explore financial data?** Check out the [Financial Endpoints](/docs/api/financial) for income statements, balance sheets, and more.

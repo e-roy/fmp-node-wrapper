@@ -2,47 +2,57 @@
 
 The Insider Trading Endpoints provide access to real-time and historical insider trading data, transaction types, CIK mapping, beneficial ownership, and fail-to-deliver information. These endpoints help you analyze insider activity, compliance, and market sentiment.
 
+> **⚠️ Deprecation Notice:** Some endpoints use API version v4 which will be deprecated. Please use stable endpoints when available.
+
 ## Available Methods
 
 <ApiTable
   endpoints={[
     {
       method: 'GET',
-      path: '/insider-trading-rss-feed',
+      path: '/stable/insider-trading/latest',
       description: 'Get real-time insider trading RSS feed',
     },
     {
       method: 'GET',
-      path: '/insider-trading',
+      path: '/stable/insider-trading/search',
       description: 'Search insider trades by symbol, CIK, or type',
     },
     {
       method: 'GET',
-      path: '/insider-trading-transaction-type',
+      path: '/stable/insider-trading-transaction-type',
       description: 'Get all insider transaction types',
     },
-    { method: 'GET', path: '/insider-roaster', description: 'Get insiders by symbol' },
     {
       method: 'GET',
-      path: '/insider-roaster-statistic',
+      path: '/v4/insider-roaster',
+      description: 'Get insiders by symbol (DEPRECATED)',
+    },
+    {
+      method: 'GET',
+      path: '/stable/insider-trading/statistics',
       description: 'Get insider trade statistics',
     },
     {
       method: 'GET',
-      path: '/mapper-cik-name',
-      description: 'Get CIK to name mapping or search by name',
+      path: '/v4/mapper-cik-name',
+      description: 'Get CIK to name mapping or search by name (DEPRECATED)',
     },
     {
       method: 'GET',
-      path: '/mapper-cik-company/{symbol}',
-      description: 'Get CIK for a specific symbol',
+      path: '/v4/mapper-cik-company/{symbol}',
+      description: 'Get CIK for a specific symbol (DEPRECATED)',
     },
     {
       method: 'GET',
-      path: '/insider/ownership/acquisition_of_beneficial_ownership',
+      path: '/stable/acquisition-of-beneficial-ownership',
       description: 'Get beneficial ownership acquisitions',
     },
-    { method: 'GET', path: '/fail_to_deliver', description: 'Get fail to deliver data' },
+    {
+      method: 'GET',
+      path: '/v4/fail_to_deliver',
+      description: 'Get fail to deliver data (DEPRECATED)',
+    },
   ]}
 />
 
@@ -51,12 +61,23 @@ The Insider Trading Endpoints provide access to real-time and historical insider
 ## Get Insider Trading RSS Feed
 
 <CodeBlock language="typescript">{`
-const rssFeed = await fmp.insider.getInsiderTradingRSS({ page: 0 });
+const rssFeed = await fmp.insider.getInsiderTradingRSS({ page: 0, limit: 100 });
 `}</CodeBlock>
 
 <ParameterTable
   parameters={[
-    { name: 'page', type: 'number', required: true, description: 'Page number for pagination' },
+    {
+      name: 'page',
+      type: 'number',
+      required: false,
+      description: 'Page number for pagination (default: 0)',
+    },
+    {
+      name: 'limit',
+      type: 'number',
+      required: false,
+      description: 'Limit number of results (default: 100)',
+    },
   ]}
 />
 
@@ -67,12 +88,22 @@ const rssFeed = await fmp.insider.getInsiderTradingRSS({ page: 0 });
   success: true,
   data: [
     {
-      title: '4 - Atlantic Union Bankshares Corp (0000883948) (Issuer)',
-      fillingDate: '2022-10-05 13:43:47',
       symbol: 'AUB',
-      link: 'https://www.sec.gov/Archives/edgar/data/883948/000141588922010327/0001415889-22-010327-index.htm',
+      filingDate: '2022-10-05 13:43:47',
+      transactionDate: '2022-10-04',
       reportingCik: '0001745407',
-      issuerCik: '0000883948'
+      companyCik: '0000883948',
+      transactionType: 'S-Sale',
+      securitiesOwned: 50000,
+      reportingName: 'Atlantic Union Bankshares Corp',
+      typeOfOwner: 'officer: CEO',
+      acquisitionOrDisposition: 'D',
+      directOrIndirect: 'D',
+      formType: '4',
+      securitiesTransacted: 1000,
+      price: 25.50,
+      securityName: 'Common Stock',
+      url: 'https://www.sec.gov/Archives/edgar/data/883948/000141588922010327/0001415889-22-010327-index.htm'
     }
   ]
 }
@@ -83,7 +114,7 @@ const rssFeed = await fmp.insider.getInsiderTradingRSS({ page: 0 });
 ## Search Insider Trades
 
 <CodeBlock language="typescript">{`
-const trades = await fmp.insider.searchInsiderTrading({ symbol: 'AAPL', page: 0 });
+const trades = await fmp.insider.searchInsiderTrading({ symbol: 'AAPL', page: 0, limit: 100 });
 `}</CodeBlock>
 
 <ParameterTable
@@ -107,7 +138,18 @@ const trades = await fmp.insider.searchInsiderTrading({ symbol: 'AAPL', page: 0 
       required: false,
       description: 'Transaction type to filter by',
     },
-    { name: 'page', type: 'number', required: true, description: 'Page number for pagination' },
+    {
+      name: 'page',
+      type: 'number',
+      required: false,
+      description: 'Page number for pagination (default: 0)',
+    },
+    {
+      name: 'limit',
+      type: 'number',
+      required: false,
+      description: 'Limit number of results (default: 100)',
+    },
   ]}
 />
 
@@ -128,11 +170,12 @@ const trades = await fmp.insider.searchInsiderTrading({ symbol: 'AAPL', page: 0 
       companyCik: '0000320193',
       reportingName: "O'BRIEN DEIRDRE",
       typeOfOwner: 'officer: Senior Vice President',
-      link: 'https://www.sec.gov/Archives/edgar/data/320193/000032019322000097/0000320193-22-000097-index.htm',
-      securityName: 'Common Stock',
-      price: 141.09,
+      acquisitionOrDisposition: 'D',
+      directOrIndirect: 'D',
       formType: '4',
-      acquistionOrDisposition: 'D'
+      price: 141.09,
+      securityName: 'Common Stock',
+      url: 'https://www.sec.gov/Archives/edgar/data/320193/000032019322000097/0000320193-22-000097-index.htm'
     }
   ]
 }
@@ -152,7 +195,24 @@ const types = await fmp.insider.getTransactionTypes();
 {
   success: true,
   data: [
-    'J-Other', 'P-Purchase', 'W-Will', 'I-Discretionary', 'Z-Trust', 'F-InKind'
+    { transactionType: 'A-Award' },
+    { transactionType: 'C-Conversion' },
+    { transactionType: 'D-Return' },
+    { transactionType: 'E-ExpireShort' },
+    { transactionType: 'F-InKind' },
+    { transactionType: 'G-Gift' },
+    { transactionType: 'H-ExpireLong' },
+    { transactionType: 'I-Discretionary' },
+    { transactionType: 'J-Other' },
+    { transactionType: 'L-Small' },
+    { transactionType: 'M-Exempt' },
+    { transactionType: 'O-OutOfTheMoney' },
+    { transactionType: 'P-Purchase' },
+    { transactionType: 'S-Sale' },
+    { transactionType: 'U-Tender' },
+    { transactionType: 'W-Will' },
+    { transactionType: 'X-InTheMoney' },
+    { transactionType: 'Z-Trust' }
   ]
 }
 `}</CodeBlock>
@@ -160,6 +220,8 @@ const types = await fmp.insider.getTransactionTypes();
 ---
 
 ## Get Insiders by Symbol
+
+> **⚠️ Deprecated:** This endpoint uses API version v4 which will be deprecated. Please use stable endpoints when available.
 
 <CodeBlock language="typescript">{`
 const insiders = await fmp.insider.getInsidersBySymbol({ symbol: 'AAPL' });
@@ -207,15 +269,15 @@ const stats = await fmp.insider.getInsiderTradeStatistics({ symbol: 'AAPL' });
       cik: '0000320193',
       year: 2022,
       quarter: 4,
-      purchases: 6,
-      sales: 30,
-      buySellRatio: 0.2,
-      totalBought: 1492148,
-      totalSold: 2810029,
-      averageBought: 248691.3333,
-      averageSold: 93667.6333,
-      pPurchases: 0,
-      sSales: 15
+      acquiredTransactions: 6,
+      disposedTransactions: 30,
+      acquiredDisposedRatio: 0.2,
+      totalAcquired: 1492148,
+      totalDisposed: 2810029,
+      averageAcquired: 248691.3333,
+      averageDisposed: 93667.6333,
+      totalPurchases: 0,
+      totalSales: 15
     }
   ]
 }
@@ -224,6 +286,8 @@ const stats = await fmp.insider.getInsiderTradeStatistics({ symbol: 'AAPL' });
 ---
 
 ## Get CIK Mapper
+
+> **⚠️ Deprecated:** This endpoint uses API version v4 which will be deprecated. Please use stable endpoints when available.
 
 <CodeBlock language="typescript">{`
 const cikMapper = await fmp.insider.getCikMapper({ page: 0 });
@@ -252,6 +316,8 @@ const cikMapper = await fmp.insider.getCikMapper({ page: 0 });
 ---
 
 ## Get CIK Mapper by Name
+
+> **⚠️ Deprecated:** This endpoint uses API version v4 which will be deprecated. Please use stable endpoints when available.
 
 <CodeBlock language="typescript">{`
 const cikByName = await fmp.insider.getCikMapperByName({ name: 'zuckerberg', page: 0 });
@@ -286,6 +352,8 @@ const cikByName = await fmp.insider.getCikMapperByName({ name: 'zuckerberg', pag
 ---
 
 ## Get CIK Mapper by Symbol
+
+> **⚠️ Deprecated:** This endpoint uses API version v4 which will be deprecated. Please use stable endpoints when available.
 
 <CodeBlock language="typescript">{`
 const cikBySymbol = await fmp.insider.getCikMapperBySymbol({ symbol: 'MSFT' });
@@ -352,6 +420,8 @@ const beneficialOwnership = await fmp.insider.getBeneficialOwnership({ symbol: '
 
 ## Get Fail to Deliver Data
 
+> **⚠️ Deprecated:** This endpoint uses API version v4 which will be deprecated. Please use stable endpoints when available.
+
 <CodeBlock language="typescript">{`
 const failToDeliver = await fmp.insider.getFailToDeliver({ symbol: 'GE', page: 0 });
 `}</CodeBlock>
@@ -384,6 +454,26 @@ const failToDeliver = await fmp.insider.getFailToDeliver({ symbol: 'GE', page: 0
     }
   ]
 }
+`}</CodeBlock>
+
+---
+
+## Convenience Methods
+
+The insider endpoints also provide convenience methods for common use cases:
+
+<CodeBlock language="typescript">{`
+// Get insider trades for a specific symbol
+const appleTrades = await fmp.insider.getInsiderTradesBySymbol('AAPL');
+
+// Get insider trades by transaction type
+const purchases = await fmp.insider.getInsiderTradesByType('P-Purchase');
+
+// Get insider trades by reporting CIK
+const cikTrades = await fmp.insider.getInsiderTradesByReportingCik('0000320193');
+
+// Get insider trades by company CIK
+const companyTrades = await fmp.insider.getInsiderTradesByCompanyCik('0000320193');
 `}</CodeBlock>
 
 ---

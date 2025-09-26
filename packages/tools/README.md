@@ -30,7 +30,7 @@ yarn add ai zod
 **Required versions:**
 
 - `ai`: ^5.0.0
-- `zod`: ^3.25.76 || ^4.0.0
+- `zod`: ^3.25.76
 
 **⚠️ Common Issue**: If you encounter the error `Invalid schema for function 'getStockQuote': schema must be a JSON Schema of 'type: "object"', got 'type: "None"'`, it means you have a version mismatch between `ai` and `zod`. Make sure you're using compatible versions as listed above.
 
@@ -38,13 +38,9 @@ yarn add ai zod
 
 ### OpenAI Agents Compatibility
 
-**⚠️ Important**: This package requires `@openai/agents` version `^0.0.17` or higher due to breaking changes in the API.
+**⚠️ Important**: This package requires `@openai/agents` version `^0.1.0` or higher due to breaking changes in the API.
 
 If you're using an older version, you'll encounter errors like:
-
-```
-Zod field uses .optional() without .nullable() which is not supported by the API
-```
 
 ## Quick Start
 
@@ -99,6 +95,8 @@ const result = await agent.run({
 ```bash
 FMP_API_KEY=your_api_key_here
 ```
+
+Get your API key from [Financial Modeling Prep](https://site.financialmodelingprep.com/pricing-plans?couponCode=eroy) and get your API key. This link will get you 10% off.
 
 The tools internally use the `fmp-node-api` library, which reads this environment variable to authenticate with the Financial Modeling Prep API.
 

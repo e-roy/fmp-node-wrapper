@@ -34,6 +34,9 @@ export * from './market';
 // Mutual fund types
 export * from './mutual-fund';
 
+// News types
+export * from './news';
+
 // Quote types
 export * from './quote';
 

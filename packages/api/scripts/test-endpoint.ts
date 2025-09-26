@@ -264,12 +264,14 @@ async function testEndpoint() {
       case 'insider-trading-rss':
         result = await fmp.insider.getInsiderTradingRSS({
           page: 0,
+          limit: 10,
         });
         break;
       case 'insider-trading-search':
         result = await fmp.insider.searchInsiderTrading({
           symbol: 'AAPL',
           page: 0,
+          limit: 10,
         });
         break;
       case 'insider-trading-search-by-type':
@@ -310,6 +312,7 @@ async function testEndpoint() {
       case 'beneficial-ownership':
         result = await fmp.insider.getBeneficialOwnership({
           symbol: 'AAPL',
+          limit: 10,
         });
         break;
       case 'fail-to-deliver':
@@ -392,6 +395,65 @@ async function testEndpoint() {
       // mutual fund endpoints
       case 'mutual-fund-holders':
         result = await fmp.mutualFund.getHolders('AAPL');
+        break;
+
+      // News endpoints
+      case 'fmp-articles':
+        result = await fmp.news.getArticles({
+          limit: 10,
+          page: 0,
+        });
+        break;
+      case 'stock-news':
+        result = await fmp.news.getStockNews({
+          from: '2025-07-01',
+          to: '2025-07-31',
+          limit: 10,
+          page: 0,
+        });
+        break;
+      case 'crypto-news':
+        result = await fmp.news.getCryptoNews({
+          from: '2025-07-01',
+          to: '2025-07-31',
+          limit: 10,
+          page: 0,
+        });
+        break;
+      case 'forex-news':
+        result = await fmp.news.getForexNews({
+          from: '2025-07-01',
+          to: '2025-07-31',
+          limit: 10,
+          page: 0,
+        });
+        break;
+      case 'stock-news-by-symbol':
+        result = await fmp.news.getStockNewsBySymbol({
+          symbols: ['TSLA', 'GOOGL'],
+          from: '2025-07-01',
+          to: '2025-07-31',
+          limit: 10,
+          page: 0,
+        });
+        break;
+      case 'crypto-news-by-symbol':
+        result = await fmp.news.getCryptoNewsBySymbol({
+          symbols: ['BTCUSD', 'ETHUSD'],
+          from: '2025-07-01',
+          to: '2025-07-31',
+          limit: 10,
+          page: 0,
+        });
+        break;
+      case 'forex-news-by-symbol':
+        result = await fmp.news.getForexNewsBySymbol({
+          symbols: ['EURUSD', 'GBPUSD'],
+          from: '2025-07-01',
+          to: '2025-07-31',
+          limit: 10,
+          page: 0,
+        });
         break;
 
       // Quote endpoints

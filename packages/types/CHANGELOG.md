@@ -1,5 +1,11 @@
 # fmp-node-types
 
+## 0.1.4
+
+### Patch Changes
+
+- Added news endpoints - fmp-node-api, added shares float and executive compensation to fmp-ai-tools
+
 ## 0.1.3
 
 ### Patch Changes
