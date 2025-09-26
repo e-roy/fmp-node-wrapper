@@ -6,30 +6,44 @@ Learn how to integrate FMP Tools with Vercel AI SDK to create AI-powered financi
 
 The Vercel AI SDK integration provides a seamless way to add financial data capabilities to your AI applications. With just a few lines of code, you can enable your chatbots and assistants to access real-time financial data.
 
+## Prerequisites
+
+Before you begin, make sure you have:
+
+- **FMP API Key** - Get your free API key from [Financial Modeling Prep](https://site.financialmodelingprep.com/pricing-plans?couponCode=eroy) (10% discount on paid plans)
+- **OpenAI API Key** - Required for the AI model (get from [OpenAI Platform](https://platform.openai.com/api-keys))
+- **Node.js 18+** - Required for Vercel AI SDK
+- **zod** - Version ^3.25.76 (required for schema validation)
+
 ## Installation
 
-First, install the required packages:
+Install the required packages:
 
-<CodeBlock language="bash">{`npm install fmp-ai-tools ai @ai-sdk/openai`}</CodeBlock>
+<CodeBlock language="bash">{`npm install fmp-ai-tools ai @ai-sdk/openai zod`}</CodeBlock>
 
-<CodeBlock language="bash">{`pnpm add fmp-ai-tools ai @ai-sdk/openai`}</CodeBlock>
+<CodeBlock language="bash">{`pnpm add fmp-ai-tools ai @ai-sdk/openai zod`}</CodeBlock>
 
-## Basic Setup
+<CodeBlock language="bash">{`yarn add fmp-ai-tools ai @ai-sdk/openai zod`}</CodeBlock>
+
+**⚠️ Version Requirements:**
+- `zod`: Must be version ^3.25.76
+
+## Quick Start
 
 ### 1. Set Environment Variables
 
+Create a `.env.local` file in your project root:
+
 <CodeBlock language="bash" filename=".env.local">
-  {`FMP_API_KEY=your_fmp_api_key_here
+{`# Required: Your FMP API key
+FMP_API_KEY=your_fmp_api_key_here
+
+# Required: Your OpenAI API key
 OPENAI_API_KEY=your_openai_api_key_here
 
-# To enable detailed logging of API calls and responses - default is false
-
+# Optional: Enable detailed logging
 FMP_TOOLS_LOG_API_RESULTS=false
-
-# To enable logging of data from API calls - default is false
-
 FMP_TOOLS_LOG_DATA_ONLY=false`}
-
 </CodeBlock>
 
 ### 2. Create API Route
@@ -42,16 +56,15 @@ import { fmpTools } from 'fmp-ai-tools/vercel-ai';
 export async function POST(req: Request) {
   const { messages } = await req.json();
 
-const result = streamText({
-model: openai('gpt-4o-mini'),
-messages: convertToModelMessages(messages),
-tools: fmpTools as ToolSet,
-stopWhen: stepCountIs(5),
-});
+  const result = streamText({
+    model: openai('gpt-4o-mini'),
+    messages: convertToModelMessages(messages),
+    tools: fmpTools as ToolSet,
+    stopWhen: stepCountIs(5),
+  });
 
-return result.toUIMessageStreamResponse();
+  return result.toUIMessageStreamResponse();
 }`}
-
 </CodeBlock>
 
 ### 3. Create Chat Component
@@ -66,24 +79,24 @@ export function Chat() {
     api: '/api/chat',
   });
 
-return (
-
-<div className="max-w-2xl mx-auto p-4">
-<div className="space-y-4 mb-4">
-{messages.map((message) => (
-<div
-key={message.id}
-className={\`p-4 rounded-lg \${message.role === 'user'
-? 'bg-blue-100 dark:bg-blue-900'
-: 'bg-gray-100 dark:bg-gray-800'
-}\`} >
-<div className="font-semibold mb-2">
-{message.role === 'user' ? 'You' : 'Assistant'}
-</div>
-<div>{message.content}</div>
-</div>
-))}
-</div>
+  return (
+    <div className="max-w-2xl mx-auto p-4">
+      <div className="space-y-4 mb-4">
+        {messages.map((message) => (
+          <div
+            key={message.id}
+            className={\`p-4 rounded-lg \${message.role === 'user'
+              ? 'bg-blue-100 dark:bg-blue-900'
+              : 'bg-gray-100 dark:bg-gray-800'
+            }\`}
+          >
+            <div className="font-semibold mb-2">
+              {message.role === 'user' ? 'You' : 'Assistant'}
+            </div>
+            <div>{message.content}</div>
+          </div>
+        ))}
+      </div>
 
       <form onSubmit={handleSubmit} className="flex gap-2">
         <input
@@ -102,10 +115,8 @@ className={\`p-4 rounded-lg \${message.role === 'user'
         </button>
       </form>
     </div>
-
-);
+  );
 }`}
-
 </CodeBlock>
 
 ### 4. Use in Your App
@@ -127,6 +138,68 @@ export default function HomePage() {
 }`}
 </CodeBlock>
 
+## Available Tools
+
+FMP Tools provides comprehensive financial tools organized into categories:
+
+### 📊 Quote Tools
+- `getStockQuote` - Real-time stock quotes and price data
+
+### 🏢 Company Tools  
+- `getCompanyProfile` - Comprehensive company profiles and information
+- `getCompanySharesFloat` - Company shares float and liquidity data
+- `getCompanyExecutiveCompensation` - Executive compensation information
+
+### 💰 Financial Tools
+- `getBalanceSheet` - Balance sheet statements (annual/quarterly)
+- `getIncomeStatement` - Income statements (annual/quarterly)  
+- `getCashFlowStatement` - Cash flow statements (annual/quarterly)
+- `getKeyMetrics` - Key financial metrics and KPIs (annual/quarterly)
+- `getFinancialRatios` - Financial ratios and metrics (annual/quarterly)
+- `getEnterpriseValue` - Enterprise value calculations (annual/quarterly)
+- `getCashflowGrowth` - Cash flow growth analysis (annual/quarterly)
+- `getIncomeGrowth` - Income growth analysis (annual/quarterly)
+
+### 📈 Market Tools
+- `getMarketPerformance` - Overall market performance data
+- `getSectorPerformance` - Sector performance data
+- `getGainers` - Top gaining stocks
+- `getLosers` - Top losing stocks
+- `getMostActive` - Most actively traded stocks
+
+### 🏛️ Economic Tools
+- `getTreasuryRates` - Treasury rates and yields
+- `getEconomicIndicators` - Economic indicators including GDP, CPI, unemployment, inflation, retail sales, consumer sentiment, durable goods, housing starts, vehicle sales, and more
+
+### 📋 ETF Tools
+- `getETFHoldings` - Holdings for a specific ETF
+- `getETFProfile` - ETF profile and information
+
+### 📅 Calendar Tools
+- `getEarningsCalendar` - Upcoming earnings calendar
+- `getEconomicCalendar` - Economic calendar events
+
+### 🏛️ Congressional Tools
+- `getSenateTrading` - Recent Senate trading activity by symbol
+- `getHouseTrading` - Recent House trading activity by symbol
+- `getSenateTradingByName` - Senate trading by politician name
+- `getHouseTradingByName` - House trading by politician name
+- `getSenateTradingRSSFeed` - Senate trading RSS feed with pagination
+- `getHouseTradingRSSFeed` - House trading RSS feed with pagination
+
+### 🏢 Institutional Tools
+- `getInstitutionalHolders` - Institutional holders for a company
+
+### 👤 Insider Tools
+- `getInsiderTrading` - Insider trading data for a company
+
+### 📊 Stock Tools
+- `getMarketCap` - Market capitalization for a company
+- `getStockSplits` - Historical stock splits for a company
+- `getDividendHistory` - Dividend history and payments for a company
+
+[**View detailed tool categories →**](/docs/tools/categories)
+
 ## Advanced Configuration
 
 ### Custom Tool Selection
@@ -140,48 +213,69 @@ import { quoteTools, financialTools } from 'fmp-ai-tools/vercel-ai';
 
 // Use only quote and financial tools
 const selectedTools = {
-...quoteTools,
-...financialTools,
+  ...quoteTools,
+  ...financialTools,
 };
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
 
-const result = streamText({
-model: openai('gpt-4o-mini'),
-messages: convertToModelMessages(messages),
-tools: selectedTools as ToolSet,
-});
+  const result = streamText({
+    model: openai('gpt-4o-mini'),
+    messages: convertToModelMessages(messages),
+    tools: selectedTools as ToolSet,
+  });
 
-return result.toUIMessageStreamResponse();
+  return result.toUIMessageStreamResponse();
 }`}
-
 </CodeBlock>
 
 ### Custom Model Configuration
 
 <CodeBlock language="typescript" filename="app/api/chat/route.ts">
 {`import { openai } from '@ai-sdk/openai';
-import { streamText, convertToModelMessages, ToolSet } from 'ai';
+import { streamText, convertToModelMessages, stepCountIs, ToolSet } from 'ai';
 import { fmpTools } from 'fmp-ai-tools/vercel-ai';
 
 export async function POST(req: Request) {
   const { messages } = await req.json();
 
-const result = streamText({
-model: openai('gpt-4o-mini', {
-temperature: 0.7,
-maxTokens: 1000,
-}),
-messages: convertToModelMessages(messages),
-tools: fmpTools as ToolSet,
-stopWhen: stepCountIs(3), // Limit tool usage
-system: \`You are a helpful financial assistant. Use the available tools to provide accurate financial information. Always cite your sources when providing data.\`,
-});
+  const result = streamText({
+    model: openai('gpt-4o-mini', {
+      temperature: 0.7,
+      maxTokens: 1000,
+    }),
+    messages: convertToModelMessages(messages),
+    tools: fmpTools as ToolSet,
+    stopWhen: stepCountIs(3), // Limit tool usage
+    system: \`You are a helpful financial assistant. Use the available tools to provide accurate financial information. Always cite your sources when providing data.\`,
+  });
 
-return result.toUIMessageStreamResponse();
+  return result.toUIMessageStreamResponse();
 }`}
+</CodeBlock>
 
+### Using Individual Tools
+
+<CodeBlock language="typescript">
+{`import { 
+  getStockQuote, 
+  getCompanyProfile, 
+  getBalanceSheet 
+} from 'fmp-ai-tools/vercel-ai';
+
+// Use only specific tools
+const customTools = {
+  getStockQuote,
+  getCompanyProfile,
+  getBalanceSheet,
+};
+
+const result = streamText({
+  model: openai('gpt-4o-mini'),
+  messages: convertToModelMessages(messages),
+  tools: customTools as ToolSet,
+});`}
 </CodeBlock>
 
 ## Example Conversations
@@ -206,6 +300,30 @@ Here are some example conversations you can have with your AI assistant:
 
 **Assistant:** "Let me fetch the current treasury rates and the most recent GDP data for you."
 
+## Tool Parameters
+
+Each tool accepts specific parameters. Here are some common ones:
+
+- `symbol` - Stock/ETF symbol (e.g., "AAPL", "SPY")
+- `period` - For financial statements: "annual" or "quarter"
+- `from` - Start date in YYYY-MM-DD format
+- `to` - End date in YYYY-MM-DD format
+- `name` - For economic indicators: specific indicator name
+
+## Error Handling
+
+The tools include built-in error handling and validation:
+
+- **Input Validation**: All tools use Zod schemas to validate input parameters
+- **API Error Handling**: Graceful handling of FMP API errors and rate limits
+- **User-Friendly Messages**: Clear error messages for debugging and user feedback
+
+## Performance Considerations
+
+- **Tool Selection**: Only include the tools you need to reduce complexity
+- **Rate Limiting**: Be mindful of FMP API rate limits in production
+- **Caching**: Consider implementing caching for frequently requested data
+
 ## Next Steps
 
 - [View Tool Categories](/docs/tools/categories) - Explore all available tools
@@ -214,3 +332,10 @@ Here are some example conversations you can have with your AI assistant:
 - [Error Handling](/docs/tools/error-handling) - Learn about comprehensive error handling
 - [API Documentation](/docs/api) - Learn about direct API access
 - [GitHub Repository](https://github.com/e-roy/fmp-node-wrapper) - Source code and issues
+
+## Related Resources
+
+- [Vercel AI SDK Documentation](https://sdk.vercel.ai/) - Official Vercel AI SDK docs
+- [OpenAI Platform](https://platform.openai.com/) - OpenAI API documentation
+- [Financial Modeling Prep](https://site.financialmodelingprep.com/pricing-plans?couponCode=eroy) - Get free API key (10% discount on paid plans)
+- [FMP API Documentation](https://financialmodelingprep.com/developer/docs) - FMP API documentation

@@ -1,55 +1,235 @@
-# OpenAI Provider
+# OpenAI Agents Integration
 
-The OpenAI provider for FMP Tools allows you to use Financial Modeling Prep data with OpenAI Agents and other OpenAI-compatible frameworks.
+Learn how to integrate FMP Tools with OpenAI Agents to create autonomous AI agents with financial data capabilities.
+
+## Overview
+
+The OpenAI Agents integration allows you to build sophisticated AI agents that can access real-time financial data. Perfect for creating autonomous financial analysis tools, investment research assistants, and market monitoring systems.
+
+## Prerequisites
+
+Before you begin, make sure you have:
+
+- **FMP API Key** - Get your free API key from [Financial Modeling Prep](https://site.financialmodelingprep.com/pricing-plans?couponCode=eroy) (10% discount on paid plans)
+- **OpenAI API Key** - Required for the AI model (get from [OpenAI Platform](https://platform.openai.com/api-keys))
+- **Node.js 18+** - Required for OpenAI Agents
+- **@openai/agents** - Version 0.1.0 or 0.1.1 only (other versions are not compatible)
+- **zod** - Version ^3.25.76 (required for schema validation)
 
 ## Installation
 
 Install the required packages:
 
-<CodeBlock language="bash">{`npm install fmp-ai-tools @openai/agents`}</CodeBlock>
+<CodeBlock language="bash">{`npm install fmp-ai-tools @openai/agents@0.1.1 zod`}</CodeBlock>
 
-<CodeBlock language="bash">{`pnpm add fmp-ai-tools @openai/agents`}</CodeBlock>
+<CodeBlock language="bash">{`pnpm add fmp-ai-tools @openai/agents@0.1.1 zod`}</CodeBlock>
+
+<CodeBlock language="bash">{`yarn add fmp-ai-tools @openai/agents@0.1.1 zod`}</CodeBlock>
+
+**⚠️ Important Version Requirements:**
+- `@openai/agents`: Must be exactly version 0.1.0 or 0.1.1
+- `zod`: Must be version ^3.25.76
 
 ## Quick Start
 
-### Set Environment Variables
+### 1. Set Environment Variables
+
+Create a `.env.local` file in your project root:
 
 <CodeBlock language="bash" filename=".env.local">
-  {`FMP_API_KEY=your_fmp_api_key_here
+{`# Required: Your FMP API key
+FMP_API_KEY=your_fmp_api_key_here
+
+# Required: Your OpenAI API key
 OPENAI_API_KEY=your_openai_api_key_here
 
-# To enable detailed logging of API calls and responses - default is false
-
+# Optional: Enable detailed logging
 FMP_TOOLS_LOG_API_RESULTS=false
-
-# To enable logging of data from API calls - default is false
-
 FMP_TOOLS_LOG_DATA_ONLY=false`}
-
 </CodeBlock>
 
-### Basic Usage with OpenAI Agents
+### 2. Basic Usage with OpenAI Agents
 
-<CodeBlock language="typescript" filename="app/api/chat/route.ts">
+<CodeBlock language="typescript" filename="app/api/agent/route.ts">
 {`import { Agent } from '@openai/agents';
 import { fmpTools } from 'fmp-ai-tools/openai';
 
 const agent = new Agent({
-name: 'Financial Analyst',
-instructions: 'You are a financial analyst with access to real-time market data. Use the available tools to provide accurate financial information.',
-tools: fmpTools,
+  name: 'Financial Analyst',
+  instructions: 'You are a financial analyst with access to real-time market data. Use the available tools to provide accurate financial information.',
+  tools: fmpTools,
 });
 
-const result = await agent.run({
-messages: [
-{
-role: 'user',
-content: 'Get the current stock quote for Apple (AAPL) and show me their latest balance sheet',
-},
-],
-});`}
+export async function POST(req: Request) {
+  const { messages } = await req.json();
+  
+  const result = await agent.run({
+    messages: messages,
+  });
 
+  return Response.json(result);
+}`}
 </CodeBlock>
+
+### 3. Create Agent Component
+
+<CodeBlock language="typescript" filename="components/agent-chat.tsx">
+{`'use client';
+
+import { useState } from 'react';
+
+export function AgentChat() {
+  const [messages, setMessages] = useState<Array<{role: string, content: string}>>([]);
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+
+    const userMessage = { role: 'user', content: input };
+    setMessages(prev => [...prev, userMessage]);
+    setInput('');
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/agent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: [...messages, userMessage] }),
+      });
+
+      const result = await response.json();
+      setMessages(prev => [...prev, { role: 'assistant', content: result.content }]);
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="max-w-2xl mx-auto p-4">
+      <div className="space-y-4 mb-4">
+        {messages.map((message, index) => (
+          <div
+            key={index}
+            className={\`p-4 rounded-lg \${message.role === 'user'
+              ? 'bg-blue-100 dark:bg-blue-900'
+              : 'bg-gray-100 dark:bg-gray-800'
+            }\`}
+          >
+            <div className="font-semibold mb-2">
+              {message.role === 'user' ? 'You' : 'Financial Analyst'}
+            </div>
+            <div>{message.content}</div>
+          </div>
+        ))}
+      </div>
+
+      <form onSubmit={handleSubmit} className="flex gap-2">
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Ask about stocks, financial data, or market information..."
+          className="flex-1 p-2 border rounded-lg"
+          disabled={isLoading}
+        />
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+        >
+          Send
+        </button>
+      </form>
+    </div>
+  );
+}`}
+</CodeBlock>
+
+### 4. Use in Your App
+
+<CodeBlock language="typescript" filename="app/page.tsx">
+{`import { AgentChat } from '@/components/agent-chat';
+
+export default function HomePage() {
+  return (
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="container mx-auto py-8">
+        <h1 className="text-3xl font-bold text-center mb-8">
+          Financial AI Agent
+        </h1>
+        <AgentChat />
+      </div>
+    </div>
+  );
+}`}
+</CodeBlock>
+
+## Available Tools
+
+FMP Tools provides comprehensive financial tools organized into categories:
+
+### 📊 Quote Tools
+- `getStockQuote` - Real-time stock quotes and price data
+
+### 🏢 Company Tools  
+- `getCompanyProfile` - Comprehensive company profiles and information
+- `getCompanySharesFloat` - Company shares float and liquidity data
+- `getCompanyExecutiveCompensation` - Executive compensation information
+
+### 💰 Financial Tools
+- `getBalanceSheet` - Balance sheet statements (annual/quarterly)
+- `getIncomeStatement` - Income statements (annual/quarterly)  
+- `getCashFlowStatement` - Cash flow statements (annual/quarterly)
+- `getKeyMetrics` - Key financial metrics and KPIs (annual/quarterly)
+- `getFinancialRatios` - Financial ratios and metrics (annual/quarterly)
+- `getEnterpriseValue` - Enterprise value calculations (annual/quarterly)
+- `getCashflowGrowth` - Cash flow growth analysis (annual/quarterly)
+- `getIncomeGrowth` - Income growth analysis (annual/quarterly)
+
+### 📈 Market Tools
+- `getMarketPerformance` - Overall market performance data
+- `getSectorPerformance` - Sector performance data
+- `getGainers` - Top gaining stocks
+- `getLosers` - Top losing stocks
+- `getMostActive` - Most actively traded stocks
+
+### 🏛️ Economic Tools
+- `getTreasuryRates` - Treasury rates and yields
+- `getEconomicIndicators` - Economic indicators including GDP, CPI, unemployment, inflation, retail sales, consumer sentiment, durable goods, housing starts, vehicle sales, and more
+
+### 📋 ETF Tools
+- `getETFHoldings` - Holdings for a specific ETF
+- `getETFProfile` - ETF profile and information
+
+### 📅 Calendar Tools
+- `getEarningsCalendar` - Upcoming earnings calendar
+- `getEconomicCalendar` - Economic calendar events
+
+### 🏛️ Congressional Tools
+- `getSenateTrading` - Recent Senate trading activity by symbol
+- `getHouseTrading` - Recent House trading activity by symbol
+- `getSenateTradingByName` - Senate trading by politician name
+- `getHouseTradingByName` - House trading by politician name
+- `getSenateTradingRSSFeed` - Senate trading RSS feed with pagination
+- `getHouseTradingRSSFeed` - House trading RSS feed with pagination
+
+### 🏢 Institutional Tools
+- `getInstitutionalHolders` - Institutional holders for a company
+
+### 👤 Insider Tools
+- `getInsiderTrading` - Insider trading data for a company
+
+### 📊 Stock Tools
+- `getMarketCap` - Market capitalization for a company
+- `getStockSplits` - Historical stock splits for a company
+- `getDividendHistory` - Dividend history and payments for a company
+
+[**View detailed tool categories →**](/docs/tools/categories)
+
+## Advanced Configuration
 
 ### Using Specific Tool Categories
 
@@ -62,17 +242,16 @@ content: 'Get the current stock quote for Apple (AAPL) and show me their latest 
 
 // Combine specific tool categories
 const selectedTools = [
-...companyTools,
-...financialTools,
-...marketTools,
+  ...companyTools,
+  ...financialTools,
+  ...marketTools,
 ];
 
 const agent = new Agent({
-name: 'Financial Analyst',
-instructions: 'You are a financial analyst with access to company, financial, and market data.',
-tools: selectedTools,
+  name: 'Financial Analyst',
+  instructions: 'You are a financial analyst with access to company, financial, and market data.',
+  tools: selectedTools,
 });`}
-
 </CodeBlock>
 
 ### Using Individual Tools
@@ -86,83 +265,87 @@ tools: selectedTools,
 
 // Use only specific tools
 const customTools = [
-getCompanyProfile,
-getStockQuote,
-getBalanceSheet,
+  getCompanyProfile,
+  getStockQuote,
+  getBalanceSheet,
 ];
 
 const agent = new Agent({
-name: 'Company Analyst',
-instructions: 'You are a company analyst focused on company profiles, stock quotes, and financial statements.',
-tools: customTools,
+  name: 'Company Analyst',
+  instructions: 'You are a company analyst focused on company profiles, stock quotes, and financial statements.',
+  tools: customTools,
 });`}
-
 </CodeBlock>
 
-## Available Tools
+### Custom Agent Configuration
 
-The OpenAI provider includes all the same tools as the Vercel AI provider, organized into logical categories:
+<CodeBlock language="typescript">
+{`import { Agent } from '@openai/agents';
+import { fmpTools } from 'fmp-ai-tools/openai';
 
-### Company Tools
+const financialAgent = new Agent({
+  name: 'Financial Analysis Assistant',
+  instructions: \`You are a financial analysis assistant. You can:
+  - Get company profiles and stock quotes
+  - Retrieve financial statements and ratios
+  - Analyze market performance and trends
+  - Provide insights on economic indicators
+  
+  Always use the appropriate tools to get real-time data before providing analysis.\`,
+  tools: fmpTools,
+  model: 'gpt-4o-mini',
+  temperature: 0.7,
+  maxTokens: 2000,
+});`}
+</CodeBlock>
 
-- `getCompanyProfile` - Get comprehensive company profile and information
+## Example Use Cases
 
-### Financial Tools
+### Financial Analysis Assistant
 
-- `getBalanceSheet` - Get balance sheet statements (annual/quarterly)
-- `getIncomeStatement` - Get income statements (annual/quarterly)
-- `getCashFlowStatement` - Get cash flow statements (annual/quarterly)
-- `getFinancialRatios` - Get financial ratios and metrics (annual/quarterly)
+<CodeBlock language="typescript">
+{`const financialAgent = new Agent({
+  name: 'Financial Analysis Assistant',
+  instructions: \`You are a financial analysis assistant. You can:
+  - Get company profiles and stock quotes
+  - Retrieve financial statements and ratios
+  - Analyze market performance and trends
+  - Provide insights on economic indicators
+  
+  Always use the appropriate tools to get real-time data before providing analysis.\`,
+  tools: fmpTools,
+});`}
+</CodeBlock>
 
-### Market Tools
+### Market Research Bot
 
-- `getMarketPerformance` - Get overall market performance data
-- `getSectorPerformance` - Get sector performance data
-- `getGainers` - Get top gaining stocks
-- `getLosers` - Get top losing stocks
-- `getMostActive` - Get most actively traded stocks
+<CodeBlock language="typescript">
+{`const marketBot = new Agent({
+  name: 'Market Research Bot',
+  instructions: 'You are a market research bot focused on market performance, sector analysis, and trading activity.',
+  tools: [
+    ...marketTools,
+    ...economicTools,
+    ...calendarTools,
+  ],
+});`}
+</CodeBlock>
 
-### Quote Tools
+### Company Research Specialist
 
-- `getStockQuote` - Get real-time stock quote for a company
-
-### Stock Tools
-
-- `getMarketCap` - Get market capitalization for a company
-- `getStockSplits` - Get historical stock splits for a company
-- `getDividendHistory` - Get dividend history and payments for a company
-
-### Economic Tools
-
-- `getTreasuryRates` - Get treasury rates and yields
-- `getEconomicIndicators` - Get economic indicators (GDP, CPI, unemployment, etc.)
-
-### ETF Tools
-
-- `getETFHoldings` - Get holdings for a specific ETF
-- `getETFProfile` - Get ETF profile and information
-
-### Calendar Tools
-
-- `getEarningsCalendar` - Get upcoming earnings calendar
-- `getEconomicCalendar` - Get economic calendar events
-
-### Senate & House Trading Tools
-
-- `getSenateTrading` - Get recent Senate trading activity
-- `getHouseTrading` - Get recent House trading activity
-- `getSenateTradingByName` - Get Senate trading by politician name
-- `getHouseTradingByName` - Get House trading by politician name
-- `getSenateTradingRSSFeed` - Get Senate trading RSS feed
-- `getHouseTradingRSSFeed` - Get House trading RSS feed
-
-### Institutional Tools
-
-- `getInstitutionalHolders` - Get institutional holders for a company
-
-### Insider Trading Tools
-
-- `getInsiderTrading` - Get insider trading data for a company
+<CodeBlock language="typescript">
+{`const companySpecialist = new Agent({
+  name: 'Company Research Specialist',
+  instructions: 'You are a company research specialist who provides comprehensive company analysis.',
+  tools: [
+    ...companyTools,
+    ...financialTools,
+    ...stockTools,
+    ...institutionalTools,
+    ...insiderTools,
+  ],
+});`}
+</CodeBlock>
 
 ## Tool Structure
 
@@ -180,75 +363,22 @@ export const financialTools = [
 
 // Combine all tools into a single array
 export const fmpTools = [
-...companyTools,
-...financialTools,
-...marketTools,
-// ... all other tools
+  ...companyTools,
+  ...financialTools,
+  ...marketTools,
+  // ... all other tools
 ] as Tool[];`}
-
 </CodeBlock>
 
-## Configuration
+## Tool Parameters
 
-### Environment Variables
+Each tool accepts specific parameters. Here are some common ones:
 
-Set your FMP API key as an environment variable:
-
-<CodeBlock language="bash">{`FMP_API_KEY=your_api_key_here`}</CodeBlock>
-
-### OpenAI Configuration
-
-Make sure you have the OpenAI Agents package installed:
-
-<CodeBlock language="bash">{`npm install @openai/agents`}</CodeBlock>
-
-## Example Use Cases
-
-### Financial Analysis Assistant
-
-<CodeBlock language="typescript">
-  {`const financialAgent = new Agent({
-  name: 'Financial Analysis Assistant',
-  instructions: \`You are a financial analysis assistant. You can:
-  - Get company profiles and stock quotes
-  - Retrieve financial statements and ratios
-  - Analyze market performance and trends
-  - Provide insights on economic indicators
-  
-  Always use the appropriate tools to get real-time data before providing analysis.\`,
-  tools: fmpTools,
-});`}
-</CodeBlock>
-
-### Market Research Bot
-
-<CodeBlock language="typescript">
-  {`const marketBot = new Agent({
-  name: 'Market Research Bot',
-  instructions: 'You are a market research bot focused on market performance, sector analysis, and trading activity.',
-  tools: [
-    ...marketTools,
-    ...economicTools,
-    ...calendarTools,
-  ],
-});`}
-</CodeBlock>
-
-### Company Research Specialist
-
-<CodeBlock language="typescript">
-  {`const companySpecialist = new Agent({
-  name: 'Company Research Specialist',
-  instructions: 'You are a company research specialist who provides comprehensive company analysis.',
-  tools: [
-    ...companyTools,
-    ...financialTools,
-    ...stockTools,
-    ...institutionalTools,
-    ...insiderTools,
-  ],
-});`}
-</CodeBlock>
+- `symbol` - Stock/ETF symbol (e.g., "AAPL", "SPY")
+- `period` - For financial statements: "annual" or "quarter"
+- `from` - Start date in YYYY-MM-DD format
+- `to` - End date in YYYY-MM-DD format
+- `name` - For economic indicators: specific indicator name
 
 ## Error Handling
 
@@ -257,6 +387,31 @@ The tools include built-in error handling and validation:
 - **Input Validation**: All tools use Zod schemas to validate input parameters
 - **API Error Handling**: Graceful handling of FMP API errors and rate limits
 - **User-Friendly Messages**: Clear error messages for debugging and user feedback
+
+## Version Compatibility
+
+### OpenAI Agents Version Requirements
+
+**⚠️ Critical**: FMP Tools only works with specific versions of `@openai/agents`:
+
+- ✅ **Supported**: `@openai/agents@0.1.0` and `@openai/agents@0.1.1`
+- ❌ **Not Supported**: Any other versions (including newer versions)
+
+### Zod Version Requirements
+
+**⚠️ Important**: The `zod` package must be compatible with the schema validation:
+
+- ✅ **Supported**: `zod@^3.25.76` or `zod@^4.0.0`
+- ❌ **Not Supported**: Older versions of zod
+
+### Common Installation Issues
+
+If you encounter errors like:
+- `Invalid schema for function 'getStockQuote': schema must be a JSON Schema of 'type: "object"'`
+- `Module not found: @openai/agents`
+- `TypeError: Cannot read property 'tool' of undefined`
+
+**Solution**: Ensure you're using the exact versions specified above.
 
 ## Performance Considerations
 
@@ -278,3 +433,12 @@ If you're migrating from the Vercel AI provider:
 - [Check out Examples](/docs/tools/examples) - See practical implementations
 - [Explore Tool Categories](/docs/tools/categories) - Detailed tool documentation
 - [Error Handling Guide](/docs/tools/error-handling) - Best practices for error handling
+- [API Documentation](/docs/api) - Learn about direct API access
+- [GitHub Repository](https://github.com/e-roy/fmp-node-wrapper) - Source code and issues
+
+## Related Resources
+
+- [OpenAI Agents Documentation](https://platform.openai.com/docs/assistants/overview) - Official OpenAI Agents docs
+- [OpenAI Platform](https://platform.openai.com/) - OpenAI API documentation
+- [Financial Modeling Prep](https://site.financialmodelingprep.com/pricing-plans?couponCode=eroy) - Get free API key (10% discount on paid plans)
+- [FMP API Documentation](https://financialmodelingprep.com/developer/docs) - FMP API documentation

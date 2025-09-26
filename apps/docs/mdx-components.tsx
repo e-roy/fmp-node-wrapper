@@ -74,6 +74,12 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         {...props}
       />
     ),
+    a: (props: React.ComponentProps<'a'>) => (
+      <a
+        className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline decoration-2 underline-offset-2 hover:decoration-blue-800 dark:hover:decoration-blue-300 transition-colors duration-200 font-medium"
+        {...props}
+      />
+    ),
     // Custom components
     CodeBlock,
     ApiTable,

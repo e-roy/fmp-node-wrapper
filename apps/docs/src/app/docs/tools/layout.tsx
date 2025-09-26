@@ -6,13 +6,16 @@ import { Footer } from '@/components/layout/footer';
 
 const toolsNavigationGroups = [
   {
-    title: 'Documentation',
+    title: 'Getting Started',
     items: [
       { name: 'Tools Overview', href: '/docs/tools' },
-      { name: 'Categories', href: '/docs/tools/categories' },
       { name: 'Vercel AI SDK', href: '/docs/tools/vercel-ai' },
-      { name: 'OpenAI Provider', href: '/docs/tools/openai' },
+      { name: 'OpenAI Agents', href: '/docs/tools/openai' },
     ],
+  },
+  {
+    title: 'Tool Reference',
+    items: [{ name: 'Tool Categories', href: '/docs/tools/categories' }],
   },
   {
     title: 'Advanced',

@@ -1,67 +1,242 @@
 # Tool Categories
 
-A comprehensive overview of all available FMP Tools organized by category.
+A comprehensive overview of all available FMP Tools organized by category for easy selection and integration.
 
 ## Overview
 
-FMP Tools are organized into logical categories based on the type of financial data they provide. These tools handle all the complexity internally, so you can focus on building your AI applications without worrying about API details.
+FMP Tools are organized into logical categories based on the type of financial data they provide. Each category contains related tools that work together to provide comprehensive financial insights. You can import entire categories or individual tools based on your needs.
 
 ## Available Categories
 
-### Quote Tools
+### 📊 Quote Tools
 
 Real-time and historical price data for stocks and other securities.
 
-### Company Tools
+**Tools:**
+- `getStockQuote` - Get real-time stock quote for a company
+
+**Use Cases:**
+- Real-time price monitoring
+- Portfolio tracking
+- Price alerts and notifications
+
+### 🏢 Company Tools
 
 Company profiles, descriptions, and basic information.
 
-### Financial Tools
+**Tools:**
+- `getCompanyProfile` - Get comprehensive company profile and information
+- `getCompanySharesFloat` - Get company shares float and liquidity data
+- `getCompanyExecutiveCompensation` - Get executive compensation information
+
+**Use Cases:**
+- Company research and analysis
+- Due diligence processes
+- Investment screening
+- Executive compensation analysis
+- Share liquidity assessment
+
+### 💰 Financial Tools
 
 Financial statements, ratios, and detailed financial metrics.
 
-### Stock Tools
+**Tools:**
+- `getBalanceSheet` - Get balance sheet statements (annual/quarterly)
+- `getIncomeStatement` - Get income statements (annual/quarterly)
+- `getCashFlowStatement` - Get cash flow statements (annual/quarterly)
+- `getKeyMetrics` - Get key financial metrics and KPIs (annual/quarterly)
+- `getFinancialRatios` - Get financial ratios and metrics (annual/quarterly)
+- `getEnterpriseValue` - Get enterprise value calculations (annual/quarterly)
+- `getCashflowGrowth` - Get cash flow growth analysis (annual/quarterly)
+- `getIncomeGrowth` - Get income growth analysis (annual/quarterly)
 
-Stock-specific data like market cap, splits, and dividends.
+**Use Cases:**
+- Financial analysis and modeling
+- Investment research
+- Credit analysis
+- Valuation models
+- Growth trend analysis
+- Enterprise value calculations
 
-### Market Tools
+### 📈 Market Tools
 
 Market-wide data including indices, sectors, gainers, losers, and trading activity.
 
-### Economic Tools
+**Tools:**
+- `getMarketPerformance` - Get overall market performance data
+- `getSectorPerformance` - Get sector performance data
+- `getGainers` - Get top gaining stocks
+- `getLosers` - Get top losing stocks
+- `getMostActive` - Get most actively traded stocks
+
+**Use Cases:**
+- Market analysis and trends
+- Sector rotation strategies
+- Trading opportunities identification
+- Market sentiment analysis
+
+### 🏛️ Economic Tools
 
 Economic indicators, treasury rates, and macroeconomic data.
 
-### ETF Tools
+**Tools:**
+- `getTreasuryRates` - Get treasury rates and yields
+- `getEconomicIndicators` - Get economic indicators including GDP, CPI, unemployment, inflation, retail sales, consumer sentiment, durable goods, housing starts, vehicle sales, and more
+
+**Use Cases:**
+- Economic analysis and forecasting
+- Interest rate monitoring
+- Macroeconomic research
+- Policy impact assessment
+- Consumer behavior analysis
+- Housing market analysis
+
+### 📋 ETF Tools
 
 ETF profiles, holdings, and composition data.
 
-### Calendar Tools
+**Tools:**
+- `getETFHoldings` - Get holdings for a specific ETF
+- `getETFProfile` - Get ETF profile and information
+
+**Use Cases:**
+- ETF research and analysis
+- Portfolio diversification
+- Asset allocation strategies
+- ETF comparison and selection
+
+### 📅 Calendar Tools
 
 Earnings calendars and economic event schedules.
 
-### Senate & House Trading Tools
+**Tools:**
+- `getEarningsCalendar` - Get upcoming earnings calendar
+- `getEconomicCalendar` - Get economic calendar events
+
+**Use Cases:**
+- Earnings season planning
+- Event-driven trading strategies
+- Economic event monitoring
+- Corporate calendar tracking
+
+### 🏛️ Congressional Tools
 
 Congressional trading activity and disclosures.
 
-### Institutional Tools
+**Tools:**
+- `getSenateTrading` - Get recent Senate trading activity by symbol
+- `getHouseTrading` - Get recent House trading activity by symbol
+- `getSenateTradingByName` - Get Senate trading by politician name
+- `getHouseTradingByName` - Get House trading by politician name
+- `getSenateTradingRSSFeed` - Get Senate trading RSS feed with pagination
+- `getHouseTradingRSSFeed` - Get House trading RSS feed with pagination
+
+**Use Cases:**
+- Political trading analysis
+- Insider trading research
+- Policy impact assessment
+- Regulatory compliance monitoring
+- Congressional activity tracking
+
+### 🏢 Institutional Tools
 
 Institutional ownership and holdings data.
 
-### Insider Trading Tools
+**Tools:**
+- `getInstitutionalHolders` - Get institutional holders for a company
+
+**Use Cases:**
+- Institutional ownership analysis
+- Shareholder research
+- Corporate governance analysis
+- Investment flow tracking
+
+### 👤 Insider Tools
 
 Insider trading transactions and disclosures.
 
-## How to Use These Tools
+**Tools:**
+- `getInsiderTrading` - Get insider trading data for a company
+
+**Use Cases:**
+- Insider trading analysis
+- Corporate insider research
+- Regulatory compliance
+- Investment signal analysis
+
+### 📊 Stock Tools
+
+Stock-specific data like market cap, splits, and dividends.
+
+**Tools:**
+- `getMarketCap` - Get market capitalization for a company
+- `getStockSplits` - Get historical stock splits for a company
+- `getDividendHistory` - Get dividend history and payments for a company
+
+**Use Cases:**
+- Market capitalization analysis
+- Stock split tracking
+- Dividend analysis
+- Historical stock data research
+
+## Tool Selection Guide
+
+### For Financial Analysis Applications
+
+**Recommended Categories:**
+- Company Tools
+- Financial Tools
+- Quote Tools
+
+**Example Use Case:** Building a comprehensive financial analysis tool that provides company profiles, financial statements, and real-time quotes.
+
+### For Market Research Applications
+
+**Recommended Categories:**
+- Market Tools
+- Economic Tools
+- Calendar Tools
+
+**Example Use Case:** Creating a market research platform that tracks market performance, economic indicators, and upcoming events.
+
+### For Investment Research Applications
+
+**Recommended Categories:**
+- Quote Tools
+- Company Tools
+- Financial Tools
+- Market Tools
+- ETF Tools
+
+**Example Use Case:** Developing an investment research tool that provides comprehensive analysis across multiple asset classes.
+
+### For Trading Applications
+
+**Recommended Categories:**
+- Quote Tools
+- Market Tools
+- Calendar Tools
+- Congressional Tools
+
+**Example Use Case:** Building a trading platform that monitors real-time prices, market activity, and relevant events.
+
+### For Economic Analysis Applications
+
+**Recommended Categories:**
+- Economic Tools
+- Calendar Tools
+- Market Tools
+
+**Example Use Case:** Creating an economic analysis tool that tracks indicators, events, and market responses.
+
+## Import Examples
 
 ### Vercel AI SDK
 
 #### Import All Tools
-
 <CodeBlock language="typescript">{`import { fmpTools } from 'fmp-ai-tools/vercel-ai';`}</CodeBlock>
 
 #### Import Specific Categories
-
 <CodeBlock language="typescript">
 {`import { 
   quoteTools, 
@@ -77,15 +252,13 @@ Insider trading transactions and disclosures.
 
 // Combine specific categories
 const selectedTools = {
-...quoteTools,
-...financialTools,
-...marketTools,
+  ...quoteTools,
+  ...financialTools,
+  ...marketTools,
 };`}
-
 </CodeBlock>
 
 #### Import Individual Tools
-
 <CodeBlock language="typescript">
 {`import { 
   getStockQuote,
@@ -95,22 +268,19 @@ const selectedTools = {
 } from 'fmp-ai-tools/vercel-ai';
 
 const customTools = {
-getStockQuote,
-getCompanyProfile,
-getBalanceSheet,
-getMarketPerformance,
+  getStockQuote,
+  getCompanyProfile,
+  getBalanceSheet,
+  getMarketPerformance,
 };`}
-
 </CodeBlock>
 
 ### OpenAI Agents
 
 #### Import All Tools
-
 <CodeBlock language="typescript">{`import { fmpTools } from 'fmp-ai-tools/openai';`}</CodeBlock>
 
 #### Import Specific Categories
-
 <CodeBlock language="typescript">
 {`import { 
   quoteTools, 
@@ -126,15 +296,13 @@ getMarketPerformance,
 
 // Combine specific categories
 const selectedTools = [
-...quoteTools,
-...financialTools,
-...marketTools,
+  ...quoteTools,
+  ...financialTools,
+  ...marketTools,
 ];`}
-
 </CodeBlock>
 
 #### Import Individual Tools
-
 <CodeBlock language="typescript">
 {`import { 
   getStockQuote,
@@ -144,17 +312,44 @@ const selectedTools = [
 } from 'fmp-ai-tools/openai';
 
 const customTools = [
-getStockQuote,
-getCompanyProfile,
-getBalanceSheet,
-getMarketPerformance,
+  getStockQuote,
+  getCompanyProfile,
+  getBalanceSheet,
+  getMarketPerformance,
 ];`}
-
 </CodeBlock>
+
+## Tool Parameters Reference
+
+### Common Parameters
+
+- `symbol` - Stock/ETF symbol (e.g., "AAPL", "SPY")
+- `period` - For financial statements: "annual" or "quarter"
+- `from` - Start date in YYYY-MM-DD format
+- `to` - End date in YYYY-MM-DD format
+- `name` - For economic indicators: specific indicator name
+
+### Category-Specific Parameters
+
+**Financial Tools:**
+- `period` - "annual" or "quarter" for statement periods
+- `limit` - Number of periods to retrieve
+
+**Market Tools:**
+- `limit` - Number of results to return
+- `exchange` - Specific exchange (e.g., "NASDAQ", "NYSE")
+
+**Calendar Tools:**
+- `from` - Start date for calendar events
+- `to` - End date for calendar events
+
+**Congressional Tools:**
+- `name` - Politician name for specific trading data
+- `limit` - Number of transactions to retrieve
 
 ## Next Steps
 
-- [Vercel AI SDK Integration](/docs/tools/vercel-ai) - Learn how to use these tools
+- [Vercel AI SDK Integration](/docs/tools/vercel-ai) - Learn how to use these tools with Vercel AI SDK
 - [OpenAI Provider](/docs/tools/openai) - Learn about OpenAI Agents integration
 - [Examples](/docs/tools/examples) - See practical implementations
 - [Best Practices](/docs/tools/best-practices) - Learn best practices for building robust applications
