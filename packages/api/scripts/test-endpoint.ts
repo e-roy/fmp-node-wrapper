@@ -397,6 +397,65 @@ async function testEndpoint() {
         result = await fmp.mutualFund.getHolders('AAPL');
         break;
 
+      // News endpoints
+      case 'fmp-articles':
+        result = await fmp.news.getArticles({
+          limit: 10,
+          page: 0,
+        });
+        break;
+      case 'stock-news':
+        result = await fmp.news.getStockNews({
+          from: '2025-07-01',
+          to: '2025-07-31',
+          limit: 10,
+          page: 0,
+        });
+        break;
+      case 'crypto-news':
+        result = await fmp.news.getCryptoNews({
+          from: '2025-07-01',
+          to: '2025-07-31',
+          limit: 10,
+          page: 0,
+        });
+        break;
+      case 'forex-news':
+        result = await fmp.news.getForexNews({
+          from: '2025-07-01',
+          to: '2025-07-31',
+          limit: 10,
+          page: 0,
+        });
+        break;
+      case 'stock-news-by-symbol':
+        result = await fmp.news.getStockNewsBySymbol({
+          symbols: ['TSLA', 'GOOGL'],
+          from: '2025-07-01',
+          to: '2025-07-31',
+          limit: 10,
+          page: 0,
+        });
+        break;
+      case 'crypto-news-by-symbol':
+        result = await fmp.news.getCryptoNewsBySymbol({
+          symbols: ['BTCUSD', 'ETHUSD'],
+          from: '2025-07-01',
+          to: '2025-07-31',
+          limit: 10,
+          page: 0,
+        });
+        break;
+      case 'forex-news-by-symbol':
+        result = await fmp.news.getForexNewsBySymbol({
+          symbols: ['EURUSD', 'GBPUSD'],
+          from: '2025-07-01',
+          to: '2025-07-31',
+          limit: 10,
+          page: 0,
+        });
+        break;
+
       // Quote endpoints
       case 'quote':
         result = await fmp.quote.getQuote('AAPL');

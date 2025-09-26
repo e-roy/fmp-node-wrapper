@@ -14,6 +14,7 @@ import { InstitutionalEndpoints } from './endpoints/institutional';
 import { ListEndpoints } from './endpoints/list';
 import { MarketEndpoints } from './endpoints/market';
 import { MutualFundEndpoints } from './endpoints/mutual-fund';
+import { NewsEndpoints } from './endpoints/news';
 import { QuoteEndpoints } from './endpoints/quote';
 import { ScreenerEndpoints } from './endpoints/screener';
 import { SECEndpoints } from './endpoints/sec';
@@ -61,6 +62,7 @@ export class FMP {
   public readonly list: ListEndpoints;
   public readonly market: MarketEndpoints;
   public readonly mutualFund: MutualFundEndpoints;
+  public readonly news: NewsEndpoints;
   public readonly quote: QuoteEndpoints;
   public readonly screener: ScreenerEndpoints;
   public readonly sec: SECEndpoints;
@@ -94,6 +96,7 @@ export class FMP {
     this.list = new ListEndpoints(client);
     this.market = new MarketEndpoints(client);
     this.mutualFund = new MutualFundEndpoints(client);
+    this.news = new NewsEndpoints(client);
     this.quote = new QuoteEndpoints(client);
     this.screener = new ScreenerEndpoints(client);
     this.sec = new SECEndpoints(client);

@@ -1,0 +1,447 @@
+# News Endpoints
+
+Access financial news, market updates, and curated articles from Financial Modeling Prep and various financial sources.
+
+## Available Methods
+
+<ApiTable
+  endpoints={[
+    {
+      method: 'GET',
+      path: 'stable/fmp-articles',
+      description: 'Get FMP curated articles',
+    },
+    {
+      method: 'GET',
+      path: 'stable/news/stock-latest',
+      description: 'Get latest stock market news',
+    },
+    {
+      method: 'GET',
+      path: 'stable/news/crypto-latest',
+      description: 'Get latest cryptocurrency news',
+    },
+    {
+      method: 'GET',
+      path: 'stable/news/forex-latest',
+      description: 'Get latest forex market news',
+    },
+    {
+      method: 'GET',
+      path: 'stable/news/stock',
+      description: 'Get stock news by symbol',
+    },
+    {
+      method: 'GET',
+      path: 'stable/news/crypto',
+      description: 'Get crypto news by symbol',
+    },
+    {
+      method: 'GET',
+      path: 'stable/news/forex',
+      description: 'Get forex news by symbol',
+    },
+  ]}
+/>
+
+## Get FMP Articles
+
+Retrieve Financial Modeling Prep's curated articles covering market analysis, financial insights, and educational content.
+
+<CodeBlock language="typescript">
+  {`const articles = await fmp.news.getArticles({
+  page: 1,
+  limit: 10
+});
+
+// Get first page with default limit (100)
+const latestArticles = await fmp.news.getArticles({ page: 1 });`}
+
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'page',
+      type: 'number',
+      required: false,
+      description: 'Page number for pagination (defaults to 1)',
+    },
+    {
+      name: 'limit',
+      type: 'number',
+      required: false,
+      description: 'Number of articles per page (defaults to 100)',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+  success: true,
+  data: [
+    {
+      title: 'Market Analysis: Tech Stocks Rally',
+      date: '2024-01-15',
+      content: 'Analysis of recent tech stock movements...',
+      tickers: 'AAPL,MSFT,GOOGL',
+      image: 'https://example.com/image.jpg',
+      link: 'https://example.com/article',
+      author: 'FMP Team',
+      site: 'Financial Modeling Prep'
+    }
+  ]
+}`}
+</CodeBlock>
+
+## Get Stock News
+
+Retrieve the most recent stock market news articles from multiple financial news sources.
+
+<CodeBlock language="typescript">
+  {`const stockNews = await fmp.news.getStockNews({
+  from: '2024-01-01',
+  to: '2024-01-15',
+  page: 1,
+  limit: 20
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'from',
+      type: 'string',
+      required: false,
+      description: 'Start date (YYYY-MM-DD format)',
+    },
+    {
+      name: 'to',
+      type: 'string',
+      required: false,
+      description: 'End date (YYYY-MM-DD format)',
+    },
+    {
+      name: 'page',
+      type: 'number',
+      required: false,
+      description: 'Page number for pagination (defaults to 1)',
+    },
+    {
+      name: 'limit',
+      type: 'number',
+      required: false,
+      description: 'Number of articles per page (defaults to 100)',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+  success: true,
+  data: [
+    {
+      symbol: 'AAPL',
+      publishedDate: '2024-01-15T10:30:00Z',
+      publisher: 'Reuters',
+      title: 'Apple Reports Strong Q4 Earnings',
+      image: 'https://example.com/apple-news.jpg',
+      site: 'reuters.com',
+      text: 'Apple Inc. reported better-than-expected earnings...',
+      url: 'https://reuters.com/apple-earnings'
+    }
+  ]
+}`}
+</CodeBlock>
+
+## Get Crypto News
+
+Retrieve the most recent cryptocurrency news articles covering market trends, regulatory updates, and technology developments.
+
+<CodeBlock language="typescript">
+  {`const cryptoNews = await fmp.news.getCryptoNews({
+  from: '2024-01-01',
+  to: '2024-01-15',
+  limit: 15
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'from',
+      type: 'string',
+      required: false,
+      description: 'Start date (YYYY-MM-DD format)',
+    },
+    {
+      name: 'to',
+      type: 'string',
+      required: false,
+      description: 'End date (YYYY-MM-DD format)',
+    },
+    {
+      name: 'page',
+      type: 'number',
+      required: false,
+      description: 'Page number for pagination (defaults to 1)',
+    },
+    {
+      name: 'limit',
+      type: 'number',
+      required: false,
+      description: 'Number of articles per page (defaults to 100)',
+    },
+  ]}
+/>
+
+## Get Forex News
+
+Retrieve the most recent forex market news covering currency movements, central bank announcements, and economic indicators.
+
+<CodeBlock language="typescript">
+  {`const forexNews = await fmp.news.getForexNews({
+  from: '2024-01-01',
+  to: '2024-01-15',
+  limit: 25
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'from',
+      type: 'string',
+      required: false,
+      description: 'Start date (YYYY-MM-DD format)',
+    },
+    {
+      name: 'to',
+      type: 'string',
+      required: false,
+      description: 'End date (YYYY-MM-DD format)',
+    },
+    {
+      name: 'page',
+      type: 'number',
+      required: false,
+      description: 'Page number for pagination (defaults to 1)',
+    },
+    {
+      name: 'limit',
+      type: 'number',
+      required: false,
+      description: 'Number of articles per page (defaults to 100)',
+    },
+  ]}
+/>
+
+## Get Stock News by Symbol
+
+Retrieve news articles specifically related to the provided stock symbols. Perfect for monitoring news about specific companies.
+
+<CodeBlock language="typescript">
+  {`const appleNews = await fmp.news.getStockNewsBySymbol({
+  symbols: ['AAPL'],
+  limit: 10
+});
+
+// Multiple symbols
+const techNews = await fmp.news.getStockNewsBySymbol({
+symbols: ['AAPL', 'MSFT', 'GOOGL', 'AMZN'],
+from: '2024-01-01',
+limit: 20
+});`}
+
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbols',
+      type: 'string[]',
+      required: true,
+      description: 'Array of stock symbols to get news for',
+    },
+    {
+      name: 'from',
+      type: 'string',
+      required: false,
+      description: 'Start date (YYYY-MM-DD format)',
+    },
+    {
+      name: 'to',
+      type: 'string',
+      required: false,
+      description: 'End date (YYYY-MM-DD format)',
+    },
+    {
+      name: 'page',
+      type: 'number',
+      required: false,
+      description: 'Page number for pagination (defaults to 1)',
+    },
+    {
+      name: 'limit',
+      type: 'number',
+      required: false,
+      description: 'Number of articles per page (defaults to 100)',
+    },
+  ]}
+/>
+
+## Get Crypto News by Symbol
+
+Retrieve news articles specifically related to the provided cryptocurrency symbols.
+
+<CodeBlock language="typescript">
+  {`const bitcoinNews = await fmp.news.getCryptoNewsBySymbol({
+  symbols: ['BTCUSD'],
+  limit: 15
+});
+
+// Multiple cryptocurrencies
+const cryptoNews = await fmp.news.getCryptoNewsBySymbol({
+symbols: ['BTCUSD', 'ETHUSD', 'ADAUSD'],
+from: '2024-01-01',
+limit: 25
+});`}
+
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbols',
+      type: 'string[]',
+      required: true,
+      description: 'Array of cryptocurrency symbols to get news for',
+    },
+    {
+      name: 'from',
+      type: 'string',
+      required: false,
+      description: 'Start date (YYYY-MM-DD format)',
+    },
+    {
+      name: 'to',
+      type: 'string',
+      required: false,
+      description: 'End date (YYYY-MM-DD format)',
+    },
+    {
+      name: 'page',
+      type: 'number',
+      required: false,
+      description: 'Page number for pagination (defaults to 1)',
+    },
+    {
+      name: 'limit',
+      type: 'number',
+      required: false,
+      description: 'Number of articles per page (defaults to 100)',
+    },
+  ]}
+/>
+
+## Get Forex News by Symbol
+
+Retrieve news articles specifically related to the provided forex currency pairs.
+
+<CodeBlock language="typescript">
+  {`const eurUsdNews = await fmp.news.getForexNewsBySymbol({
+  symbols: ['EURUSD'],
+  limit: 10
+});
+
+// Multiple currency pairs
+const forexNews = await fmp.news.getForexNewsBySymbol({
+symbols: ['EURUSD', 'GBPUSD', 'USDJPY'],
+from: '2024-01-01',
+limit: 20
+});`}
+
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbols',
+      type: 'string[]',
+      required: true,
+      description: 'Array of forex currency pair symbols to get news for',
+    },
+    {
+      name: 'from',
+      type: 'string',
+      required: false,
+      description: 'Start date (YYYY-MM-DD format)',
+    },
+    {
+      name: 'to',
+      type: 'string',
+      required: false,
+      description: 'End date (YYYY-MM-DD format)',
+    },
+    {
+      name: 'page',
+      type: 'number',
+      required: false,
+      description: 'Page number for pagination (defaults to 1)',
+    },
+    {
+      name: 'limit',
+      type: 'number',
+      required: false,
+      description: 'Number of articles per page (defaults to 100)',
+    },
+  ]}
+/>
+
+## Response Types
+
+### Article
+
+<CodeBlock language="typescript">
+  {`interface Article {
+  title: string;
+  date: string;
+  content: string;
+  tickers: string;
+  image: string;
+  link: string;
+  author: string;
+  site: string;
+}`}
+</CodeBlock>
+
+### News
+
+<CodeBlock language="typescript">
+  {`interface News {
+  symbol: string;
+  publishedDate: string;
+  publisher: string;
+  title: string;
+  image: string;
+  site: string;
+  text: string;
+  url: string;
+}`}
+</CodeBlock>
+
+## Next Steps
+
+Explore other endpoint categories:
+
+- [Stock Endpoints](/docs/api/stock) - Real-time quotes and historical data
+- [Financial Endpoints](/docs/api/financial) - Financial statements and ratios
+- [Market Endpoints](/docs/api/market) - Market indices and sector data
+- [Calendar Endpoints](/docs/api/calendar) - Earnings and economic calendars
+- [Economic Endpoints](/docs/api/economic) - Economic indicators and treasury rates
+- [List Endpoints](/docs/api/list) - Available symbols and instruments
+- [Examples](/docs/examples) - Practical code samples

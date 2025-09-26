@@ -10,19 +10,21 @@ export { FMPClient } from './client';
 export type * from 'fmp-node-types';
 
 // Export endpoint classes for tree-shaking
-export { QuoteEndpoints } from './endpoints/quote';
-export { StockEndpoints } from './endpoints/stock';
-export { FinancialEndpoints } from './endpoints/financial';
-export { CompanyEndpoints } from './endpoints/company';
-export { ETFEndpoints } from './endpoints/etf';
-export { MutualFundEndpoints } from './endpoints/mutual-fund';
-export { MarketEndpoints } from './endpoints/market';
-export { EconomicEndpoints } from './endpoints/economic';
-export { ListEndpoints } from './endpoints/list';
 export { CalendarEndpoints } from './endpoints/calendar';
-export { SenateHouseEndpoints } from './endpoints/senate-house';
-export { InstitutionalEndpoints } from './endpoints/institutional';
+export { CompanyEndpoints } from './endpoints/company';
+export { EconomicEndpoints } from './endpoints/economic';
+export { ETFEndpoints } from './endpoints/etf';
+export { FinancialEndpoints } from './endpoints/financial';
 export { InsiderEndpoints } from './endpoints/insider';
+export { InstitutionalEndpoints } from './endpoints/institutional';
+export { ListEndpoints } from './endpoints/list';
+export { MarketEndpoints } from './endpoints/market';
+export { MutualFundEndpoints } from './endpoints/mutual-fund';
+export { NewsEndpoints } from './endpoints/news';
+export { QuoteEndpoints } from './endpoints/quote';
+export { ScreenerEndpoints } from './endpoints/screener';
+export { StockEndpoints } from './endpoints/stock';
+export { SenateHouseEndpoints } from './endpoints/senate-house';
 export { SECEndpoints } from './endpoints/sec';
 
 // Export commonly used utilities
