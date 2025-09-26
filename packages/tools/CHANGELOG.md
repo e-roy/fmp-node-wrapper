@@ -1,5 +1,13 @@
 # fmp-ai-tools
 
+## 0.0.12
+
+### Patch Changes
+
+- Added news endpoints - fmp-node-api, added shares float and executive compensation to fmp-ai-tools
+- Updated dependencies
+  - fmp-node-api@0.1.9
+
 ## 0.0.11
 
 ### Patch Changes

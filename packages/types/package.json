@@ -1,6 +1,6 @@
 {
   "name": "fmp-node-types",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Shared TypeScript types for FMP Node Wrapper ecosystem (internal package)",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
