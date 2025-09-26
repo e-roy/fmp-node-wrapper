@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { Header } from '@/components/layout/header';
-import { Footer } from '@/components/layout/footer';
 import { ThemeProvider } from '@/components/theme/theme-provider';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -22,10 +21,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           enableSystem
           disableTransitionOnChange
         >
-          <div className="min-h-screen flex flex-col">
+          <div className="h-screen flex flex-col">
             <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
+            <main className="flex-1 overflow-hidden">{children}</main>
           </div>
         </ThemeProvider>
       </body>
