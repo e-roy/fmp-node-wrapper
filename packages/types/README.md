@@ -23,7 +23,7 @@ pnpm add fmp-node-api
 ## Usage (for end users)
 
 ```typescript
-import type { Quote, CompanyProfile, FinancialStatement } from 'fmp-node-api';
+import type { Quote, CompanyProfile, IncomeStatement } from 'fmp-node-api';
 
 // Use types in your code
 const quote: Quote = {
@@ -56,19 +56,22 @@ const quote: Quote = {
 - `IncomeStatement` - Income statement data
 - `BalanceSheet` - Balance sheet data
 - `CashFlowStatement` - Cash flow statement data
-- `FinancialRatio` - Financial ratios
-- `Earnings` - Earnings data
+- `FinancialRatios` - Financial ratios
+- `KeyMetrics` - Key financial metrics
 
 ### Company Types
 
 - `CompanyProfile` - Company information
-- `Executive` - Executive data
-- `Employee` - Employee information
+- `ExecutiveCompensation` - Executive compensation data
+- `SharesFloat` - Shares float and outstanding data
+- `HistoricalEmployeeCount` - Historical employee counts
 
 ### Market Types
 
 - `MarketIndex` - Market index data
-- `SectorPerformance` - Sector performance data
+- `MarketPerformance` - Market performance data
+- `MarketSectorPerformance` - Sector performance data
+- `MarketHours` - Market trading hours
 
 ### And many more...
 
@@ -79,7 +82,7 @@ This package is part of the FMP Node Wrapper monorepo. To contribute:
 1. Clone the repository
 2. Install dependencies: `pnpm install`
 3. Build the package: `pnpm build`
-4. Run tests: `pnpm test`
+4. Type-check: `pnpm type-check`
 
 ## License
 

@@ -1,3 +1,9 @@
+---
+description: File structure of entire project
+globs:
+alwaysApply: true
+---
+
 # FMP Node Wrapper - Project Structure Rules
 
 ## Project Overview
@@ -70,18 +76,23 @@ fmp-node-wrapper/
       - `market/` - Market-wide data and performance
       - `economic/` - Economic indicators
       - `list/` - Stock lists and indices
+      - `screener/` - Stock screener and filter lookups
       - `calendar/` - Earnings and economic calendar
       - `senate-house/` - Congressional trading data
       - `institutional/` - Form 13F filings
       - `insider/` - Insider trading data
       - `sec/` - SEC filings and industry data
+      - `news/` - Financial news articles
 
 - **`apps/examples/`**: Example applications demonstrating FMP API usage
   - **`vercel-ai/`**: Vercel AI SDK integration example
-    - Chat interface using FMP tools with OpenAI
+    - Chat interface using FMP tools with the Vercel AI SDK
     - Demonstrates AI tool integration patterns
     - Built with Next.js 15, React 19, and Tailwind CSS
-    - Uses `fmp-tools` and `fmp-node-api` as workspace dependencies
+    - Uses `fmp-ai-tools` and `fmp-node-api` as workspace dependencies
+  - **`openai/`**: OpenAI integration example
+    - Demonstrates using FMP tools with OpenAI directly
+    - Uses `fmp-ai-tools` and `fmp-node-api` as workspace dependencies
 
 ### Packages
 
@@ -98,28 +109,31 @@ fmp-node-wrapper/
     - `market.ts` - Market-wide data and performance
     - `economic.ts` - Economic indicators
     - `list.ts` - Stock lists and indices
+    - `screener.ts` - Stock screener and available exchanges/sectors/industries/countries
     - `calendar.ts` - Earnings and economic calendar
     - `senate-house.ts` - Congressional trading data
     - `institutional.ts` - Form 13F filings
     - `insider.ts` - Insider trading data
     - `sec.ts` - SEC filings and industry data
+    - `news.ts` - Financial news (general, stock, crypto, forex; latest or by symbol)
   - Shared utilities and constants
   - Jest tests and manual testing scripts
   - Built with tsup for multiple output formats
 
-- **`packages/tools/`**: AI tools for FMP API integrations (`fmp-tools`)
+- **`packages/tools/`**: AI tools for FMP API integrations (`fmp-ai-tools`)
 
-  - AI tool implementations compatible with Vercel AI SDK, Langchain, OpenAI, and more
-  - Provider-specific implementations:
+  - AI tool implementations compatible with Vercel AI SDK, OpenAI, and more
+  - Provider-specific implementations (one file per endpoint category, aggregated in `index.ts`):
     - `providers/vercel-ai/` - Vercel AI SDK tool providers
+    - `providers/openai/` - OpenAI tool providers
   - Tool wrapper utilities and type definitions
   - Built with tsup for multiple output formats
-  - Uses `fmp-node-types` and `fmp-node-api` as workspace dependencies
+  - Depends on `fmp-node-api` as a workspace dependency
 
 - **`packages/types/`**: Shared TypeScript types (`fmp-node-types`)
   - Internal package containing all TypeScript interfaces and types
   - Organized by endpoint category (quote, stock, financial, etc.)
-  - Used by both `fmp-node-api` and `fmp-tools` packages
+  - Used by both `fmp-node-api` and `fmp-ai-tools` packages
   - Built with tsup for multiple output formats
 
 ## Build System
@@ -213,12 +227,12 @@ fmp-node-wrapper/
 
 - Internal packages use workspace dependencies:
   - `"fmp-node-api": "workspace:*"`
-  - `"fmp-tools": "workspace:*"`
+  - `"fmp-ai-tools": "workspace:*"`
   - `"fmp-node-types": "workspace:*"`
 - External dependencies are managed at the package level
 - Types are centralized in `fmp-node-types` package
 - API client is imported from `fmp-node-api`
-- AI tools are imported from `fmp-tools`
+- AI tools are imported from `fmp-ai-tools` (subpaths `fmp-ai-tools/vercel-ai`, `fmp-ai-tools/openai`)
 
 ## API Structure
 
@@ -232,18 +246,21 @@ The API is organized into logical endpoint categories:
 - **Mutual Fund Endpoints**: Mutual fund data, NAV, and performance
 - **Market Endpoints**: Market performance, trading hours, sector data
 - **Economic Endpoints**: Economic indicators, treasury rates, inflation data
-- **List Endpoints**: Stock listings, screening, and filtering
+- **List Endpoints**: Stock listings, indices, and symbol lists
+- **Screener Endpoints**: Stock screener with filters, plus available exchanges/sectors/industries/countries
 - **Calendar Endpoints**: Earnings calendar, economic calendar, events
 - **Senate House Endpoints**: Congressional trading data
 - **Institutional Endpoints**: Form 13F filings and institutional ownership
 - **Insider Endpoints**: Insider trading data and transactions
 - **SEC Endpoints**: SEC filings, RSS feeds, industry classification
+- **News Endpoints**: Financial news articles — general, stock, crypto, and forex; latest feeds or filtered by symbol
 
 ## AI Tools Structure
 
 The AI tools package provides integrations for various AI platforms:
 
-- **Vercel AI SDK**: Tool providers for Vercel AI SDK integration
-- **Provider-specific implementations**: Organized by AI platform
-- **Tool wrappers**: Utilities for creating and managing AI tools
+- **Vercel AI SDK**: Tool providers exported from `fmp-ai-tools/vercel-ai`
+- **OpenAI**: Tool providers exported from `fmp-ai-tools/openai`
+- **Provider-specific implementations**: Organized by AI platform under `src/providers/`
+- **Tool wrappers**: Utilities for creating and managing AI tools (`aisdk-tool-wrapper.ts`, `openai-tool-wrapper.ts`)
 - **Type definitions**: Shared types for tool implementations

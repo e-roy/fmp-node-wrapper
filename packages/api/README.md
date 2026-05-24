@@ -143,11 +143,13 @@ const fmp = new FMP({
 - **`fmp.economic`** - Economic indicators
 - **`fmp.market`** - Market-wide data and performance
 - **`fmp.list`** - Stock lists and indices
+- **`fmp.screener`** - Stock screener with filters and available exchanges/sectors/industries/countries
 - **`fmp.calendar`** - Earnings and economic calendar
 - **`fmp.senateHouse`** - Congressional trading data
 - **`fmp.institutional`** - Form 13F filings and institutional ownership
 - **`fmp.insider`** - Insider trading data
 - **`fmp.sec`** - SEC filings and industry classification
+- **`fmp.news`** - Financial news articles (general, stock, crypto, forex; by symbol or latest)
 
 ## Usage Examples
 
@@ -303,6 +305,39 @@ const companies = await fmp.company.searchCompany({ query: 'Apple' });
 const companyProfile = await fmp.company.getCompanyProfile('AAPL');
 ```
 
+### Stock Screener
+
+```typescript
+// Filter stocks by multiple criteria
+const results = await fmp.screener.getScreener({
+  marketCapMoreThan: 10000000000,
+  sector: 'Technology',
+  isActivelyTrading: true,
+  limit: 50,
+});
+
+// Lookups for available filter values
+const exchanges = await fmp.screener.getAvailableExchanges();
+const sectors = await fmp.screener.getAvailableSectors();
+const industries = await fmp.screener.getAvailableIndustries();
+const countries = await fmp.screener.getAvailableCountries();
+```
+
+### News
+
+```typescript
+// Latest news by asset class
+const stockNews = await fmp.news.getStockNews({ from: '2024-01-01', to: '2024-01-31' });
+const cryptoNews = await fmp.news.getCryptoNews({ limit: 50 });
+const forexNews = await fmp.news.getForexNews({ limit: 50 });
+
+// FMP-authored articles
+const articles = await fmp.news.getArticles({ page: 1, limit: 20 });
+
+// News for specific symbols
+const aaplNews = await fmp.news.getStockNewsBySymbol({ symbols: ['AAPL', 'MSFT'] });
+```
+
 ## Testing
 
 This package includes comprehensive tests for all endpoints. There are two test scripts available:
@@ -316,16 +351,6 @@ pnpm test
 - Uses Jest to run all tests
 - Automatically loads API key from `.env` file
 - Requires a valid FMP API key in your `.env` file
-
-### CI Environment
-
-```bash
-pnpm test:ci
-```
-
-- Uses Jest with explicit environment variable passing
-- Requires `FMP_API_KEY` environment variable to be set
-- Used by CI/CD pipelines
 
 ### Running Specific Tests
 
@@ -349,10 +374,7 @@ pnpm test:company
 # Run all endpoint tests
 pnpm test:endpoints
 
-# Manual testing with real API calls
-pnpm test:manual
-
-# Run specific endpoint test
+# Manual testing against the real API
 pnpm test:endpoint
 ```
 
@@ -433,9 +455,6 @@ import {
   formatLargeNumber,
   formatDate,
   formatVolume,
-  formatNumber,
-  formatTimestamp,
-  formatReadableDate,
 } from 'fmp-node-api';
 
 // Format financial data
@@ -444,7 +463,6 @@ const formattedChange = formatPercentage(1.45); // "1.45%"
 const formattedMarketCap = formatLargeNumber(2500000000); // "2.50B"
 const formattedVolume = formatVolume(1500000); // "1.50M"
 const formattedDate = formatDate('2024-01-15'); // "2024-01-15"
-const formattedTimestamp = formatTimestamp(1705276800); // "1/15/2024, 12:00:00 AM"
 ```
 
 ## Advanced Usage
@@ -501,15 +519,14 @@ pnpm test:calendar      # Calendar endpoint tests only
 pnpm test:company       # Company endpoint tests only
 
 # Manual testing with real API calls
-pnpm test:manual        # Test real API integration
-pnpm test:endpoint      # Run specific endpoint test
+pnpm test:endpoint      # Run a specific endpoint against the live API
 
 # Development
 pnpm test:watch         # Watch mode for development
 pnpm test:coverage      # Generate coverage report
 ```
 
-**Note**: Additional endpoint-specific test scripts (crypto, etf, mutual-fund) are available in the package-level scripts but not exposed at the root level.
+**Note**: Additional endpoint-specific test scripts (`test:etf`, `test:mutual-fund`, `test:senate-house`, `test:institutional`, `test:insider`, `test:sec`) are also available, both here and at the repo root.
 
 ## Development
 
@@ -551,8 +568,7 @@ pnpm dev                # Watch mode for development
 pnpm test               # Run all tests
 pnpm test:watch         # Watch mode
 pnpm test:coverage      # Coverage report
-pnpm test:manual        # Manual API testing
-pnpm test:endpoint      # Run specific endpoint test
+pnpm test:endpoint      # Run specific endpoint test against the live API
 pnpm test:unit          # Run unit tests
 pnpm test:integration   # Run integration tests
 pnpm test:endpoints     # Run all endpoint tests
@@ -580,52 +596,39 @@ pnpm clean              # Clean build artifacts
 
 ```
 src/
-├── client.ts              # Base HTTP client
-├── fmp.ts                 # Main FMP class
+├── client.ts              # Base HTTP client (v3/v4/stable axios instances)
+├── fmp.ts                 # Main FMP class (wires up all endpoint classes)
 ├── index.ts               # Main exports
-├── shared.ts              # Shared types and utilities
-├── endpoints/             # API endpoint classes
-│   ├── index.ts
+├── types-only.ts          # Types-only entry point (fmp-node-api/types)
+├── shared.ts              # Shared error types
+├── endpoints/             # API endpoint classes (one per category)
+│   ├── quote.ts
 │   ├── stock.ts
 │   ├── financial.ts
-│   ├── quote.ts
+│   ├── company.ts
 │   ├── etf.ts
 │   ├── mutual-fund.ts
 │   ├── economic.ts
 │   ├── market.ts
 │   ├── list.ts
+│   ├── screener.ts
 │   ├── calendar.ts
-│   ├── company.ts
 │   ├── senate-house.ts
 │   ├── institutional.ts
 │   ├── insider.ts
-│   └── sec.ts
+│   ├── sec.ts
+│   └── news.ts
 ├── utils/                 # Utility functions
-│   ├── index.ts
 │   ├── validation.ts      # Input validation
 │   ├── formatting.ts      # Data formatting
-│   └── constants.ts       # API constants
-├── __tests__/            # Test files
-│   ├── client.test.ts
-│   ├── fmp.test.ts
-│   ├── integration.test.ts
-│   ├── endpoints/         # Endpoint tests
-│   │   ├── stock.test.ts
-│   │   ├── financial.test.ts
-│   │   ├── market.test.ts
-│   │   ├── quote.test.ts
-│   │   ├── economic.test.ts
-│   │   ├── etf.test.ts
-│   │   ├── mutual-fund.test.ts
-│   │   ├── list.test.ts
-│   │   ├── calendar.test.ts
-│   │   └── company.test.ts
-│   └── utils/             # Test utilities
-│       ├── formatting.test.ts
-│       ├── validation.test.ts
-│       └── test-setup.ts
-└── scripts/              # Build and utility scripts
-    └── test-manual.ts     # Manual API testing script
+│   ├── constants.ts       # API constants
+│   ├── helpers.ts         # Shared helpers
+│   ├── debug.ts           # Debug logging
+│   └── utils.ts           # Misc utilities
+└── __tests__/             # Jest tests (client, fmp, integration, endpoints/, utils/)
+
+scripts/
+└── test-endpoint.ts       # Manual live-API endpoint testing script
 ```
 
 ## Contributing

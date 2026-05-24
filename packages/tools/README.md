@@ -38,9 +38,7 @@ yarn add ai zod
 
 ### OpenAI Agents Compatibility
 
-**⚠️ Important**: This package requires `@openai/agents` version `^0.1.0` or higher due to breaking changes in the API.
-
-If you're using an older version, you'll encounter errors like:
+**⚠️ Important**: This package requires `@openai/agents` version `^0.1.0` or higher due to breaking changes in the API. Older versions are not supported and will fail when the tools are imported.
 
 ## Quick Start
 
@@ -68,7 +66,7 @@ export async function POST(req: Request) {
 ### OpenAI Agents
 
 ```typescript
-import { Agent } from '@openai/agents';
+import { Agent, run } from '@openai/agents';
 import { fmpTools } from 'fmp-ai-tools/openai';
 
 const agent = new Agent({
@@ -77,15 +75,10 @@ const agent = new Agent({
   tools: fmpTools,
 });
 
-const result = await agent.run({
-  messages: [
-    {
-      role: 'user',
-      content:
-        'Get the current stock quote for Apple (AAPL) and show me their latest balance sheet',
-    },
-  ],
-});
+const result = await run(
+  agent,
+  'Get the current stock quote for Apple (AAPL) and show me their latest balance sheet',
+);
 ```
 
 ## Configuration
@@ -148,13 +141,22 @@ Logs: result summary and formatted JSON response data.
 ### Company Tools
 
 - `getCompanyProfile` - Get comprehensive company profile and information
+- `getCompanySharesFloat` - Get shares float and outstanding share data
+- `getCompanyExecutiveCompensation` - Get executive compensation data
 
 ### Financial Tools
 
 - `getBalanceSheet` - Get balance sheet statements (annual/quarterly)
 - `getIncomeStatement` - Get income statements (annual/quarterly)
 - `getCashFlowStatement` - Get cash flow statements (annual/quarterly)
+- `getKeyMetrics` - Get key financial metrics (annual/quarterly)
 - `getFinancialRatios` - Get financial ratios and metrics (annual/quarterly)
+- `getEnterpriseValue` - Get enterprise value data
+- `getIncomeGrowth` - Get income statement growth metrics
+- `getBalanceSheetGrowth` - Get balance sheet growth metrics
+- `getCashflowGrowth` - Get cash flow growth metrics
+- `getFinancialGrowth` - Get overall financial growth metrics
+- `getEarningsHistorical` - Get historical earnings data
 
 ### Stock Tools
 

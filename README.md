@@ -196,6 +196,41 @@ const earnings = await fmp.calendar.getEarningsCalendar({
 const companies = await fmp.company.searchCompany({ query: 'Apple' });
 ```
 
+### Stock Screener
+
+```typescript
+// Screen stocks by multiple criteria
+const largeCapTech = await fmp.screener.getScreener({
+  marketCapMoreThan: 10000000000, // $10B+
+  sector: 'Technology',
+  isActivelyTrading: true,
+  limit: 50,
+});
+
+// Lookup values available for screener filters
+const exchanges = await fmp.screener.getAvailableExchanges();
+const sectors = await fmp.screener.getAvailableSectors();
+const industries = await fmp.screener.getAvailableIndustries();
+const countries = await fmp.screener.getAvailableCountries();
+```
+
+### News
+
+```typescript
+// Latest financial articles (FMP-authored)
+const articles = await fmp.news.getArticles({ page: 1, limit: 20 });
+
+// Latest news by asset class
+const stockNews = await fmp.news.getStockNews({ from: '2024-01-01', to: '2024-01-31' });
+const cryptoNews = await fmp.news.getCryptoNews({ limit: 50 });
+const forexNews = await fmp.news.getForexNews({ limit: 50 });
+
+// News for specific symbols
+const aaplNews = await fmp.news.getStockNewsBySymbol({ symbols: ['AAPL', 'MSFT'] });
+const btcNews = await fmp.news.getCryptoNewsBySymbol({ symbols: ['BTCUSD'] });
+const eurNews = await fmp.news.getForexNewsBySymbol({ symbols: ['EURUSD'] });
+```
+
 ## Response Format
 
 All API methods return a standardized response format:
@@ -273,11 +308,13 @@ All API responses and parameters are fully typed for complete type safety.
 - **`fmp.economic`** - Economic indicators
 - **`fmp.market`** - Market-wide data and performance
 - **`fmp.list`** - Stock lists and indices
+- **`fmp.screener`** - Stock screener with filters and available exchanges/sectors/industries/countries
 - **`fmp.calendar`** - Earnings and economic calendar
 - **`fmp.senateHouse`** - Congressional trading data
 - **`fmp.institutional`** - Form 13F filings and institutional ownership
 - **`fmp.insider`** - Insider trading data
 - **`fmp.sec`** - SEC filings and industry classification
+- **`fmp.news`** - Financial news articles (general, stock, crypto, forex; by symbol or latest)
 
 ## AI Tools Integration
 
@@ -372,6 +409,7 @@ This is a monorepo containing:
 - **`apps/docs/`**: Next.js documentation site
 - **`apps/examples/`**: Example applications
   - **`vercel-ai/`**: Vercel AI SDK integration example
+  - **`openai/`**: OpenAI integration example
 
 ### Development Setup
 
@@ -398,6 +436,7 @@ pnpm api:dev          # Just API
 pnpm tools:dev        # Just tools package
 pnpm types:dev        # Just types package
 pnpm example:dev      # Just Vercel AI example
+pnpm example:openai:dev # Just OpenAI example
 pnpm build            # Build all packages
 pnpm clean            # Clean build artifacts
 pnpm clean:install    # Clean all node_modules and reinstall

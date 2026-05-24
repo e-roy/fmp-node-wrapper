@@ -10,40 +10,44 @@ The documentation is organized using MDX files for easy content management and e
 src/
 ├── app/
 │   ├── docs/                    # Main documentation pages
-│   │   ├── getting-started/     # Getting started guide
-│   │   ├── api/                 # API reference
-│   │   │   ├── stock/          # Stock endpoints (market cap, splits, dividends)
+│   │   ├── api/                 # API wrapper (fmp-node-api) reference
+│   │   │   ├── getting-started/ # Getting started guide
+│   │   │   ├── configuration/  # Client configuration
 │   │   │   ├── quote/          # Quote endpoints (unified quotes for all assets)
+│   │   │   ├── stock/          # Stock endpoints (market cap, splits, dividends)
 │   │   │   ├── financial/      # Financial endpoints
 │   │   │   ├── etf/            # ETF endpoints
+│   │   │   ├── mutual-fund/    # Mutual fund endpoints
 │   │   │   ├── market/         # Market data endpoints
 │   │   │   ├── economic/       # Economic indicators
-│   │   │   ├── mutual-fund/    # Mutual fund endpoints
-│   │   │   ├── list/           # List and screening endpoints
+│   │   │   ├── news/           # Financial news endpoints
+│   │   │   ├── list/           # List endpoints
+│   │   │   ├── screener/       # Stock screener endpoints
 │   │   │   ├── calendar/       # Calendar and events endpoints
 │   │   │   ├── company/        # Company information endpoints
 │   │   │   ├── senate-house/   # Congressional trading data
 │   │   │   ├── institutional/  # Form 13F filings
 │   │   │   ├── insider/        # Insider trading data
-│   │   │   └── sec/            # SEC filings and industry data
-│   │   ├── examples/           # Code examples
-│   │   ├── layout.tsx          # Documentation layout
-│   │   └── page.mdx            # Main docs page
+│   │   │   ├── sec/            # SEC filings and industry data
+│   │   │   ├── helpers/        # Helper utilities
+│   │   │   ├── examples/       # Code examples
+│   │   │   ├── layout.tsx      # API docs nav + layout
+│   │   │   └── page.mdx        # API reference landing page
+│   │   └── tools/              # AI tools (fmp-ai-tools) reference
+│   │       ├── categories/     # Tool categories
+│   │       ├── best-practices/ # Usage best practices
+│   │       ├── error-handling/ # Error handling guide
+│   │       ├── vercel-ai/      # Vercel AI SDK provider docs
+│   │       ├── openai/         # OpenAI provider docs
+│   │       ├── layout.tsx      # Tools docs nav + layout
+│   │       └── page.mdx        # Tools landing page
 │   ├── layout.tsx              # Root layout
 │   └── page.tsx                # Homepage
 ├── components/
-│   ├── mdx/                    # MDX-specific components
-│   │   ├── code-block.tsx      # Syntax highlighting
-│   │   └── api-table.tsx       # API endpoint and parameter tables
-│   ├── layout/                 # Layout components
-│   │   ├── header.tsx          # Site header
-│   │   └── footer.tsx          # Site footer
-│   ├── theme/                  # Theme components
-│   │   ├── theme-provider.tsx  # Theme context provider
-│   │   └── theme-toggle.tsx    # Dark/light mode toggle
-│   └── ui/                     # UI components
-│       ├── button.tsx          # Button component
-│       └── card.tsx            # Card component
+│   ├── mdx/                    # MDX-specific components (code blocks, API tables)
+│   ├── layout/                 # Layout components (header, footer)
+│   ├── theme/                  # Theme components (provider, toggle)
+│   └── ui/                     # Reusable UI components (button, card)
 ├── hooks/                      # Custom React hooks
 └── lib/                        # Utility functions
     └── utils.ts                # Common utilities
@@ -104,16 +108,21 @@ Shows parameter documentation (included in the same file as ApiTable):
 
 ## Navigation
 
-The documentation uses a grouped sidebar navigation system defined in `src/app/docs/layout.tsx`:
+The API reference uses a grouped sidebar navigation system defined in `src/app/docs/api/layout.tsx`:
 
 ### Documentation
 
 - Getting Started
+- Configuration
 - API Reference
+- Examples
+
+### Quotes
+
+- Quote Endpoints (unified quotes for all assets)
 
 ### Asset Classes
 
-- Quote Endpoints (unified quotes for all assets)
 - Stock Endpoints (market cap, splits, dividends)
 - Financial Endpoints
 - ETF Endpoints
@@ -123,20 +132,24 @@ The documentation uses a grouped sidebar navigation system defined in `src/app/d
 
 - Market Endpoints
 - Economic Endpoints
+- News Endpoints
 
 ### Information
 
 - List Endpoints
 - Calendar Endpoints
 - Company Endpoints
+- Screener Endpoints
 - Senate & House Trading
-- Institutional Data
-- Insider Trading
+- Institutional Endpoints
+- Insider Endpoints
 - SEC Filings
 
 ### Resources
 
-- Examples
+- Helper Utilities
+
+The AI tools reference under `src/app/docs/tools/` has its own navigation defined in `src/app/docs/tools/layout.tsx`.
 
 ## Adding New Documentation
 
@@ -170,7 +183,7 @@ Regular markdown content here.
 
 ### 4. Update navigation
 
-Add the new page to the appropriate group in the navigation in `src/app/docs/layout.tsx`.
+Add the new page to the appropriate group in the navigation in `src/app/docs/api/layout.tsx` (or `src/app/docs/tools/layout.tsx` for AI tools pages).
 
 ## API Endpoint Categories
 
@@ -188,10 +201,12 @@ The documentation covers comprehensive financial data across multiple asset clas
 
 - **Market Endpoints**: Market performance, trading hours, sector data, gainers/losers
 - **Economic Endpoints**: Economic indicators, calendar, treasury rates, inflation data
+- **News Endpoints**: Financial news articles — general, stock, crypto, and forex
 
 ### Information
 
-- **List Endpoints**: Stock listings, screening, and filtering capabilities
+- **List Endpoints**: Stock listings, indices, and symbol lists
+- **Screener Endpoints**: Stock screener with filters and available exchanges/sectors/industries/countries
 - **Calendar Endpoints**: Earnings calendar, economic calendar, and event scheduling
 - **Company Endpoints**: Company profiles, executive information, and corporate data
 - **Senate & House Trading**: Congressional trading data and political stock activity
