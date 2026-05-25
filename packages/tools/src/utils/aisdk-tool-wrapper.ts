@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { tool, ToolSet } from 'ai';
+import { tool } from 'ai';
 import { logApiExecutionWithTiming } from './logger';
 
 interface AISDKToolConfig {
@@ -13,9 +13,11 @@ export const createTool = (config: AISDKToolConfig) => {
   const { name, description, inputSchema, execute } = config;
   return tool({
     description,
-    inputSchema,
+    // `as any` avoids ai@6 tool()'s excessively-deep type instantiation on a
+    // generic Zod schema; the real Zod schema is still passed at runtime.
+    inputSchema: inputSchema as any,
     execute: async (input: any) => {
       return await logApiExecutionWithTiming(name, input, () => execute(input));
     },
-  } as ToolSet);
+  });
 };

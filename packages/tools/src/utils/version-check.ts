@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-const REQUIRED_VERSION = '0.1.0';
+const REQUIRED_VERSION = '0.11.0';
 
 /**
  * Gets the actual installed version of a package
