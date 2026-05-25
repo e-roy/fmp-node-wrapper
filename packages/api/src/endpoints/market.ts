@@ -74,7 +74,7 @@ export class MarketEndpoints {
    *
    * @see {@link https://site.financialmodelingprep.com/developer/docs#market-index-market-overview|FMP Market Performance Documentation}
    */
-  async getMarketPerformance(): Promise<APIResponse<MarketPerformance[]>> {
+  async getMarketPerformance(): Promise<APIResponse<MarketIndex[]>> {
     return this.client.get('/quotes/index', 'v3');
   }
 

@@ -186,6 +186,8 @@ console.log(\`Final Link: \${filing.finalLink}\`);
   link: string;
   finalLink: string;
   date: string;
+  process: string;
+  hasFinancials: string;
 }`}
 </CodeBlock>
 
@@ -422,8 +424,8 @@ const classification = await fmp.sec.getIndividualIndustryClassification({
 symbol: symbol
 });
 
-if (classification.success && classification.data.length > 0) {
-const company = classification.data[0];
+if (classification.success && classification.data) {
+const company = classification.data;
 console.log(\`\${company.symbol}: \${company.industryTitle} (SIC: \${company.sicCode})\`);
 }
 }`}

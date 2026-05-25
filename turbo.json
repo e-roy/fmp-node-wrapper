@@ -42,11 +42,6 @@
       "outputs": ["coverage/**"],
       "env": ["FMP_API_KEY", "NODE_ENV"]
     },
-    "test:integration": {
-      "dependsOn": ["^build"],
-      "outputs": ["coverage/**"],
-      "env": ["FMP_API_KEY", "NODE_ENV"]
-    },
     "test:endpoints": {
       "dependsOn": ["^build"],
       "outputs": ["coverage/**"],

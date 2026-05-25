@@ -1,85 +1,99 @@
-// ETF-related types for FMP API
+// etf types for FMP API
+//
+// Schema-first: Zod schemas are the source of truth; types are derived via z.infer.
+// Base schemas generated via `pnpm --filter fmp-node-types gen:schemas`.
+import { z } from "zod";
 
-export interface ETFHoldingDates {
-  date: string;
-}
+export const ETFHoldingDatesSchema = z.object({
+    date: z.string()
+});
 
-export interface ETFHolding {
-  cik: string;
-  acceptanceTime: string;
-  date: string;
-  symbol: string;
-  name: string;
-  lei: string;
-  title: string;
-  cusip: string;
-  isin: string;
-  balance: number;
-  units: string;
-  cur_cd: string;
-  valUsd: number;
-  pctVal: number;
-  payoffProfile: string;
-  assetCat: string;
-  issuerCat: string;
-  invCountry: string;
-  isRestrictedSec: string;
-  fairValLevel: string;
-  isCashCollateral: string;
-  isNonCashCollateral: string;
-  isLoanByFund: string;
-}
+export const ETFHoldingSchema = z.object({
+    cik: z.string(),
+    acceptanceTime: z.string(),
+    date: z.string(),
+    symbol: z.string(),
+    name: z.string(),
+    lei: z.string(),
+    title: z.string(),
+    cusip: z.string(),
+    isin: z.string(),
+    balance: z.number(),
+    units: z.string(),
+    cur_cd: z.string(),
+    valUsd: z.number(),
+    pctVal: z.number(),
+    payoffProfile: z.string(),
+    assetCat: z.string(),
+    issuerCat: z.string(),
+    invCountry: z.string(),
+    isRestrictedSec: z.string(),
+    fairValLevel: z.string(),
+    isCashCollateral: z.string(),
+    isNonCashCollateral: z.string(),
+    isLoanByFund: z.string()
+});
 
-export interface ETFHolder {
-  asset: string;
-  name: string;
-  isin: string;
-  cusip: string;
-  sharesNumber: number;
-  weightPercentage: number;
-  marketValue: number;
-  updated: string;
-}
+export const ETFHolderSchema = z.object({
+    asset: z.string(),
+    name: z.string(),
+    isin: z.string(),
+    cusip: z.string(),
+    sharesNumber: z.number(),
+    weightPercentage: z.number(),
+    marketValue: z.number(),
+    updated: z.string()
+});
 
-export interface ETFProfile {
-  symbol: string;
-  name: string;
-  description: string;
-  isin: string;
-  assetClass: string;
-  securityCusip: string;
-  domicile: string;
-  website: string;
-  etfCompany: string;
-  expenseRatio: number;
-  assetsUnderManagement: number;
-  avgVolume: number;
-  inceptionDate: string;
-  nav: number;
-  navCurrency: string;
-  holdingsCount: number;
-  updatedAt: string;
-  sectorsList: {
-    exposure: string;
-    industry: string;
-  }[];
-}
+export const ETFProfileSchema = z.object({
+    symbol: z.string(),
+    name: z.string(),
+    description: z.string(),
+    isin: z.string(),
+    assetClass: z.string(),
+    securityCusip: z.string(),
+    domicile: z.string(),
+    website: z.string(),
+    etfCompany: z.string(),
+    expenseRatio: z.number(),
+    assetsUnderManagement: z.number(),
+    avgVolume: z.number(),
+    inceptionDate: z.string(),
+    nav: z.number(),
+    navCurrency: z.string(),
+    holdingsCount: z.number(),
+    updatedAt: z.string(),
+    isActivelyTrading: z.boolean(),
+    sectorsList: z.array(z.object({
+        exposure: z.number(),
+        industry: z.string()
+    }))
+});
 
-export interface ETFWeighting {
-  symbol: string;
-  sector: string;
-  weightPercentage: string;
-}
+export const ETFWeightingSchema = z.object({
+    symbol: z.string(),
+    sector: z.string(),
+    // Sector weighting returns a numeric percentage (country weighting returns a string).
+    weightPercentage: z.number()
+});
 
-export interface ETFCountryWeighting {
-  country: string;
-  weightPercentage: string;
-}
+export const ETFCountryWeightingSchema = z.object({
+    country: z.string(),
+    weightPercentage: z.string()
+});
 
-export interface ETFStockExposure {
-  etfSymbol: string;
-  assetExposure: string;
-  sharesNumber: number;
-  weightPercentage: number;
-  marketValue: number;
-}
+export const ETFStockExposureSchema = z.object({
+    etfSymbol: z.string(),
+    assetExposure: z.string(),
+    sharesNumber: z.number(),
+    weightPercentage: z.number(),
+    marketValue: z.number()
+});
+
+export type ETFHoldingDates = z.infer<typeof ETFHoldingDatesSchema>;
+export type ETFHolding = z.infer<typeof ETFHoldingSchema>;
+export type ETFHolder = z.infer<typeof ETFHolderSchema>;
+export type ETFProfile = z.infer<typeof ETFProfileSchema>;
+export type ETFWeighting = z.infer<typeof ETFWeightingSchema>;
+export type ETFCountryWeighting = z.infer<typeof ETFCountryWeightingSchema>;
+export type ETFStockExposure = z.infer<typeof ETFStockExposureSchema>;

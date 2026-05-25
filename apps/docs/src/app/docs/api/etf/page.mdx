@@ -73,26 +73,28 @@ Retrieve ETF profile and basic information including expense ratio, AUM, and fun
     data: {
       symbol: 'SPY',
       name: 'SPDR S&P 500 ETF Trust',
-      assetClass: 'Equity',
-      aum: 500000000000,
-      avgVolume: 75000000,
-      cusip: '78462F103',
       description: 'The SPDR S&P 500 ETF Trust tracks the S&P 500 Index',
+      isin: 'US78462F1030',
+      assetClass: 'Equity',
+      securityCusip: '78462F103',
       domicile: 'United States',
+      website: 'https://www.ssga.com',
       etfCompany: 'State Street Global Advisors',
       expenseRatio: 0.0945,
+      assetsUnderManagement: 500000000000,
+      avgVolume: 75000000,
       inceptionDate: '1993-01-29',
-      isin: 'US78462F1030',
       nav: 450.25,
       navCurrency: 'USD',
+      holdingsCount: 500,
+      updatedAt: '2024-01-15T16:30:00.000Z',
+      isActivelyTrading: true,
       sectorsList: [
         {
-          exposure: 'Technology',
-          industry: 'Software'
+          exposure: 29.85,
+          industry: 'Technology'
         }
-      ],
-      website: 'https://www.ssga.com',
-      holdingsCount: 500
+      ]
     }
 }`}
 </CodeBlock>
@@ -258,16 +260,19 @@ Retrieve sector breakdown of ETF holdings.
     success: true,
     data: [
       {
+        symbol: 'SPY',
         sector: 'Technology',
-        weightPercentage: '32.62%'
+        weightPercentage: 32.62
       },
       {
+        symbol: 'SPY',
         sector: 'Financial Services',
-        weightPercentage: '12.48%'
+        weightPercentage: 12.48
       },
       {
+        symbol: 'SPY',
         sector: 'Healthcare',
-        weightPercentage: '12.1%'
+        weightPercentage: 12.1
       }
     ]
 }`}
@@ -364,25 +369,27 @@ Retrieve which ETFs hold a specific stock.
 <CodeBlock language="typescript">
   {`interface ETFProfile {
     symbol: string;
-    assetClass: string;
-    aum: number;
-    avgVolume: number;
-    cusip: string;
+    name: string;
     description: string;
+    isin: string;
+    assetClass: string;
+    securityCusip: string;
     domicile: string;
+    website: string;
     etfCompany: string;
     expenseRatio: number;
+    assetsUnderManagement: number;
+    avgVolume: number;
     inceptionDate: string;
-    isin: string;
-    name: string;
     nav: number;
     navCurrency: string;
+    holdingsCount: number;
+    updatedAt: string;
+    isActivelyTrading: boolean;
     sectorsList: {
-      exposure: string;
+      exposure: number;
       industry: string;
     }[];
-    website: string;
-    holdingsCount: number;
 }`}
 </CodeBlock>
 
@@ -435,8 +442,9 @@ Retrieve which ETFs hold a specific stock.
 
 <CodeBlock language="typescript">
   {`interface ETFWeighting {
+    symbol: string;
     sector: string;
-    weightPercentage: string;
+    weightPercentage: number;
 }`}
 </CodeBlock>
 

@@ -27,7 +27,7 @@ pnpm lint:all           # turbo lint across every package (incl. tools)
 pnpm format             # prettier --write
 ```
 
-Per-endpoint Jest runs (filter to `fmp-node-api`), e.g. `pnpm test:quote`, `pnpm test:stock`, `pnpm test:financial`, `pnpm test:sec`, etc. Also `pnpm test:unit` (client + fmp), `pnpm test:integration`, `pnpm test:endpoints`, `pnpm test:tools`.
+Per-endpoint Jest runs (filter to `fmp-node-api`), e.g. `pnpm test:quote`, `pnpm test:stock`, `pnpm test:financial`, `pnpm test:sec`, etc. Also `pnpm test:unit` (client + fmp), `pnpm test:endpoints`, `pnpm test:tools`. **All Jest tests are fully mocked and deterministic — no network or API key required.** Live API validation is a separate concern handled by `pnpm test:live` (shape-checks responses against the canonical Zod schemas; see below).
 
 Run a single test file directly:
 ```bash
@@ -36,13 +36,16 @@ pnpm --filter fmp-node-api exec jest src/__tests__/endpoints/quote.test.ts
 
 Manual live-API smoke tests (hit the real FMP API, need `FMP_API_KEY`):
 ```bash
-pnpm test:endpoint <name>   # packages/api/scripts/test-endpoint.ts
+pnpm test:endpoint <name>   # packages/api/scripts/test-endpoint.ts (raw JSON, one endpoint)
 pnpm test:tool              # packages/tools manual tool runner
+pnpm test:live [flags]      # live-API shape check vs Zod schemas; PASS/FAIL/SKIP/DRIFT (packages/api/scripts/live)
 ```
+
+`test:live` validates real responses against the canonical Zod schemas in `fmp-node-types` (schema-first; types are `z.infer`). It is sequential + throttled and supports `--category`, `--endpoint`, `--delay`, `--max-calls`, `--dry-run`, `--include-locked`, `--fail-on-drift`. Seeded for `quote`/`stock`/`financial`/`market`; classifier logic is unit-tested in `packages/api/src/__tests__/live/`. Add new cases in `scripts/live/manifest.ts`.
 
 ### API key for tests
 
-Integration tests and manual scripts read `FMP_API_KEY` from a root `.env` (`cp .env.example .env`). Turbo passes `FMP_API_KEY` through to test tasks (see `turbo.json` `env`). Constructing `new FMP()` with no key falls back to `process.env.FMP_API_KEY` and throws if absent or malformed (`FMPValidation.isValidApiKey`).
+The live-check tool (`test:live`) and manual scripts read `FMP_API_KEY` from a root `.env` (`cp .env.example .env`); the mocked Jest suite does not need it. Turbo passes `FMP_API_KEY` through to test tasks (see `turbo.json` `env`). Constructing `new FMP()` with no key falls back to `process.env.FMP_API_KEY` and throws if absent or malformed (`FMPValidation.isValidApiKey`).
 
 ## Architecture
 

@@ -1,154 +1,134 @@
-import { FMP } from '../../fmp';
-import { API_KEY, isCI } from '../utils/test-setup';
+import { MarketEndpoints } from '../../endpoints/market';
+import { FMPClient } from '../../client';
 
-// Helper function to safely access data that could be an array or single object
-function getFirstItem<T>(data: T | T[]): T {
-  return Array.isArray(data) ? data[0] : data;
-}
+// Mock the FMPClient
+jest.mock('../../client');
 
-describe('Market Endpoints', () => {
-  if (!API_KEY || isCI) {
-    it('should skip tests when no API key is provided or running in CI', () => {
-      expect(true).toBe(true);
-    });
-    return;
-  }
+describe('MarketEndpoints', () => {
+  let marketEndpoints: MarketEndpoints;
+  let mockClient: jest.Mocked<FMPClient>;
 
-  let fmp: FMP;
-
-  beforeAll(() => {
-    if (!API_KEY) {
-      throw new Error('FMP_API_KEY is required for testing');
-    }
-    fmp = new FMP({ apiKey: API_KEY });
+  beforeEach(() => {
+    mockClient = new FMPClient({ apiKey: 'test-key' }) as jest.Mocked<FMPClient>;
+    marketEndpoints = new MarketEndpoints(mockClient);
   });
 
   describe('getMarketHours', () => {
-    it('should fetch market hours', async () => {
-      const result = await fmp.market.getMarketHours();
+    it('should get market hours using /market-hours endpoint', async () => {
+      const mockResponse = {
+        success: true,
+        data: [{ isTheStockMarketOpen: true }],
+        error: null,
+        status: 200,
+      };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-      expect(result.success).toBe(true);
-      expect(result.data).toBeDefined();
-      expect(result.data?.isTheStockMarketOpen).toBeDefined();
-      expect(result.data?.isTheForexMarketOpen).toBeDefined();
-      expect(result.data?.isTheCryptoMarketOpen).toBeDefined();
-      expect(result.data?.stockExchangeName).toBeDefined();
-    }, 10000);
+      const result = await marketEndpoints.getMarketHours();
+
+      expect(mockClient.get).toHaveBeenCalledWith('/market-hours', 'v3');
+      expect(result).toEqual(mockResponse);
+    });
   });
 
   describe('getMarketPerformance', () => {
-    it('should fetch market performance', async () => {
-      const result = await fmp.market.getMarketPerformance();
+    it('should get market performance using /quotes/index endpoint', async () => {
+      const mockResponse = {
+        success: true,
+        data: [{ symbol: '^GSPC', price: 4500 }],
+        error: null,
+        status: 200,
+      };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-      expect(result.success).toBe(true);
-      expect(result.data).toBeDefined();
-      expect(Array.isArray(result.data)).toBe(true);
+      const result = await marketEndpoints.getMarketPerformance();
 
-      if (result.data && Array.isArray(result.data) && result.data.length > 0) {
-        const performance = getFirstItem(result.data);
-        expect(performance.symbol).toBeDefined();
-        expect(performance.name).toBeDefined();
-        expect(Number(performance.price)).toBeGreaterThan(0);
-        expect(typeof performance.change).toBe('number');
-        expect(typeof performance.changesPercentage).toBe('number');
-      }
-    }, 10000);
+      expect(mockClient.get).toHaveBeenCalledWith('/quotes/index', 'v3');
+      expect(result).toEqual(mockResponse);
+    });
   });
 
   describe('getGainers', () => {
-    it('should fetch market gainers', async () => {
-      const result = await fmp.market.getGainers();
-      expect(result.success).toBe(true);
-      expect(result.data).toBeDefined();
-      expect(Array.isArray(result.data)).toBe(true);
+    it('should get gainers using /biggest-gainers stable endpoint', async () => {
+      const mockResponse = {
+        success: true,
+        data: [{ symbol: 'AAPL', changesPercentage: 5 }],
+        error: null,
+        status: 200,
+      };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-      if (result.data && Array.isArray(result.data) && result.data.length > 0) {
-        const gainer = getFirstItem(result.data);
-        expect(gainer.symbol).toBeDefined();
-        expect(gainer.name).toBeDefined();
-        expect(Number(gainer.price)).toBeGreaterThan(0);
-        expect(Number(gainer.changesPercentage)).toBeGreaterThan(0);
-        expect(typeof gainer.change).toBe('number');
-      }
-    }, 10000);
+      const result = await marketEndpoints.getGainers();
+
+      expect(mockClient.get).toHaveBeenCalledWith('/biggest-gainers', 'stable');
+      expect(result).toEqual(mockResponse);
+    });
   });
 
   describe('getLosers', () => {
-    it('should fetch market losers', async () => {
-      const result = await fmp.market.getLosers();
-      expect(result.success).toBe(true);
-      expect(result.data).toBeDefined();
-      expect(Array.isArray(result.data)).toBe(true);
+    it('should get losers using /biggest-losers stable endpoint', async () => {
+      const mockResponse = {
+        success: true,
+        data: [{ symbol: 'XYZ', changesPercentage: -5 }],
+        error: null,
+        status: 200,
+      };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-      if (result.data && Array.isArray(result.data) && result.data.length > 0) {
-        const loser = getFirstItem(result.data);
-        expect(loser.symbol).toBeDefined();
-        expect(loser.name).toBeDefined();
-        expect(Number(loser.price)).toBeGreaterThan(0);
-        expect(Number(loser.changesPercentage)).toBeLessThan(0);
-        expect(typeof loser.change).toBe('number');
-      }
-    }, 10000);
+      const result = await marketEndpoints.getLosers();
+
+      expect(mockClient.get).toHaveBeenCalledWith('/biggest-losers', 'stable');
+      expect(result).toEqual(mockResponse);
+    });
   });
 
   describe('getMostActive', () => {
-    it('should fetch most active stocks', async () => {
-      const result = await fmp.market.getMostActive();
+    it('should get most active using /most-actives stable endpoint', async () => {
+      const mockResponse = {
+        success: true,
+        data: [{ symbol: 'AAPL', volume: 1000000 }],
+        error: null,
+        status: 200,
+      };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-      expect(result.success).toBe(true);
-      expect(result.data).toBeDefined();
-      expect(Array.isArray(result.data)).toBe(true);
+      const result = await marketEndpoints.getMostActive();
 
-      if (result.data && Array.isArray(result.data) && result.data.length > 0) {
-        const active = getFirstItem(result.data);
-        expect(active.symbol).toBeDefined();
-        expect(active.name).toBeDefined();
-        expect(Number(active.price)).toBeGreaterThan(0);
-        expect(typeof active.change).toBe('number');
-        expect(typeof active.changesPercentage).toBe('number');
-      }
-    }, 10000);
+      expect(mockClient.get).toHaveBeenCalledWith('/most-actives', 'stable');
+      expect(result).toEqual(mockResponse);
+    });
   });
 
   describe('getSectorPerformance', () => {
-    it('should fetch sector performance', async () => {
-      const result = await fmp.market.getSectorPerformance();
+    it('should get sector performance using /sector-performance endpoint', async () => {
+      const mockResponse = {
+        success: true,
+        data: [{ sector: 'Technology', changesPercentage: 1.5 }],
+        error: null,
+        status: 200,
+      };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-      expect(result.success).toBe(true);
-      expect(result.data).toBeDefined();
-      expect(Array.isArray(result.data)).toBe(true);
+      const result = await marketEndpoints.getSectorPerformance();
 
-      if (result.data && Array.isArray(result.data) && result.data.length > 0) {
-        const sector = getFirstItem(result.data);
-        expect(sector.sector).toBeDefined();
-        expect(sector.changesPercentage).toBeDefined();
-        // changesPercentage can be a string or number from the API
-        expect(['string', 'number']).toContain(typeof sector.changesPercentage);
-      }
-    }, 10000);
+      expect(mockClient.get).toHaveBeenCalledWith('/sector-performance', 'v3');
+      expect(result).toEqual(mockResponse);
+    });
   });
 
   describe('getMarketIndex', () => {
-    it('should fetch market index data', async () => {
-      const result = await fmp.market.getMarketIndex();
+    it('should get market index using /quotes/index endpoint', async () => {
+      const mockResponse = {
+        success: true,
+        data: [{ symbol: '^GSPC', price: 4500 }],
+        error: null,
+        status: 200,
+      };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-      expect(result.success).toBe(true);
-      expect(result.data).toBeDefined();
-      expect(Array.isArray(result.data)).toBe(true);
+      const result = await marketEndpoints.getMarketIndex();
 
-      if (result.data && Array.isArray(result.data) && result.data.length > 0) {
-        const index = getFirstItem(result.data);
-        expect(index.symbol).toBeDefined();
-        expect(index.name).toBeDefined();
-        expect(Number(index.price)).toBeGreaterThan(0);
-        // Check for optional properties that may or may not be present
-        if (index.type !== undefined) {
-          expect(typeof index.type).toBe('string');
-        }
-        if (index.volume !== undefined) {
-          expect(typeof index.volume).toBe('number');
-        }
-      }
-    }, 15000);
+      expect(mockClient.get).toHaveBeenCalledWith('/quotes/index', 'v3');
+      expect(result).toEqual(mockResponse);
+    });
   });
 });

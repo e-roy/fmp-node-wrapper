@@ -1,7 +1,7 @@
 // Unified quote endpoints for FMP API - handles stocks, crypto, forex, commodities, and ETFs
 
 import { FMPClient } from '@/client';
-import { APIResponse, Quote, HistoricalPriceResponse, HistoricalPriceData } from 'fmp-node-types';
+import { APIResponse, Quote, HistoricalPriceResponse, IntradayPrice } from 'fmp-node-types';
 
 export class QuoteEndpoints {
   constructor(private client: FMPClient) {}
@@ -144,7 +144,7 @@ export class QuoteEndpoints {
     interval: '1min' | '5min' | '15min' | '30min' | '1hour' | '4hour';
     from?: string;
     to?: string;
-  }): Promise<APIResponse<HistoricalPriceData[]>> {
+  }): Promise<APIResponse<IntradayPrice[]>> {
     const { symbol, interval, from, to } = params;
 
     const queryParams: { from?: string; to?: string } = {};

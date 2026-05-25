@@ -1,6 +1,5 @@
 import { FMP } from '../fmp';
 import { FMPClient } from '../client';
-import { API_KEY } from './utils/test-setup';
 
 // Mock the environment variable
 const originalEnv = process.env.FMP_API_KEY;
@@ -121,18 +120,5 @@ describe('FMP', () => {
         new FMP({ apiKey: 'validapikey32characterslong123456789012345' });
       }).not.toThrow();
     });
-  });
-});
-
-describe('FMP API Smoke Test', () => {
-  it('should have an API key set for integration tests', () => {
-    if (!API_KEY) {
-      console.log('⚠️  No FMP_API_KEY found - integration tests will be skipped');
-      console.log(
-        '   Set FMP_API_KEY in your .env file or environment variables to run integration tests',
-      );
-    }
-    expect(typeof API_KEY).toBe('string');
-    expect(API_KEY?.length || 0).toBeGreaterThan(0);
   });
 });

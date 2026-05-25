@@ -1,392 +1,143 @@
-import { FMP } from '../../fmp';
-import { FAST_TIMEOUT } from '../utils/test-setup';
+import { SenateHouseEndpoints } from '../../endpoints/senate-house';
+import { FMPClient } from '../../client';
+
+// Mock the FMPClient
+jest.mock('../../client');
 
 describe('SenateHouseEndpoints', () => {
-  let fmp: FMP;
+  let endpoints: SenateHouseEndpoints;
+  let mockClient: jest.Mocked<FMPClient>;
 
   beforeEach(() => {
-    fmp = new FMP();
+    mockClient = new FMPClient({ apiKey: 'test-key' }) as jest.Mocked<FMPClient>;
+    endpoints = new SenateHouseEndpoints(mockClient);
   });
 
   describe('getSenateTrading', () => {
-    it(
-      'should get senate trading data for a specific symbol',
-      async () => {
-        const result = await fmp.senateHouse.getSenateTrading({
-          symbol: 'AAPL',
-        });
+    it('should get senate trading by symbol (stable)', async () => {
+      const mockResponse = {
+        success: true,
+        data: [{ symbol: 'AAPL', firstName: 'Jane', lastName: 'Doe' }],
+        error: null,
+        status: 200,
+      };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-        expect(result).toBeDefined();
-        expect(typeof result.success).toBe('boolean');
+      const result = await endpoints.getSenateTrading({ symbol: 'AAPL' });
 
-        // Type safety test - verify SenateTradingResponse structure
-        if (result.success && result.data) {
-          const senateData = result.data;
-          expect(Array.isArray(senateData)).toBe(true);
-
-          if (senateData.length > 0) {
-            const firstItem = senateData[0];
-            // Check for SenateTradingResponse specific fields
-            expect(firstItem).toHaveProperty('firstName');
-            expect(firstItem).toHaveProperty('lastName');
-            expect(firstItem).toHaveProperty('office');
-            expect(firstItem).toHaveProperty('disclosureDate');
-            expect(firstItem).toHaveProperty('transactionDate');
-            expect(firstItem).toHaveProperty('owner');
-            expect(firstItem).toHaveProperty('assetDescription');
-            expect(firstItem).toHaveProperty('assetType');
-            expect(firstItem).toHaveProperty('type');
-            expect(firstItem).toHaveProperty('amount');
-            expect(firstItem).toHaveProperty('comment');
-            expect(firstItem).toHaveProperty('symbol');
-            // Note: Both Senate and House now have similar fields in unified structure
-          }
-        }
-      },
-      FAST_TIMEOUT,
-    );
-
-    it(
-      'should get senate trading data for different symbols',
-      async () => {
-        const result = await fmp.senateHouse.getSenateTrading({
-          symbol: 'MSFT',
-        });
-
-        expect(result).toBeDefined();
-        expect(typeof result.success).toBe('boolean');
-      },
-      FAST_TIMEOUT,
-    );
+      expect(mockClient.get).toHaveBeenCalledWith('/senate-trades', 'stable', { symbol: 'AAPL' });
+      expect(result).toEqual(mockResponse);
+    });
   });
 
   describe('getSenateTradingRSSFeed', () => {
-    it(
-      'should get senate trading RSS feed for page 0',
-      async () => {
-        const result = await fmp.senateHouse.getSenateTradingRSSFeed({
-          page: 0,
-          limit: 5,
-        });
+    it('should get senate RSS feed with default limit of 100', async () => {
+      const mockResponse = { success: true, data: [], error: null, status: 200 };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-        expect(result).toBeDefined();
-        expect(typeof result.success).toBe('boolean');
+      const result = await endpoints.getSenateTradingRSSFeed({ page: 0 });
 
-        // Type safety test - verify SenateTradingResponse structure
-        if (result.success && result.data) {
-          const senateData = result.data;
-          expect(Array.isArray(senateData)).toBe(true);
-
-          if (senateData.length > 0) {
-            const firstItem = senateData[0];
-            // Check for SenateTradingResponse specific fields
-            expect(firstItem).toHaveProperty('firstName');
-            expect(firstItem).toHaveProperty('lastName');
-            expect(firstItem).toHaveProperty('office');
-            expect(firstItem).toHaveProperty('disclosureDate');
-            // Note: Both Senate and House now have similar fields in unified structure
-          }
-        }
-      },
-      FAST_TIMEOUT,
-    );
-
-    it(
-      'should get senate trading RSS feed for different pages',
-      async () => {
-        const result = await fmp.senateHouse.getSenateTradingRSSFeed({
-          page: 1,
-        });
-
-        expect(result).toBeDefined();
-        expect(typeof result.success).toBe('boolean');
-      },
-      FAST_TIMEOUT,
-    );
-
-    it(
-      'should get senate trading RSS feed for page 2',
-      async () => {
-        const result = await fmp.senateHouse.getSenateTradingRSSFeed({
-          page: 2,
-        });
-
-        expect(result).toBeDefined();
-        expect(typeof result.success).toBe('boolean');
-      },
-      FAST_TIMEOUT,
-    );
-  });
-
-  describe('getHouseTrading', () => {
-    it(
-      'should get house trading data for a specific symbol',
-      async () => {
-        const result = await fmp.senateHouse.getHouseTrading({
-          symbol: 'AAPL',
-        });
-
-        expect(result).toBeDefined();
-        expect(typeof result.success).toBe('boolean');
-
-        // Type safety test - verify HouseTradingResponse structure
-        if (result.success && result.data) {
-          const houseData = result.data;
-          expect(Array.isArray(houseData)).toBe(true);
-
-          if (houseData.length > 0) {
-            const firstItem = houseData[0];
-            // Check for HouseTradingResponse specific fields
-            expect(firstItem).toHaveProperty('disclosureDate');
-            expect(firstItem).toHaveProperty('transactionDate');
-            expect(firstItem).toHaveProperty('owner');
-            expect(firstItem).toHaveProperty('symbol');
-            expect(firstItem).toHaveProperty('assetDescription');
-            expect(firstItem).toHaveProperty('type');
-            expect(firstItem).toHaveProperty('amount');
-            expect(firstItem).toHaveProperty('firstName');
-            expect(firstItem).toHaveProperty('lastName');
-            expect(firstItem).toHaveProperty('district');
-            expect(firstItem).toHaveProperty('link');
-            expect(firstItem).toHaveProperty('capitalGainsOver200USD');
-            // Note: Both Senate and House now have office field in unified structure
-          }
-        }
-      },
-      FAST_TIMEOUT,
-    );
-
-    it(
-      'should get house trading data for different symbols',
-      async () => {
-        const result = await fmp.senateHouse.getHouseTrading({
-          symbol: 'GOOGL',
-        });
-
-        expect(result).toBeDefined();
-        expect(typeof result.success).toBe('boolean');
-      },
-      FAST_TIMEOUT,
-    );
-  });
-
-  describe('getHouseTradingRSSFeed', () => {
-    it('should get house trading RSS feed for page 0', async () => {
-      const result = await fmp.senateHouse.getHouseTradingRSSFeed({
+      expect(mockClient.get).toHaveBeenCalledWith('/senate-latest', 'stable', {
         page: 0,
-        limit: 5,
+        limit: 100,
       });
-
-      expect(result).toBeDefined();
-      expect(typeof result.success).toBe('boolean');
-
-      // Type safety test - this would catch the type mismatch
-      if (result.success && result.data) {
-        // This should be HouseTradingResponse[], not SenateTradingResponse[]
-        const houseData = result.data;
-        expect(Array.isArray(houseData)).toBe(true);
-
-        if (houseData.length > 0) {
-          const firstItem = houseData[0];
-          // Check for HouseTradingResponse specific fields
-          expect(firstItem).toHaveProperty('disclosureDate');
-          expect(firstItem).toHaveProperty('firstName');
-          expect(firstItem).toHaveProperty('lastName');
-          expect(firstItem).toHaveProperty('district');
-          expect(firstItem).toHaveProperty('capitalGainsOver200USD');
-          // Note: Both Senate and House now have office field in unified structure
-        }
-      }
+      expect(result).toEqual(mockResponse);
     });
 
-    it(
-      'should get house trading RSS feed for different pages',
-      async () => {
-        const result = await fmp.senateHouse.getHouseTradingRSSFeed({
-          page: 1,
-        });
+    it('should pass through explicit limit', async () => {
+      const mockResponse = { success: true, data: [], error: null, status: 200 };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-        expect(result).toBeDefined();
-        expect(typeof result.success).toBe('boolean');
-      },
-      FAST_TIMEOUT,
-    );
+      const result = await endpoints.getSenateTradingRSSFeed({ page: 1, limit: 5 });
 
-    it(
-      'should get house trading RSS feed for page 2',
-      async () => {
-        const result = await fmp.senateHouse.getHouseTradingRSSFeed({
-          page: 2,
-        });
-
-        expect(result).toBeDefined();
-        expect(typeof result.success).toBe('boolean');
-      },
-      FAST_TIMEOUT,
-    );
+      expect(mockClient.get).toHaveBeenCalledWith('/senate-latest', 'stable', {
+        page: 1,
+        limit: 5,
+      });
+      expect(result).toEqual(mockResponse);
+    });
   });
 
   describe('getSenateTradingByName', () => {
-    it(
-      'should get senate trading data by name',
-      async () => {
-        const result = await fmp.senateHouse.getSenateTradingByName({
-          name: 'Jerry',
-        });
+    it('should get senate trading by name (stable)', async () => {
+      const mockResponse = {
+        success: true,
+        data: [{ symbol: 'AAPL', firstName: 'Jerry' }],
+        error: null,
+        status: 200,
+      };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-        expect(result).toBeDefined();
-        expect(typeof result.success).toBe('boolean');
+      const result = await endpoints.getSenateTradingByName({ name: 'Jerry' });
 
-        // Type safety test - verify SenateHouseTradingByNameResponse structure
-        if (result.success && result.data) {
-          const senateData = result.data;
-          expect(Array.isArray(senateData)).toBe(true);
+      expect(mockClient.get).toHaveBeenCalledWith('/senate-trades-by-name', 'stable', {
+        name: 'Jerry',
+      });
+      expect(result).toEqual(mockResponse);
+    });
+  });
 
-          if (senateData.length > 0) {
-            const firstItem = senateData[0];
-            // Check for SenateHouseTradingByNameResponse specific fields
-            expect(firstItem).toHaveProperty('symbol');
-            expect(firstItem).toHaveProperty('disclosureDate');
-            expect(firstItem).toHaveProperty('transactionDate');
-            expect(firstItem).toHaveProperty('firstName');
-            expect(firstItem).toHaveProperty('lastName');
-            expect(firstItem).toHaveProperty('office');
-            expect(firstItem).toHaveProperty('district');
-            expect(firstItem).toHaveProperty('owner');
-            expect(firstItem).toHaveProperty('assetDescription');
-            expect(firstItem).toHaveProperty('assetType');
-            expect(firstItem).toHaveProperty('type');
-            expect(firstItem).toHaveProperty('amount');
-            expect(firstItem).toHaveProperty('capitalGainsOver200USD');
-            expect(firstItem).toHaveProperty('comment');
-            expect(firstItem).toHaveProperty('link');
-          }
-        }
-      },
-      FAST_TIMEOUT,
-    );
+  describe('getHouseTrading', () => {
+    it('should get house trading by symbol (stable)', async () => {
+      const mockResponse = {
+        success: true,
+        data: [{ symbol: 'AAPL', district: 'CA-12' }],
+        error: null,
+        status: 200,
+      };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-    it(
-      'should get senate trading data by different names',
-      async () => {
-        const result = await fmp.senateHouse.getSenateTradingByName({
-          name: 'John',
-        });
+      const result = await endpoints.getHouseTrading({ symbol: 'AAPL' });
 
-        expect(result).toBeDefined();
-        expect(typeof result.success).toBe('boolean');
+      expect(mockClient.get).toHaveBeenCalledWith('/house-trades', 'stable', { symbol: 'AAPL' });
+      expect(result).toEqual(mockResponse);
+    });
+  });
 
-        if (result.success && result.data) {
-          expect(Array.isArray(result.data)).toBe(true);
-          if (result.data.length > 0) {
-            // Data found as expected
-          } else {
-            // No data found as expected
-          }
-        }
-      },
-      FAST_TIMEOUT,
-    );
+  describe('getHouseTradingRSSFeed', () => {
+    it('should get house RSS feed with default limit of 100', async () => {
+      const mockResponse = { success: true, data: [], error: null, status: 200 };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-    it(
-      'should handle empty results gracefully',
-      async () => {
-        const result = await fmp.senateHouse.getSenateTradingByName({
-          name: 'NonExistentName123',
-        });
+      const result = await endpoints.getHouseTradingRSSFeed({ page: 0 });
 
-        expect(result).toBeDefined();
-        expect(typeof result.success).toBe('boolean');
+      expect(mockClient.get).toHaveBeenCalledWith('/house-latest', 'stable', {
+        page: 0,
+        limit: 100,
+      });
+      expect(result).toEqual(mockResponse);
+    });
 
-        // Should return empty array, not undefined
-        if (result.success && result.data) {
-          expect(Array.isArray(result.data)).toBe(true);
-          expect(result.data.length).toBe(0);
-        }
-      },
-      FAST_TIMEOUT,
-    );
+    it('should pass through explicit limit', async () => {
+      const mockResponse = { success: true, data: [], error: null, status: 200 };
+      mockClient.get.mockResolvedValue(mockResponse);
+
+      const result = await endpoints.getHouseTradingRSSFeed({ page: 2, limit: 5 });
+
+      expect(mockClient.get).toHaveBeenCalledWith('/house-latest', 'stable', {
+        page: 2,
+        limit: 5,
+      });
+      expect(result).toEqual(mockResponse);
+    });
   });
 
   describe('getHouseTradingByName', () => {
-    it(
-      'should get house trading data by name',
-      async () => {
-        const result = await fmp.senateHouse.getHouseTradingByName({
-          name: 'Nancy',
-        });
+    it('should get house trading by name (stable)', async () => {
+      const mockResponse = {
+        success: true,
+        data: [{ symbol: 'AAPL', firstName: 'Nancy' }],
+        error: null,
+        status: 200,
+      };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-        expect(result).toBeDefined();
-        expect(typeof result.success).toBe('boolean');
+      const result = await endpoints.getHouseTradingByName({ name: 'Nancy' });
 
-        // Type safety test - verify SenateHouseTradingByNameResponse structure
-        if (result.success && result.data) {
-          const houseData = result.data;
-          expect(Array.isArray(houseData)).toBe(true);
-
-          if (houseData.length > 0) {
-            const firstItem = houseData[0];
-            // Check for SenateHouseTradingByNameResponse specific fields
-            expect(firstItem).toHaveProperty('symbol');
-            expect(firstItem).toHaveProperty('disclosureDate');
-            expect(firstItem).toHaveProperty('transactionDate');
-            expect(firstItem).toHaveProperty('firstName');
-            expect(firstItem).toHaveProperty('lastName');
-            expect(firstItem).toHaveProperty('office');
-            expect(firstItem).toHaveProperty('district');
-            expect(firstItem).toHaveProperty('owner');
-            expect(firstItem).toHaveProperty('assetDescription');
-            expect(firstItem).toHaveProperty('assetType');
-            expect(firstItem).toHaveProperty('type');
-            expect(firstItem).toHaveProperty('amount');
-            expect(firstItem).toHaveProperty('capitalGainsOver200USD');
-            expect(firstItem).toHaveProperty('comment');
-            expect(firstItem).toHaveProperty('link');
-          }
-        }
-      },
-      FAST_TIMEOUT,
-    );
-
-    it(
-      'should get house trading data by different names',
-      async () => {
-        const result = await fmp.senateHouse.getHouseTradingByName({
-          name: 'Kevin',
-        });
-
-        expect(result).toBeDefined();
-        expect(typeof result.success).toBe('boolean');
-
-        if (result.success && result.data) {
-          expect(Array.isArray(result.data)).toBe(true);
-          if (result.data.length > 0) {
-            // Data found as expected
-          } else {
-            // No data found as expected
-          }
-        }
-      },
-      FAST_TIMEOUT,
-    );
-
-    it(
-      'should handle empty results gracefully',
-      async () => {
-        const result = await fmp.senateHouse.getHouseTradingByName({
-          name: 'NonExistentName123',
-        });
-
-        expect(result).toBeDefined();
-        expect(typeof result.success).toBe('boolean');
-
-        // Should return empty array, not undefined
-        if (result.success && result.data) {
-          expect(Array.isArray(result.data)).toBe(true);
-          expect(result.data.length).toBe(0);
-        }
-      },
-      FAST_TIMEOUT,
-    );
+      expect(mockClient.get).toHaveBeenCalledWith('/house-trades-by-name', 'stable', {
+        name: 'Nancy',
+      });
+      expect(result).toEqual(mockResponse);
+    });
   });
 });

@@ -259,17 +259,14 @@ const treasury = await fmp.economic.getTreasuryRates({
   to: '2024-12-31',
 });
 
-// Get federal funds rate
-const fedRate = await fmp.economic.getFederalFundsRate();
-
-// Get CPI data
-const cpi = await fmp.economic.getCPI();
-
-// Get GDP data
-const gdp = await fmp.economic.getGDP();
-
-// Get unemployment data
-const unemployment = await fmp.economic.getUnemployment();
+// Get economic indicators by name (GDP, CPI, federalFunds, unemploymentRate, …)
+const gdp = await fmp.economic.getEconomicIndicators({
+  name: 'GDP',
+  from: '2024-01-01',
+  to: '2024-12-31',
+});
+const cpi = await fmp.economic.getEconomicIndicators({ name: 'CPI' });
+const unemployment = await fmp.economic.getEconomicIndicators({ name: 'unemploymentRate' });
 ```
 
 ### Other Asset Classes
@@ -281,10 +278,11 @@ const forexQuote = await fmp.quote.getQuote('EURUSD');
 // Cryptocurrency
 const cryptoQuote = await fmp.quote.getQuote('BTCUSD');
 
-// Stock lists and indices
-const sp500 = await fmp.list.getSP500();
-const nasdaq = await fmp.list.getNasdaq100();
-const dowJones = await fmp.list.getDowJones();
+// Symbol lists
+const stocks = await fmp.list.getStockList();
+const etfs = await fmp.list.getETFList();
+const crypto = await fmp.list.getCryptoList();
+const indexes = await fmp.list.getAvailableIndexes();
 
 // Earnings calendar
 const earnings = await fmp.calendar.getEarningsCalendar({
@@ -297,9 +295,6 @@ const economic = await fmp.calendar.getEconomicCalendar({
   from: '2024-01-01',
   to: '2024-12-31',
 });
-
-// Company search
-const companies = await fmp.company.searchCompany({ query: 'Apple' });
 
 // Company profile
 const companyProfile = await fmp.company.getCompanyProfile('AAPL');
@@ -349,17 +344,14 @@ pnpm test
 ```
 
 - Uses Jest to run all tests
-- Automatically loads API key from `.env` file
-- Requires a valid FMP API key in your `.env` file
+- **Fully mocked and deterministic** — no network and no API key required
+- Live API validation is handled separately by `pnpm test:live` (see below)
 
 ### Running Specific Tests
 
 ```bash
-# Run only unit tests
+# Run only unit tests (client + main FMP class)
 pnpm test:unit
-
-# Run only integration tests
-pnpm test:integration
 
 # Run tests for specific endpoints
 pnpm test:stock
@@ -374,8 +366,11 @@ pnpm test:company
 # Run all endpoint tests
 pnpm test:endpoints
 
-# Manual testing against the real API
-pnpm test:endpoint
+# Inspect one endpoint's raw response against the live API
+pnpm test:endpoint <name>
+
+# Validate response shapes against the live API (needs FMP_API_KEY)
+pnpm test:live
 ```
 
 ## Response Format
@@ -507,8 +502,7 @@ pnpm test
 
 # Run specific test categories
 pnpm test:unit          # Unit tests (client, main FMP class)
-pnpm test:integration   # Integration tests
-pnpm test:endpoints     # All endpoint tests
+pnpm test:endpoints     # All endpoint tests (mocked)
 pnpm test:stock         # Stock endpoint tests only
 pnpm test:financial     # Financial endpoint tests only
 pnpm test:market        # Market endpoint tests only
@@ -527,6 +521,31 @@ pnpm test:coverage      # Generate coverage report
 ```
 
 **Note**: Additional endpoint-specific test scripts (`test:etf`, `test:mutual-fund`, `test:senate-house`, `test:institutional`, `test:insider`, `test:sec`) are also available, both here and at the repo root.
+
+### Live API shape check (`test:live`)
+
+`test:live` validates real FMP responses against the canonical Zod schemas in `fmp-node-types` — catching renamed/missing/changed fields and version-mismatch 404s, not just "did it respond". Unlike `test:endpoint` (which prints one endpoint's raw JSON), `test:live` runs many cases and prints a classified summary.
+
+Run from the repo root (it builds `fmp-node-types` first so the runner uses fresh schemas):
+
+```bash
+pnpm test:live                                   # all seeded cases
+pnpm test:live --category quote,stock            # only these categories
+pnpm test:live --endpoint getQuote               # cases whose name matches
+pnpm test:live --dry-run                         # list cases, make NO API calls
+pnpm test:live --category financial --max-calls 10
+```
+
+Each result is classified:
+
+- **PASS** — response matches the schema
+- **FAIL** — an expected field is missing or has the wrong (non-null) type
+- **SKIP** — plan-locked (HTTP 402/403) or rate/quota limited (429)
+- **DRIFT** — extra top-level fields, or a non-nullable field came back `null`
+
+Flags: `--delay <ms>` (default 400) paces calls; `--max-calls <n>` (default 50) caps live calls; `--include-locked` also runs cases marked `planLocked`; `--fail-on-drift` makes DRIFT fail the exit code. The runner is sequential and throttled to stay within limited API plans — the first full run doubles as a calibration pass: mark any consistently plan-locked endpoints `planLocked: true` in `scripts/live/manifest.ts` so later default runs skip them. Exits non-zero when any case FAILs.
+
+> Coverage note: the seeded manifest currently covers the `quote`, `stock`, `financial`, and `market` categories. The classifier logic is unit-tested in `src/__tests__/live/validate.test.ts` (no API key needed).
 
 ## Development
 
@@ -565,12 +584,12 @@ pnpm build              # Build the package
 pnpm dev                # Watch mode for development
 
 # Testing
-pnpm test               # Run all tests
+pnpm test               # Run all tests (mocked, deterministic)
 pnpm test:watch         # Watch mode
 pnpm test:coverage      # Coverage report
-pnpm test:endpoint      # Run specific endpoint test against the live API
+pnpm test:live          # Validate response shapes against the live API
+pnpm test:endpoint      # Inspect one endpoint's raw response (live)
 pnpm test:unit          # Run unit tests
-pnpm test:integration   # Run integration tests
 pnpm test:endpoints     # Run all endpoint tests
 pnpm test:stock         # Run stock endpoint tests
 pnpm test:financial     # Run financial endpoint tests
@@ -625,10 +644,16 @@ src/
 │   ├── helpers.ts         # Shared helpers
 │   ├── debug.ts           # Debug logging
 │   └── utils.ts           # Misc utilities
-└── __tests__/             # Jest tests (client, fmp, integration, endpoints/, utils/)
+├── live/                  # Live-check classifier (dev-only; not exported/shipped)
+│   └── validate.ts        # Relaxed validator / classifier (PASS/FAIL/SKIP/DRIFT)
+└── __tests__/             # Jest tests (client, fmp, integration, endpoints/, utils/, live/)
 
 scripts/
-└── test-endpoint.ts       # Manual live-API endpoint testing script
+├── test-endpoint.ts       # Manual live-API endpoint inspector (raw JSON, one endpoint)
+└── live/                  # Live-API shape-check tool (pnpm test:live)
+    ├── run.ts             # CLI runner (flags, throttle, budget, summary)
+    ├── manifest.ts        # Data-driven registry of cases (endpoint + inputs + schema)
+    └── tsconfig.json      # Type-checks the runner (pnpm type-check:live)
 ```
 
 ## Contributing

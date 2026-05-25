@@ -1,77 +1,78 @@
-import { FMP } from '../../fmp';
+import { InstitutionalEndpoints } from '../../endpoints/institutional';
+import { FMPClient } from '../../client';
 
-const API_KEY = process.env.FMP_API_KEY || '';
+// Mock the FMPClient
+jest.mock('../../client');
 
-describe('InstitutionalEndpoints (integration)', () => {
-  let fmp: FMP;
+describe('InstitutionalEndpoints', () => {
+  let endpoints: InstitutionalEndpoints;
+  let mockClient: jest.Mocked<FMPClient>;
 
-  beforeAll(() => {
-    if (!API_KEY) {
-      throw new Error('FMP_API_KEY must be set in environment for integration tests');
-    }
-    fmp = new FMP({ apiKey: API_KEY });
+  beforeEach(() => {
+    mockClient = new FMPClient({ apiKey: 'test-key' }) as jest.Mocked<FMPClient>;
+    endpoints = new InstitutionalEndpoints(mockClient);
   });
 
   describe('getForm13F', () => {
-    it('should return non-empty data array with expected fields for a valid CIK and date', async () => {
-      const result = await fmp.institutional.getForm13F({
-        cik: '0001388838',
+    it('should get Form 13F data without a date (empty params)', async () => {
+      const mockResponse = {
+        success: true,
+        data: [{ nameOfIssuer: 'Apple Inc.', cusip: '037833100' }],
+        error: null,
+        status: 200,
+      };
+      mockClient.get.mockResolvedValue(mockResponse);
+
+      const result = await endpoints.getForm13F({ cik: '0001067983' });
+
+      expect(mockClient.get).toHaveBeenCalledWith('/form-thirteen/0001067983', 'v3', {});
+      expect(result).toEqual(mockResponse);
+    });
+
+    it('should include date in query params when provided', async () => {
+      const mockResponse = { success: true, data: [], error: null, status: 200 };
+      mockClient.get.mockResolvedValue(mockResponse);
+
+      const result = await endpoints.getForm13F({ cik: '0001388838', date: '2021-09-30' });
+
+      expect(mockClient.get).toHaveBeenCalledWith('/form-thirteen/0001388838', 'v3', {
         date: '2021-09-30',
       });
-      expect(result).toBeDefined();
-      expect(result.success).toBe(true);
-      expect(Array.isArray(result.data)).toBe(true);
-      if (result.data && result.data.length > 0) {
-        const first = result.data[0];
-        expect(first).toHaveProperty('nameOfIssuer');
-        expect(first).toHaveProperty('cusip');
-        expect(first).toHaveProperty('value');
-        expect(first).toHaveProperty('shares');
-        expect(first).toHaveProperty('titleOfClass');
-        expect(first).toHaveProperty('tickercusip');
-        expect(first).toHaveProperty('acceptedDate');
-        expect(first).toHaveProperty('fillingDate');
-        expect(first).toHaveProperty('link');
-        expect(first).toHaveProperty('finalLink');
-      } else {
-        console.warn(
-          '⚠️ getForm13F returned an empty array for CIK 0001388838 and date 2021-09-30',
-        );
-      }
+      expect(result).toEqual(mockResponse);
     });
   });
 
   describe('getForm13FDates', () => {
-    it('should return a non-empty array of date strings for a valid CIK', async () => {
-      const result = await fmp.institutional.getForm13FDates({ cik: '0001067983' });
-      expect(result).toBeDefined();
-      expect(result.success).toBe(true);
-      expect(Array.isArray(result.data)).toBe(true);
-      if (result.data && result.data.length > 0) {
-        expect(typeof result.data[0]).toBe('string');
-        // Optionally, check if it's a valid date string
-        expect(result.data[0]).toMatch(/^\d{4}-\d{2}-\d{2}$/);
-      } else {
-        console.warn('⚠️ getForm13FDates returned an empty array for CIK 0001067983');
-      }
+    it('should get Form 13F filing dates for a CIK', async () => {
+      const mockResponse = {
+        success: true,
+        data: ['2023-12-31', '2023-09-30'],
+        error: null,
+        status: 200,
+      };
+      mockClient.get.mockResolvedValue(mockResponse);
+
+      const result = await endpoints.getForm13FDates({ cik: '0001067983' });
+
+      expect(mockClient.get).toHaveBeenCalledWith('/form-thirteen-date/0001067983', 'v3');
+      expect(result).toEqual(mockResponse);
     });
   });
 
   describe('getInstitutionalHolders', () => {
-    it('should return non-empty data array with expected fields for a valid symbol', async () => {
-      const result = await fmp.institutional.getInstitutionalHolders({ symbol: 'AAPL' });
-      expect(result).toBeDefined();
-      expect(result.success).toBe(true);
-      expect(Array.isArray(result.data)).toBe(true);
-      if (result.data && result.data.length > 0) {
-        const first = result.data[0];
-        expect(first).toHaveProperty('holder');
-        expect(first).toHaveProperty('shares');
-        expect(first).toHaveProperty('dateReported');
-        expect(first).toHaveProperty('change');
-      } else {
-        console.warn('⚠️ getInstitutionalHolders returned an empty array for symbol AAPL');
-      }
+    it('should get institutional holders for a symbol', async () => {
+      const mockResponse = {
+        success: true,
+        data: [{ holder: 'Vanguard', shares: 1000000 }],
+        error: null,
+        status: 200,
+      };
+      mockClient.get.mockResolvedValue(mockResponse);
+
+      const result = await endpoints.getInstitutionalHolders({ symbol: 'AAPL' });
+
+      expect(mockClient.get).toHaveBeenCalledWith('/institutional-holder/AAPL', 'v3');
+      expect(result).toEqual(mockResponse);
     });
   });
 });

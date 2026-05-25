@@ -1,562 +1,344 @@
-import { FMP } from '../../fmp';
-import { TransactionType } from 'fmp-node-types';
-import { shouldSkipTests, createTestClient, API_TIMEOUT, FAST_TIMEOUT } from '../utils/test-setup';
+import { InsiderEndpoints } from '../../endpoints/insider';
+import { FMPClient } from '../../client';
+
+// Mock the FMPClient
+jest.mock('../../client');
 
 describe('InsiderEndpoints', () => {
-  let fmp: FMP;
+  let endpoints: InsiderEndpoints;
+  let mockClient: jest.Mocked<FMPClient>;
 
   beforeEach(() => {
-    // Create a new FMP instance for each test
-    fmp = createTestClient();
+    mockClient = new FMPClient({ apiKey: 'test-key' }) as jest.Mocked<FMPClient>;
+    endpoints = new InsiderEndpoints(mockClient);
   });
 
   describe('getInsiderTradingRSS', () => {
-    it(
-      'should return insider trading RSS data with pagination',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping insider trading RSS test - no API key available');
-          return;
-        }
+    it('should get RSS feed with default page and limit', async () => {
+      const mockResponse = {
+        success: true,
+        data: [{ symbol: 'AAPL', reportingName: 'John Doe' }],
+        error: null,
+        status: 200,
+      };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-        const result = await fmp.insider.getInsiderTradingRSS({ page: 0, limit: 5 });
+      const result = await endpoints.getInsiderTradingRSS({});
 
-        expect(result.success).toBe(true);
-        expect(result.data).not.toBeNull();
-        expect(Array.isArray(result.data)).toBe(true);
-        expect(result.data!.length).toBeLessThanOrEqual(5);
+      expect(mockClient.get).toHaveBeenCalledWith('/insider-trading/latest', 'stable', {
+        page: 0,
+        limit: 100,
+      });
+      expect(result).toEqual(mockResponse);
+    });
 
-        if (result.data && result.data.length > 0) {
-          const firstTrade = result.data[0];
-          expect(firstTrade).toHaveProperty('symbol');
-          expect(firstTrade).toHaveProperty('filingDate');
-          expect(firstTrade).toHaveProperty('transactionDate');
-          expect(firstTrade).toHaveProperty('reportingCik');
-          expect(firstTrade).toHaveProperty('companyCik');
-          expect(firstTrade).toHaveProperty('transactionType');
-          expect(firstTrade).toHaveProperty('reportingName');
-        }
-      },
-      API_TIMEOUT,
-    );
+    it('should pass through explicit page and limit', async () => {
+      const mockResponse = { success: true, data: [], error: null, status: 200 };
+      mockClient.get.mockResolvedValue(mockResponse);
+
+      const result = await endpoints.getInsiderTradingRSS({ page: 2, limit: 5 });
+
+      expect(mockClient.get).toHaveBeenCalledWith('/insider-trading/latest', 'stable', {
+        page: 2,
+        limit: 5,
+      });
+      expect(result).toEqual(mockResponse);
+    });
   });
 
   describe('searchInsiderTrading', () => {
-    it(
-      'should return insider trading data for a specific symbol',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping insider trading search test - no API key available');
-          return;
-        }
+    it('should search with only defaults when no filters provided', async () => {
+      const mockResponse = {
+        success: true,
+        data: [{ symbol: 'AAPL' }],
+        error: null,
+        status: 200,
+      };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-        const result = await fmp.insider.searchInsiderTrading({
-          symbol: 'AAPL',
-          page: 0,
-          limit: 3,
-        });
+      const result = await endpoints.searchInsiderTrading({});
 
-        expect(result.success).toBe(true);
-        expect(result.data).not.toBeNull();
-        expect(Array.isArray(result.data)).toBe(true);
-        expect(result.data!.length).toBeLessThanOrEqual(3);
+      expect(mockClient.get).toHaveBeenCalledWith('/insider-trading/search', 'stable', {
+        page: 0,
+        limit: 100,
+      });
+      expect(result).toEqual(mockResponse);
+    });
 
-        if (result.data && result.data.length > 0) {
-          const firstTrade = result.data[0];
-          expect(firstTrade).toHaveProperty('symbol');
-          expect(firstTrade).toHaveProperty('filingDate');
-          expect(firstTrade).toHaveProperty('transactionDate');
-          expect(firstTrade).toHaveProperty('reportingCik');
-          expect(firstTrade).toHaveProperty('companyCik');
-          expect(firstTrade).toHaveProperty('transactionType');
-          expect(firstTrade).toHaveProperty('reportingName');
-          expect(firstTrade.symbol).toBe('AAPL');
-        }
-      },
-      API_TIMEOUT,
-    );
+    it('should include all provided filters in query params', async () => {
+      const mockResponse = { success: true, data: [], error: null, status: 200 };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-    it(
-      'should return insider trading data with pagination only',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping insider trading search test - no API key available');
-          return;
-        }
+      const result = await endpoints.searchInsiderTrading({
+        symbol: 'AAPL',
+        reportingCik: '0000111111',
+        companyCik: '0000320193',
+        transactionType: 'P-Purchase',
+        page: 1,
+        limit: 25,
+      });
 
-        const result = await fmp.insider.searchInsiderTrading({
-          page: 0,
-          limit: 2,
-        });
-
-        expect(result.success).toBe(true);
-        expect(result.data).not.toBeNull();
-        expect(Array.isArray(result.data)).toBe(true);
-        expect(result.data!.length).toBeLessThanOrEqual(2);
-      },
-      API_TIMEOUT,
-    );
-
-    it(
-      'should return insider trading data filtered by reporting CIK',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log(
-            'Skipping insider trading search by reporting CIK test - no API key available',
-          );
-          return;
-        }
-
-        const result = await fmp.insider.searchInsiderTrading({
-          reportingCik: '0000320193',
-          page: 0,
-          limit: 2,
-        });
-
-        expect(result.success).toBe(true);
-        expect(result.data).not.toBeNull();
-        expect(Array.isArray(result.data)).toBe(true);
-        expect(result.data!.length).toBeLessThanOrEqual(2);
-      },
-      API_TIMEOUT,
-    );
-
-    it(
-      'should return insider trading data filtered by company CIK',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping insider trading search by company CIK test - no API key available');
-          return;
-        }
-
-        const result = await fmp.insider.searchInsiderTrading({
-          companyCik: '0000320193',
-          page: 0,
-          limit: 2,
-        });
-
-        expect(result.success).toBe(true);
-        expect(result.data).not.toBeNull();
-        expect(Array.isArray(result.data)).toBe(true);
-        expect(result.data!.length).toBeLessThanOrEqual(2);
-      },
-      API_TIMEOUT,
-    );
-
-    it(
-      'should return insider trading data filtered by transaction type',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log(
-            'Skipping insider trading search by transaction type test - no API key available',
-          );
-          return;
-        }
-
-        const result = await fmp.insider.searchInsiderTrading({
-          transactionType: 'P-Purchase',
-          page: 0,
-          limit: 2,
-        });
-
-        expect(result.success).toBe(true);
-        expect(result.data).not.toBeNull();
-        expect(Array.isArray(result.data)).toBe(true);
-        expect(result.data!.length).toBeLessThanOrEqual(2);
-      },
-      API_TIMEOUT,
-    );
+      expect(mockClient.get).toHaveBeenCalledWith('/insider-trading/search', 'stable', {
+        page: 1,
+        limit: 25,
+        symbol: 'AAPL',
+        reportingCik: '0000111111',
+        companyCik: '0000320193',
+        transactionType: 'P-Purchase',
+      });
+      expect(result).toEqual(mockResponse);
+    });
   });
 
   describe('getTransactionTypes', () => {
-    it(
-      'should return array of transaction types',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping transaction types test - no API key available');
-          return;
-        }
+    it('should get transaction types', async () => {
+      const mockResponse = {
+        success: true,
+        data: ['P-Purchase', 'S-Sale'],
+        error: null,
+        status: 200,
+      };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-        const result = await fmp.insider.getTransactionTypes();
+      const result = await endpoints.getTransactionTypes();
 
-        expect(result.success).toBe(true);
-        expect(result.data).not.toBeNull();
-        expect(Array.isArray(result.data)).toBe(true);
-        expect(result.data!.length).toBeGreaterThan(0);
-
-        // Check that we have some expected transaction types
-        const transactionTypes = result.data!;
-        const typeStrings = transactionTypes.map((t: any) => t.transactionType);
-        expect(typeStrings).toContain('P-Purchase');
-        expect(typeStrings).toContain('S-Sale');
-      },
-      FAST_TIMEOUT,
-    );
+      expect(mockClient.get).toHaveBeenCalledWith('/insider-trading-transaction-type', 'stable');
+      expect(result).toEqual(mockResponse);
+    });
   });
 
-  describe('getInsidersBySymbol (DEPRECATED)', () => {
-    it(
-      'should return insiders data for a symbol (v4 endpoint)',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping insiders by symbol test - no API key available');
-          return;
-        }
+  describe('getInsidersBySymbol', () => {
+    it('should get insiders roster by symbol (v4)', async () => {
+      const mockResponse = {
+        success: true,
+        data: [{ owner: 'John Doe', typeOfOwner: 'officer' }],
+        error: null,
+        status: 200,
+      };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-        const result = await fmp.insider.getInsidersBySymbol({ symbol: 'AAPL' });
+      const result = await endpoints.getInsidersBySymbol({ symbol: 'AAPL' });
 
-        expect(result.success).toBe(true);
-        expect(result.data).not.toBeNull();
-        expect(Array.isArray(result.data)).toBe(true);
-
-        if (result.data && result.data.length > 0) {
-          const firstInsider = result.data[0];
-          expect(firstInsider).toHaveProperty('typeOfOwner');
-          expect(firstInsider).toHaveProperty('transactionDate');
-          expect(firstInsider).toHaveProperty('owner');
-        }
-      },
-      API_TIMEOUT,
-    );
+      expect(mockClient.get).toHaveBeenCalledWith('/insider-roaster', 'v4', { symbol: 'AAPL' });
+      expect(result).toEqual(mockResponse);
+    });
   });
 
   describe('getInsiderTradeStatistics', () => {
-    it(
-      'should return insider trade statistics for a symbol',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping insider trade statistics test - no API key available');
-          return;
-        }
+    it('should get insider trade statistics by symbol', async () => {
+      const mockResponse = {
+        success: true,
+        data: [{ symbol: 'AAPL', totalPurchases: 10 }],
+        error: null,
+        status: 200,
+      };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-        const result = await fmp.insider.getInsiderTradeStatistics({ symbol: 'AAPL' });
+      const result = await endpoints.getInsiderTradeStatistics({ symbol: 'AAPL' });
 
-        expect(result.success).toBe(true);
-        expect(result.data).not.toBeNull();
-        expect(Array.isArray(result.data)).toBe(true);
-
-        if (result.data && result.data.length > 0) {
-          const firstStat = result.data[0];
-          expect(firstStat).toHaveProperty('symbol');
-          expect(firstStat).toHaveProperty('cik');
-          expect(firstStat).toHaveProperty('year');
-          expect(firstStat).toHaveProperty('quarter');
-          expect(firstStat).toHaveProperty('totalPurchases');
-          expect(firstStat).toHaveProperty('totalSales');
-          expect(firstStat.symbol).toBe('AAPL');
-        }
-      },
-      API_TIMEOUT,
-    );
+      expect(mockClient.get).toHaveBeenCalledWith('/insider-trading/statistics', 'stable', {
+        symbol: 'AAPL',
+      });
+      expect(result).toEqual(mockResponse);
+    });
   });
 
-  describe('getCikMapper (DEPRECATED)', () => {
-    it(
-      'should return CIK mapper data with pagination (v4 endpoint)',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping CIK mapper test - no API key available');
-          return;
-        }
+  describe('getCikMapper', () => {
+    it('should get CIK mapper with default page (v4)', async () => {
+      const mockResponse = {
+        success: true,
+        data: [{ reportingCik: '0000320193', reportingName: 'Apple Inc.' }],
+        error: null,
+        status: 200,
+      };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-        const result = await fmp.insider.getCikMapper({ page: 0 });
+      const result = await endpoints.getCikMapper({});
 
-        expect(result.success).toBe(true);
-        expect(result.data).not.toBeNull();
-        expect(Array.isArray(result.data)).toBe(true);
+      expect(mockClient.get).toHaveBeenCalledWith('/mapper-cik-name', 'v4', { page: 0 });
+      expect(result).toEqual(mockResponse);
+    });
 
-        if (result.data && result.data.length > 0) {
-          const firstMapping = result.data[0];
-          expect(firstMapping).toHaveProperty('reportingCik');
-          expect(firstMapping).toHaveProperty('reportingName');
-        }
-      },
-      API_TIMEOUT,
-    );
+    it('should pass through explicit page', async () => {
+      const mockResponse = { success: true, data: [], error: null, status: 200 };
+      mockClient.get.mockResolvedValue(mockResponse);
+
+      const result = await endpoints.getCikMapper({ page: 3 });
+
+      expect(mockClient.get).toHaveBeenCalledWith('/mapper-cik-name', 'v4', { page: 3 });
+      expect(result).toEqual(mockResponse);
+    });
   });
 
-  describe('getCikMapperByName (DEPRECATED)', () => {
-    it(
-      'should return CIK mapper data by name search (v4 endpoint)',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping CIK mapper by name test - no API key available');
-          return;
-        }
+  describe('getCikMapperByName', () => {
+    it('should get CIK mapper by name with default page (v4)', async () => {
+      const mockResponse = {
+        success: true,
+        data: [{ reportingCik: '0000320193', reportingName: 'Apple Inc.' }],
+        error: null,
+        status: 200,
+      };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-        const result = await fmp.insider.getCikMapperByName({ name: 'apple', page: 0 });
+      const result = await endpoints.getCikMapperByName({ name: 'Apple' });
 
-        // This endpoint might fail, so we'll check for success or handle the failure gracefully
-        if (result.success) {
-          expect(result.data).not.toBeNull();
-          expect(Array.isArray(result.data)).toBe(true);
-
-          if (result.data && result.data.length > 0) {
-            const firstMapping = result.data[0];
-            expect(firstMapping).toHaveProperty('reportingCik');
-            expect(firstMapping).toHaveProperty('reportingName');
-            expect(firstMapping.reportingName.toLowerCase()).toContain('apple');
-          }
-        } else {
-          // If the API call fails, just log it but don't fail the test
-          console.log(
-            'CIK mapper by name API call failed, which is expected for deprecated endpoints',
-          );
-          expect(result.success).toBe(false);
-        }
-      },
-      API_TIMEOUT,
-    );
+      expect(mockClient.get).toHaveBeenCalledWith('/mapper-cik-name', 'v4', {
+        name: 'Apple',
+        page: 0,
+      });
+      expect(result).toEqual(mockResponse);
+    });
   });
 
-  describe('getCikMapperBySymbol (DEPRECATED)', () => {
-    it(
-      'should return CIK mapper data by symbol (v4 endpoint)',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping CIK mapper by symbol test - no API key available');
-          return;
-        }
+  describe('getCikMapperBySymbol', () => {
+    it('should get CIK mapper by symbol via getSingle (v4)', async () => {
+      const mockResponse = {
+        success: true,
+        data: { symbol: 'AAPL', companyCik: '0000320193' },
+        error: null,
+        status: 200,
+      };
+      mockClient.getSingle.mockResolvedValue(mockResponse);
 
-        const result = await fmp.insider.getCikMapperBySymbol({ symbol: 'AAPL' });
+      const result = await endpoints.getCikMapperBySymbol({ symbol: 'AAPL' });
 
-        expect(result.success).toBe(true);
-        expect(result.data).not.toBeNull();
-        expect(result.data).toHaveProperty('symbol');
-        expect(result.data).toHaveProperty('companyCik');
-        expect(result.data!.symbol).toBe('AAPL');
-      },
-      FAST_TIMEOUT,
-    );
+      expect(mockClient.getSingle).toHaveBeenCalledWith('/mapper-cik-company/AAPL', 'v4');
+      expect(result).toEqual(mockResponse);
+    });
   });
 
   describe('getBeneficialOwnership', () => {
-    it(
-      'should return beneficial ownership data for a symbol',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping beneficial ownership test - no API key available');
-          return;
-        }
+    it('should get beneficial ownership with default limit', async () => {
+      const mockResponse = {
+        success: true,
+        data: [{ symbol: 'AAPL', cik: '0000320193' }],
+        error: null,
+        status: 200,
+      };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-        const result = await fmp.insider.getBeneficialOwnership({ symbol: 'AAPL' });
+      const result = await endpoints.getBeneficialOwnership({ symbol: 'AAPL' });
 
-        expect(result.success).toBe(true);
-        expect(result.data).not.toBeNull();
-        expect(Array.isArray(result.data)).toBe(true);
+      expect(mockClient.get).toHaveBeenCalledWith('/acquisition-of-beneficial-ownership', 'stable', {
+        symbol: 'AAPL',
+        limit: 100,
+      });
+      expect(result).toEqual(mockResponse);
+    });
 
-        if (result.data && result.data.length > 0) {
-          const firstOwnership = result.data[0];
-          expect(firstOwnership).toHaveProperty('cik');
-          expect(firstOwnership).toHaveProperty('symbol');
-          expect(firstOwnership).toHaveProperty('filingDate');
-          expect(firstOwnership).toHaveProperty('nameOfReportingPerson');
-          expect(firstOwnership.symbol).toBe('AAPL');
-        }
-      },
-      API_TIMEOUT,
-    );
+    it('should pass through explicit limit', async () => {
+      const mockResponse = { success: true, data: [], error: null, status: 200 };
+      mockClient.get.mockResolvedValue(mockResponse);
+
+      const result = await endpoints.getBeneficialOwnership({ symbol: 'MSFT', limit: 10 });
+
+      expect(mockClient.get).toHaveBeenCalledWith('/acquisition-of-beneficial-ownership', 'stable', {
+        symbol: 'MSFT',
+        limit: 10,
+      });
+      expect(result).toEqual(mockResponse);
+    });
   });
 
-  describe('getFailToDeliver (DEPRECATED)', () => {
-    it(
-      'should return fail to deliver data for a symbol (v4 endpoint)',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping fail to deliver test - no API key available');
-          return;
-        }
+  describe('getFailToDeliver', () => {
+    it('should get fail to deliver data with default page (v4)', async () => {
+      const mockResponse = {
+        success: true,
+        data: [{ symbol: 'AAPL', quantity: 500 }],
+        error: null,
+        status: 200,
+      };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-        const result = await fmp.insider.getFailToDeliver({ symbol: 'AAPL', page: 0 });
+      const result = await endpoints.getFailToDeliver({ symbol: 'AAPL' });
 
-        expect(result.success).toBe(true);
-        expect(result.data).not.toBeNull();
-        expect(Array.isArray(result.data)).toBe(true);
-
-        if (result.data && result.data.length > 0) {
-          const firstEntry = result.data[0];
-          expect(firstEntry).toHaveProperty('symbol');
-          expect(firstEntry).toHaveProperty('date');
-          expect(firstEntry).toHaveProperty('price');
-          expect(firstEntry).toHaveProperty('quantity');
-          expect(firstEntry.symbol).toBe('AAPL');
-        }
-      },
-      API_TIMEOUT,
-    );
+      expect(mockClient.get).toHaveBeenCalledWith('/fail_to_deliver', 'v4', {
+        symbol: 'AAPL',
+        page: 0,
+      });
+      expect(result).toEqual(mockResponse);
+    });
   });
 
-  describe('convenience methods', () => {
-    describe('getInsiderTradesBySymbol', () => {
-      it(
-        'should return insider trades for a specific symbol',
-        async () => {
-          if (shouldSkipTests()) {
-            console.log('Skipping insider trades by symbol test - no API key available');
-            return;
-          }
+  describe('getInsiderTradesBySymbol', () => {
+    it('should delegate to searchInsiderTrading with symbol and explicit page', async () => {
+      const mockResponse = {
+        success: true,
+        data: [{ symbol: 'AAPL' }],
+        error: null,
+        status: 200,
+      };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-          const result = await fmp.insider.getInsiderTradesBySymbol('AAPL', 0);
+      const result = await endpoints.getInsiderTradesBySymbol('AAPL', 1);
 
-          expect(result.success).toBe(true);
-          expect(result.data).not.toBeNull();
-          expect(Array.isArray(result.data)).toBe(true);
-
-          if (result.data && result.data.length > 0) {
-            const firstTrade = result.data[0];
-            expect(firstTrade).toHaveProperty('symbol');
-            expect(firstTrade.symbol).toBe('AAPL');
-          }
-        },
-        API_TIMEOUT,
-      );
-
-      it(
-        'should use default page value when not provided',
-        async () => {
-          if (shouldSkipTests()) {
-            console.log(
-              'Skipping insider trades by symbol default page test - no API key available',
-            );
-            return;
-          }
-
-          const result = await fmp.insider.getInsiderTradesBySymbol('AAPL');
-
-          expect(result.success).toBe(true);
-          expect(result.data).not.toBeNull();
-          expect(Array.isArray(result.data)).toBe(true);
-        },
-        API_TIMEOUT,
-      );
+      expect(mockClient.get).toHaveBeenCalledWith('/insider-trading/search', 'stable', {
+        page: 1,
+        limit: 100,
+        symbol: 'AAPL',
+      });
+      expect(result).toEqual(mockResponse);
     });
 
-    describe('getInsiderTradesByType', () => {
-      it(
-        'should return insider trades filtered by transaction type',
-        async () => {
-          if (shouldSkipTests()) {
-            console.log('Skipping insider trades by type test - no API key available');
-            return;
-          }
+    it('should default page to 0', async () => {
+      const mockResponse = { success: true, data: [], error: null, status: 200 };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-          const result = await fmp.insider.getInsiderTradesByType(TransactionType.SALE, 0);
+      await endpoints.getInsiderTradesBySymbol('AAPL');
 
-          expect(result.success).toBe(true);
-          expect(result.data).not.toBeNull();
-          expect(Array.isArray(result.data)).toBe(true);
-
-          if (result.data && result.data.length > 0) {
-            const firstTrade = result.data[0];
-            expect(firstTrade).toHaveProperty('transactionType');
-            expect(firstTrade.transactionType).toBe(TransactionType.SALE);
-          }
-        },
-        API_TIMEOUT,
-      );
-
-      it(
-        'should use default page value when not provided',
-        async () => {
-          if (shouldSkipTests()) {
-            console.log('Skipping insider trades by type default page test - no API key available');
-            return;
-          }
-
-          const result = await fmp.insider.getInsiderTradesByType(TransactionType.SALE);
-
-          expect(result.success).toBe(true);
-          expect(result.data).not.toBeNull();
-          expect(Array.isArray(result.data)).toBe(true);
-        },
-        API_TIMEOUT,
-      );
+      expect(mockClient.get).toHaveBeenCalledWith('/insider-trading/search', 'stable', {
+        page: 0,
+        limit: 100,
+        symbol: 'AAPL',
+      });
     });
+  });
 
-    describe('getInsiderTradesByReportingCik', () => {
-      it(
-        'should return insider trades filtered by reporting CIK',
-        async () => {
-          if (shouldSkipTests()) {
-            console.log('Skipping insider trades by reporting CIK test - no API key available');
-            return;
-          }
+  describe('getInsiderTradesByType', () => {
+    it('should delegate to searchInsiderTrading with transactionType and page', async () => {
+      const mockResponse = { success: true, data: [], error: null, status: 200 };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-          const result = await fmp.insider.getInsiderTradesByReportingCik('0000320193', 0);
+      const result = await endpoints.getInsiderTradesByType('P-Purchase', 2);
 
-          expect(result.success).toBe(true);
-          expect(result.data).not.toBeNull();
-          expect(Array.isArray(result.data)).toBe(true);
-
-          if (result.data && result.data.length > 0) {
-            const firstTrade = result.data[0];
-            expect(firstTrade).toHaveProperty('reportingCik');
-          }
-        },
-        API_TIMEOUT,
-      );
-
-      it(
-        'should use default page value when not provided',
-        async () => {
-          if (shouldSkipTests()) {
-            console.log(
-              'Skipping insider trades by reporting CIK default page test - no API key available',
-            );
-            return;
-          }
-
-          const result = await fmp.insider.getInsiderTradesByReportingCik('0000320193');
-
-          expect(result.success).toBe(true);
-          expect(result.data).not.toBeNull();
-          expect(Array.isArray(result.data)).toBe(true);
-        },
-        API_TIMEOUT,
-      );
+      expect(mockClient.get).toHaveBeenCalledWith('/insider-trading/search', 'stable', {
+        page: 2,
+        limit: 100,
+        transactionType: 'P-Purchase',
+      });
+      expect(result).toEqual(mockResponse);
     });
+  });
 
-    describe('getInsiderTradesByCompanyCik', () => {
-      it(
-        'should return insider trades filtered by company CIK',
-        async () => {
-          if (shouldSkipTests()) {
-            console.log('Skipping insider trades by company CIK test - no API key available');
-            return;
-          }
+  describe('getInsiderTradesByReportingCik', () => {
+    it('should delegate to searchInsiderTrading with reportingCik and page', async () => {
+      const mockResponse = { success: true, data: [], error: null, status: 200 };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-          const result = await fmp.insider.getInsiderTradesByCompanyCik('0000320193', 0);
+      const result = await endpoints.getInsiderTradesByReportingCik('0000111111', 1);
 
-          expect(result.success).toBe(true);
-          expect(result.data).not.toBeNull();
-          expect(Array.isArray(result.data)).toBe(true);
+      expect(mockClient.get).toHaveBeenCalledWith('/insider-trading/search', 'stable', {
+        page: 1,
+        limit: 100,
+        reportingCik: '0000111111',
+      });
+      expect(result).toEqual(mockResponse);
+    });
+  });
 
-          if (result.data && result.data.length > 0) {
-            const firstTrade = result.data[0];
-            expect(firstTrade).toHaveProperty('companyCik');
-          }
-        },
-        API_TIMEOUT,
-      );
+  describe('getInsiderTradesByCompanyCik', () => {
+    it('should delegate to searchInsiderTrading with companyCik and page', async () => {
+      const mockResponse = { success: true, data: [], error: null, status: 200 };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-      it(
-        'should use default page value when not provided',
-        async () => {
-          if (shouldSkipTests()) {
-            console.log(
-              'Skipping insider trades by company CIK default page test - no API key available',
-            );
-            return;
-          }
+      const result = await endpoints.getInsiderTradesByCompanyCik('0000320193', 0);
 
-          const result = await fmp.insider.getInsiderTradesByCompanyCik('0000320193');
-
-          expect(result.success).toBe(true);
-          expect(result.data).not.toBeNull();
-          expect(Array.isArray(result.data)).toBe(true);
-        },
-        API_TIMEOUT,
-      );
+      expect(mockClient.get).toHaveBeenCalledWith('/insider-trading/search', 'stable', {
+        page: 0,
+        limit: 100,
+        companyCik: '0000320193',
+      });
+      expect(result).toEqual(mockResponse);
     });
   });
 });

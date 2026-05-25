@@ -182,9 +182,9 @@ const treasury = await fmp.economic.getTreasuryRates({
   to: '2024-12-31',
 });
 
-// Stock lists and indices
-const sp500 = await fmp.list.getSP500();
-const nasdaq = await fmp.list.getNasdaq100();
+// Symbol lists
+const stocks = await fmp.list.getStockList();
+const etfs = await fmp.list.getETFList();
 
 // Earnings calendar
 const earnings = await fmp.calendar.getEarningsCalendar({
@@ -192,8 +192,8 @@ const earnings = await fmp.calendar.getEarningsCalendar({
   to: '2024-12-31',
 });
 
-// Company search
-const companies = await fmp.company.searchCompany({ query: 'Apple' });
+// Company profile
+const companyProfile = await fmp.company.getCompanyProfile('AAPL');
 ```
 
 ### Stock Screener

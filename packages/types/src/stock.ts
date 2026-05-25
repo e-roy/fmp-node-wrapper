@@ -1,56 +1,79 @@
 // Stock-related types for FMP API
+//
+// Schema-first: Zod schemas are the source of truth; TypeScript types are
+// derived via `z.infer`. Schemas here are hand-written because `ts-to-zod`
+// cannot generate from the generic wrapper interfaces below.
 
-export interface StockSplit {
-  date: string;
-  label: string;
-  numerator: number;
-  denominator: number;
-}
+import { z } from 'zod';
 
-export interface StockSplitResponse {
-  symbol: string;
-  historical: StockSplit[];
-}
+export const StockSplitSchema = z.object({
+  date: z.string(),
+  label: z.string(),
+  numerator: z.number(),
+  denominator: z.number(),
+});
 
-export interface StockDividend {
-  date: string;
-  label: string;
-  adjDividend: number;
-  dividend: number;
-  recordDate: string;
-  paymentDate: string;
-  declarationDate: string;
-}
+export type StockSplit = z.infer<typeof StockSplitSchema>;
 
-export interface StockDividendResponse {
-  symbol: string;
-  historical: StockDividend[];
-}
+export const StockSplitResponseSchema = z.object({
+  symbol: z.string(),
+  historical: z.array(StockSplitSchema),
+});
 
-export interface MarketCap {
-  symbol: string;
-  date: string;
-  marketCap: number;
-}
+export type StockSplitResponse = z.infer<typeof StockSplitResponseSchema>;
 
-export interface StockRealTimePrice {
-  symbol: string;
-  price: number;
-}
+export const StockDividendSchema = z.object({
+  date: z.string(),
+  label: z.string(),
+  adjDividend: z.number(),
+  dividend: z.number(),
+  recordDate: z.string(),
+  paymentDate: z.string(),
+  declarationDate: z.string(),
+});
 
-export interface StockRealTimePriceFull {
-  bidSize: number;
-  askPrice: number;
-  volume: number;
-  askSize: number;
-  bidPrice: number;
-  lastSalePrice: number;
-  lastSaleSize: number;
-  lastSaleTime: number;
-  fmpLast: number;
-  lastUpdated: number;
-  symbol: string;
-}
+export type StockDividend = z.infer<typeof StockDividendSchema>;
+
+export const StockDividendResponseSchema = z.object({
+  symbol: z.string(),
+  historical: z.array(StockDividendSchema),
+});
+
+export type StockDividendResponse = z.infer<typeof StockDividendResponseSchema>;
+
+export const MarketCapSchema = z.object({
+  symbol: z.string(),
+  date: z.string(),
+  marketCap: z.number(),
+});
+
+export type MarketCap = z.infer<typeof MarketCapSchema>;
+
+export const StockRealTimePriceSchema = z.object({
+  symbol: z.string(),
+  price: z.number(),
+});
+
+export type StockRealTimePrice = z.infer<typeof StockRealTimePriceSchema>;
+
+export const StockRealTimePriceFullSchema = z.object({
+  bidSize: z.number(),
+  askPrice: z.number(),
+  volume: z.number(),
+  askSize: z.number(),
+  bidPrice: z.number(),
+  lastSalePrice: z.number(),
+  lastSaleSize: z.number(),
+  lastSaleTime: z.number(),
+  fmpLast: z.number(),
+  lastUpdated: z.number(),
+  symbol: z.string(),
+});
+
+export type StockRealTimePriceFull = z.infer<typeof StockRealTimePriceFullSchema>;
+
+// Generic response wrappers — kept as plain interfaces because Zod schemas
+// cannot represent open generics. Not part of the schema-first surface.
 
 // For endpoints that return { stockList: [...] }
 export interface StockListResponse<T> {
