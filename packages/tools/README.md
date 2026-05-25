@@ -7,44 +7,39 @@ This package provides pre-built AI tools that can be used with various AI framew
 ## Installation
 
 ```bash
-npm install fmp-ai-tools
-# or
-pnpm add fmp-ai-tools
-# or
-yarn add fmp-ai-tools
+pnpm add fmp-ai-tools     # or: npm install fmp-ai-tools / yarn add fmp-ai-tools
 ```
 
-### Peer Dependencies
+`fmp-ai-tools` has two entry points. `ai` and `@openai/agents` are **optional peer dependencies**, so install only the SDK for the entry point you use, plus `zod`.
 
-This package requires the following peer dependencies to be installed in your project:
+### Vercel AI SDK — `fmp-ai-tools/vercel-ai`
 
 ```bash
-# For Vercel AI SDK
-npm install ai zod
-# or
 pnpm add ai zod
-# or
-yarn add ai zod
 ```
 
-**Required versions:**
+- `ai`: `>=6.0.0`
+- `zod`: `^4.0.0`
 
-- `ai`: ^5.0.0
-- `zod`: ^3.25.76
+### OpenAI Agents — `fmp-ai-tools/openai`
 
-**⚠️ Common Issue**: If you encounter the error `Invalid schema for function 'getStockQuote': schema must be a JSON Schema of 'type: "object"', got 'type: "None"'`, it means you have a version mismatch between `ai` and `zod`. Make sure you're using compatible versions as listed above.
+```bash
+pnpm add @openai/agents zod
+```
 
-## Version Compatibility
+- `@openai/agents`: `>=0.11.0`
+- `zod`: `^4.0.0`
 
-### OpenAI Agents Compatibility
-
-**⚠️ Important**: This package requires `@openai/agents` version `^0.1.0` or higher due to breaking changes in the API. Older versions are not supported and will fail when the tools are imported.
+Both entry points are imported with a normal static `import` — no `serverExternalPackages`, `createRequire`, or other bundler workarounds are needed (Next.js App Router and Turbopack included).
 
 ## Quick Start
 
 ### Vercel AI SDK (Recommended)
 
+`convertToModelMessages` is **async in `ai` v6** — be sure to `await` it.
+
 ```typescript
+// app/api/chat/route.ts
 import { openai } from '@ai-sdk/openai';
 import { streamText, convertToModelMessages, stepCountIs } from 'ai';
 import { fmpTools } from 'fmp-ai-tools/vercel-ai';
@@ -54,9 +49,12 @@ export async function POST(req: Request) {
 
   const result = streamText({
     model: openai('gpt-4o-mini'),
-    messages: convertToModelMessages(messages),
+    messages: await convertToModelMessages(messages),
     tools: fmpTools,
     stopWhen: stepCountIs(5),
+    // FMP tools have optional params; relax strict JSON schema so the model
+    // can omit them (@ai-sdk/openai v3 defaults strictJsonSchema: true).
+    providerOptions: { openai: { strictJsonSchema: false } },
   });
 
   return result.toUIMessageStreamResponse();
@@ -66,19 +64,24 @@ export async function POST(req: Request) {
 ### OpenAI Agents
 
 ```typescript
+// app/api/chat/route.ts
 import { Agent, run } from '@openai/agents';
 import { fmpTools } from 'fmp-ai-tools/openai';
 
 const agent = new Agent({
   name: 'Financial Analyst',
+  model: 'gpt-4o-mini',
   instructions: 'You are a financial analyst with access to real-time market data.',
   tools: fmpTools,
 });
 
-const result = await run(
-  agent,
-  'Get the current stock quote for Apple (AAPL) and show me their latest balance sheet',
-);
+export async function POST(req: Request) {
+  const { message } = await req.json();
+
+  const result = await run(agent, message);
+
+  return Response.json({ output: result.finalOutput });
+}
 ```
 
 ## Configuration
@@ -222,7 +225,7 @@ const selectedTools = {
 // Use with Vercel AI SDK
 const result = streamText({
   model: openai('gpt-4o-mini'),
-  messages: convertToModelMessages(messages),
+  messages: await convertToModelMessages(messages),
   tools: selectedTools,
 });
 ```

@@ -1,0 +1,17 @@
+{
+  "mode": "pre",
+  "tag": "beta",
+  "initialVersions": {
+    "fmp-docs": "0.0.0",
+    "fmp-ai-tools-openai-example": "0.1.0",
+    "fmp-ai-tools-vercel-ai-example": "0.1.0",
+    "fmp-node-api": "0.1.9",
+    "fmp-ai-tools": "0.1.0",
+    "fmp-node-types": "0.1.4"
+  },
+  "changesets": [
+    "loosen-tool-dep-ranges",
+    "openai-bundler-safe",
+    "zod4-v6-beta"
+  ]
+}

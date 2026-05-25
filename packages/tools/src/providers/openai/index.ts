@@ -1,5 +1,4 @@
 import type { Tool } from '@openai/agents';
-import { checkOpenAIAgentsVersion } from '@/utils/version-check';
 import {
   getCompanyProfile,
   getCompanySharesFloat,
@@ -164,6 +163,3 @@ export const fmpTools: Tool<unknown>[] = [
   getStockSplits,
   getDividendHistory,
 ];
-
-// Check version compatibility when the module is imported
-checkOpenAIAgentsVersion();

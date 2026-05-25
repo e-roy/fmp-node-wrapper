@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@openai/agents": "^0.11.5",
+    "@openai/agents": "^0.11.0",
     "fmp-ai-tools": "workspace:*",
     "next": "15.3.0",
     "react": "^19.0.0",
