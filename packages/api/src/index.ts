@@ -23,6 +23,7 @@ export { MutualFundEndpoints } from './endpoints/mutual-fund';
 export { NewsEndpoints } from './endpoints/news';
 export { QuoteEndpoints } from './endpoints/quote';
 export { ScreenerEndpoints } from './endpoints/screener';
+export { SearchEndpoints } from './endpoints/search';
 export { StockEndpoints } from './endpoints/stock';
 export { SenateHouseEndpoints } from './endpoints/senate-house';
 export { SECEndpoints } from './endpoints/sec';

@@ -13,7 +13,9 @@
     "error-handling",
     "loosen-tool-dep-ranges",
     "openai-bundler-safe",
+    "search-endpoint",
     "tools-catch-thrown-errors",
+    "tools-config-and-coverage",
     "tools-shared-definitions",
     "zod4-v6-beta"
   ]

@@ -7,6 +7,9 @@ import { etfDefinitions } from './etf';
 import { insiderDefinitions } from './insider';
 import { institutionalDefinitions } from './institutional';
 import { marketDefinitions } from './market';
+import { newsDefinitions } from './news';
+import { screenerDefinitions } from './screener';
+import { searchDefinitions } from './search';
 import { senateHouseDefinitions } from './senate-house';
 import { stockDefinitions } from './stock';
 import type { FMPToolDefinition } from './types';
@@ -23,6 +26,9 @@ export {
   insiderDefinitions,
   institutionalDefinitions,
   marketDefinitions,
+  newsDefinitions,
+  screenerDefinitions,
+  searchDefinitions,
   senateHouseDefinitions,
   stockDefinitions,
 };
@@ -38,6 +44,9 @@ export const allDefinitions: FMPToolDefinition[] = [
   ...insiderDefinitions,
   ...institutionalDefinitions,
   ...marketDefinitions,
+  ...newsDefinitions,
+  ...screenerDefinitions,
+  ...searchDefinitions,
   ...senateHouseDefinitions,
   ...stockDefinitions,
 ];

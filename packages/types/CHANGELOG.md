@@ -1,5 +1,11 @@
 # fmp-node-types
 
+## 0.2.0-beta.2
+
+### Minor Changes
+
+- Add a `/search` endpoint: `fmp.search.search({ query, limit?, exchange? })` resolves a company name or partial ticker to matching symbols, returning the new `SearchResult` type. Wired into the live-API shape-check manifest.
+
 ## 0.2.0-beta.1
 
 ### Minor Changes

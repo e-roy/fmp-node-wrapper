@@ -1,5 +1,9 @@
 import type { Tool } from '@openai/agents';
 import { createOpenAITool } from '@/utils/openai-tool-wrapper';
+
+// Re-export client configuration helpers (optional; tools default to FMP_API_KEY).
+export { configureFMPClient, resetFMPClient } from '@/client';
+
 import {
   allDefinitions,
   quoteDefinitions,
@@ -11,6 +15,9 @@ import {
   insiderDefinitions,
   institutionalDefinitions,
   marketDefinitions,
+  newsDefinitions,
+  screenerDefinitions,
+  searchDefinitions,
   senateHouseDefinitions,
   stockDefinitions,
   type FMPToolDefinition,
@@ -26,6 +33,8 @@ const pick = (defs: FMPToolDefinition[]): Tool<unknown>[] => defs.map(def => byN
 
 // Individual tools for direct import
 export const getStockQuote = byName.getStockQuote;
+export const getHistoricalPrice = byName.getHistoricalPrice;
+export const getIntraday = byName.getIntraday;
 export const getCompanyProfile = byName.getCompanyProfile;
 export const getCompanySharesFloat = byName.getCompanySharesFloat;
 export const getCompanyExecutiveCompensation = byName.getCompanyExecutiveCompensation;
@@ -59,6 +68,10 @@ export const getSenateTradingByName = byName.getSenateTradingByName;
 export const getHouseTradingByName = byName.getHouseTradingByName;
 export const getSenateTradingRSSFeed = byName.getSenateTradingRSSFeed;
 export const getHouseTradingRSSFeed = byName.getHouseTradingRSSFeed;
+export const getStockNews = byName.getStockNews;
+export const getStockNewsBySymbol = byName.getStockNewsBySymbol;
+export const screenStocks = byName.screenStocks;
+export const searchSymbol = byName.searchSymbol;
 export const getMarketCap = byName.getMarketCap;
 export const getStockSplits = byName.getStockSplits;
 export const getDividendHistory = byName.getDividendHistory;
@@ -73,6 +86,9 @@ export const etfTools = pick(etfDefinitions);
 export const insiderTools = pick(insiderDefinitions);
 export const institutionalTools = pick(institutionalDefinitions);
 export const marketTools = pick(marketDefinitions);
+export const newsTools = pick(newsDefinitions);
+export const screenerTools = pick(screenerDefinitions);
+export const searchTools = pick(searchDefinitions);
 export const senateHouseTools = pick(senateHouseDefinitions);
 export const stockTools = pick(stockDefinitions);
 

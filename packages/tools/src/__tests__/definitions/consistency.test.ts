@@ -7,9 +7,9 @@ import { fmpTools as openaiTools } from '@/providers/openai';
 describe('cross-provider consistency', () => {
   const names = allDefinitions.map(d => d.name);
 
-  it('has 37 uniquely-named definitions', () => {
-    expect(names.length).toBe(37);
-    expect(new Set(names).size).toBe(37);
+  it('has 43 uniquely-named definitions', () => {
+    expect(names.length).toBe(43);
+    expect(new Set(names).size).toBe(43);
   });
 
   it('Vercel AI exposes exactly the defined tools', () => {

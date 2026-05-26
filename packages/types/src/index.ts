@@ -46,6 +46,9 @@ export * from './sec';
 // Screener types
 export * from './screener';
 
+// Search types
+export * from './search';
+
 // Senate house types
 export * from './senate-house';
 

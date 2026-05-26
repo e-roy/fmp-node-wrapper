@@ -96,6 +96,16 @@ Get your API key from [Financial Modeling Prep](https://site.financialmodelingpr
 
 The tools internally use the `fmp-node-api` library, which reads this environment variable to authenticate with the Financial Modeling Prep API.
 
+### Configuring the client explicitly (optional)
+
+If you'd rather not use the environment variable, call `configureFMPClient` once at startup (available from either entry point). The client is memoized, so this only needs to happen once:
+
+```typescript
+import { configureFMPClient } from 'fmp-ai-tools/vercel-ai'; // or 'fmp-ai-tools/openai'
+
+configureFMPClient({ apiKey: 'your_api_key_here', timeout: 15000 });
+```
+
 ### Debugging and Logging
 
 **⚠️ Development Only**: These logging features are intended for debugging and development, not production use.
@@ -140,6 +150,8 @@ Logs: result summary and formatted JSON response data.
 ### Quote Tools
 
 - `getStockQuote` - Get real-time stock quote for a company
+- `getHistoricalPrice` - Get historical daily prices (most recent `limit` days, default 30)
+- `getIntraday` - Get intraday price bars at a given interval (most recent `limit` bars, default 50)
 
 ### Company Tools
 
@@ -206,6 +218,19 @@ Logs: result summary and formatted JSON response data.
 ### Insider Trading Tools
 
 - `getInsiderTrading` - Get insider trading data for a company
+
+### News Tools
+
+- `getStockNews` - Get the latest general stock market news (most recent `limit`, default 20)
+- `getStockNewsBySymbol` - Get the latest news for one or more symbols (default `limit` 20)
+
+### Screener Tools
+
+- `screenStocks` - Screen for stocks by market cap, price, sector, exchange, etc. (default `limit` 50)
+
+### Search Tools
+
+- `searchSymbol` - Resolve a company name or partial ticker to matching symbols (e.g., "Apple" → AAPL)
 
 ## Using Individual Tools
 

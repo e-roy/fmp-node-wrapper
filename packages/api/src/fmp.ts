@@ -17,6 +17,7 @@ import { MutualFundEndpoints } from './endpoints/mutual-fund';
 import { NewsEndpoints } from './endpoints/news';
 import { QuoteEndpoints } from './endpoints/quote';
 import { ScreenerEndpoints } from './endpoints/screener';
+import { SearchEndpoints } from './endpoints/search';
 import { SECEndpoints } from './endpoints/sec';
 import { SenateHouseEndpoints } from './endpoints/senate-house';
 import { StockEndpoints } from './endpoints/stock';
@@ -65,6 +66,7 @@ export class FMP {
   public readonly news: NewsEndpoints;
   public readonly quote: QuoteEndpoints;
   public readonly screener: ScreenerEndpoints;
+  public readonly search: SearchEndpoints;
   public readonly sec: SECEndpoints;
   public readonly senateHouse: SenateHouseEndpoints;
   public readonly stock: StockEndpoints;
@@ -99,6 +101,7 @@ export class FMP {
     this.news = new NewsEndpoints(client);
     this.quote = new QuoteEndpoints(client);
     this.screener = new ScreenerEndpoints(client);
+    this.search = new SearchEndpoints(client);
     this.sec = new SECEndpoints(client);
     this.senateHouse = new SenateHouseEndpoints(client);
     this.stock = new StockEndpoints(client);

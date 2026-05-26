@@ -1,5 +1,9 @@
 import { ToolSet } from 'ai';
 import { createTool } from '@/utils/aisdk-tool-wrapper';
+
+// Re-export client configuration helpers (optional; tools default to FMP_API_KEY).
+export { configureFMPClient, resetFMPClient } from '@/client';
+
 import {
   quoteDefinitions,
   companyDefinitions,
@@ -10,6 +14,9 @@ import {
   insiderDefinitions,
   institutionalDefinitions,
   marketDefinitions,
+  newsDefinitions,
+  screenerDefinitions,
+  searchDefinitions,
   senateHouseDefinitions,
   stockDefinitions,
   type FMPToolDefinition,
@@ -29,6 +36,9 @@ export const etfTools = toToolSet(etfDefinitions);
 export const insiderTools = toToolSet(insiderDefinitions);
 export const institutionalTools = toToolSet(institutionalDefinitions);
 export const marketTools = toToolSet(marketDefinitions);
+export const newsTools = toToolSet(newsDefinitions);
+export const screenerTools = toToolSet(screenerDefinitions);
+export const searchTools = toToolSet(searchDefinitions);
 export const senateHouseTools = toToolSet(senateHouseDefinitions);
 export const stockTools = toToolSet(stockDefinitions);
 
@@ -43,12 +53,15 @@ export const fmpTools: ToolSet = {
   ...insiderTools,
   ...institutionalTools,
   ...marketTools,
+  ...newsTools,
+  ...screenerTools,
+  ...searchTools,
   ...senateHouseTools,
   ...stockTools,
 };
 
 // Individual tools for direct import
-export const { getStockQuote } = quoteTools;
+export const { getStockQuote, getHistoricalPrice, getIntraday } = quoteTools;
 export const { getCompanyProfile, getCompanySharesFloat, getCompanyExecutiveCompensation } =
   companyTools;
 export const { getEarningsCalendar, getEconomicCalendar } = calendarTools;
@@ -79,4 +92,7 @@ export const {
   getSenateTradingRSSFeed,
   getHouseTradingRSSFeed,
 } = senateHouseTools;
+export const { getStockNews, getStockNewsBySymbol } = newsTools;
+export const { screenStocks } = screenerTools;
+export const { searchSymbol } = searchTools;
 export const { getMarketCap, getStockSplits, getDividendHistory } = stockTools;

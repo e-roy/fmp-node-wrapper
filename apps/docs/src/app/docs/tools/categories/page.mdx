@@ -14,11 +14,14 @@ Real-time and historical price data for stocks and other securities.
 
 **Tools:**
 - `getStockQuote` - Get real-time stock quote for a company
+- `getHistoricalPrice` - Get historical daily prices (most recent `limit` days, default 30)
+- `getIntraday` - Get intraday price bars at a given interval (most recent `limit` bars, default 50)
 
 **Use Cases:**
 - Real-time price monitoring
 - Portfolio tracking
 - Price alerts and notifications
+- Historical trend and performance analysis
 
 ### 🏢 Company Tools
 
@@ -178,6 +181,39 @@ Stock-specific data like market cap, splits, and dividends.
 - Stock split tracking
 - Dividend analysis
 - Historical stock data research
+
+### 📰 News Tools
+
+Latest stock market news, general or filtered by symbol.
+
+**Tools:**
+- `getStockNews` - Get the latest general stock market news (most recent `limit`, default 20)
+- `getStockNewsBySymbol` - Get the latest news for one or more symbols (default `limit` 20)
+
+**Use Cases:**
+- Market sentiment and event tracking
+- Company-specific news monitoring
+
+### 🔎 Screener Tools
+
+Find stocks matching financial criteria.
+
+**Tools:**
+- `screenStocks` - Screen for stocks by market cap, price, sector, exchange, etc. (default `limit` 50)
+
+**Use Cases:**
+- Idea generation and stock discovery
+- Building filtered watchlists
+
+### 🔍 Search Tools
+
+Resolve names and partial tickers to symbols.
+
+**Tools:**
+- `searchSymbol` - Resolve a company name or partial ticker to matching symbols (e.g., "Apple" → AAPL)
+
+**Use Cases:**
+- Turning a company name into a ticker before calling other tools
 
 ## Tool Selection Guide
 

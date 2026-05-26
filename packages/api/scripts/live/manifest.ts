@@ -92,6 +92,8 @@ import {
   AvailableSectorsSchema,
   AvailableIndustriesSchema,
   AvailableCountriesSchema,
+  // search
+  SearchResultSchema,
   // sec
   RSSFeedItemSchema,
   RSSFeedAllItemSchema,
@@ -122,6 +124,7 @@ export type Category =
   | 'mutual-fund'
   | 'news'
   | 'screener'
+  | 'search'
   | 'sec'
   | 'senate-house';
 
@@ -255,6 +258,9 @@ export const manifest: LiveCase[] = [
   { category: 'screener', name: 'getAvailableSectors()', schema: AvailableSectorsSchema, kind: 'array', call: (fmp) => fmp.screener.getAvailableSectors() },
   { category: 'screener', name: 'getAvailableIndustries()', schema: AvailableIndustriesSchema, kind: 'array', call: (fmp) => fmp.screener.getAvailableIndustries() },
   { category: 'screener', name: 'getAvailableCountries()', schema: AvailableCountriesSchema, kind: 'array', call: (fmp) => fmp.screener.getAvailableCountries() },
+
+  // ---- search ----
+  { category: 'search', name: 'search(AAPL)', schema: SearchResultSchema, kind: 'array', call: (fmp) => fmp.search.search({ query: 'AAPL', limit: 5 }) },
 
   // ---- sec ----
   { category: 'sec', name: 'getRSSFeed()', schema: RSSFeedItemSchema, kind: 'array', call: (fmp) => fmp.sec.getRSSFeed({ limit: 5, type: '10-K', from: '2024-01-01', to: '2024-12-31', isDone: true }) },
