@@ -1,4 +1,4 @@
-import { quoteTools } from '@/providers/vercel-ai/quote';
+import { quoteTools } from '@/providers/vercel-ai';
 
 const mockQuote = {
   getQuote: jest.fn(),

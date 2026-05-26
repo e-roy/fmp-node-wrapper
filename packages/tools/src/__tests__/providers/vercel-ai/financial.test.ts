@@ -1,4 +1,4 @@
-import { financialTools } from '@/providers/vercel-ai/financial';
+import { financialTools } from '@/providers/vercel-ai';
 
 const mockFinancial = {
   getBalanceSheet: jest.fn(),

@@ -1,4 +1,4 @@
-import { getTreasuryRates, getEconomicIndicators } from '@/providers/openai/economic';
+import { getTreasuryRates, getEconomicIndicators } from '@/providers/openai';
 
 const mockEconomic = {
   getTreasuryRates: jest.fn(),

@@ -5,7 +5,7 @@ import {
   getHouseTradingByName,
   getSenateTradingRSSFeed,
   getHouseTradingRSSFeed,
-} from '@/providers/openai/senate-house';
+} from '@/providers/openai';
 
 const mockSenateHouse = {
   getSenateTrading: jest.fn(),

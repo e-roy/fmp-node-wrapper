@@ -1,4 +1,4 @@
-import { companyTools } from '@/providers/vercel-ai/company';
+import { companyTools } from '@/providers/vercel-ai';
 
 const mockCompany = {
   getCompanyProfile: jest.fn(),

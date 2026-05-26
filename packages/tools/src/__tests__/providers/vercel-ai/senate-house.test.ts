@@ -1,4 +1,4 @@
-import { senateHouseTools } from '@/providers/vercel-ai/senate-house';
+import { senateHouseTools } from '@/providers/vercel-ai';
 
 const mockSenateHouse = {
   getSenateTrading: jest.fn(),

@@ -1,4 +1,4 @@
-import { getStockQuote } from '@/providers/openai/quote';
+import { getStockQuote } from '@/providers/openai';
 
 const mockQuote = {
   getQuote: jest.fn(),

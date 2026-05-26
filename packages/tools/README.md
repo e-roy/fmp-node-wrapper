@@ -348,6 +348,27 @@ const quote = await fmp.quote.getQuote('AAPL');
 const profile = await fmp.company.getCompanyProfile('AAPL');
 ```
 
+## Architecture
+
+Each tool is defined **once**, provider-agnostically, then adapted to each AI SDK:
+
+```
+src/definitions/<category>.ts   one FMPToolDefinition per tool: { name, description, inputSchema (Zod), execute }
+src/utils/aisdk-tool-wrapper.ts   createTool()      → Vercel AI SDK tool
+src/utils/openai-tool-wrapper.ts  createOpenAITool() → OpenAI Agents tool
+src/providers/<provider>/index.ts builds that provider's public shape from the shared definitions
+```
+
+A definition's `execute` calls the `fmp-node-api` method and returns `toToolResponse(...)`, which formats the result (or a structured error) for the model. The adapters add logging and error catching; the OpenAI adapter also validates input against the Zod schema.
+
+### Adding a tool
+
+1. Add a `defineTool({ name, description, inputSchema, execute })` to the relevant `src/definitions/<category>.ts` (or create a new category file and register it in `src/definitions/index.ts`).
+2. Add a one-line individual export to each provider's `index.ts` (`src/providers/vercel-ai/index.ts` and `src/providers/openai/index.ts`). It flows into the category group and `fmpTools` automatically.
+3. Add a test and run `pnpm --filter fmp-ai-tools test`.
+
+Adding a brand-new provider is a single adapter (`src/utils/<provider>-tool-wrapper.ts`) plus a `src/providers/<provider>/index.ts`.
+
 ## License
 
 MIT

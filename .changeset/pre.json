@@ -14,6 +14,7 @@
     "loosen-tool-dep-ranges",
     "openai-bundler-safe",
     "tools-catch-thrown-errors",
+    "tools-shared-definitions",
     "zod4-v6-beta"
   ]
 }

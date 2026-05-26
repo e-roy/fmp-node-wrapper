@@ -176,6 +176,29 @@ describe('getNewEndpoint', () => {
 });
 ```
 
+### Adding a New AI Tool (`fmp-ai-tools`)
+
+Tools are defined once, provider-agnostically, and adapted to each AI SDK (Vercel AI, OpenAI Agents). To add a tool:
+
+1. **Define the tool** in the relevant `packages/tools/src/definitions/<category>.ts` (create the category file and register it in `definitions/index.ts` if new):
+
+   ```typescript
+   defineTool({
+     name: 'getNewTool',
+     description: 'Clear, model-facing description of what this returns',
+     inputSchema: z.object({
+       symbol: z.string().min(1).describe('The stock symbol'),
+     }),
+     execute: async ({ symbol }) => toToolResponse(await getFMPClient().category.getNew(symbol)),
+   });
+   ```
+
+2. **Export it from each provider** — add one line to `packages/tools/src/providers/vercel-ai/index.ts` and `packages/tools/src/providers/openai/index.ts`. It flows into the category group and `fmpTools` automatically.
+3. **Add a test** and run `pnpm --filter fmp-ai-tools test`.
+4. **Update docs** — the Available Tools lists in `packages/tools/README.md` and `apps/docs`.
+
+Conventions: numeric params use `z.number()`; optional dates use `.optional().nullable()` and are coerced with `?? undefined`; `symbol`/`name` use `.min(1)`. Adding a brand-new provider is a single adapter (`src/utils/<provider>-tool-wrapper.ts`) plus a `src/providers/<provider>/index.ts`.
+
 ## Testing
 
 ### Test Structure

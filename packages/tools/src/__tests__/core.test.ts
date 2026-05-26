@@ -13,28 +13,34 @@ describe('FMP Tools', () => {
   describe('Vercel AI SDK Tools', () => {
     it('should have getStockQuote tool', () => {
       expect(fmpTools.getStockQuote).toBeDefined();
-      expect(fmpTools.getStockQuote.description).toBe('Get the stock quote for a company');
+      expect(fmpTools.getStockQuote.description).toBe(
+        'Get the real-time stock quote for a company including price, volume, and market data',
+      );
     });
 
     it('should have getCompanyProfile tool', () => {
       expect(fmpTools.getCompanyProfile).toBeDefined();
-      expect(fmpTools.getCompanyProfile.description).toBe('Get the company profile');
+      expect(fmpTools.getCompanyProfile.description).toBe('Get the company profile for a company');
     });
 
     it('should have getBalanceSheet tool', () => {
       expect(fmpTools.getBalanceSheet).toBeDefined();
-      expect(fmpTools.getBalanceSheet.description).toBe('Get balance sheet for a company');
+      expect(fmpTools.getBalanceSheet.description).toBe(
+        'Get balance sheet for a company showing assets, liabilities, and equity',
+      );
     });
 
     it('should have getIncomeStatement tool', () => {
       expect(fmpTools.getIncomeStatement).toBeDefined();
-      expect(fmpTools.getIncomeStatement.description).toBe('Get income statement for a company');
+      expect(fmpTools.getIncomeStatement.description).toBe(
+        'Get income statement for a company showing revenue, expenses, and profit',
+      );
     });
 
     it('should have getCashFlowStatement tool', () => {
       expect(fmpTools.getCashFlowStatement).toBeDefined();
       expect(fmpTools.getCashFlowStatement.description).toBe(
-        'Get cash flow statement for a company',
+        'Get cash flow statement for a company showing operating, investing, and financing cash flows',
       );
     });
 

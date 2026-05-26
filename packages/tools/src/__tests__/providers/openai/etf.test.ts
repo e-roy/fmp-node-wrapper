@@ -1,4 +1,4 @@
-import { getETFHoldings, getETFProfile } from '@/providers/openai/etf';
+import { getETFHoldings, getETFProfile } from '@/providers/openai';
 
 const mockETF = {
   getHoldings: jest.fn(),

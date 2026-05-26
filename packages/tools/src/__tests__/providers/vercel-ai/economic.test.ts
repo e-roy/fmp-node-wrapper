@@ -1,4 +1,4 @@
-import { economicTools } from '@/providers/vercel-ai/economic';
+import { economicTools } from '@/providers/vercel-ai';
 
 const mockEconomic = {
   getTreasuryRates: jest.fn(),

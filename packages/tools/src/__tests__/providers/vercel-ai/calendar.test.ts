@@ -1,4 +1,4 @@
-import { calendarTools } from '@/providers/vercel-ai/calendar';
+import { calendarTools } from '@/providers/vercel-ai';
 
 const mockCalendar = {
   getEarningsCalendar: jest.fn(),

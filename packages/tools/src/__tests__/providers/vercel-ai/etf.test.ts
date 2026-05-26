@@ -1,4 +1,4 @@
-import { etfTools } from '@/providers/vercel-ai/etf';
+import { etfTools } from '@/providers/vercel-ai';
 
 const mockETF = {
   getHoldings: jest.fn(),

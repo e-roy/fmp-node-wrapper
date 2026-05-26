@@ -1,61 +1,38 @@
 import { ToolSet } from 'ai';
-import { quoteTools } from './quote';
-import { companyTools } from './company';
-import { financialTools } from './financial';
-import { calendarTools } from './calendar';
-import { economicTools } from './economic';
-import { etfTools } from './etf';
-import { insiderTools } from './insider';
-import { institutionalTools } from './institutional';
-import { marketTools } from './market';
-import { senateHouseTools } from './senate-house';
-import { stockTools } from './stock';
+import { createTool } from '@/utils/aisdk-tool-wrapper';
+import {
+  quoteDefinitions,
+  companyDefinitions,
+  financialDefinitions,
+  calendarDefinitions,
+  economicDefinitions,
+  etfDefinitions,
+  insiderDefinitions,
+  institutionalDefinitions,
+  marketDefinitions,
+  senateHouseDefinitions,
+  stockDefinitions,
+  type FMPToolDefinition,
+} from '@/definitions';
 
-// Export individual tools for Vercel AI
-export const { getCompanyProfile, getCompanySharesFloat, getCompanyExecutiveCompensation } =
-  companyTools;
+// Build a Vercel AI `ToolSet` (object keyed by tool name) from shared definitions.
+const toToolSet = (defs: FMPToolDefinition[]): ToolSet =>
+  Object.fromEntries(defs.map(def => [def.name, createTool(def)]));
 
-export const { getEarningsCalendar, getEconomicCalendar } = calendarTools;
+// Tool groups by category
+export const quoteTools = toToolSet(quoteDefinitions);
+export const companyTools = toToolSet(companyDefinitions);
+export const financialTools = toToolSet(financialDefinitions);
+export const calendarTools = toToolSet(calendarDefinitions);
+export const economicTools = toToolSet(economicDefinitions);
+export const etfTools = toToolSet(etfDefinitions);
+export const insiderTools = toToolSet(insiderDefinitions);
+export const institutionalTools = toToolSet(institutionalDefinitions);
+export const marketTools = toToolSet(marketDefinitions);
+export const senateHouseTools = toToolSet(senateHouseDefinitions);
+export const stockTools = toToolSet(stockDefinitions);
 
-export const { getTreasuryRates, getEconomicIndicators } = economicTools;
-
-export const { getETFHoldings, getETFProfile } = etfTools;
-
-export const {
-  getBalanceSheet,
-  getIncomeStatement,
-  getCashFlowStatement,
-  getKeyMetrics,
-  getFinancialRatios,
-  getEnterpriseValue,
-  getCashflowGrowth,
-  getIncomeGrowth,
-  getBalanceSheetGrowth,
-  getFinancialGrowth,
-  getEarningsHistorical,
-} = financialTools;
-
-export const { getInsiderTrading } = insiderTools;
-
-export const { getInstitutionalHolders } = institutionalTools;
-
-export const { getMarketPerformance, getSectorPerformance, getGainers, getLosers, getMostActive } =
-  marketTools;
-
-export const { getStockQuote } = quoteTools;
-
-export const {
-  getSenateTrading,
-  getHouseTrading,
-  getSenateTradingByName,
-  getHouseTradingByName,
-  getSenateTradingRSSFeed,
-  getHouseTradingRSSFeed,
-} = senateHouseTools;
-
-export const { getMarketCap, getStockSplits, getDividendHistory } = stockTools;
-
-// Combine all tools into a single object for AI SDK v2
+// Combine all tools into a single ToolSet
 export const fmpTools: ToolSet = {
   ...quoteTools,
   ...companyTools,
@@ -70,17 +47,36 @@ export const fmpTools: ToolSet = {
   ...stockTools,
 };
 
-// Re-export individual tool groups
-export {
-  quoteTools,
-  companyTools,
-  financialTools,
-  calendarTools,
-  economicTools,
-  etfTools,
-  insiderTools,
-  institutionalTools,
-  marketTools,
-  senateHouseTools,
-  stockTools,
-};
+// Individual tools for direct import
+export const { getStockQuote } = quoteTools;
+export const { getCompanyProfile, getCompanySharesFloat, getCompanyExecutiveCompensation } =
+  companyTools;
+export const { getEarningsCalendar, getEconomicCalendar } = calendarTools;
+export const { getTreasuryRates, getEconomicIndicators } = economicTools;
+export const { getETFHoldings, getETFProfile } = etfTools;
+export const {
+  getBalanceSheet,
+  getIncomeStatement,
+  getCashFlowStatement,
+  getKeyMetrics,
+  getFinancialRatios,
+  getEnterpriseValue,
+  getCashflowGrowth,
+  getIncomeGrowth,
+  getBalanceSheetGrowth,
+  getFinancialGrowth,
+  getEarningsHistorical,
+} = financialTools;
+export const { getInsiderTrading } = insiderTools;
+export const { getInstitutionalHolders } = institutionalTools;
+export const { getMarketPerformance, getSectorPerformance, getGainers, getLosers, getMostActive } =
+  marketTools;
+export const {
+  getSenateTrading,
+  getHouseTrading,
+  getSenateTradingByName,
+  getHouseTradingByName,
+  getSenateTradingRSSFeed,
+  getHouseTradingRSSFeed,
+} = senateHouseTools;
+export const { getMarketCap, getStockSplits, getDividendHistory } = stockTools;

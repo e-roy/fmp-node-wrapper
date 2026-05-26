@@ -123,10 +123,11 @@ fmp-node-wrapper/
 - **`packages/tools/`**: AI tools for FMP API integrations (`fmp-ai-tools`)
 
   - AI tool implementations compatible with Vercel AI SDK, OpenAI, and more
-  - Provider-specific implementations (one file per endpoint category, aggregated in `index.ts`):
-    - `providers/vercel-ai/` - Vercel AI SDK tool providers
-    - `providers/openai/` - OpenAI tool providers
-  - Tool wrapper utilities and type definitions
+  - `definitions/` - each tool defined once (provider-agnostic `FMPToolDefinition`), one file per endpoint category, aggregated in `definitions/index.ts`
+  - Per-provider adapters wrap a definition into an SDK-specific tool (`utils/aisdk-tool-wrapper.ts`, `utils/openai-tool-wrapper.ts`)
+  - `providers/` - each provider's `index.ts` builds its public shape from the shared definitions via its adapter:
+    - `providers/vercel-ai/` - Vercel AI SDK (`ToolSet` object)
+    - `providers/openai/` - OpenAI Agents (`Tool[]` arrays)
   - Built with tsup for multiple output formats
   - Depends on `fmp-node-api` as a workspace dependency
 
@@ -259,8 +260,9 @@ The API is organized into logical endpoint categories:
 
 The AI tools package provides integrations for various AI platforms:
 
-- **Vercel AI SDK**: Tool providers exported from `fmp-ai-tools/vercel-ai`
-- **OpenAI**: Tool providers exported from `fmp-ai-tools/openai`
-- **Provider-specific implementations**: Organized by AI platform under `src/providers/`
-- **Tool wrappers**: Utilities for creating and managing AI tools (`aisdk-tool-wrapper.ts`, `openai-tool-wrapper.ts`)
-- **Type definitions**: Shared types for tool implementations
+- **Shared definitions**: Each tool is defined once under `src/definitions/` (provider-agnostic `FMPToolDefinition`: name, description, Zod input schema, execute), one file per endpoint category.
+- **Per-provider adapters**: Turn a definition into an SDK-specific tool (`utils/aisdk-tool-wrapper.ts` for Vercel AI, `utils/openai-tool-wrapper.ts` for OpenAI).
+- **Providers**: Each `src/providers/<name>/index.ts` builds that provider's public shape from the shared definitions and exposes it on a subpath:
+  - **Vercel AI SDK**: `fmp-ai-tools/vercel-ai` (a `ToolSet` object)
+  - **OpenAI Agents**: `fmp-ai-tools/openai` (`Tool[]` arrays)
+- **Adding a tool**: add one definition under `src/definitions/`, then a one-line export to each provider's `index.ts`.

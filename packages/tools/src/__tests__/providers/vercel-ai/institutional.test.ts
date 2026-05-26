@@ -1,4 +1,4 @@
-import { institutionalTools } from '@/providers/vercel-ai/institutional';
+import { institutionalTools } from '@/providers/vercel-ai';
 
 const mockInstitutional = {
   getInstitutionalHolders: jest.fn(),

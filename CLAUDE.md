@@ -71,7 +71,15 @@ Inside `packages/api` and `packages/tools`, source uses the `@/` alias for `src/
 
 ### AI tools (`packages/tools`)
 
-Tools wrap the `fmp-node-api` client for LLM use. `getFMPClient()` (`src/client.ts`) just does `new FMP()` (env-var key). Tools are organized by provider under `src/providers/` (`vercel-ai/`, `openai/`), one file per endpoint category, aggregated in each provider's `index.ts`. The package exports per-provider subpaths: `fmp-ai-tools/vercel-ai` and `fmp-ai-tools/openai`. `fmpTools` is the combined `ToolSet` for the Vercel AI SDK. Provider files use `createTool` wrappers (`src/utils/aisdk-tool-wrapper.ts`, `openai-tool-wrapper.ts`) with Zod input schemas.
+Tools wrap the `fmp-node-api` client for LLM use. `getFMPClient()` (`src/client.ts`) just does `new FMP()` (env-var key).
+
+**Each tool is defined once** in `src/definitions/<category>.ts` as a provider-agnostic `FMPToolDefinition` (`{ name, description, inputSchema (Zod), execute }`); `execute` calls the `fmp-node-api` method and returns `toToolResponse(...)`. `src/definitions/index.ts` aggregates the per-category arrays into `allDefinitions`.
+
+**Per-provider adapters** turn a definition into an SDK-specific tool: `createTool` (`src/utils/aisdk-tool-wrapper.ts`) for the Vercel AI SDK and `createOpenAITool` (`src/utils/openai-tool-wrapper.ts`) for OpenAI Agents. Both add logging + error catching (`toToolError`); the OpenAI adapter also `inputSchema.parse()`s input (the Vercel SDK does that itself).
+
+Each provider's `index.ts` (`src/providers/vercel-ai/`, `src/providers/openai/`) maps the shared definitions through its adapter and rebuilds that provider's public shape — Vercel exposes a `ToolSet` object (`fmpTools`) + category objects; OpenAI exposes `Tool[]` arrays. Both also re-export every tool individually. The package exports per-provider subpaths `fmp-ai-tools/vercel-ai` and `fmp-ai-tools/openai`.
+
+To add a tool: add one `defineTool({...})` to the relevant `src/definitions/<category>.ts`, then add a one-line individual export to each provider's `index.ts` (it flows into the category group and `fmpTools` automatically). Adding a new provider is one adapter + one `providers/<name>/index.ts`.
 
 ## Build & publish
 

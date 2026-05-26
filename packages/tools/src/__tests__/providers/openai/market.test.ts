@@ -4,7 +4,7 @@ import {
   getGainers,
   getLosers,
   getMostActive,
-} from '@/providers/openai/market';
+} from '@/providers/openai';
 
 const mockMarket = {
   getMarketPerformance: jest.fn(),

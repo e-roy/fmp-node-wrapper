@@ -1,4 +1,4 @@
-import { getInsiderTrading } from '@/providers/openai/insider';
+import { getInsiderTrading } from '@/providers/openai';
 
 const mockInsider = {
   getInsiderTradesBySymbol: jest.fn(),
