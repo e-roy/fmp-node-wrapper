@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { createOpenAITool } from '@/utils/openai-tool-wrapper';
 import { getFMPClient } from '@/client';
+import { toToolResponse } from '@/utils/format-response';
 
 // Common input schema for calendar date range
 const calendarInputSchema = z.object({
@@ -18,7 +19,7 @@ export const getEarningsCalendar = createOpenAITool({
       from: from ?? undefined,
       to: to ?? undefined,
     });
-    return JSON.stringify(earningsCalendar.data, null, 2);
+    return toToolResponse(earningsCalendar);
   },
 });
 
@@ -32,6 +33,6 @@ export const getEconomicCalendar = createOpenAITool({
       from: from ?? undefined,
       to: to ?? undefined,
     });
-    return JSON.stringify(economicCalendar.data, null, 2);
+    return toToolResponse(economicCalendar);
   },
 });

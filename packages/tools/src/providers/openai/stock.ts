@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { createOpenAITool } from '@/utils/openai-tool-wrapper';
 import { getFMPClient } from '@/client';
+import { toToolResponse } from '@/utils/format-response';
 
 // Input schema for symbol-based stock operations
 const symbolInputSchema = z.object({
@@ -17,7 +18,7 @@ export const getMarketCap = createOpenAITool({
   execute: async ({ symbol }) => {
     const fmp = getFMPClient();
     const marketCap = await fmp.stock.getMarketCap(symbol);
-    return JSON.stringify(marketCap.data, null, 2);
+    return toToolResponse(marketCap);
   },
 });
 
@@ -28,7 +29,7 @@ export const getStockSplits = createOpenAITool({
   execute: async ({ symbol }) => {
     const fmp = getFMPClient();
     const stockSplits = await fmp.stock.getStockSplits(symbol);
-    return JSON.stringify(stockSplits.data, null, 2);
+    return toToolResponse(stockSplits);
   },
 });
 
@@ -39,7 +40,7 @@ export const getDividendHistory = createOpenAITool({
   execute: async ({ symbol }) => {
     const fmp = getFMPClient();
     const dividendHistory = await fmp.stock.getDividendHistory(symbol);
-    return JSON.stringify(dividendHistory.data, null, 2);
+    return toToolResponse(dividendHistory);
   },
 });
 

@@ -1,5 +1,25 @@
 # fmp-ai-tools
 
+## 0.2.0-beta.4
+
+### Patch Changes
+
+- Tools no longer throw out of `execute`. A thrown error — most importantly a missing/invalid `FMP_API_KEY`, which throws from the `FMP` constructor before any request is made — is now caught at the tool boundary and returned to the model as the same structured `{ error, type, message, status }` shape (with `type: "auth"` for key problems). Previously the raw exception reached the AI SDK and the agent received only a vague failure with no reason.
+
+## 0.2.0-beta.3
+
+### Minor Changes
+
+- Typed error classification for FMP failures, surfaced through the AI tools.
+  - **fmp-node-types**: `APIResponse` gains an optional `errorType` (`plan-restricted | rate-limit | auth | not-found | bad-request | network | unknown`).
+  - **fmp-node-api**: the client now reads FMP's real error message from the response body and classifies failures (new `classifyError` export). Plan/subscription-restricted endpoints (402/403 or "Exclusive/Special Endpoint") are reported as `plan-restricted` instead of a generic error.
+  - **fmp-ai-tools**: every tool now returns a structured error (`{ error, type, message, status }`) to the model on failure instead of `null`, so an agent can explain _why_ a call failed — e.g. that the data requires a higher FMP plan.
+
+### Patch Changes
+
+- Updated dependencies
+  - fmp-node-api@0.2.0-beta.1
+
 ## 0.2.0-beta.2
 
 ### Patch Changes

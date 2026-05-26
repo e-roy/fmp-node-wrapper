@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { getFMPClient } from '@/client';
+import { toToolResponse } from '@/utils/format-response';
 import { createTool } from '@/utils/aisdk-tool-wrapper';
 
 export const quoteTools = {
@@ -12,7 +13,7 @@ export const quoteTools = {
     execute: async ({ symbol }) => {
       const fmp = getFMPClient();
       const stockQuote = await fmp.quote.getQuote(symbol);
-      const response = JSON.stringify(stockQuote.data, null, 2);
+      const response = toToolResponse(stockQuote);
       return response;
     },
   }),

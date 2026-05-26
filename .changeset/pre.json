@@ -10,8 +10,10 @@
     "fmp-node-types": "0.1.4"
   },
   "changesets": [
+    "error-handling",
     "loosen-tool-dep-ranges",
     "openai-bundler-safe",
+    "tools-catch-thrown-errors",
     "zod4-v6-beta"
   ]
 }

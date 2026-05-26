@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { getFMPClient } from '@/client';
+import { toToolResponse } from '@/utils/format-response';
 import { createTool } from '@/utils/aisdk-tool-wrapper';
 
 export const marketTools = {
@@ -10,7 +11,7 @@ export const marketTools = {
     execute: async () => {
       const fmp = getFMPClient();
       const marketPerformance = await fmp.market.getMarketPerformance();
-      const response = JSON.stringify(marketPerformance.data, null, 2);
+      const response = toToolResponse(marketPerformance);
       return response;
     },
   }),
@@ -22,7 +23,7 @@ export const marketTools = {
     execute: async () => {
       const fmp = getFMPClient();
       const sectorPerformance = await fmp.market.getSectorPerformance();
-      const response = JSON.stringify(sectorPerformance.data, null, 2);
+      const response = toToolResponse(sectorPerformance);
       return response;
     },
   }),
@@ -34,7 +35,7 @@ export const marketTools = {
     execute: async () => {
       const fmp = getFMPClient();
       const gainers = await fmp.market.getGainers();
-      const response = JSON.stringify(gainers.data, null, 2);
+      const response = toToolResponse(gainers);
       return response;
     },
   }),
@@ -46,7 +47,7 @@ export const marketTools = {
     execute: async () => {
       const fmp = getFMPClient();
       const losers = await fmp.market.getLosers();
-      const response = JSON.stringify(losers.data, null, 2);
+      const response = toToolResponse(losers);
       return response;
     },
   }),
@@ -58,7 +59,7 @@ export const marketTools = {
     execute: async () => {
       const fmp = getFMPClient();
       const mostActive = await fmp.market.getMostActive();
-      const response = JSON.stringify(mostActive.data, null, 2);
+      const response = toToolResponse(mostActive);
       return response;
     },
   }),

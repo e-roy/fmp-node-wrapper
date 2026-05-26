@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { getFMPClient } from '@/client';
+import { toToolResponse } from '@/utils/format-response';
 import { createTool } from '@/utils/aisdk-tool-wrapper';
 
 export const institutionalTools = {
@@ -12,7 +13,7 @@ export const institutionalTools = {
     execute: async ({ symbol }) => {
       const fmp = getFMPClient();
       const institutionalHolders = await fmp.institutional.getInstitutionalHolders({ symbol });
-      const response = JSON.stringify(institutionalHolders.data, null, 2);
+      const response = toToolResponse(institutionalHolders);
       return response;
     },
   }),

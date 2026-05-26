@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { getFMPClient } from '@/client';
+import { toToolResponse } from '@/utils/format-response';
 import { createTool } from '@/utils/aisdk-tool-wrapper';
 
 export const etfTools = {
@@ -17,7 +18,7 @@ export const etfTools = {
         params.date = date;
       }
       const etfHoldings = await fmp.etf.getHoldings(params);
-      const response = JSON.stringify(etfHoldings.data, null, 2);
+      const response = toToolResponse(etfHoldings);
       return response;
     },
   }),
@@ -31,7 +32,7 @@ export const etfTools = {
     execute: async ({ symbol }) => {
       const fmp = getFMPClient();
       const etfProfile = await fmp.etf.getProfile(symbol);
-      const response = JSON.stringify(etfProfile.data, null, 2);
+      const response = toToolResponse(etfProfile);
       return response;
     },
   }),

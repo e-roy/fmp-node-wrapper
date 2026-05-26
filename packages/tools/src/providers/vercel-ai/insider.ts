@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { createTool } from '@/utils/aisdk-tool-wrapper';
 import { getFMPClient } from '@/client';
+import { toToolResponse } from '@/utils/format-response';
 
 export const insiderTools = {
   getInsiderTrading: createTool({
@@ -13,7 +14,7 @@ export const insiderTools = {
     execute: async ({ symbol, page }) => {
       const fmp = getFMPClient();
       const insiderTrading = await fmp.insider.getInsiderTradesBySymbol(symbol, page);
-      const response = JSON.stringify(insiderTrading.data, null, 2);
+      const response = toToolResponse(insiderTrading);
       return response;
     },
   }),

@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { createTool } from '@/utils/aisdk-tool-wrapper';
 import { getFMPClient } from '@/client';
+import { toToolResponse } from '@/utils/format-response';
 
 export const companyTools = {
   getCompanyProfile: createTool({
@@ -12,7 +13,7 @@ export const companyTools = {
     execute: async ({ symbol }) => {
       const fmp = getFMPClient();
       const companyProfile = await fmp.company.getCompanyProfile(symbol);
-      const response = JSON.stringify(companyProfile.data, null, 2);
+      const response = toToolResponse(companyProfile);
       return response;
     },
   }),
@@ -25,7 +26,7 @@ export const companyTools = {
     execute: async ({ symbol }) => {
       const fmp = getFMPClient();
       const companySharesFloat = await fmp.company.getSharesFloat(symbol);
-      const response = JSON.stringify(companySharesFloat.data, null, 2);
+      const response = toToolResponse(companySharesFloat);
       return response;
     },
   }),
@@ -39,7 +40,7 @@ export const companyTools = {
     execute: async ({ symbol }) => {
       const fmp = getFMPClient();
       const companyExecutiveCompensation = await fmp.company.getExecutiveCompensation(symbol);
-      const response = JSON.stringify(companyExecutiveCompensation.data, null, 2);
+      const response = toToolResponse(companyExecutiveCompensation);
       return response;
     },
   }),

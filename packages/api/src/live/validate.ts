@@ -13,6 +13,7 @@
 // sub-objects are not reported in this iteration.
 
 import { z } from 'zod';
+import { classifyError } from '../utils/error-classifier';
 
 export type Outcome = 'PASS' | 'FAIL' | 'SKIP' | 'DRIFT';
 
@@ -33,37 +34,26 @@ export interface Classification {
 
 const OUTCOME_RANK: Record<Outcome, number> = { PASS: 0, DRIFT: 1, SKIP: 2, FAIL: 3 };
 
-const PLAN_LOCKED_PATTERNS = [
-  /exclusive endpoint/i,
-  /not available under your current/i,
-  /premium/i,
-  /special endpoint/i,
-  /upgrade your plan/i,
-];
-
 /**
  * Classify a transport-level outcome. Returns null when the request succeeded
- * (so the caller proceeds to shape validation).
+ * (so the caller proceeds to shape validation). Delegates the failure
+ * categorization to the shared `classifyError` so the live tool and the
+ * production client agree on what counts as plan-locked / rate-limited.
  */
 export function classifyTransport(res: TransportResult): Classification | null {
   if (res.success) return null;
 
-  const error = res.error ?? '';
+  const { errorType } = classifyError(res.status, res.error ?? '');
 
-  if (res.status === 429) {
-    return { outcome: 'SKIP', detail: `quota/rate limit (429): ${error}`.trim(), stopRun: true };
+  if (errorType === 'rate-limit') {
+    return { outcome: 'SKIP', detail: `quota/rate limit (${res.status}): ${res.error ?? ''}`.trim(), stopRun: true };
   }
 
-  const planLocked =
-    res.status === 402 ||
-    res.status === 403 ||
-    PLAN_LOCKED_PATTERNS.some((re) => re.test(error));
-
-  if (planLocked) {
-    return { outcome: 'SKIP', detail: `plan-locked (${res.status}): ${error}`.trim() };
+  if (errorType === 'plan-restricted') {
+    return { outcome: 'SKIP', detail: `plan-locked (${res.status}): ${res.error ?? ''}`.trim() };
   }
 
-  return { outcome: 'FAIL', detail: `request failed (${res.status}): ${error || 'unknown error'}` };
+  return { outcome: 'FAIL', detail: `request failed (${res.status}): ${res.error || 'unknown error'}` };
 }
 
 /** Classify a single object value against an (object) schema. */

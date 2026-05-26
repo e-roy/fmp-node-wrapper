@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { createOpenAITool } from '@/utils/openai-tool-wrapper';
 import { getFMPClient } from '@/client';
+import { toToolResponse } from '@/utils/format-response';
 
 export const getBalanceSheet = createOpenAITool({
   name: 'getBalanceSheet',
@@ -20,7 +21,7 @@ export const getBalanceSheet = createOpenAITool({
       period,
       limit: Number(limit),
     });
-    return JSON.stringify(balanceSheet.data, null, 2);
+    return toToolResponse(balanceSheet);
   },
 });
 
@@ -42,7 +43,7 @@ export const getIncomeStatement = createOpenAITool({
       period,
       limit: Number(limit),
     });
-    return JSON.stringify(incomeStatement.data, null, 2);
+    return toToolResponse(incomeStatement);
   },
 });
 
@@ -65,7 +66,7 @@ export const getCashFlowStatement = createOpenAITool({
       period,
       limit: Number(limit),
     });
-    return JSON.stringify(cashFlowStatement.data, null, 2);
+    return toToolResponse(cashFlowStatement);
   },
 });
 
@@ -83,7 +84,7 @@ export const getKeyMetrics = createOpenAITool({
   execute: async ({ symbol, period, limit }) => {
     const fmp = getFMPClient();
     const keyMetrics = await fmp.financial.getKeyMetrics({ symbol, period, limit: Number(limit) });
-    return JSON.stringify(keyMetrics.data, null, 2);
+    return toToolResponse(keyMetrics);
   },
 });
 
@@ -106,7 +107,7 @@ export const getFinancialRatios = createOpenAITool({
       period,
       limit: Number(limit),
     });
-    return JSON.stringify(financialRatios.data, null, 2);
+    return toToolResponse(financialRatios);
   },
 });
 
@@ -128,7 +129,7 @@ export const getEnterpriseValue = createOpenAITool({
       period,
       limit: Number(limit),
     });
-    return JSON.stringify(enterpriseValue.data, null, 2);
+    return toToolResponse(enterpriseValue);
   },
 });
 
@@ -150,7 +151,7 @@ export const getCashflowGrowth = createOpenAITool({
       period,
       limit: Number(limit),
     });
-    return JSON.stringify(cashflowGrowth.data, null, 2);
+    return toToolResponse(cashflowGrowth);
   },
 });
 
@@ -172,7 +173,7 @@ export const getIncomeGrowth = createOpenAITool({
       period,
       limit: Number(limit),
     });
-    return JSON.stringify(incomeGrowth.data, null, 2);
+    return toToolResponse(incomeGrowth);
   },
 });
 
@@ -194,7 +195,7 @@ export const getBalanceSheetGrowth = createOpenAITool({
       period,
       limit: Number(limit),
     });
-    return JSON.stringify(balanceSheetGrowth.data, null, 2);
+    return toToolResponse(balanceSheetGrowth);
   },
 });
 
@@ -216,7 +217,7 @@ export const getFinancialGrowth = createOpenAITool({
       period,
       limit: Number(limit),
     });
-    return JSON.stringify(financialGrowth.data, null, 2);
+    return toToolResponse(financialGrowth);
   },
 });
 
@@ -233,6 +234,6 @@ export const getEarningsHistorical = createOpenAITool({
       symbol,
       limit: Number(limit),
     });
-    return JSON.stringify(earningsHistorical.data, null, 2);
+    return toToolResponse(earningsHistorical);
   },
 });

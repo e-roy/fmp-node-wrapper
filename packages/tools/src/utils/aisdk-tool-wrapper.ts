@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { tool } from 'ai';
 import { logApiExecutionWithTiming } from './logger';
+import { toToolError } from './format-response';
 
 interface AISDKToolConfig {
   name: string;
@@ -17,7 +18,13 @@ export const createTool = (config: AISDKToolConfig) => {
     // generic Zod schema; the real Zod schema is still passed at runtime.
     inputSchema: inputSchema as any,
     execute: async (input: any) => {
-      return await logApiExecutionWithTiming(name, input, () => execute(input));
+      try {
+        return await logApiExecutionWithTiming(name, input, () => execute(input));
+      } catch (error) {
+        // Never throw out of a tool — return a structured error the model can
+        // relay (e.g. a missing FMP_API_KEY, which throws from `new FMP()`).
+        return toToolError(error);
+      }
     },
   });
 };

@@ -1,5 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 import { FMPConfig, APIResponse } from 'fmp-node-types';
+import { classifyError } from './utils/error-classifier';
 
 /**
  * Utility function to unwrap single objects from arrays
@@ -99,12 +100,7 @@ export class FMPClient {
         status: response.status,
       };
     } catch (error: any) {
-      return {
-        success: false,
-        data: null,
-        error: error.message || 'Unknown error occurred',
-        status: error.response?.status || 500,
-      };
+      return this.buildErrorResponse<T>(error);
     }
   }
 
@@ -130,13 +126,37 @@ export class FMPClient {
         status: response.status,
       };
     } catch (error: any) {
-      return {
-        success: false,
-        data: null,
-        error: error.message || 'Unknown error occurred',
-        status: error.response?.status || 500,
-      };
+      return this.buildErrorResponse<T>(error);
     }
+  }
+
+  /**
+   * Build a classified error response from a caught axios error.
+   *
+   * FMP returns the real reason in the response *body* (e.g.
+   * `{ "Error Message": "Special Endpoint : ..." }`), not in `error.message`
+   * (which is axios's generic "Request failed with status code N"). We prefer
+   * the body, then classify into a typed `errorType`.
+   */
+  private buildErrorResponse<T>(error: any): APIResponse<T> {
+    const body = error?.response?.data;
+    const fmpMessage =
+      body && typeof body === 'object'
+        ? (body['Error Message'] ?? body.message ?? null)
+        : typeof body === 'string'
+          ? body
+          : null;
+    // status 0 signals "no HTTP response" (network error / timeout) to the classifier.
+    const status = error?.response?.status ?? 0;
+    const { errorType, message } = classifyError(status, fmpMessage || error?.message || '');
+
+    return {
+      success: false,
+      data: null,
+      error: message,
+      errorType,
+      status: status || 500,
+    };
   }
 
   private getClientForVersion(version: 'v3' | 'v4' | 'stable'): AxiosInstance {

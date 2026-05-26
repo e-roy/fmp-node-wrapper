@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { getFMPClient } from '@/client';
+import { toToolResponse } from '@/utils/format-response';
 import { createTool } from '@/utils/aisdk-tool-wrapper';
 
 export const senateHouseTools = {
@@ -12,7 +13,7 @@ export const senateHouseTools = {
     execute: async ({ symbol }) => {
       const fmp = getFMPClient();
       const senateTrading = await fmp.senateHouse.getSenateTrading({ symbol });
-      const response = JSON.stringify(senateTrading.data, null, 2);
+      const response = toToolResponse(senateTrading);
       return response;
     },
   }),
@@ -26,7 +27,7 @@ export const senateHouseTools = {
     execute: async ({ symbol }) => {
       const fmp = getFMPClient();
       const houseTrading = await fmp.senateHouse.getHouseTrading({ symbol });
-      const response = JSON.stringify(houseTrading.data, null, 2);
+      const response = toToolResponse(houseTrading);
       return response;
     },
   }),
@@ -40,7 +41,7 @@ export const senateHouseTools = {
     execute: async ({ name }) => {
       const fmp = getFMPClient();
       const senateTradingByName = await fmp.senateHouse.getSenateTradingByName({ name });
-      const response = JSON.stringify(senateTradingByName.data, null, 2);
+      const response = toToolResponse(senateTradingByName);
       return response;
     },
   }),
@@ -54,7 +55,7 @@ export const senateHouseTools = {
     execute: async ({ name }) => {
       const fmp = getFMPClient();
       const houseTradingByName = await fmp.senateHouse.getHouseTradingByName({ name });
-      const response = JSON.stringify(houseTradingByName.data, null, 2);
+      const response = toToolResponse(houseTradingByName);
       return response;
     },
   }),
@@ -68,7 +69,7 @@ export const senateHouseTools = {
     execute: async ({ page = 0 }) => {
       const fmp = getFMPClient();
       const senateTradingRSSFeed = await fmp.senateHouse.getSenateTradingRSSFeed({ page });
-      const response = JSON.stringify(senateTradingRSSFeed.data, null, 2);
+      const response = toToolResponse(senateTradingRSSFeed);
       return response;
     },
   }),
@@ -82,7 +83,7 @@ export const senateHouseTools = {
     execute: async ({ page = 0 }) => {
       const fmp = getFMPClient();
       const houseTradingRSSFeed = await fmp.senateHouse.getHouseTradingRSSFeed({ page });
-      const response = JSON.stringify(houseTradingRSSFeed.data, null, 2);
+      const response = toToolResponse(houseTradingRSSFeed);
       return response;
     },
   }),

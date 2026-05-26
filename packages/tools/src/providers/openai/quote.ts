@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { createOpenAITool } from '@/utils/openai-tool-wrapper';
 import { getFMPClient } from '@/client';
+import { toToolResponse } from '@/utils/format-response';
 
 // Input schema for stock quote with symbol
 const stockQuoteInputSchema = z.object({
@@ -18,6 +19,6 @@ export const getStockQuote = createOpenAITool({
   execute: async ({ symbol }) => {
     const fmp = getFMPClient();
     const stockQuote = await fmp.quote.getQuote(symbol);
-    return JSON.stringify(stockQuote.data, null, 2);
+    return toToolResponse(stockQuote);
   },
 });

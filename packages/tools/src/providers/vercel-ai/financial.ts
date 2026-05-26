@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { getFMPClient } from '@/client';
+import { toToolResponse } from '@/utils/format-response';
 import { createTool } from '@/utils/aisdk-tool-wrapper';
 
 export const financialTools = {
@@ -17,7 +18,7 @@ export const financialTools = {
     execute: async ({ symbol, period, limit }) => {
       const fmp = getFMPClient();
       const balanceSheet = await fmp.financial.getBalanceSheet({ symbol, period, limit });
-      const response = JSON.stringify(balanceSheet.data, null, 2);
+      const response = toToolResponse(balanceSheet);
       return response;
     },
   }),
@@ -36,7 +37,7 @@ export const financialTools = {
     execute: async ({ symbol, period, limit }) => {
       const fmp = getFMPClient();
       const incomeStatement = await fmp.financial.getIncomeStatement({ symbol, period, limit });
-      const response = JSON.stringify(incomeStatement.data, null, 2);
+      const response = toToolResponse(incomeStatement);
       return response;
     },
   }),
@@ -55,7 +56,7 @@ export const financialTools = {
     execute: async ({ symbol, period, limit }) => {
       const fmp = getFMPClient();
       const cashFlowStatement = await fmp.financial.getCashFlowStatement({ symbol, period, limit });
-      const response = JSON.stringify(cashFlowStatement.data, null, 2);
+      const response = toToolResponse(cashFlowStatement);
       return response;
     },
   }),
@@ -74,7 +75,7 @@ export const financialTools = {
     execute: async ({ symbol, period, limit }) => {
       const fmp = getFMPClient();
       const keyMetrics = await fmp.financial.getKeyMetrics({ symbol, period, limit });
-      const response = JSON.stringify(keyMetrics.data, null, 2);
+      const response = toToolResponse(keyMetrics);
       return response;
     },
   }),
@@ -93,7 +94,7 @@ export const financialTools = {
     execute: async ({ symbol, period, limit }) => {
       const fmp = getFMPClient();
       const financialRatios = await fmp.financial.getFinancialRatios({ symbol, period, limit });
-      const response = JSON.stringify(financialRatios.data, null, 2);
+      const response = toToolResponse(financialRatios);
       return response;
     },
   }),
@@ -112,7 +113,7 @@ export const financialTools = {
     execute: async ({ symbol, period, limit }) => {
       const fmp = getFMPClient();
       const enterpriseValue = await fmp.financial.getEnterpriseValue({ symbol, period, limit });
-      const response = JSON.stringify(enterpriseValue.data, null, 2);
+      const response = toToolResponse(enterpriseValue);
       return response;
     },
   }),
@@ -131,7 +132,7 @@ export const financialTools = {
     execute: async ({ symbol, period, limit }) => {
       const fmp = getFMPClient();
       const cashflowGrowth = await fmp.financial.getCashflowGrowth({ symbol, period, limit });
-      const response = JSON.stringify(cashflowGrowth.data, null, 2);
+      const response = toToolResponse(cashflowGrowth);
       return response;
     },
   }),
@@ -150,7 +151,7 @@ export const financialTools = {
     execute: async ({ symbol, period, limit }) => {
       const fmp = getFMPClient();
       const incomeGrowth = await fmp.financial.getIncomeGrowth({ symbol, period, limit });
-      const response = JSON.stringify(incomeGrowth.data, null, 2);
+      const response = toToolResponse(incomeGrowth);
       return response;
     },
   }),
@@ -173,7 +174,7 @@ export const financialTools = {
         period,
         limit,
       });
-      const response = JSON.stringify(balanceSheetGrowth.data, null, 2);
+      const response = toToolResponse(balanceSheetGrowth);
       return response;
     },
   }),
@@ -192,7 +193,7 @@ export const financialTools = {
     execute: async ({ symbol, period, limit }) => {
       const fmp = getFMPClient();
       const financialGrowth = await fmp.financial.getFinancialGrowth({ symbol, period, limit });
-      const response = JSON.stringify(financialGrowth.data, null, 2);
+      const response = toToolResponse(financialGrowth);
       return response;
     },
   }),
@@ -207,7 +208,7 @@ export const financialTools = {
     execute: async ({ symbol, limit }) => {
       const fmp = getFMPClient();
       const earningsHistorical = await fmp.financial.getEarningsHistorical({ symbol, limit });
-      const response = JSON.stringify(earningsHistorical.data, null, 2);
+      const response = toToolResponse(earningsHistorical);
       return response;
     },
   }),

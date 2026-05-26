@@ -23,4 +23,21 @@ describe('getStockQuote (minimal coverage)', () => {
     expect(mockQuote.getQuote).toHaveBeenCalledWith('AAPL');
     expect(JSON.parse(result)).toEqual([{ symbol: 'AAPL', price: 123.45 }]);
   });
+
+  it('surfaces a plan-restricted error instead of null', async () => {
+    mockQuote.getQuote.mockResolvedValueOnce({
+      success: false,
+      data: null,
+      error: 'This endpoint is not available on your current FMP plan. (403: ...)',
+      errorType: 'plan-restricted',
+      status: 403,
+    });
+
+    const result = await (getStockQuote as any).execute({ symbol: 'AAPL' });
+    const parsed = JSON.parse(result);
+
+    expect(parsed.error).toBe(true);
+    expect(parsed.type).toBe('plan-restricted');
+    expect(parsed.status).toBe(403);
+  });
 });

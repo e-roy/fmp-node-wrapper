@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { createOpenAITool } from '@/utils/openai-tool-wrapper';
 import { getFMPClient } from '@/client';
+import { toToolResponse } from '@/utils/format-response';
 
 export const getCompanyProfile = createOpenAITool({
   name: 'getCompanyProfile',
@@ -14,7 +15,7 @@ export const getCompanyProfile = createOpenAITool({
   execute: async ({ symbol }) => {
     const fmp = getFMPClient();
     const companyProfile = await fmp.company.getCompanyProfile(symbol);
-    return JSON.stringify(companyProfile.data, null, 2);
+    return toToolResponse(companyProfile);
   },
 });
 
@@ -27,7 +28,7 @@ export const getCompanySharesFloat = createOpenAITool({
   execute: async ({ symbol }) => {
     const fmp = getFMPClient();
     const companySharesFloat = await fmp.company.getSharesFloat(symbol);
-    return JSON.stringify(companySharesFloat.data, null, 2);
+    return toToolResponse(companySharesFloat);
   },
 });
 
@@ -40,6 +41,6 @@ export const getCompanyExecutiveCompensation = createOpenAITool({
   execute: async ({ symbol }) => {
     const fmp = getFMPClient();
     const companyExecutiveCompensation = await fmp.company.getExecutiveCompensation(symbol);
-    return JSON.stringify(companyExecutiveCompensation.data, null, 2);
+    return toToolResponse(companyExecutiveCompensation);
   },
 });

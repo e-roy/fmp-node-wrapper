@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { createOpenAITool } from '@/utils/openai-tool-wrapper';
 import { getFMPClient } from '@/client';
+import { toToolResponse } from '@/utils/format-response';
 
 // Empty schema for tools that don't require parameters
 const emptyInputSchema = z.object({});
@@ -12,7 +13,7 @@ export const getMarketPerformance = createOpenAITool({
   execute: async () => {
     const fmp = getFMPClient();
     const marketPerformance = await fmp.market.getMarketPerformance();
-    return JSON.stringify(marketPerformance.data, null, 2);
+    return toToolResponse(marketPerformance);
   },
 });
 
@@ -23,7 +24,7 @@ export const getSectorPerformance = createOpenAITool({
   execute: async () => {
     const fmp = getFMPClient();
     const sectorPerformance = await fmp.market.getSectorPerformance();
-    return JSON.stringify(sectorPerformance.data, null, 2);
+    return toToolResponse(sectorPerformance);
   },
 });
 
@@ -34,7 +35,7 @@ export const getGainers = createOpenAITool({
   execute: async () => {
     const fmp = getFMPClient();
     const gainers = await fmp.market.getGainers();
-    return JSON.stringify(gainers.data, null, 2);
+    return toToolResponse(gainers);
   },
 });
 
@@ -45,7 +46,7 @@ export const getLosers = createOpenAITool({
   execute: async () => {
     const fmp = getFMPClient();
     const losers = await fmp.market.getLosers();
-    return JSON.stringify(losers.data, null, 2);
+    return toToolResponse(losers);
   },
 });
 
@@ -56,6 +57,6 @@ export const getMostActive = createOpenAITool({
   execute: async () => {
     const fmp = getFMPClient();
     const mostActive = await fmp.market.getMostActive();
-    return JSON.stringify(mostActive.data, null, 2);
+    return toToolResponse(mostActive);
   },
 });

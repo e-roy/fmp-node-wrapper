@@ -163,7 +163,7 @@ describe('FMPClient', () => {
       expect(result.data).toEqual([]);
     });
 
-    it('should handle network errors', async () => {
+    it('should handle network errors (no HTTP response)', async () => {
       const networkError = new Error('Network Error');
       mockAxiosInstance.get.mockRejectedValue(networkError);
 
@@ -172,7 +172,8 @@ describe('FMPClient', () => {
       expect(result).toEqual({
         success: false,
         data: null,
-        error: 'Network Error',
+        error: 'Network error: Network Error',
+        errorType: 'network',
         status: 500,
       });
     });
@@ -187,9 +188,38 @@ describe('FMPClient', () => {
       expect(result).toEqual({
         success: false,
         data: null,
-        error: 'HTTP Error',
+        error: 'Not found: HTTP Error',
+        errorType: 'not-found',
         status: 404,
       });
+    });
+
+    it('should classify plan-restricted (403) errors using the FMP message body', async () => {
+      const planError: any = new Error('Request failed with status code 403');
+      planError.response = {
+        status: 403,
+        data: { 'Error Message': 'Special Endpoint : This endpoint is only for premium users.' },
+      };
+      mockAxiosInstance.get.mockRejectedValue(planError);
+
+      const result = await client.get('/test-endpoint');
+
+      expect(result.success).toBe(false);
+      expect(result.errorType).toBe('plan-restricted');
+      expect(result.status).toBe(403);
+      // Surfaces FMP's real reason, not axios's generic message.
+      expect(result.error).toContain('Special Endpoint');
+    });
+
+    it('should classify rate-limit (429) errors', async () => {
+      const rateError: any = new Error('Request failed with status code 429');
+      rateError.response = { status: 429, data: 'Limit Reach . Please upgrade your plan.' };
+      mockAxiosInstance.get.mockRejectedValue(rateError);
+
+      const result = await client.get('/test-endpoint');
+
+      expect(result.errorType).toBe('rate-limit');
+      expect(result.status).toBe(429);
     });
 
     it('should handle errors without response object', async () => {
@@ -201,7 +231,8 @@ describe('FMPClient', () => {
       expect(result).toEqual({
         success: false,
         data: null,
-        error: 'Unknown error',
+        error: 'Network error: Unknown error',
+        errorType: 'network',
         status: 500,
       });
     });
@@ -215,7 +246,8 @@ describe('FMPClient', () => {
       expect(result).toEqual({
         success: false,
         data: null,
-        error: 'Unknown error occurred',
+        error: 'Network error: Unknown error occurred',
+        errorType: 'network',
         status: 500,
       });
     });
@@ -296,7 +328,8 @@ describe('FMPClient', () => {
       expect(result).toEqual({
         success: false,
         data: null,
-        error: 'Network Error',
+        error: 'Network error: Network Error',
+        errorType: 'network',
         status: 500,
       });
     });

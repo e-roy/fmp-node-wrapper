@@ -46,3 +46,8 @@ export {
 } from './utils/constants';
 
 export { FMPValidation } from './utils/validation';
+
+// Export error classification utilities
+export { classifyError } from './utils/error-classifier';
+export type { ClassifiedError } from './utils/error-classifier';
+export { FMPError } from './shared';

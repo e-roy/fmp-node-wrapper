@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { getFMPClient } from '@/client';
+import { toToolResponse } from '@/utils/format-response';
 import { createTool } from '@/utils/aisdk-tool-wrapper';
 
 export const stockTools = {
@@ -12,7 +13,7 @@ export const stockTools = {
     execute: async ({ symbol }) => {
       const fmp = getFMPClient();
       const marketCap = await fmp.stock.getMarketCap(symbol);
-      const response = JSON.stringify(marketCap.data, null, 2);
+      const response = toToolResponse(marketCap);
       return response;
     },
   }),
@@ -26,7 +27,7 @@ export const stockTools = {
     execute: async ({ symbol }) => {
       const fmp = getFMPClient();
       const stockSplits = await fmp.stock.getStockSplits(symbol);
-      const response = JSON.stringify(stockSplits.data, null, 2);
+      const response = toToolResponse(stockSplits);
       return response;
     },
   }),
@@ -40,7 +41,7 @@ export const stockTools = {
     execute: async ({ symbol }) => {
       const fmp = getFMPClient();
       const dividendHistory = await fmp.stock.getDividendHistory(symbol);
-      const response = JSON.stringify(dividendHistory.data, null, 2);
+      const response = toToolResponse(dividendHistory);
       return response;
     },
   }),

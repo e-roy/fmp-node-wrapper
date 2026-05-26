@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { createOpenAITool } from '@/utils/openai-tool-wrapper';
 import { getFMPClient } from '@/client';
+import { toToolResponse } from '@/utils/format-response';
 
 // Input schema for institutional holders with symbol
 const institutionalHoldersInputSchema = z.object({
@@ -20,6 +21,6 @@ export const getInstitutionalHolders = createOpenAITool({
     const institutionalHolders = await fmp.institutional.getInstitutionalHolders({ symbol });
 
     // Return formatted JSON string
-    return JSON.stringify(institutionalHolders.data, null, 2);
+    return toToolResponse(institutionalHolders);
   },
 });

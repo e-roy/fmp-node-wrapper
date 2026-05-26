@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { createOpenAITool } from '@/utils/openai-tool-wrapper';
 import { getFMPClient } from '@/client';
+import { toToolResponse } from '@/utils/format-response';
 
 // Input schema for insider trading with symbol and optional page
 const insiderTradingInputSchema = z.object({
@@ -24,6 +25,6 @@ export const getInsiderTrading = createOpenAITool({
   execute: async ({ symbol, page }) => {
     const fmp = getFMPClient();
     const insiderTrading = await fmp.insider.getInsiderTradesBySymbol(symbol, page);
-    return JSON.stringify(insiderTrading.data, null, 2);
+    return toToolResponse(insiderTrading);
   },
 });

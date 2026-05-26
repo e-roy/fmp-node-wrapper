@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { tool } from '@openai/agents';
 import { logApiExecutionWithTiming } from './logger';
+import { toToolError } from './format-response';
 
 export interface OpenAIToolConfig<T extends z.ZodObject<any>> {
   name: string;
@@ -22,8 +23,14 @@ export function createOpenAITool<T extends z.ZodObject<any>>(config: OpenAIToolC
     description,
     parameters: inputSchema as z.ZodObject<any>,
     execute: async (input: unknown) => {
-      const args = inputSchema.parse(input) as z.infer<T>;
-      return await logApiExecutionWithTiming(name, args, () => execute(args));
+      try {
+        const args = inputSchema.parse(input) as z.infer<T>;
+        return await logApiExecutionWithTiming(name, args, () => execute(args));
+      } catch (error) {
+        // Never throw out of a tool — return a structured error the model can
+        // relay (e.g. a missing FMP_API_KEY, which throws from `new FMP()`).
+        return toToolError(error);
+      }
     },
   });
 }

@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { createOpenAITool } from '@/utils/openai-tool-wrapper';
 import { getFMPClient } from '@/client';
+import { toToolResponse } from '@/utils/format-response';
 
 // Input schema for ETF holdings with optional date
 const etfHoldingsInputSchema = z.object({
@@ -30,7 +31,7 @@ export const getETFHoldings = createOpenAITool({
     }
 
     const etfHoldings = await fmp.etf.getHoldings(params);
-    return JSON.stringify(etfHoldings.data, null, 2);
+    return toToolResponse(etfHoldings);
   },
 });
 
@@ -41,6 +42,6 @@ export const getETFProfile = createOpenAITool({
   execute: async ({ symbol }) => {
     const fmp = getFMPClient();
     const etfProfile = await fmp.etf.getProfile(symbol);
-    return JSON.stringify(etfProfile.data, null, 2);
+    return toToolResponse(etfProfile);
   },
 });

@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { getFMPClient } from '@/client';
+import { toToolResponse } from '@/utils/format-response';
 import { createTool } from '@/utils/aisdk-tool-wrapper';
 
 export const economicTools = {
@@ -13,7 +14,7 @@ export const economicTools = {
     execute: async ({ from, to }) => {
       const fmp = getFMPClient();
       const treasuryRates = await fmp.economic.getTreasuryRates({ from, to });
-      const response = JSON.stringify(treasuryRates.data, null, 2);
+      const response = toToolResponse(treasuryRates);
       return response;
     },
   }),
@@ -55,7 +56,7 @@ export const economicTools = {
     execute: async ({ name, from, to }) => {
       const fmp = getFMPClient();
       const economicIndicators = await fmp.economic.getEconomicIndicators({ name, from, to });
-      const response = JSON.stringify(economicIndicators.data, null, 2);
+      const response = toToolResponse(economicIndicators);
       return response;
     },
   }),

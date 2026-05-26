@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { createOpenAITool } from '@/utils/openai-tool-wrapper';
 import { getFMPClient } from '@/client';
+import { toToolResponse } from '@/utils/format-response';
 
 // Input schema for treasury rates with date range
 const treasuryRatesInputSchema = z.object({
@@ -51,7 +52,7 @@ export const getTreasuryRates = createOpenAITool({
       from: from ?? undefined,
       to: to ?? undefined,
     });
-    return JSON.stringify(treasuryRates.data, null, 2);
+    return toToolResponse(treasuryRates);
   },
 });
 
@@ -66,6 +67,6 @@ export const getEconomicIndicators = createOpenAITool({
       from: from ?? undefined,
       to: to ?? undefined,
     });
-    return JSON.stringify(economicIndicators.data, null, 2);
+    return toToolResponse(economicIndicators);
   },
 });

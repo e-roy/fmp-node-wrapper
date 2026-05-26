@@ -36,4 +36,22 @@ describe('createOpenAITool', () => {
     expect(spy).toHaveBeenCalledWith({ symbol: 'AAPL' });
     expect(result).toBe('got AAPL');
   });
+
+  it('catches a thrown execute and returns a structured error instead of throwing', async () => {
+    const tool = createOpenAITool({
+      name: 'throwTool',
+      description: 'Throws',
+      inputSchema: z.object({ symbol: z.string() }),
+      execute: async () => {
+        throw new Error('FMP API key is required. Set the FMP_API_KEY environment variable.');
+      },
+    });
+
+    const result = await (tool as any).execute({ symbol: 'AAPL' });
+    const parsed = JSON.parse(result);
+
+    expect(parsed.error).toBe(true);
+    expect(parsed.type).toBe('auth');
+    expect(parsed.message).toContain('API key');
+  });
 });

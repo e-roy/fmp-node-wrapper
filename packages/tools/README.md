@@ -302,12 +302,25 @@ Each tool accepts specific parameters. Here are some common ones:
 
 ## Error Handling
 
-The tools handle API errors gracefully and will return informative error messages if:
+When a request fails, a tool returns a structured JSON error (instead of `null`) so the model can explain *why* to the user:
 
-- The API key is invalid or missing
-- The requested data is not available
-- Rate limits are exceeded
-- Invalid parameters are provided
+```json
+{ "error": true, "type": "plan-restricted", "message": "This endpoint is not available on your current FMP plan. (403: ...)", "status": 403 }
+```
+
+The `type` field classifies the failure so your agent can react appropriately:
+
+| `type`            | Meaning                                                      |
+| ----------------- | ------------------------------------------------------------ |
+| `plan-restricted` | Endpoint isn't included in your FMP subscription (402/403)   |
+| `rate-limit`      | FMP quota / rate limit reached (429)                         |
+| `auth`            | Invalid or missing `FMP_API_KEY` (401)                       |
+| `not-found`       | Resource does not exist (404)                                |
+| `bad-request`     | Invalid parameters (400)                                     |
+| `network`         | No response from FMP (timeout / offline)                     |
+| `unknown`         | Anything else                                                |
+
+This is especially useful on lower FMP tiers: an agent calling an endpoint your plan doesn't cover now gets a clear `plan-restricted` message it can relay, rather than empty data. (Direct `fmp-node-api` callers get the same classification via `response.errorType`.)
 
 ## Testing Tools
 
