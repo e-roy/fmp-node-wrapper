@@ -1,5 +1,23 @@
 # fmp-ai-tools
 
+## 0.2.0-beta.8
+
+### Patch Changes
+
+- Updated dependencies
+  - fmp-node-api@0.2.0-beta.4
+
+## 0.2.0-beta.7
+
+### Minor Changes
+
+- Add AI tools for the new analyst, valuation, and technical endpoints: `getAnalystEstimates`, `getPriceTargetConsensus`, `getStockGrades`, `getDiscountedCashFlow`, `getCompanyRating`, and `getTechnicalIndicator`. List-returning tools apply a default result `limit`.
+
+### Patch Changes
+
+- Updated dependencies
+  - fmp-node-api@0.2.0-beta.3
+
 ## 0.2.0-beta.6
 
 ### Minor Changes

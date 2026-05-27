@@ -83,7 +83,7 @@ To add a tool: add one `defineTool({...})` to the relevant `src/definitions/<cat
 
 ## Build & publish
 
-Each package builds with **tsup** to dual CJS+ESM with `.d.ts` (see per-package `tsup.config.ts`); `axios` is marked external in the API build. Versioning/publishing uses **Changesets**: `pnpm changeset` to record a change, `pnpm publish-packages` to build+lint+test+version+publish.
+Each package builds with **tsup** to dual CJS+ESM with `.d.ts` (see per-package `tsup.config.ts`); `axios` is marked external in the API build. Versioning/publishing uses **Changesets**: `pnpm changeset` to record a change, `pnpm publish-packages` to build+lint+test+**live-check**+version+publish. The `pnpm test:live` step is a **release gate**: it validates the real FMP API against the canonical schemas and aborts the publish on any FAIL (e.g. a renamed/removed route), so always release via `pnpm publish-packages` (the CI publish job runs the same gate as its own step). It needs `FMP_API_KEY` present at release time.
 
 ## Conventions
 

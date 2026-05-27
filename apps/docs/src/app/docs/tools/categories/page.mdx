@@ -215,6 +215,41 @@ Resolve names and partial tickers to symbols.
 **Use Cases:**
 - Turning a company name into a ticker before calling other tools
 
+### 🎯 Analyst Tools
+
+Forward-looking analyst estimates, price targets, and grades.
+
+**Tools:**
+- `getAnalystEstimates` - Analyst estimates (revenue, EBITDA, net income, EPS) by period (default `limit` 10)
+- `getPriceTargetConsensus` - Analyst price-target consensus (high/low/consensus/median)
+- `getStockGrades` - Recent analyst grades / upgrades & downgrades (default `limit` 20)
+
+**Use Cases:**
+- Outlook and sentiment analysis
+- Comparing price to analyst targets
+
+### 🧮 Valuation Tools
+
+Fair-value estimates and company ratings.
+
+**Tools:**
+- `getDiscountedCashFlow` - Discounted-cash-flow fair value vs. current price
+- `getCompanyRating` - FMP's current rating/score snapshot for a company
+
+**Use Cases:**
+- Over/undervaluation assessment
+- Quality/score screening
+
+### 📐 Technical Tools
+
+Technical indicators over a chosen timeframe.
+
+**Tools:**
+- `getTechnicalIndicator` - Indicator series (SMA, EMA, RSI, etc.) at a chosen timeframe (default `limit` 50)
+
+**Use Cases:**
+- Trend and momentum analysis for trading agents
+
 ## Tool Selection Guide
 
 ### For Financial Analysis Applications

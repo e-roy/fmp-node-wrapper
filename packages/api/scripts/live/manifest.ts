@@ -94,6 +94,16 @@ import {
   AvailableCountriesSchema,
   // search
   SearchResultSchema,
+  // analyst
+  AnalystEstimateSchema,
+  PriceTargetConsensusSchema,
+  PriceTargetSummarySchema,
+  StockGradeSchema,
+  // valuation
+  DCFValuationSchema,
+  CompanyRatingSchema,
+  // technical
+  TechnicalIndicatorSchema,
   // sec
   RSSFeedItemSchema,
   RSSFeedAllItemSchema,
@@ -125,6 +135,9 @@ export type Category =
   | 'news'
   | 'screener'
   | 'search'
+  | 'analyst'
+  | 'valuation'
+  | 'technical'
   | 'sec'
   | 'senate-house';
 
@@ -261,6 +274,20 @@ export const manifest: LiveCase[] = [
 
   // ---- search ----
   { category: 'search', name: 'search(AAPL)', schema: SearchResultSchema, kind: 'array', call: (fmp) => fmp.search.search({ query: 'AAPL', limit: 5 }) },
+
+  // ---- analyst ----
+  { category: 'analyst', name: 'getEstimates(AAPL,annual,2)', schema: AnalystEstimateSchema, kind: 'array', call: (fmp) => fmp.analyst.getEstimates({ symbol: 'AAPL', period: 'annual', limit: 2 }) },
+  { category: 'analyst', name: 'getPriceTargetConsensus(AAPL)', schema: PriceTargetConsensusSchema, kind: 'object', call: (fmp) => fmp.analyst.getPriceTargetConsensus({ symbol: 'AAPL' }) },
+  { category: 'analyst', name: 'getPriceTargetSummary(AAPL)', schema: PriceTargetSummarySchema, kind: 'object', call: (fmp) => fmp.analyst.getPriceTargetSummary({ symbol: 'AAPL' }) },
+  { category: 'analyst', name: 'getGrades(AAPL)', schema: StockGradeSchema, kind: 'array', call: (fmp) => fmp.analyst.getGrades({ symbol: 'AAPL' }) },
+
+  // ---- valuation ----
+  { category: 'valuation', name: 'getDiscountedCashFlow(AAPL)', schema: DCFValuationSchema, kind: 'object', call: (fmp) => fmp.valuation.getDiscountedCashFlow({ symbol: 'AAPL' }) },
+  { category: 'valuation', name: 'getRatingSnapshot(AAPL)', schema: CompanyRatingSchema, kind: 'object', call: (fmp) => fmp.valuation.getRatingSnapshot({ symbol: 'AAPL' }) },
+  { category: 'valuation', name: 'getHistoricalRating(AAPL,2)', schema: CompanyRatingSchema, kind: 'array', call: (fmp) => fmp.valuation.getHistoricalRating({ symbol: 'AAPL', limit: 2 }) },
+
+  // ---- technical ----
+  { category: 'technical', name: 'getTechnicalIndicator(AAPL,sma,10,1day)', schema: TechnicalIndicatorSchema, kind: 'array', call: (fmp) => fmp.technical.getTechnicalIndicator({ symbol: 'AAPL', type: 'sma', periodLength: 10, timeframe: '1day' }) },
 
   // ---- sec ----
   { category: 'sec', name: 'getRSSFeed()', schema: RSSFeedItemSchema, kind: 'array', call: (fmp) => fmp.sec.getRSSFeed({ limit: 5, type: '10-K', from: '2024-01-01', to: '2024-12-31', isDone: true }) },

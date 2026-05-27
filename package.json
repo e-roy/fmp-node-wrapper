@@ -39,7 +39,7 @@
     "type-check": "turbo run type-check",
     "format": "turbo run format",
     "format:check": "turbo run format:check",
-    "publish-packages": "turbo run build lint test --filter=./packages/* && changeset version && changeset publish"
+    "publish-packages": "turbo run build lint test --filter=./packages/* && pnpm test:live && changeset version && changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",

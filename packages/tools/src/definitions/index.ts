@@ -10,6 +10,9 @@ import { marketDefinitions } from './market';
 import { newsDefinitions } from './news';
 import { screenerDefinitions } from './screener';
 import { searchDefinitions } from './search';
+import { analystDefinitions } from './analyst';
+import { valuationDefinitions } from './valuation';
+import { technicalDefinitions } from './technical';
 import { senateHouseDefinitions } from './senate-house';
 import { stockDefinitions } from './stock';
 import type { FMPToolDefinition } from './types';
@@ -29,6 +32,9 @@ export {
   newsDefinitions,
   screenerDefinitions,
   searchDefinitions,
+  analystDefinitions,
+  valuationDefinitions,
+  technicalDefinitions,
   senateHouseDefinitions,
   stockDefinitions,
 };
@@ -47,6 +53,9 @@ export const allDefinitions: FMPToolDefinition[] = [
   ...newsDefinitions,
   ...screenerDefinitions,
   ...searchDefinitions,
+  ...analystDefinitions,
+  ...valuationDefinitions,
+  ...technicalDefinitions,
   ...senateHouseDefinitions,
   ...stockDefinitions,
 ];

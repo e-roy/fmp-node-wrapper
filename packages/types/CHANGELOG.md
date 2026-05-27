@@ -1,5 +1,27 @@
 # fmp-node-types
 
+## 0.2.0-beta.4
+
+### Patch Changes
+
+- Correct the analyst/valuation schemas to match the live FMP `stable` API (verified):
+  - **AnalystEstimate**: fields drop the `estimated` prefix and use the real names (`revenueLow/High/Avg`, `ebitda*`, `ebit*`, `netIncome*`, `sgaExpense*`, `epsAvg/High/Low`, `numAnalystsRevenue`, `numAnalystsEps`).
+  - **PriceTargetSummary**: count fields are `lastMonthCount`/`lastQuarterCount`/`lastYearCount`/`allTimeCount`.
+  - **DCFValuation**: the price field is keyed `"Stock Price"` (with a space).
+  - **CompanyRating**: gains an optional `date` (present on historical rows).
+  - `analyst.getEstimates` now defaults `period` to `annual` (the `stable` endpoint returns 400 without it).
+
+## 0.2.0-beta.3
+
+### Minor Changes
+
+- Add three new endpoint categories:
+  - **`fmp.analyst`** — `getEstimates`, `getPriceTargetConsensus`, `getPriceTargetSummary`, `getGrades`.
+  - **`fmp.valuation`** — `getDiscountedCashFlow`, `getRatingSnapshot`, `getHistoricalRating`.
+  - **`fmp.technical`** — `getTechnicalIndicator` (SMA/EMA/RSI/etc. via a `type` param).
+
+  Adds the matching `SearchResult`-style types and live-API shape-check manifest cases.
+
 ## 0.2.0-beta.2
 
 ### Minor Changes

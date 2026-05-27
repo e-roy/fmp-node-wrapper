@@ -232,6 +232,21 @@ Logs: result summary and formatted JSON response data.
 
 - `searchSymbol` - Resolve a company name or partial ticker to matching symbols (e.g., "Apple" → AAPL)
 
+### Analyst Tools
+
+- `getAnalystEstimates` - Analyst estimates (revenue, EBITDA, net income, EPS) by period (default `limit` 10)
+- `getPriceTargetConsensus` - Analyst price-target consensus (high/low/consensus/median)
+- `getStockGrades` - Recent analyst grades / upgrades & downgrades (default `limit` 20)
+
+### Valuation Tools
+
+- `getDiscountedCashFlow` - Discounted-cash-flow fair value vs. current price
+- `getCompanyRating` - FMP's current rating/score snapshot for a company
+
+### Technical Tools
+
+- `getTechnicalIndicator` - Indicator series (SMA, EMA, RSI, etc.) at a chosen timeframe (default `limit` 50)
+
 ## Using Individual Tools
 
 You can import and use specific tool categories or individual tools from either provider:

@@ -10,7 +10,10 @@
     "fmp-node-types": "0.1.4"
   },
   "changesets": [
+    "analyst-valuation-technical-api",
+    "analyst-valuation-technical-tools",
     "error-handling",
+    "fix-analyst-valuation-schemas",
     "loosen-tool-dep-ranges",
     "openai-bundler-safe",
     "search-endpoint",

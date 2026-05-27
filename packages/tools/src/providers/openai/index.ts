@@ -18,6 +18,9 @@ import {
   newsDefinitions,
   screenerDefinitions,
   searchDefinitions,
+  analystDefinitions,
+  valuationDefinitions,
+  technicalDefinitions,
   senateHouseDefinitions,
   stockDefinitions,
   type FMPToolDefinition,
@@ -72,6 +75,12 @@ export const getStockNews = byName.getStockNews;
 export const getStockNewsBySymbol = byName.getStockNewsBySymbol;
 export const screenStocks = byName.screenStocks;
 export const searchSymbol = byName.searchSymbol;
+export const getAnalystEstimates = byName.getAnalystEstimates;
+export const getPriceTargetConsensus = byName.getPriceTargetConsensus;
+export const getStockGrades = byName.getStockGrades;
+export const getDiscountedCashFlow = byName.getDiscountedCashFlow;
+export const getCompanyRating = byName.getCompanyRating;
+export const getTechnicalIndicator = byName.getTechnicalIndicator;
 export const getMarketCap = byName.getMarketCap;
 export const getStockSplits = byName.getStockSplits;
 export const getDividendHistory = byName.getDividendHistory;
@@ -89,6 +98,9 @@ export const marketTools = pick(marketDefinitions);
 export const newsTools = pick(newsDefinitions);
 export const screenerTools = pick(screenerDefinitions);
 export const searchTools = pick(searchDefinitions);
+export const analystTools = pick(analystDefinitions);
+export const valuationTools = pick(valuationDefinitions);
+export const technicalTools = pick(technicalDefinitions);
 export const senateHouseTools = pick(senateHouseDefinitions);
 export const stockTools = pick(stockDefinitions);
 
