@@ -1,5 +1,16 @@
 # fmp-node-api
 
+## 0.2.1
+
+### Patch Changes
+
+- Bump `axios` dependency floor from `^1.6.2` to `^1.13.0` (resolves to 1.16.x at install time). Clears three transitive security advisories surfaced by `pnpm audit` against consumers:
+  - **Critical:** `form-data` unsafe random boundary (GHSA-fjxv-7rqg-78g4) — fixed because newer axios depends on patched `form-data`.
+  - **High:** axios DoS via missing data-size check (GHSA-4hjh-wcwx-xvwj) — patched in axios >=1.12.0.
+  - **Moderate:** axios cloud-metadata exfiltration via header injection (GHSA-fvcv-3m26-pcqx) — patched in axios >=1.15.0.
+
+  No runtime API changes; the wrapper uses the same axios surface it always has.
+
 ## 0.2.0
 
 ### Minor Changes
