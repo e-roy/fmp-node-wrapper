@@ -46,6 +46,11 @@ The Company Endpoints provide access to comprehensive company information includ
       path: 'v3/earning_call_transcript/{symbol}',
       description: 'Get company transcript dates and data',
     },
+    {
+      method: 'GET',
+      path: 'stable/stock-peers?symbol={symbol}',
+      description: 'Get peer companies with price and market cap',
+    },
   ]}
 />
 
@@ -401,6 +406,47 @@ Retrieve available transcript dates and data for a company's earnings calls.
 }`}
 </CodeBlock>
 
+## Get Stock Peers
+
+Retrieve a list of peer companies for a stock, each with its current price and market cap. Useful for relative valuation and "compare X to its peers" analysis.
+
+<CodeBlock language="typescript">
+  {`const peers = await fmp.company.getStockPeers('AAPL');`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        symbol: 'GOOGL',
+        companyName: 'Alphabet Inc.',
+        price: 388.83,
+        mktCap: 4702848416027
+      },
+      {
+        symbol: 'MSFT',
+        companyName: 'Microsoft Corporation',
+        price: 430.16,
+        mktCap: 3198000000000
+      }
+    ]
+}`}
+</CodeBlock>
+
 ## Data Types
 
 ### CompanyProfile
@@ -498,6 +544,17 @@ Retrieve available transcript dates and data for a company's earnings calls.
 
 <CodeBlock language="typescript">
   {`type CompanyTranscriptData = [number, number, string];`}
+</CodeBlock>
+
+### StockPeer
+
+<CodeBlock language="typescript">
+  {`interface StockPeer {
+  symbol: string;
+  companyName: string;
+  price: number;
+  mktCap: number;
+}`}
 </CodeBlock>
 
 **Note**: The `CompanyTranscriptData` type represents an array where:

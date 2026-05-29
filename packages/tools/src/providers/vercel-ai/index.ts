@@ -71,8 +71,12 @@ export const fmpTools: ToolSet = {
 
 // Individual tools for direct import
 export const { getStockQuote, getHistoricalPrice, getIntraday } = quoteTools;
-export const { getCompanyProfile, getCompanySharesFloat, getCompanyExecutiveCompensation } =
-  companyTools;
+export const {
+  getCompanyProfile,
+  getCompanySharesFloat,
+  getCompanyExecutiveCompensation,
+  getStockPeers,
+} = companyTools;
 export const { getEarningsCalendar, getEconomicCalendar } = calendarTools;
 export const { getTreasuryRates, getEconomicIndicators } = economicTools;
 export const { getETFHoldings, getETFProfile } = etfTools;
@@ -88,6 +92,11 @@ export const {
   getBalanceSheetGrowth,
   getFinancialGrowth,
   getEarningsHistorical,
+  getFinancialScores,
+  getKeyMetricsTTM,
+  getFinancialRatiosTTM,
+  getRevenueProductSegmentation,
+  getRevenueGeographicSegmentation,
 } = financialTools;
 export const { getInsiderTrading } = insiderTools;
 export const { getInstitutionalHolders } = institutionalTools;
@@ -104,7 +113,8 @@ export const {
 export const { getStockNews, getStockNewsBySymbol } = newsTools;
 export const { screenStocks } = screenerTools;
 export const { searchSymbol } = searchTools;
-export const { getAnalystEstimates, getPriceTargetConsensus, getStockGrades } = analystTools;
+export const { getAnalystEstimates, getPriceTargetConsensus, getStockGrades, getGradesConsensus } =
+  analystTools;
 export const { getDiscountedCashFlow, getCompanyRating } = valuationTools;
 export const { getTechnicalIndicator } = technicalTools;
 export const { getMarketCap, getStockSplits, getDividendHistory } = stockTools;

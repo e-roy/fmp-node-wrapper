@@ -8,6 +8,7 @@ import {
   HistoricalEmployeeCount,
   HistoricalSharesFloat,
   SharesFloat,
+  StockPeer,
 } from 'fmp-node-types';
 import { FMPClient } from '@/client';
 
@@ -265,5 +266,28 @@ export class CompanyEndpoints {
    */
   async getCompanyTranscriptData(symbol: string): Promise<APIResponse<CompanyTranscriptData[]>> {
     return this.client.getSingle(`/earning_call_transcript`, 'v4', { symbol });
+  }
+
+  /**
+   * Get peer companies for a stock
+   *
+   * Provides a list of comparable companies (peers) for a stock, each with its
+   * current price and market cap. Useful for relative valuation and "compare X to
+   * its peers" analysis.
+   *
+   * @param symbol - The stock symbol to get peers for (e.g., 'AAPL', 'MSFT', 'GOOGL')
+   *
+   * @returns Promise resolving to an array of peer companies with price and market cap
+   *
+   * @example
+   * ```typescript
+   * const peers = await fmp.company.getStockPeers('AAPL');
+   * peers.data.forEach(p => console.log(`${p.symbol} (${p.companyName}): $${p.price}`));
+   * ```
+   *
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#stock-peers|FMP Stock Peers Documentation}
+   */
+  async getStockPeers(symbol: string): Promise<APIResponse<StockPeer[]>> {
+    return this.client.get('/stock-peers', 'stable', { symbol });
   }
 }

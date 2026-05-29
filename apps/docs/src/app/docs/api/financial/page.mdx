@@ -67,6 +67,31 @@ and fundamental data for companies.
       path: '/earnings-surprises/{symbol}',
       description: 'Get earnings surprises data',
     },
+    {
+      method: 'GET',
+      path: '/stable/financial-scores?symbol={symbol}',
+      description: 'Get financial health scores (Altman Z + Piotroski)',
+    },
+    {
+      method: 'GET',
+      path: '/stable/key-metrics-ttm?symbol={symbol}',
+      description: 'Get trailing-twelve-month (TTM) key metrics',
+    },
+    {
+      method: 'GET',
+      path: '/stable/ratios-ttm?symbol={symbol}',
+      description: 'Get trailing-twelve-month (TTM) financial ratios',
+    },
+    {
+      method: 'GET',
+      path: '/stable/revenue-product-segmentation?symbol={symbol}',
+      description: 'Get revenue broken down by product line',
+    },
+    {
+      method: 'GET',
+      path: '/stable/revenue-geographic-segmentation?symbol={symbol}',
+      description: 'Get revenue broken down by geographic region',
+    },
   ]}
 />
 
@@ -1082,6 +1107,229 @@ Retrieve earnings surprises data showing the difference between estimated and ac
         symbol: 'AAPL',
         actualEarningResult: 1.26,
         estimatedEarning: 1.19
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Financial Scores
+
+Retrieve financial health scores for a company: the Altman Z-Score (bankruptcy-risk indicator) and the Piotroski Score (fundamental-strength score, 0-9), plus the underlying components. Returns a single snapshot object.
+
+<CodeBlock language="typescript">
+  {`const scores = await fmp.financial.getFinancialScores({ symbol: 'AAPL' });`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: {
+      symbol: 'AAPL',
+      reportedCurrency: 'USD',
+      altmanZScore: 12.89,
+      piotroskiScore: 9,
+      workingCapital: 9473000000,
+      totalAssets: 371082000000,
+      retainedEarnings: 12359000000,
+      ebit: 147722000000,
+      marketCap: 4535749279920,
+      totalLiabilities: 264591000000,
+      revenue: 451442000000
+    }
+}`}
+</CodeBlock>
+
+## Get Key Metrics (TTM)
+
+Retrieve a single trailing-twelve-month snapshot of key valuation and performance metrics (EV multiples, returns, per-share figures). More token-efficient than the multi-period key-metrics statement when you only need the company's latest standing.
+
+<CodeBlock language="typescript">
+  {`const ttm = await fmp.financial.getKeyMetricsTTM({ symbol: 'AAPL' });`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: {
+      symbol: 'AAPL',
+      marketCap: 4565564612600,
+      enterpriseValueTTM: 4613947612600,
+      evToSalesTTM: 10.22,
+      evToFreeCashFlowTTM: 35.72,
+      evToEBITDATTM: 28.78,
+      netDebtToEBITDATTM: 0.30,
+      currentRatioTTM: 1.07,
+      returnOnEquityTTM: 1.47,
+      returnOnInvestedCapitalTTM: 0.50,
+      earningsYieldTTM: 0.027,
+      freeCashFlowYieldTTM: 0.028,
+      freeCashFlowToEquityTTM: 114843000000
+      // ...additional TTM fields
+    }
+}`}
+</CodeBlock>
+
+## Get Financial Ratios (TTM)
+
+Retrieve a single trailing-twelve-month snapshot of profitability, liquidity, leverage, and per-share ratios. Ideal for "what is this company's current P/E / margins / ROE" questions.
+
+<CodeBlock language="typescript">
+  {`const ratios = await fmp.financial.getFinancialRatiosTTM({ symbol: 'AAPL' });`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: {
+      symbol: 'AAPL',
+      grossProfitMarginTTM: 0.479,
+      operatingProfitMarginTTM: 0.326,
+      netProfitMarginTTM: 0.272,
+      currentRatioTTM: 1.07,
+      quickRatioTTM: 1.02,
+      priceToEarningsRatioTTM: 37.31,
+      priceToBookRatioTTM: 42.94,
+      priceToSalesRatioTTM: 10.11,
+      debtToEquityRatioTTM: 0.80,
+      dividendYieldTTM: 0.0034,
+      dividendPayoutRatioTTM: 0.127
+      // ...additional TTM ratios
+    }
+}`}
+</CodeBlock>
+
+## Get Revenue Product Segmentation
+
+Retrieve per-period revenue segmented by product/service line. The \`data\` object is keyed dynamically by product line.
+
+<CodeBlock language="typescript">
+  {`const seg = await fmp.financial.getRevenueProductSegmentation({ symbol: 'AAPL' });`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+    {
+      name: 'period',
+      type: 'string',
+      required: false,
+      description: 'Period type: "annual" or "quarter"',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        symbol: 'AAPL',
+        fiscalYear: 2025,
+        period: 'FY',
+        reportedCurrency: null,
+        date: '2025-09-27',
+        data: {
+          iPhone: 209586000000,
+          Mac: 33708000000,
+          iPad: 28023000000,
+          'Wearables, Home and Accessories': 35686000000,
+          Service: 109158000000
+        }
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Revenue Geographic Segmentation
+
+Retrieve per-period revenue segmented by geographic region. The \`data\` object is keyed dynamically by region.
+
+<CodeBlock language="typescript">
+  {`const seg = await fmp.financial.getRevenueGeographicSegmentation({ symbol: 'AAPL' });`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+    {
+      name: 'period',
+      type: 'string',
+      required: false,
+      description: 'Period type: "annual" or "quarter"',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        symbol: 'AAPL',
+        fiscalYear: 2025,
+        period: 'FY',
+        reportedCurrency: null,
+        date: '2025-09-27',
+        data: {
+          'Americas Segment': 178353000000,
+          'Europe Segment': 111032000000,
+          'Greater China Segment': 64377000000,
+          'Japan Segment': 28703000000,
+          'Rest of Asia Pacific Segment': 33696000000
+        }
       }
     ]
 }`}

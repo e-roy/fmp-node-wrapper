@@ -35,6 +35,11 @@ import {
   FinancialGrowthSchema,
   EarningsHistoricalSchema,
   EarningsSurprisesSchema,
+  FinancialScoresSchema,
+  KeyMetricsTTMSchema,
+  FinancialRatiosTTMSchema,
+  RevenueProductSegmentationSchema,
+  RevenueGeographicSegmentationSchema,
   // calendar
   EarningsCalendarSchema,
   EarningsConfirmedSchema,
@@ -51,6 +56,7 @@ import {
   HistoricalSharesFloatSchema,
   EarningsCallTranscriptSchema,
   CompanyTranscriptDataSchema,
+  StockPeerSchema,
   // economic
   TreasuryRateSchema,
   EconomicIndicatorSchema,
@@ -99,6 +105,7 @@ import {
   PriceTargetConsensusSchema,
   PriceTargetSummarySchema,
   StockGradeSchema,
+  GradesConsensusSchema,
   // valuation
   DCFValuationSchema,
   CompanyRatingSchema,
@@ -193,6 +200,11 @@ export const manifest: LiveCase[] = [
   { category: 'financial', name: 'getFinancialGrowth(AAPL,annual,2)', schema: FinancialGrowthSchema, kind: 'array', call: (fmp) => fmp.financial.getFinancialGrowth({ symbol: 'AAPL', period: 'annual', limit: 2 }) },
   { category: 'financial', name: 'getEarningsHistorical(AAPL,2)', schema: EarningsHistoricalSchema, kind: 'array', call: (fmp) => fmp.financial.getEarningsHistorical({ symbol: 'AAPL', limit: 2 }) },
   { category: 'financial', name: 'getEarningsSurprises(AAPL)', schema: EarningsSurprisesSchema, kind: 'array', call: (fmp) => fmp.financial.getEarningsSurprises('AAPL') },
+  { category: 'financial', name: 'getFinancialScores(AAPL)', schema: FinancialScoresSchema, kind: 'object', call: (fmp) => fmp.financial.getFinancialScores({ symbol: 'AAPL' }) },
+  { category: 'financial', name: 'getKeyMetricsTTM(AAPL)', schema: KeyMetricsTTMSchema, kind: 'object', call: (fmp) => fmp.financial.getKeyMetricsTTM({ symbol: 'AAPL' }) },
+  { category: 'financial', name: 'getFinancialRatiosTTM(AAPL)', schema: FinancialRatiosTTMSchema, kind: 'object', call: (fmp) => fmp.financial.getFinancialRatiosTTM({ symbol: 'AAPL' }) },
+  { category: 'financial', name: 'getRevenueProductSegmentation(AAPL)', schema: RevenueProductSegmentationSchema, kind: 'array', call: (fmp) => fmp.financial.getRevenueProductSegmentation({ symbol: 'AAPL' }) },
+  { category: 'financial', name: 'getRevenueGeographicSegmentation(AAPL)', schema: RevenueGeographicSegmentationSchema, kind: 'array', call: (fmp) => fmp.financial.getRevenueGeographicSegmentation({ symbol: 'AAPL' }) },
 
   // ---- calendar ----
   { category: 'calendar', name: 'getEarningsCalendar()', schema: EarningsCalendarSchema, kind: 'array', call: (fmp) => fmp.calendar.getEarningsCalendar({ from: '2024-01-15', to: '2024-01-21' }) },
@@ -211,6 +223,7 @@ export const manifest: LiveCase[] = [
   { category: 'company', name: 'getHistoricalSharesFloat(AAPL)', schema: HistoricalSharesFloatSchema, kind: 'array', call: (fmp) => fmp.company.getHistoricalSharesFloat('AAPL') },
   { category: 'company', name: 'getEarningsCallTranscript(AAPL,2020,3)', schema: EarningsCallTranscriptSchema, kind: 'object', call: (fmp) => fmp.company.getEarningsCallTranscript({ symbol: 'AAPL', year: 2020, quarter: 3 }) },
   { category: 'company', name: 'getCompanyTranscriptData(AAPL)', schema: CompanyTranscriptDataSchema, kind: 'array', call: (fmp) => fmp.company.getCompanyTranscriptData('AAPL') },
+  { category: 'company', name: 'getStockPeers(AAPL)', schema: StockPeerSchema, kind: 'array', call: (fmp) => fmp.company.getStockPeers('AAPL') },
 
   // ---- economic ----
   { category: 'economic', name: 'getTreasuryRates()', schema: TreasuryRateSchema, kind: 'array', call: (fmp) => fmp.economic.getTreasuryRates({ from: '2024-01-01', to: '2024-12-31' }) },
@@ -280,6 +293,7 @@ export const manifest: LiveCase[] = [
   { category: 'analyst', name: 'getPriceTargetConsensus(AAPL)', schema: PriceTargetConsensusSchema, kind: 'object', call: (fmp) => fmp.analyst.getPriceTargetConsensus({ symbol: 'AAPL' }) },
   { category: 'analyst', name: 'getPriceTargetSummary(AAPL)', schema: PriceTargetSummarySchema, kind: 'object', call: (fmp) => fmp.analyst.getPriceTargetSummary({ symbol: 'AAPL' }) },
   { category: 'analyst', name: 'getGrades(AAPL)', schema: StockGradeSchema, kind: 'array', call: (fmp) => fmp.analyst.getGrades({ symbol: 'AAPL' }) },
+  { category: 'analyst', name: 'getGradesConsensus(AAPL)', schema: GradesConsensusSchema, kind: 'object', call: (fmp) => fmp.analyst.getGradesConsensus({ symbol: 'AAPL' }) },
 
   // ---- valuation ----
   { category: 'valuation', name: 'getDiscountedCashFlow(AAPL)', schema: DCFValuationSchema, kind: 'object', call: (fmp) => fmp.valuation.getDiscountedCashFlow({ symbol: 'AAPL' }) },

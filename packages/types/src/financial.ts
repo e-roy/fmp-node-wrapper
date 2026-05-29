@@ -530,3 +530,156 @@ export const EarningsSurprisesSchema = z.object({
 });
 
 export type EarningsSurprises = z.infer<typeof EarningsSurprisesSchema>;
+
+// Financial Scores (Altman Z-Score + Piotroski + components) — stable /financial-scores.
+// Verified against the live FMP `stable` API (2026-05-27).
+export const FinancialScoresSchema = z.object({
+  symbol: z.string(),
+  reportedCurrency: z.string().nullable(),
+  altmanZScore: z.number(),
+  piotroskiScore: z.number(),
+  workingCapital: z.number(),
+  totalAssets: z.number(),
+  retainedEarnings: z.number(),
+  ebit: z.number(),
+  marketCap: z.number(),
+  totalLiabilities: z.number(),
+  revenue: z.number(),
+});
+
+export type FinancialScores = z.infer<typeof FinancialScoresSchema>;
+
+// Key Metrics TTM (trailing-twelve-month snapshot) — stable /key-metrics-ttm.
+// Verified against the live FMP `stable` API (2026-05-27).
+export const KeyMetricsTTMSchema = z.object({
+  symbol: z.string(),
+  marketCap: z.number(),
+  enterpriseValueTTM: z.number(),
+  evToSalesTTM: z.number(),
+  evToOperatingCashFlowTTM: z.number(),
+  evToFreeCashFlowTTM: z.number(),
+  evToEBITDATTM: z.number(),
+  netDebtToEBITDATTM: z.number(),
+  currentRatioTTM: z.number(),
+  incomeQualityTTM: z.number(),
+  grahamNumberTTM: z.number(),
+  grahamNetNetTTM: z.number(),
+  taxBurdenTTM: z.number(),
+  interestBurdenTTM: z.number(),
+  workingCapitalTTM: z.number(),
+  investedCapitalTTM: z.number(),
+  returnOnAssetsTTM: z.number(),
+  operatingReturnOnAssetsTTM: z.number(),
+  returnOnTangibleAssetsTTM: z.number(),
+  returnOnEquityTTM: z.number(),
+  returnOnInvestedCapitalTTM: z.number(),
+  returnOnCapitalEmployedTTM: z.number(),
+  earningsYieldTTM: z.number(),
+  freeCashFlowYieldTTM: z.number(),
+  capexToOperatingCashFlowTTM: z.number(),
+  capexToDepreciationTTM: z.number(),
+  capexToRevenueTTM: z.number(),
+  salesGeneralAndAdministrativeToRevenueTTM: z.number(),
+  researchAndDevelopementToRevenueTTM: z.number(),
+  stockBasedCompensationToRevenueTTM: z.number(),
+  intangiblesToTotalAssetsTTM: z.number(),
+  averageReceivablesTTM: z.number(),
+  averagePayablesTTM: z.number(),
+  averageInventoryTTM: z.number(),
+  daysOfSalesOutstandingTTM: z.number(),
+  daysOfPayablesOutstandingTTM: z.number(),
+  daysOfInventoryOutstandingTTM: z.number(),
+  operatingCycleTTM: z.number(),
+  cashConversionCycleTTM: z.number(),
+  freeCashFlowToEquityTTM: z.number(),
+  freeCashFlowToFirmTTM: z.number(),
+  tangibleAssetValueTTM: z.number(),
+  netCurrentAssetValueTTM: z.number(),
+});
+
+export type KeyMetricsTTM = z.infer<typeof KeyMetricsTTMSchema>;
+
+// Financial Ratios TTM (trailing-twelve-month snapshot) — stable /ratios-ttm.
+// Verified against the live FMP `stable` API (2026-05-27).
+export const FinancialRatiosTTMSchema = z.object({
+  symbol: z.string(),
+  grossProfitMarginTTM: z.number(),
+  ebitMarginTTM: z.number(),
+  ebitdaMarginTTM: z.number(),
+  operatingProfitMarginTTM: z.number(),
+  pretaxProfitMarginTTM: z.number(),
+  continuousOperationsProfitMarginTTM: z.number(),
+  netProfitMarginTTM: z.number(),
+  bottomLineProfitMarginTTM: z.number(),
+  receivablesTurnoverTTM: z.number(),
+  payablesTurnoverTTM: z.number(),
+  inventoryTurnoverTTM: z.number(),
+  fixedAssetTurnoverTTM: z.number(),
+  assetTurnoverTTM: z.number(),
+  currentRatioTTM: z.number(),
+  quickRatioTTM: z.number(),
+  solvencyRatioTTM: z.number(),
+  cashRatioTTM: z.number(),
+  priceToEarningsRatioTTM: z.number(),
+  priceToEarningsGrowthRatioTTM: z.number(),
+  forwardPriceToEarningsGrowthRatioTTM: z.number(),
+  priceToBookRatioTTM: z.number(),
+  priceToSalesRatioTTM: z.number(),
+  priceToFreeCashFlowRatioTTM: z.number(),
+  priceToOperatingCashFlowRatioTTM: z.number(),
+  debtToAssetsRatioTTM: z.number(),
+  debtToEquityRatioTTM: z.number(),
+  debtToCapitalRatioTTM: z.number(),
+  longTermDebtToCapitalRatioTTM: z.number(),
+  financialLeverageRatioTTM: z.number(),
+  workingCapitalTurnoverRatioTTM: z.number(),
+  operatingCashFlowRatioTTM: z.number(),
+  operatingCashFlowSalesRatioTTM: z.number(),
+  freeCashFlowOperatingCashFlowRatioTTM: z.number(),
+  debtServiceCoverageRatioTTM: z.number(),
+  interestCoverageRatioTTM: z.number(),
+  shortTermOperatingCashFlowCoverageRatioTTM: z.number(),
+  operatingCashFlowCoverageRatioTTM: z.number(),
+  capitalExpenditureCoverageRatioTTM: z.number(),
+  dividendPaidAndCapexCoverageRatioTTM: z.number(),
+  dividendPayoutRatioTTM: z.number(),
+  dividendYieldTTM: z.number(),
+  enterpriseValueTTM: z.number(),
+  revenuePerShareTTM: z.number(),
+  netIncomePerShareTTM: z.number(),
+  interestDebtPerShareTTM: z.number(),
+  cashPerShareTTM: z.number(),
+  bookValuePerShareTTM: z.number(),
+  tangibleBookValuePerShareTTM: z.number(),
+  shareholdersEquityPerShareTTM: z.number(),
+  operatingCashFlowPerShareTTM: z.number(),
+  capexPerShareTTM: z.number(),
+  freeCashFlowPerShareTTM: z.number(),
+  netIncomePerEBTTTM: z.number(),
+  ebtPerEbitTTM: z.number(),
+  priceToFairValueTTM: z.number(),
+  debtToMarketCapTTM: z.number(),
+  effectiveTaxRateTTM: z.number(),
+  enterpriseValueMultipleTTM: z.number(),
+  dividendPerShareTTM: z.number(),
+});
+
+export type FinancialRatiosTTM = z.infer<typeof FinancialRatiosTTMSchema>;
+
+// Revenue segmentation (product & geographic share one shape) — stable
+// /revenue-product-segmentation and /revenue-geographic-segmentation. The `data`
+// object is keyed dynamically by product line / region.
+// Verified against the live FMP `stable` API (2026-05-27).
+export const RevenueSegmentationSchema = z.object({
+  symbol: z.string(),
+  fiscalYear: z.number(),
+  period: z.string(),
+  reportedCurrency: z.string().nullable(),
+  date: z.string(),
+  data: z.record(z.string(), z.number()),
+});
+
+export const RevenueProductSegmentationSchema = RevenueSegmentationSchema;
+export const RevenueGeographicSegmentationSchema = RevenueSegmentationSchema;
+export type RevenueProductSegmentation = z.infer<typeof RevenueSegmentationSchema>;
+export type RevenueGeographicSegmentation = z.infer<typeof RevenueSegmentationSchema>;

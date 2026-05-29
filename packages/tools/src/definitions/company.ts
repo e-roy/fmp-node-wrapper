@@ -32,4 +32,11 @@ export const companyDefinitions: FMPToolDefinition[] = [
     execute: async ({ symbol }) =>
       toToolResponse(await getFMPClient().company.getExecutiveCompensation(symbol)),
   }),
+  defineTool({
+    name: 'getStockPeers',
+    description: 'Get a list of peer companies (with price and market cap) for a company',
+    inputSchema: symbolSchema,
+    execute: async ({ symbol }) =>
+      toToolResponse(await getFMPClient().company.getStockPeers(symbol)),
+  }),
 ];

@@ -7,6 +7,7 @@ import {
   PriceTargetConsensus,
   PriceTargetSummary,
   StockGrade,
+  GradesConsensus,
 } from 'fmp-node-types';
 
 export class AnalystEndpoints {
@@ -46,5 +47,13 @@ export class AnalystEndpoints {
   /** Get analyst grades (upgrades/downgrades) for a company. */
   async getGrades(params: { symbol: string }): Promise<APIResponse<StockGrade[]>> {
     return this.client.get('/grades', 'stable', { symbol: params.symbol });
+  }
+
+  /**
+   * Get the analyst rating consensus for a company: the count of analysts at each
+   * rating (strongBuy/buy/hold/sell/strongSell) plus the overall consensus label.
+   */
+  async getGradesConsensus(params: { symbol: string }): Promise<APIResponse<GradesConsensus>> {
+    return this.client.getSingle('/grades-consensus', 'stable', { symbol: params.symbol });
   }
 }

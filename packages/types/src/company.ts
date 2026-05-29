@@ -108,6 +108,15 @@ export const EarningsCallTranscriptSchema = z.object({
 
 export const CompanyTranscriptDataSchema = z.tuple([z.number(), z.number(), z.string()]);
 
+// Stock Peers — stable /stock-peers. Peer companies with price + market cap.
+// Verified against the live FMP `stable` API (2026-05-27).
+export const StockPeerSchema = z.object({
+    symbol: z.string(),
+    companyName: z.string(),
+    price: z.number(),
+    mktCap: z.number()
+});
+
 export type CompanyProfile = z.infer<typeof CompanyProfileSchema>;
 export type ExecutiveCompensation = z.infer<typeof ExecutiveCompensationSchema>;
 export type CompanyNotes = z.infer<typeof CompanyNotesSchema>;
@@ -116,3 +125,4 @@ export type SharesFloat = z.infer<typeof SharesFloatSchema>;
 export type HistoricalSharesFloat = z.infer<typeof HistoricalSharesFloatSchema>;
 export type EarningsCallTranscript = z.infer<typeof EarningsCallTranscriptSchema>;
 export type CompanyTranscriptData = z.infer<typeof CompanyTranscriptDataSchema>;
+export type StockPeer = z.infer<typeof StockPeerSchema>;

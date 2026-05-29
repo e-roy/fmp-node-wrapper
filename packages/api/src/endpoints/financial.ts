@@ -12,6 +12,11 @@ import {
   CashFlowStatement,
   EarningsSurprises,
   EarningsHistorical,
+  FinancialScores,
+  KeyMetricsTTM,
+  FinancialRatiosTTM,
+  RevenueProductSegmentation,
+  RevenueGeographicSegmentation,
 } from 'fmp-node-types';
 import { FMPClient } from '@/client';
 
@@ -477,5 +482,132 @@ export class FinancialEndpoints {
    */
   async getEarningsSurprises(symbol: string): Promise<APIResponse<EarningsSurprises[]>> {
     return this.client.get(`/earnings-surprises/${symbol}`, 'v3');
+  }
+
+  /**
+   * Get financial health scores for a company
+   *
+   * Provides the Altman Z-Score (bankruptcy-risk indicator) and Piotroski Score
+   * (fundamental-strength score, 0-9) along with the underlying components.
+   * A single, high-signal snapshot of a company's financial health.
+   *
+   * @param params.symbol - The stock symbol (e.g., 'AAPL', 'MSFT', 'GOOGL')
+   *
+   * @returns Promise resolving to the company's financial scores
+   *
+   * @example
+   * ```typescript
+   * const scores = await fmp.financial.getFinancialScores({ symbol: 'AAPL' });
+   * console.log(`Altman Z: ${scores.data.altmanZScore}, Piotroski: ${scores.data.piotroskiScore}`);
+   * ```
+   *
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#financial-scores|FMP Financial Scores Documentation}
+   */
+  async getFinancialScores(params: { symbol: string }): Promise<APIResponse<FinancialScores>> {
+    return this.client.getSingle('/financial-scores', 'stable', { symbol: params.symbol });
+  }
+
+  /**
+   * Get trailing-twelve-month (TTM) key metrics for a company
+   *
+   * Provides a single current snapshot of key valuation and performance metrics
+   * (EV multiples, returns, per-share figures) computed over the trailing twelve
+   * months. More token-efficient than the multi-period key-metrics statement when
+   * you only need the company's latest standing.
+   *
+   * @param params.symbol - The stock symbol (e.g., 'AAPL', 'MSFT', 'GOOGL')
+   *
+   * @returns Promise resolving to the company's TTM key metrics
+   *
+   * @example
+   * ```typescript
+   * const ttm = await fmp.financial.getKeyMetricsTTM({ symbol: 'AAPL' });
+   * console.log(`EV/EBITDA: ${ttm.data.evToEBITDATTM}, ROE: ${ttm.data.returnOnEquityTTM}`);
+   * ```
+   *
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#key-metrics-ttm|FMP Key Metrics TTM Documentation}
+   */
+  async getKeyMetricsTTM(params: { symbol: string }): Promise<APIResponse<KeyMetricsTTM>> {
+    return this.client.getSingle('/key-metrics-ttm', 'stable', { symbol: params.symbol });
+  }
+
+  /**
+   * Get trailing-twelve-month (TTM) financial ratios for a company
+   *
+   * Provides a single current snapshot of profitability, liquidity, leverage, and
+   * per-share ratios computed over the trailing twelve months. Ideal for "what is
+   * this company's current P/E / margins / ROE" questions.
+   *
+   * @param params.symbol - The stock symbol (e.g., 'AAPL', 'MSFT', 'GOOGL')
+   *
+   * @returns Promise resolving to the company's TTM financial ratios
+   *
+   * @example
+   * ```typescript
+   * const ratios = await fmp.financial.getFinancialRatiosTTM({ symbol: 'AAPL' });
+   * console.log(`P/E: ${ratios.data.priceToEarningsRatioTTM}, Net margin: ${ratios.data.netProfitMarginTTM}`);
+   * ```
+   *
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#ratios-ttm|FMP Financial Ratios TTM Documentation}
+   */
+  async getFinancialRatiosTTM(params: {
+    symbol: string;
+  }): Promise<APIResponse<FinancialRatiosTTM>> {
+    return this.client.getSingle('/ratios-ttm', 'stable', { symbol: params.symbol });
+  }
+
+  /**
+   * Get revenue broken down by product line for a company
+   *
+   * Provides per-period revenue segmented by product/service line. Useful for
+   * understanding which products drive a company's revenue and how the mix shifts
+   * over time.
+   *
+   * @param params.symbol - The stock symbol (e.g., 'AAPL', 'MSFT', 'GOOGL')
+   * @param params.period - The reporting period: 'annual' or 'quarter' (optional)
+   *
+   * @returns Promise resolving to an array of per-period product revenue breakdowns
+   *
+   * @example
+   * ```typescript
+   * const seg = await fmp.financial.getRevenueProductSegmentation({ symbol: 'AAPL' });
+   * console.log(seg.data[0].data); // { iPhone: ..., Mac: ..., Service: ..., ... }
+   * ```
+   *
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#revenue-product-segmentation|FMP Revenue Product Segmentation Documentation}
+   */
+  async getRevenueProductSegmentation(params: {
+    symbol: string;
+    period?: 'annual' | 'quarter';
+  }): Promise<APIResponse<RevenueProductSegmentation[]>> {
+    const { symbol, period } = params;
+    return this.client.get('/revenue-product-segmentation', 'stable', { symbol, period });
+  }
+
+  /**
+   * Get revenue broken down by geographic region for a company
+   *
+   * Provides per-period revenue segmented by geographic region. Useful for
+   * understanding a company's regional exposure and how it shifts over time.
+   *
+   * @param params.symbol - The stock symbol (e.g., 'AAPL', 'MSFT', 'GOOGL')
+   * @param params.period - The reporting period: 'annual' or 'quarter' (optional)
+   *
+   * @returns Promise resolving to an array of per-period geographic revenue breakdowns
+   *
+   * @example
+   * ```typescript
+   * const seg = await fmp.financial.getRevenueGeographicSegmentation({ symbol: 'AAPL' });
+   * console.log(seg.data[0].data); // { 'Americas Segment': ..., 'Europe Segment': ..., ... }
+   * ```
+   *
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable#revenue-geographic-segmentation|FMP Revenue Geographic Segmentation Documentation}
+   */
+  async getRevenueGeographicSegmentation(params: {
+    symbol: string;
+    period?: 'annual' | 'quarter';
+  }): Promise<APIResponse<RevenueGeographicSegmentation[]>> {
+    const { symbol, period } = params;
+    return this.client.get('/revenue-geographic-segmentation', 'stable', { symbol, period });
   }
 }

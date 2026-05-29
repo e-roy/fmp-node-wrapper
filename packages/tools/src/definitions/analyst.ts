@@ -56,4 +56,14 @@ export const analystDefinitions: FMPToolDefinition[] = [
       return toToolResponse(res);
     },
   }),
+  defineTool({
+    name: 'getGradesConsensus',
+    description:
+      'Get the analyst rating consensus for a company (counts of strongBuy/buy/hold/sell/strongSell + overall consensus)',
+    inputSchema: z.object({
+      symbol: z.string().min(1).describe('The stock symbol (e.g., AAPL)'),
+    }),
+    execute: async ({ symbol }) =>
+      toToolResponse(await getFMPClient().analyst.getGradesConsensus({ symbol })),
+  }),
 ];

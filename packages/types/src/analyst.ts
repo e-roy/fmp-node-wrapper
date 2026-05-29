@@ -59,7 +59,18 @@ export const StockGradeSchema = z.object({
     action: z.string().nullable()
 });
 
+export const GradesConsensusSchema = z.object({
+    symbol: z.string(),
+    strongBuy: z.number(),
+    buy: z.number(),
+    hold: z.number(),
+    sell: z.number(),
+    strongSell: z.number(),
+    consensus: z.string()
+});
+
 export type AnalystEstimate = z.infer<typeof AnalystEstimateSchema>;
 export type PriceTargetConsensus = z.infer<typeof PriceTargetConsensusSchema>;
 export type PriceTargetSummary = z.infer<typeof PriceTargetSummarySchema>;
 export type StockGrade = z.infer<typeof StockGradeSchema>;
+export type GradesConsensus = z.infer<typeof GradesConsensusSchema>;
