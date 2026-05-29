@@ -9,6 +9,9 @@ export function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // SSR-safe "mounted" flag is the documented next-themes pattern for reading
+    // `resolvedTheme` without hydration mismatch. Intentional setState-in-effect.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 
