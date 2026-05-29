@@ -1,50 +1,33 @@
-// Economic indicator types for FMP API
+// economic types for FMP API
+//
+// Schema-first: Zod schemas are the source of truth; types are derived via z.infer.
+// Base schemas generated via `pnpm --filter fmp-node-types gen:schemas`.
+import { z } from "zod";
 
-// Economic data interfaces
-export interface EconomicIndicator {
-  name: string;
-  date: string;
-  value: number;
-}
+export const EconomicIndicatorSchema = z.object({
+    name: z.string(),
+    date: z.string(),
+    value: z.number()
+});
 
-export interface TreasuryRate {
-  date: string;
-  month1: number;
-  month2: number;
-  month3: number;
-  month6: number;
-  year1: number;
-  year2: number;
-  year3: number;
-  year5: number;
-  year7: number;
-  year10: number;
-  year20: number;
-  year30: number;
-}
+export const TreasuryRateSchema = z.object({
+    date: z.string(),
+    month1: z.number(),
+    month2: z.number(),
+    month3: z.number(),
+    month6: z.number(),
+    year1: z.number(),
+    year2: z.number(),
+    year3: z.number(),
+    year5: z.number(),
+    year7: z.number(),
+    year10: z.number(),
+    year20: z.number(),
+    year30: z.number()
+});
 
-// Economic indicator names as per FMP API documentation
-export type EconomicIndicatorName =
-  | 'GDP'
-  | 'realGDP'
-  | 'nominalPotentialGDP'
-  | 'realGDPPerCapita'
-  | 'federalFunds'
-  | 'CPI'
-  | 'inflationRate'
-  | 'inflation'
-  | 'retailSales'
-  | 'consumerSentiment'
-  | 'durableGoods'
-  | 'unemploymentRate'
-  | 'totalNonfarmPayroll'
-  | 'initialClaims'
-  | 'industrialProductionTotalIndex'
-  | 'newPrivatelyOwnedHousingUnitsStartedTotalUnits'
-  | 'totalVehicleSales'
-  | 'retailMoneyFunds'
-  | 'smoothedUSRecessionProbabilities'
-  | '3MonthOr90DayRatesAndYieldsCertificatesOfDeposit'
-  | 'commercialBankInterestRateOnCreditCardPlansAllAccounts'
-  | '30YearFixedRateMortgageAverage'
-  | '15YearFixedRateMortgageAverage';
+export const EconomicIndicatorNameSchema = z.union([z.literal("GDP"), z.literal("realGDP"), z.literal("nominalPotentialGDP"), z.literal("realGDPPerCapita"), z.literal("federalFunds"), z.literal("CPI"), z.literal("inflationRate"), z.literal("inflation"), z.literal("retailSales"), z.literal("consumerSentiment"), z.literal("durableGoods"), z.literal("unemploymentRate"), z.literal("totalNonfarmPayroll"), z.literal("initialClaims"), z.literal("industrialProductionTotalIndex"), z.literal("newPrivatelyOwnedHousingUnitsStartedTotalUnits"), z.literal("totalVehicleSales"), z.literal("retailMoneyFunds"), z.literal("smoothedUSRecessionProbabilities"), z.literal("3MonthOr90DayRatesAndYieldsCertificatesOfDeposit"), z.literal("commercialBankInterestRateOnCreditCardPlansAllAccounts"), z.literal("30YearFixedRateMortgageAverage"), z.literal("15YearFixedRateMortgageAverage")]);
+
+export type EconomicIndicator = z.infer<typeof EconomicIndicatorSchema>;
+export type TreasuryRate = z.infer<typeof TreasuryRateSchema>;
+export type EconomicIndicatorName = z.infer<typeof EconomicIndicatorNameSchema>;

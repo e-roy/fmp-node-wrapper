@@ -39,8 +39,8 @@ export default function Home() {
                   https://site.financialmodelingprep.com/pricing-plans?couponCode=eroy
                 </a>
                 <div className="text-sm text-neutral-600 dark:text-neutral-300 italic">
-                  I don't get paid for the working on this project. Using this link helps support
-                  the project with affiliate earnings.
+                  I don&apos;t get paid for the working on this project. Using this link helps
+                  support the project with affiliate earnings.
                 </div>
                 <div className="flex items-center justify-center space-x-2 text-sm text-neutral-600 dark:text-neutral-300">
                   <span>If this project helps you, consider giving it a</span>

@@ -1,4 +1,4 @@
-import { getInstitutionalHolders } from '@/providers/openai/institutional';
+import { getInstitutionalHolders } from '@/providers/openai';
 
 const mockInstitutional = {
   getInstitutionalHolders: jest.fn(),

@@ -36,6 +36,10 @@ const apiNavigationGroups = [
     ],
   },
   {
+    title: 'Analysis',
+    items: [{ name: 'Analyst Endpoints', href: '/docs/api/analyst' }],
+  },
+  {
     title: 'Information',
     items: [
       { name: 'List Endpoints', href: '/docs/api/list' },

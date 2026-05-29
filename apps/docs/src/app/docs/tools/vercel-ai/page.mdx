@@ -144,6 +144,8 @@ FMP Tools provides comprehensive financial tools organized into categories:
 
 ### 📊 Quote Tools
 - `getStockQuote` - Real-time stock quotes and price data
+- `getHistoricalPrice` - Historical daily prices (most recent `limit` days, default 30)
+- `getIntraday` - Intraday price bars at a given interval (most recent `limit` bars, default 50)
 
 ### 🏢 Company Tools  
 - `getCompanyProfile` - Comprehensive company profiles and information
@@ -197,6 +199,28 @@ FMP Tools provides comprehensive financial tools organized into categories:
 - `getMarketCap` - Market capitalization for a company
 - `getStockSplits` - Historical stock splits for a company
 - `getDividendHistory` - Dividend history and payments for a company
+
+### 📰 News Tools
+- `getStockNews` - Latest general stock market news (default `limit` 20)
+- `getStockNewsBySymbol` - Latest news for one or more symbols (default `limit` 20)
+
+### 🔎 Screener Tools
+- `screenStocks` - Screen for stocks by market cap, price, sector, exchange, etc. (default `limit` 50)
+
+### 🔍 Search Tools
+- `searchSymbol` - Resolve a company name or partial ticker to matching symbols
+
+### 🎯 Analyst Tools
+- `getAnalystEstimates` - Analyst estimates (revenue, EBITDA, net income, EPS) by period
+- `getPriceTargetConsensus` - Analyst price-target consensus
+- `getStockGrades` - Recent analyst grades / upgrades & downgrades
+
+### 🧮 Valuation Tools
+- `getDiscountedCashFlow` - DCF fair value vs. current price
+- `getCompanyRating` - Company rating/score snapshot
+
+### 📐 Technical Tools
+- `getTechnicalIndicator` - Indicator series (SMA, EMA, RSI, etc.) at a chosen timeframe
 
 [**View detailed tool categories →**](/docs/tools/categories)
 

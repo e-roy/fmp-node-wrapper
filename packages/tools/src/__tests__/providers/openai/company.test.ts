@@ -2,7 +2,7 @@ import {
   getCompanyProfile,
   getCompanySharesFloat,
   getCompanyExecutiveCompensation,
-} from '@/providers/openai/company';
+} from '@/providers/openai';
 
 const mockCompany = {
   getCompanyProfile: jest.fn(),

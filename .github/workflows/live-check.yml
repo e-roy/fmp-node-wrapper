@@ -1,0 +1,46 @@
+name: Live API Drift Check
+
+# Validates the live FMP API against the canonical Zod schemas in fmp-node-types.
+# Runs on a schedule (and on demand) — NOT on every push/PR — so the deterministic
+# mocked unit tests gate PRs while this job catches real API contract drift.
+
+on:
+  schedule:
+    - cron: '0 12 * * 1' # Mondays 12:00 UTC
+  workflow_dispatch:
+    inputs:
+      category:
+        description: 'Optional category filter (e.g. quote,stock). Blank = all.'
+        required: false
+        default: ''
+
+jobs:
+  live-check:
+    runs-on: ubuntu-latest
+    env:
+      FMP_API_KEY: ${{ secrets.FMP_API_KEY }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.2.0
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build types (schemas the runner validates against)
+        run: pnpm --filter fmp-node-types build
+
+      - name: Run live shape check
+        run: |
+          pnpm --filter fmp-node-api exec tsx scripts/live/run.ts \
+            --sample 25 --delay 300 --fail-on-drift \
+            ${{ github.event.inputs.category && format('--category {0}', github.event.inputs.category) || '' }}

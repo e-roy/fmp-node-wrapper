@@ -14,11 +14,14 @@ Real-time and historical price data for stocks and other securities.
 
 **Tools:**
 - `getStockQuote` - Get real-time stock quote for a company
+- `getHistoricalPrice` - Get historical daily prices (most recent `limit` days, default 30)
+- `getIntraday` - Get intraday price bars at a given interval (most recent `limit` bars, default 50)
 
 **Use Cases:**
 - Real-time price monitoring
 - Portfolio tracking
 - Price alerts and notifications
+- Historical trend and performance analysis
 
 ### 🏢 Company Tools
 
@@ -178,6 +181,74 @@ Stock-specific data like market cap, splits, and dividends.
 - Stock split tracking
 - Dividend analysis
 - Historical stock data research
+
+### 📰 News Tools
+
+Latest stock market news, general or filtered by symbol.
+
+**Tools:**
+- `getStockNews` - Get the latest general stock market news (most recent `limit`, default 20)
+- `getStockNewsBySymbol` - Get the latest news for one or more symbols (default `limit` 20)
+
+**Use Cases:**
+- Market sentiment and event tracking
+- Company-specific news monitoring
+
+### 🔎 Screener Tools
+
+Find stocks matching financial criteria.
+
+**Tools:**
+- `screenStocks` - Screen for stocks by market cap, price, sector, exchange, etc. (default `limit` 50)
+
+**Use Cases:**
+- Idea generation and stock discovery
+- Building filtered watchlists
+
+### 🔍 Search Tools
+
+Resolve names and partial tickers to symbols.
+
+**Tools:**
+- `searchSymbol` - Resolve a company name or partial ticker to matching symbols (e.g., "Apple" → AAPL)
+
+**Use Cases:**
+- Turning a company name into a ticker before calling other tools
+
+### 🎯 Analyst Tools
+
+Forward-looking analyst estimates, price targets, and grades.
+
+**Tools:**
+- `getAnalystEstimates` - Analyst estimates (revenue, EBITDA, net income, EPS) by period (default `limit` 10)
+- `getPriceTargetConsensus` - Analyst price-target consensus (high/low/consensus/median)
+- `getStockGrades` - Recent analyst grades / upgrades & downgrades (default `limit` 20)
+
+**Use Cases:**
+- Outlook and sentiment analysis
+- Comparing price to analyst targets
+
+### 🧮 Valuation Tools
+
+Fair-value estimates and company ratings.
+
+**Tools:**
+- `getDiscountedCashFlow` - Discounted-cash-flow fair value vs. current price
+- `getCompanyRating` - FMP's current rating/score snapshot for a company
+
+**Use Cases:**
+- Over/undervaluation assessment
+- Quality/score screening
+
+### 📐 Technical Tools
+
+Technical indicators over a chosen timeframe.
+
+**Tools:**
+- `getTechnicalIndicator` - Indicator series (SMA, EMA, RSI, etc.) at a chosen timeframe (default `limit` 50)
+
+**Use Cases:**
+- Trend and momentum analysis for trading agents
 
 ## Tool Selection Guide
 

@@ -1,17 +1,12 @@
 import { z } from 'zod';
 import { createOpenAITool } from '@/utils/openai-tool-wrapper';
 
+// The wrapper now passes the Zod schema straight to @openai/agents `tool()`,
+// which derives the JSON schema and validates input itself. (The hand-rolled
+// all-string JSON schema + manual parse/error handling was removed.)
 describe('createOpenAITool', () => {
-  it('maps Zod schema to OpenAI parameters (string, number, boolean, enum, array, optional, default)', async () => {
-    const schema = z.object({
-      aString: z.string().describe('A string field'),
-      aNumber: z.number(),
-      aBoolean: z.boolean(),
-      anEnum: z.enum(['A', 'B']).describe('Enum field'),
-      anArray: z.array(z.string()),
-      optionalField: z.string().optional().describe('Optional string'),
-      defaultField: z.number().default(42).describe('Default number'),
-    });
+  it('passes name, description, and the Zod schema as `parameters`', () => {
+    const schema = z.object({ symbol: z.string(), limit: z.string().optional() });
 
     const tool = createOpenAITool({
       name: 'testTool',
@@ -20,119 +15,43 @@ describe('createOpenAITool', () => {
       execute: async () => 'ok',
     });
 
-    // The parameters should be a JSON schema object
-    expect(tool.parameters).toEqual({
-      type: 'object',
-      properties: {
-        aString: { type: 'string' },
-        aNumber: { type: 'string' },
-        aBoolean: { type: 'string' },
-        anEnum: { type: 'string' },
-        anArray: { type: 'string' },
-        optionalField: { type: 'string' },
-        defaultField: { type: 'string' },
-      },
-      required: [
-        'aString',
-        'aNumber',
-        'aBoolean',
-        'anEnum',
-        'anArray',
-        'optionalField',
-        'defaultField',
-      ],
-      additionalProperties: false,
-    });
-
-    // Test that the tool has the expected properties
     expect(tool.name).toBe('testTool');
     expect(tool.description).toBe('Test tool');
-
-    // Check that the tool has the expected structure for the new API
-    expect(tool).toBeDefined();
-    expect(typeof tool).toBe('object');
+    // The Zod schema is handed to the SDK as-is (no JSON-schema conversion here).
+    expect((tool as any).parameters).toBe(schema);
   });
 
-  it('validates input and returns validation errors from Zod', async () => {
-    const schema = z.object({ sym: z.string().min(1, 'required') });
-    const tool = createOpenAITool({
-      name: 'validateTool',
-      description: 'Validates',
-      inputSchema: schema,
-      execute: async () => 'ok',
-    });
-
-    const result = await (tool as any).execute({ sym: '' });
-    expect(result).toContain('Invalid input:');
-    expect(result).toContain('required');
-  });
-
-  it('returns execution errors as string messages', async () => {
-    const schema = z.object({ x: z.string() });
-    const tool = createOpenAITool({
-      name: 'errorTool',
-      description: 'Errors out',
-      inputSchema: schema,
-      execute: async () => {
-        throw new Error('boom');
-      },
-    });
-
-    const result = await (tool as any).execute({ x: 'y' });
-    expect(result).toContain('Error executing errorTool: boom');
-  });
-
-  it('passes validated input to execute', async () => {
-    const schema = z.object({ n: z.number().default(1), s: z.string().optional() });
-    const spy = jest.fn(async () => 'done');
+  it('invokes the provided execute with the input and returns its result', async () => {
+    const spy = jest.fn(async (args: { symbol: string }) => `got ${args.symbol}`);
 
     const tool = createOpenAITool({
-      name: 'passTool',
-      description: 'Passes args',
-      inputSchema: schema,
+      name: 'execTool',
+      description: 'Executes',
+      inputSchema: z.object({ symbol: z.string() }),
       execute: spy,
     });
 
-    await (tool as any).execute({});
+    const result = await (tool as any).execute({ symbol: 'AAPL' });
 
-    expect(spy).toHaveBeenCalledWith({ n: 1 });
+    expect(spy).toHaveBeenCalledWith({ symbol: 'AAPL' });
+    expect(result).toBe('got AAPL');
   });
 
-  it('extracts description from inner schema for optional/default and maps unknown types via fallback', () => {
-    const schema = z.object({
-      // Description only on inner schema, not on optional wrapper
-      optInner: z.string().describe('Inner optional').optional(),
-      // Description only on inner schema, not on default wrapper
-      defInner: z.number().describe('Inner default').default(7),
-      // Unknown type triggers fallback mapping
-      unknown: z.any(),
-    });
-
+  it('catches a thrown execute and returns a structured error instead of throwing', async () => {
     const tool = createOpenAITool({
-      name: 'branchTool',
-      description: 'Covers branches',
-      inputSchema: schema,
-      execute: async () => 'ok',
-    });
-
-    // The parameters should be a JSON schema object
-    expect(tool.parameters).toEqual({
-      type: 'object',
-      properties: {
-        optInner: { type: 'string' },
-        defInner: { type: 'string' },
-        unknown: { type: 'string' },
+      name: 'throwTool',
+      description: 'Throws',
+      inputSchema: z.object({ symbol: z.string() }),
+      execute: async () => {
+        throw new Error('FMP API key is required. Set the FMP_API_KEY environment variable.');
       },
-      required: ['optInner', 'defInner', 'unknown'],
-      additionalProperties: false,
     });
 
-    // Test that the tool has the expected properties
-    expect(tool.name).toBe('branchTool');
-    expect(tool.description).toBe('Covers branches');
+    const result = await (tool as any).execute({ symbol: 'AAPL' });
+    const parsed = JSON.parse(result);
 
-    // Check that the tool has the expected structure for the new API
-    expect(tool).toBeDefined();
-    expect(typeof tool).toBe('object');
+    expect(parsed.error).toBe(true);
+    expect(parsed.type).toBe('auth');
+    expect(parsed.message).toContain('API key');
   });
 });

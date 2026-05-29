@@ -116,10 +116,12 @@ Retrieve economic indicators with optional filtering by indicator type.
     success: true,
     data: [
       {
+        name: 'GDP',
         date: '2023-12-31',
         value: 27.36
       },
       {
+        name: 'GDP',
         date: '2023-11-30',
         value: 27.35
       }
@@ -181,6 +183,7 @@ The following economic indicators are available:
 
 <CodeBlock language="typescript">
   {`interface EconomicIndicator {
+  name: string;
   date: string;
   value: number;
 }`}

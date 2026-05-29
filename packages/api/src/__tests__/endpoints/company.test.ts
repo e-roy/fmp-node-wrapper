@@ -1,295 +1,168 @@
-import { FMP } from '../../fmp';
-import {
-  shouldSkipTests,
-  createTestClient,
-  API_TIMEOUT,
-  FAST_TIMEOUT,
-  TEST_SYMBOLS,
-} from '../utils/test-setup';
+import { CompanyEndpoints } from '../../endpoints/company';
+import { FMPClient } from '../../client';
 
-describe('Company Endpoints', () => {
-  let fmp: FMP;
+// Mock the FMPClient
+jest.mock('../../client');
 
-  beforeAll(() => {
-    if (shouldSkipTests()) {
-      console.log('Skipping company tests - no API key available');
-      return;
-    }
-    fmp = createTestClient();
+describe('CompanyEndpoints', () => {
+  let companyEndpoints: CompanyEndpoints;
+  let mockClient: jest.Mocked<FMPClient>;
+
+  beforeEach(() => {
+    mockClient = new FMPClient({ apiKey: 'test-key' }) as jest.Mocked<FMPClient>;
+    companyEndpoints = new CompanyEndpoints(mockClient);
   });
 
   describe('getCompanyProfile', () => {
-    it(
-      'should fetch company profile for AAPL',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping company profile test - no API key available');
-          return;
-        }
-        const result = await fmp.company.getCompanyProfile(TEST_SYMBOLS.STOCK);
+    it('should get company profile using /profile stable endpoint with symbol param', async () => {
+      const mockResponse = {
+        success: true,
+        data: { symbol: 'AAPL', companyName: 'Apple Inc.' },
+        error: null,
+        status: 200,
+      };
+      mockClient.getSingle.mockResolvedValue(mockResponse);
 
-        expect(result.success).toBe(true);
-        expect(result.data).toBeTruthy();
+      const result = await companyEndpoints.getCompanyProfile('AAPL');
 
-        if (result.data) {
-          const profile = result.data;
-          expect(profile.symbol).toBe(TEST_SYMBOLS.STOCK);
-          expect(profile.companyName).toBeDefined();
-          expect(profile.price).toBeGreaterThan(0);
-          expect(profile.marketCap).toBeGreaterThan(0);
-          expect(profile.industry).toBeDefined();
-          expect(profile.sector).toBeDefined();
-          expect(profile.country).toBeDefined();
-        }
-      },
-      FAST_TIMEOUT,
-    );
-
-    it(
-      'should handle invalid symbol gracefully',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping invalid symbol test - no API key available');
-          return;
-        }
-        const result = await fmp.company.getCompanyProfile('INVALID_SYMBOL_12345');
-
-        expect(Object.keys(result.data || {}).length === 0 || result.success === false).toBe(true);
-      },
-      FAST_TIMEOUT,
-    );
+      expect(mockClient.getSingle).toHaveBeenCalledWith('/profile', 'stable', { symbol: 'AAPL' });
+      expect(result).toEqual(mockResponse);
+    });
   });
 
   describe('getExecutiveCompensation', () => {
-    it(
-      'should fetch executive compensation for AAPL',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping executive compensation test - no API key available');
-          return;
-        }
-        const result = await fmp.company.getExecutiveCompensation(TEST_SYMBOLS.STOCK);
+    it('should get executive compensation using /governance-executive-compensation stable endpoint', async () => {
+      const mockResponse = {
+        success: true,
+        data: [{ symbol: 'AAPL', nameAndPosition: 'Tim Cook' }],
+        error: null,
+        status: 200,
+      };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-        expect(result.success).toBe(true);
-        expect(result.data).toBeDefined();
+      const result = await companyEndpoints.getExecutiveCompensation('AAPL');
 
-        if (result.data && Array.isArray(result.data)) {
-          expect(result.data.length).toBeGreaterThan(0);
-          const compensation = result.data[0];
-          expect(compensation.symbol).toBe(TEST_SYMBOLS.STOCK);
-          expect(compensation.cik).toBeDefined();
-          expect(compensation.companyName).toBeDefined();
-          expect(compensation.nameAndPosition).toBeDefined();
-          expect(compensation.year).toBeGreaterThan(0);
-          expect(compensation.total).toBeGreaterThan(0);
-        }
-      },
-      API_TIMEOUT,
-    );
+      expect(mockClient.get).toHaveBeenCalledWith('/governance-executive-compensation', 'stable', {
+        symbol: 'AAPL',
+      });
+      expect(result).toEqual(mockResponse);
+    });
   });
 
   describe('getCompanyNotes', () => {
-    it(
-      'should fetch company notes for AAPL',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping company notes test - no API key available');
-          return;
-        }
-        const result = await fmp.company.getCompanyNotes(TEST_SYMBOLS.STOCK);
+    it('should get company notes using /company-notes stable endpoint', async () => {
+      const mockResponse = {
+        success: true,
+        data: [{ symbol: 'AAPL', title: 'Note' }],
+        error: null,
+        status: 200,
+      };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-        expect(result.success).toBe(true);
-        expect(result.data).toBeDefined();
+      const result = await companyEndpoints.getCompanyNotes('AAPL');
 
-        if (result.data && Array.isArray(result.data)) {
-          expect(result.data.length).toBeGreaterThan(0);
-          const note = result.data[0];
-          expect(note.symbol).toBe(TEST_SYMBOLS.STOCK);
-          expect(note.cik).toBeDefined();
-          expect(note.title).toBeDefined();
-          expect(note.exchange).toBeDefined();
-        }
-      },
-      API_TIMEOUT,
-    );
+      expect(mockClient.get).toHaveBeenCalledWith('/company-notes', 'stable', { symbol: 'AAPL' });
+      expect(result).toEqual(mockResponse);
+    });
   });
 
   describe('getHistoricalEmployeeCount', () => {
-    it(
-      'should fetch historical employee count for AAPL',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping historical employee count test - no API key available');
-          return;
-        }
-        const result = await fmp.company.getHistoricalEmployeeCount(TEST_SYMBOLS.STOCK);
+    it('should get historical employee count using /historical-employee-count stable endpoint', async () => {
+      const mockResponse = {
+        success: true,
+        data: [{ symbol: 'AAPL', employeeCount: 150000 }],
+        error: null,
+        status: 200,
+      };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-        expect(result.success).toBe(true);
-        expect(result.data).toBeDefined();
+      const result = await companyEndpoints.getHistoricalEmployeeCount('AAPL');
 
-        if (result.data && Array.isArray(result.data)) {
-          expect(result.data.length).toBeGreaterThan(0);
-          const employeeData = result.data[0];
-          expect(employeeData.symbol).toBe(TEST_SYMBOLS.STOCK);
-          expect(employeeData.cik).toBeDefined();
-          expect(employeeData.companyName).toBeDefined();
-          expect(employeeData.employeeCount).toBeGreaterThan(0);
-          expect(employeeData.filingDate).toBeDefined();
-          expect(employeeData.formType).toBeDefined();
-        }
-      },
-      API_TIMEOUT,
-    );
+      expect(mockClient.get).toHaveBeenCalledWith('/historical-employee-count', 'stable', {
+        symbol: 'AAPL',
+      });
+      expect(result).toEqual(mockResponse);
+    });
   });
 
   describe('getSharesFloat', () => {
-    it(
-      'should fetch shares float for AAPL',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping shares float test - no API key available');
-          return;
-        }
-        const result = await fmp.company.getSharesFloat(TEST_SYMBOLS.STOCK);
+    it('should get shares float using /shares-float stable endpoint', async () => {
+      const mockResponse = {
+        success: true,
+        data: { symbol: 'AAPL', floatShares: 1000000 },
+        error: null,
+        status: 200,
+      };
+      mockClient.getSingle.mockResolvedValue(mockResponse);
 
-        expect(result.success).toBe(true);
-        expect(result.data).toBeTruthy();
+      const result = await companyEndpoints.getSharesFloat('AAPL');
 
-        if (result.data) {
-          const sharesFloat = Array.isArray(result.data) ? result.data[0] : result.data;
-          expect(sharesFloat.symbol).toBe(TEST_SYMBOLS.STOCK);
-          expect(sharesFloat.freeFloat).toBeGreaterThan(0);
-          expect(sharesFloat.floatShares).toBeGreaterThan(0);
-          expect(sharesFloat.outstandingShares).toBeGreaterThan(0);
-          expect(sharesFloat.source).toBeDefined();
-          expect(sharesFloat.date).toBeDefined();
-        }
-      },
-      FAST_TIMEOUT,
-    );
+      expect(mockClient.getSingle).toHaveBeenCalledWith('/shares-float', 'stable', {
+        symbol: 'AAPL',
+      });
+      expect(result).toEqual(mockResponse);
+    });
   });
 
   describe('getHistoricalSharesFloat', () => {
-    it(
-      'should fetch historical shares float for AAPL',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping historical shares float test - no API key available');
-          return;
-        }
-        const result = await fmp.company.getHistoricalSharesFloat(TEST_SYMBOLS.STOCK);
+    it('should get historical shares float using /historical/shares_float v4 endpoint', async () => {
+      const mockResponse = {
+        success: true,
+        data: [{ symbol: 'AAPL', date: '2024-01-01', floatShares: '1000000' }],
+        error: null,
+        status: 200,
+      };
+      mockClient.get.mockResolvedValue(mockResponse);
 
-        expect(result.success).toBe(true);
-        expect(result.data).toBeDefined();
+      const result = await companyEndpoints.getHistoricalSharesFloat('AAPL');
 
-        if (result.data && Array.isArray(result.data)) {
-          expect(result.data.length).toBeGreaterThan(0);
-          const sharesFloat = result.data[0];
-          expect(sharesFloat.symbol).toBe(TEST_SYMBOLS.STOCK);
-          expect(sharesFloat.freeFloat).toBeGreaterThan(0);
-          expect(sharesFloat.floatShares).toBeDefined();
-          expect(sharesFloat.floatShares.length).toBeGreaterThan(0);
-          expect(sharesFloat.outstandingShares).toBeDefined();
-          expect(sharesFloat.outstandingShares.length).toBeGreaterThan(0);
-          expect(sharesFloat.source).toBeDefined();
-          expect(sharesFloat.date).toBeDefined();
-        }
-      },
-      API_TIMEOUT,
-    );
+      expect(mockClient.get).toHaveBeenCalledWith('/historical/shares_float', 'v4', {
+        symbol: 'AAPL',
+      });
+      expect(result).toEqual(mockResponse);
+    });
   });
 
   describe('getEarningsCallTranscript', () => {
-    it(
-      'should fetch earnings call transcript for AAPL',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping earnings call transcript test - no API key available');
-          return;
-        }
-        const result = await fmp.company.getEarningsCallTranscript({
-          symbol: TEST_SYMBOLS.STOCK,
-          year: 2024,
-          quarter: 1,
-        });
+    it('should get earnings call transcript using /earning_call_transcript/{symbol} v3 endpoint', async () => {
+      const mockResponse = {
+        success: true,
+        data: { symbol: 'AAPL', content: 'transcript' },
+        error: null,
+        status: 200,
+      };
+      mockClient.getSingle.mockResolvedValue(mockResponse);
 
-        expect(result.success).toBe(true);
-        expect(result.data).toBeTruthy();
+      const result = await companyEndpoints.getEarningsCallTranscript({
+        symbol: 'AAPL',
+        year: 2024,
+        quarter: 1,
+      });
 
-        if (result.data) {
-          const transcript = result.data;
-          expect(transcript.symbol).toBe(TEST_SYMBOLS.STOCK);
-          expect(transcript.quarter).toBe(1);
-          expect(transcript.year).toBe(2024);
-          expect(transcript.date).toBeDefined();
-          expect(transcript.content).toBeDefined();
-          expect(transcript.content.length).toBeGreaterThan(0);
-        }
-      },
-      API_TIMEOUT,
-    );
-
-    it(
-      'should handle non-existent transcript gracefully',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping non-existent transcript test - no API key available');
-          return;
-        }
-        const result = await fmp.company.getEarningsCallTranscript({
-          symbol: TEST_SYMBOLS.STOCK,
-          year: 1900,
-          quarter: 1,
-        });
-
-        // Should either return empty array or handle gracefully
-        expect(result.success).toBe(true);
-        expect(result.data).toBeDefined();
-      },
-      FAST_TIMEOUT,
-    );
+      expect(mockClient.getSingle).toHaveBeenCalledWith('/earning_call_transcript/AAPL', 'v3', {
+        year: 2024,
+        quarter: 1,
+      });
+      expect(result).toEqual(mockResponse);
+    });
   });
 
   describe('getCompanyTranscriptData', () => {
-    it(
-      'should fetch company transcript data for AAPL',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping company transcript data test - no API key available');
-          return;
-        }
-        const result = await fmp.company.getCompanyTranscriptData(TEST_SYMBOLS.STOCK);
+    it('should get transcript data using /earning_call_transcript v4 endpoint with symbol param', async () => {
+      const mockResponse = {
+        success: true,
+        data: { quarter: 1, year: 2024 },
+        error: null,
+        status: 200,
+      };
+      mockClient.getSingle.mockResolvedValue(mockResponse);
 
-        expect(result.success).toBe(true);
-        expect(result.data).toBeDefined();
+      const result = await companyEndpoints.getCompanyTranscriptData('AAPL');
 
-        if (result.data && Array.isArray(result.data)) {
-          expect(result.data.length).toBeGreaterThan(0);
-          const transcriptData = result.data[0];
-          expect(Array.isArray(transcriptData)).toBe(true);
-          expect(transcriptData.length).toBe(3);
-          expect(typeof transcriptData[0]).toBe('number'); // year
-          expect(typeof transcriptData[1]).toBe('number'); // quarter
-          expect(typeof transcriptData[2]).toBe('string'); // date
-        }
-      },
-      API_TIMEOUT,
-    );
-
-    it(
-      'should handle invalid symbol gracefully',
-      async () => {
-        if (shouldSkipTests()) {
-          console.log('Skipping invalid symbol transcript data test - no API key available');
-          return;
-        }
-        const result = await fmp.company.getCompanyTranscriptData('INVALID_SYMBOL_12345');
-
-        // Should either return empty array or handle gracefully
-        expect(result.success).toBe(true);
-        expect(result.data).toBeDefined();
-      },
-      FAST_TIMEOUT,
-    );
+      expect(mockClient.getSingle).toHaveBeenCalledWith('/earning_call_transcript', 'v4', {
+        symbol: 'AAPL',
+      });
+      expect(result).toEqual(mockResponse);
+    });
   });
 });

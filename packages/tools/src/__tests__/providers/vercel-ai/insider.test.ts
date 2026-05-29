@@ -1,4 +1,4 @@
-import { insiderTools } from '@/providers/vercel-ai/insider';
+import { insiderTools } from '@/providers/vercel-ai';
 
 const mockInsider = {
   getInsiderTradesBySymbol: jest.fn(),

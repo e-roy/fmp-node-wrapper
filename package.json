@@ -11,11 +11,11 @@
     "example:dev": "turbo run dev --filter=fmp-ai-tools-vercel-ai-example",
     "example:openai:dev": "turbo run dev --filter=fmp-ai-tools-openai-example",
     "test:endpoint": "cd packages/api && pnpm test:endpoint",
+    "test:live": "pnpm --filter fmp-node-types build && pnpm --filter fmp-node-api test:live",
     "test": "turbo run test",
     "test:watch": "turbo run test:watch",
     "test:coverage": "turbo run test:coverage",
     "test:unit": "turbo run test:unit --filter=fmp-node-api",
-    "test:integration": "turbo run test:integration --filter=fmp-node-api",
     "test:endpoints": "turbo run test:endpoints --filter=fmp-node-api",
     "test:quote": "turbo run test:quote --filter=fmp-node-api",
     "test:stock": "turbo run test:stock --filter=fmp-node-api",
@@ -39,7 +39,7 @@
     "type-check": "turbo run type-check",
     "format": "turbo run format",
     "format:check": "turbo run format:check",
-    "publish-packages": "turbo run build lint test --filter=./packages/* && changeset version && changeset publish"
+    "publish-packages": "turbo run build lint test --filter=./packages/* && pnpm test:live && changeset version && changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
@@ -50,11 +50,11 @@
     "jest": "^29.7.0",
     "rimraf": "^5.0.5",
     "ts-jest": "^29.1.2",
-    "turbo": "^2.5.5",
+    "turbo": "^2.9.14",
     "typescript": "^5.3.3"
   },
   "packageManager": "pnpm@9.2.0",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.9.0"
   }
 }

@@ -1,5 +1,100 @@
 # fmp-node-api
 
+## 0.2.1
+
+### Patch Changes
+
+- Bump `axios` dependency floor from `^1.6.2` to `^1.13.0` (resolves to 1.16.x at install time). Clears three transitive security advisories surfaced by `pnpm audit` against consumers:
+  - **Critical:** `form-data` unsafe random boundary (GHSA-fjxv-7rqg-78g4) — fixed because newer axios depends on patched `form-data`.
+  - **High:** axios DoS via missing data-size check (GHSA-4hjh-wcwx-xvwj) — patched in axios >=1.12.0.
+  - **Moderate:** axios cloud-metadata exfiltration via header injection (GHSA-fvcv-3m26-pcqx) — patched in axios >=1.15.0.
+
+  No runtime API changes; the wrapper uses the same axios surface it always has.
+
+## 0.2.0
+
+### Minor Changes
+
+- 7030a68: Add three new endpoint categories:
+  - **`fmp.analyst`** — `getEstimates`, `getPriceTargetConsensus`, `getPriceTargetSummary`, `getGrades`.
+  - **`fmp.valuation`** — `getDiscountedCashFlow`, `getRatingSnapshot`, `getHistoricalRating`.
+  - **`fmp.technical`** — `getTechnicalIndicator` (SMA/EMA/RSI/etc. via a `type` param).
+
+  Adds the matching `SearchResult`-style types and live-API shape-check manifest cases.
+
+- 005a6e9: Typed error classification for FMP failures, surfaced through the AI tools.
+  - **fmp-node-types**: `APIResponse` gains an optional `errorType` (`plan-restricted | rate-limit | auth | not-found | bad-request | network | unknown`).
+  - **fmp-node-api**: the client now reads FMP's real error message from the response body and classifies failures (new `classifyError` export). Plan/subscription-restricted endpoints (402/403 or "Exclusive/Special Endpoint") are reported as `plan-restricted` instead of a generic error.
+  - **fmp-ai-tools**: every tool now returns a structured error (`{ error, type, message, status }`) to the model on failure instead of `null`, so an agent can explain _why_ a call failed — e.g. that the data requires a higher FMP plan.
+
+- 0260327: Add a `/search` endpoint: `fmp.search.search({ query, limit?, exchange? })` resolves a company name or partial ticker to matching symbols, returning the new `SearchResult` type. Wired into the live-API shape-check manifest.
+- bad0c16: Add 7 Starter-plan-verified endpoints (each with a matching AI tool; tool count 49 → 56):
+  - **`fmp.financial`** — `getFinancialScores` (Altman Z-Score + Piotroski), `getKeyMetricsTTM`, `getFinancialRatiosTTM`, `getRevenueProductSegmentation`, `getRevenueGeographicSegmentation`.
+  - **`fmp.analyst`** — `getGradesConsensus` (buy/hold/sell counts + overall consensus).
+  - **`fmp.company`** — `getStockPeers` (peer companies with price + market cap).
+
+  Adds canonical Zod schemas/types, live-API shape-check manifest cases (all PASS, 0 drift against the live `stable` API), docs for the new financial/company endpoints, and a new analyst documentation page.
+
+- e7042b4: Schema-first types and updated AI SDKs.
+  - **fmp-node-types**: now ships Zod schemas as the source of truth, with TypeScript types derived via `z.infer`.
+  - **fmp-node-api**: consumes the schema-first types; response types corrected against the live FMP API (e.g. `getIntraday` → `IntradayPrice[]`, `getMarketPerformance`/`getMarketIndex` → quote-shaped `MarketIndex[]`, plus nullability fixes). Adds an internal live-API shape-check tool.
+  - **fmp-ai-tools**: updated to Vercel AI SDK v6 (`ai@6`, `@ai-sdk/*@3`), `@openai/agents@0.11.5`, and Zod 4. The OpenAI tool wrapper now passes the Zod schema natively to `tool()`.
+
+### Patch Changes
+
+- 7030a68: Correct the analyst/valuation schemas to match the live FMP `stable` API (verified):
+  - **AnalystEstimate**: fields drop the `estimated` prefix and use the real names (`revenueLow/High/Avg`, `ebitda*`, `ebit*`, `netIncome*`, `sgaExpense*`, `epsAvg/High/Low`, `numAnalystsRevenue`, `numAnalystsEps`).
+  - **PriceTargetSummary**: count fields are `lastMonthCount`/`lastQuarterCount`/`lastYearCount`/`allTimeCount`.
+  - **DCFValuation**: the price field is keyed `"Stock Price"` (with a space).
+  - **CompanyRating**: gains an optional `date` (present on historical rows).
+  - `analyst.getEstimates` now defaults `period` to `annual` (the `stable` endpoint returns 400 without it).
+
+## 0.2.0-beta.4
+
+### Patch Changes
+
+- Correct the analyst/valuation schemas to match the live FMP `stable` API (verified):
+  - **AnalystEstimate**: fields drop the `estimated` prefix and use the real names (`revenueLow/High/Avg`, `ebitda*`, `ebit*`, `netIncome*`, `sgaExpense*`, `epsAvg/High/Low`, `numAnalystsRevenue`, `numAnalystsEps`).
+  - **PriceTargetSummary**: count fields are `lastMonthCount`/`lastQuarterCount`/`lastYearCount`/`allTimeCount`.
+  - **DCFValuation**: the price field is keyed `"Stock Price"` (with a space).
+  - **CompanyRating**: gains an optional `date` (present on historical rows).
+  - `analyst.getEstimates` now defaults `period` to `annual` (the `stable` endpoint returns 400 without it).
+
+## 0.2.0-beta.3
+
+### Minor Changes
+
+- Add three new endpoint categories:
+  - **`fmp.analyst`** — `getEstimates`, `getPriceTargetConsensus`, `getPriceTargetSummary`, `getGrades`.
+  - **`fmp.valuation`** — `getDiscountedCashFlow`, `getRatingSnapshot`, `getHistoricalRating`.
+  - **`fmp.technical`** — `getTechnicalIndicator` (SMA/EMA/RSI/etc. via a `type` param).
+
+  Adds the matching `SearchResult`-style types and live-API shape-check manifest cases.
+
+## 0.2.0-beta.2
+
+### Minor Changes
+
+- Add a `/search` endpoint: `fmp.search.search({ query, limit?, exchange? })` resolves a company name or partial ticker to matching symbols, returning the new `SearchResult` type. Wired into the live-API shape-check manifest.
+
+## 0.2.0-beta.1
+
+### Minor Changes
+
+- Typed error classification for FMP failures, surfaced through the AI tools.
+  - **fmp-node-types**: `APIResponse` gains an optional `errorType` (`plan-restricted | rate-limit | auth | not-found | bad-request | network | unknown`).
+  - **fmp-node-api**: the client now reads FMP's real error message from the response body and classifies failures (new `classifyError` export). Plan/subscription-restricted endpoints (402/403 or "Exclusive/Special Endpoint") are reported as `plan-restricted` instead of a generic error.
+  - **fmp-ai-tools**: every tool now returns a structured error (`{ error, type, message, status }`) to the model on failure instead of `null`, so an agent can explain _why_ a call failed — e.g. that the data requires a higher FMP plan.
+
+## 0.2.0-beta.0
+
+### Minor Changes
+
+- Schema-first types and updated AI SDKs.
+  - **fmp-node-types**: now ships Zod schemas as the source of truth, with TypeScript types derived via `z.infer`.
+  - **fmp-node-api**: consumes the schema-first types; response types corrected against the live FMP API (e.g. `getIntraday` → `IntradayPrice[]`, `getMarketPerformance`/`getMarketIndex` → quote-shaped `MarketIndex[]`, plus nullability fixes). Adds an internal live-API shape-check tool.
+  - **fmp-ai-tools**: updated to Vercel AI SDK v6 (`ai@6`, `@ai-sdk/*@3`), `@openai/agents@0.11.5`, and Zod 4. The OpenAI tool wrapper now passes the Zod schema natively to `tool()`.
+
 ## 0.1.9
 
 ### Patch Changes

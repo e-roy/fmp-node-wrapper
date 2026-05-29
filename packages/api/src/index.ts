@@ -23,6 +23,10 @@ export { MutualFundEndpoints } from './endpoints/mutual-fund';
 export { NewsEndpoints } from './endpoints/news';
 export { QuoteEndpoints } from './endpoints/quote';
 export { ScreenerEndpoints } from './endpoints/screener';
+export { SearchEndpoints } from './endpoints/search';
+export { AnalystEndpoints } from './endpoints/analyst';
+export { ValuationEndpoints } from './endpoints/valuation';
+export { TechnicalEndpoints } from './endpoints/technical';
 export { StockEndpoints } from './endpoints/stock';
 export { SenateHouseEndpoints } from './endpoints/senate-house';
 export { SECEndpoints } from './endpoints/sec';
@@ -46,3 +50,8 @@ export {
 } from './utils/constants';
 
 export { FMPValidation } from './utils/validation';
+
+// Export error classification utilities
+export { classifyError } from './utils/error-classifier';
+export type { ClassifiedError } from './utils/error-classifier';
+export { FMPError } from './shared';

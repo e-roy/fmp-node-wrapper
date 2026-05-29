@@ -1,0 +1,275 @@
+# Analyst Endpoints
+
+The Analyst Endpoints provide access to analyst-driven data: forward estimates,
+price targets, rating grades (upgrades/downgrades), and the overall rating
+consensus for a company.
+
+## Available Methods
+
+<ApiTable
+  endpoints={[
+    {
+      method: 'GET',
+      path: '/stable/analyst-estimates?symbol={symbol}',
+      description: 'Get analyst estimates (revenue, EBITDA, net income, EPS)',
+    },
+    {
+      method: 'GET',
+      path: '/stable/price-target-consensus?symbol={symbol}',
+      description: 'Get the analyst price-target consensus (high/low/consensus/median)',
+    },
+    {
+      method: 'GET',
+      path: '/stable/price-target-summary?symbol={symbol}',
+      description: 'Get a summary of analyst price targets over recent periods',
+    },
+    {
+      method: 'GET',
+      path: '/stable/grades?symbol={symbol}',
+      description: 'Get analyst grades (upgrades/downgrades)',
+    },
+    {
+      method: 'GET',
+      path: '/stable/grades-consensus?symbol={symbol}',
+      description: 'Get the analyst rating consensus (buy/hold/sell counts + label)',
+    },
+  ]}
+/>
+
+## Get Analyst Estimates
+
+Retrieve forward analyst estimates including revenue, EBITDA, net income, and EPS,
+with low/high/average ranges per period.
+
+<CodeBlock language="typescript">
+  {`const estimates = await fmp.analyst.getEstimates({
+    symbol: 'AAPL',
+    period: 'annual',
+    limit: 5,
+});`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+    {
+      name: 'period',
+      type: 'string',
+      required: false,
+      description: 'Period type: "annual" or "quarter" (default: "annual")',
+    },
+    {
+      name: 'limit',
+      type: 'number',
+      required: false,
+      description: 'Number of periods to retrieve',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        symbol: 'AAPL',
+        date: '2025-09-27',
+        revenueLow: 410000000000,
+        revenueHigh: 440000000000,
+        revenueAvg: 425000000000,
+        ebitdaLow: 140000000000,
+        ebitdaHigh: 155000000000,
+        ebitdaAvg: 147000000000,
+        netIncomeLow: 95000000000,
+        netIncomeHigh: 105000000000,
+        netIncomeAvg: 100000000000,
+        epsLow: 6.50,
+        epsHigh: 7.10,
+        epsAvg: 6.80,
+        numAnalystsRevenue: 24,
+        numAnalystsEps: 26
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Price Target Consensus
+
+Retrieve the analyst price-target consensus for a company (high, low, consensus,
+median). Returns a single snapshot object.
+
+<CodeBlock language="typescript">
+  {`const consensus = await fmp.analyst.getPriceTargetConsensus({ symbol: 'AAPL' });`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: {
+      symbol: 'AAPL',
+      targetHigh: 300,
+      targetLow: 200,
+      targetConsensus: 255,
+      targetMedian: 260
+    }
+}`}
+</CodeBlock>
+
+## Get Price Target Summary
+
+Retrieve a summary of analyst price targets over recent periods (last month,
+quarter, year, and all-time counts with average targets).
+
+<CodeBlock language="typescript">
+  {`const summary = await fmp.analyst.getPriceTargetSummary({ symbol: 'AAPL' });`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: {
+      symbol: 'AAPL',
+      lastMonthCount: 5,
+      lastMonthAvgPriceTarget: 258,
+      lastQuarterCount: 14,
+      lastQuarterAvgPriceTarget: 252,
+      lastYearCount: 38,
+      lastYearAvgPriceTarget: 240,
+      allTimeCount: 220,
+      allTimeAvgPriceTarget: 198,
+      publishers: '["Morgan Stanley","Goldman Sachs"]'
+    }
+}`}
+</CodeBlock>
+
+## Get Stock Grades
+
+Retrieve recent analyst grades (upgrades/downgrades) for a company.
+
+<CodeBlock language="typescript">
+  {`const grades = await fmp.analyst.getGrades({ symbol: 'AAPL' });`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: [
+      {
+        symbol: 'AAPL',
+        date: '2026-05-01',
+        gradingCompany: 'Morgan Stanley',
+        previousGrade: 'Equal-Weight',
+        newGrade: 'Overweight',
+        action: 'upgrade'
+      }
+    ]
+}`}
+</CodeBlock>
+
+## Get Grades Consensus
+
+Retrieve the analyst rating consensus for a company: the number of analysts at each
+rating (strongBuy/buy/hold/sell/strongSell) plus the overall consensus label.
+Returns a single snapshot object.
+
+<CodeBlock language="typescript">
+  {`const consensus = await fmp.analyst.getGradesConsensus({ symbol: 'AAPL' });`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: {
+      symbol: 'AAPL',
+      strongBuy: 1,
+      buy: 69,
+      hold: 33,
+      sell: 7,
+      strongSell: 0,
+      consensus: 'Buy'
+    }
+}`}
+</CodeBlock>
+
+## Error Handling
+
+Always check the success property before accessing data:
+
+<CodeBlock language="typescript">
+{`const consensus = await fmp.analyst.getGradesConsensus({ symbol: 'INVALID' });
+
+if (consensus.success) {
+console.log('Consensus:', consensus.data.consensus);
+} else {
+console.error('Error:', consensus.error);
+console.error('Status:', consensus.status);
+}`}
+
+</CodeBlock>
+
+## Next Steps
+
+Explore other endpoint categories:
+
+- [Financial Endpoints](/docs/api/financial) - Statements, ratios, and fundamental data
+- [Company Endpoints](/docs/api/company) - Profiles, peers, and company information
+- [Examples](/docs/api/examples) - Practical code samples

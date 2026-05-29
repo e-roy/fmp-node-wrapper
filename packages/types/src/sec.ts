@@ -1,118 +1,123 @@
-// SEC (Securities and Exchange Commission) types
+// sec types for FMP API
+//
+// Schema-first: Zod schemas are the source of truth; types are derived via z.infer.
+// Base schemas generated via `pnpm --filter fmp-node-types gen:schemas`.
+import { z } from "zod";
 
-// RSS Feed API (v4) Response
-export interface RSSFeedItem {
-  title: string;
-  date: string;
-  link: string;
-  cik: string;
-  form_type: string;
-  ticker: string;
-  done: boolean;
-}
+export const RSSFeedItemSchema = z.object({
+    title: z.string(),
+    date: z.string(),
+    link: z.string(),
+    cik: z.string(),
+    form_type: z.string(),
+    ticker: z.string(),
+    done: z.boolean()
+});
 
-// RSS Feed V3 API Response
-export interface RSSFeedV3Item {
-  title: string;
-  date: string;
-  link: string;
-  cik: string;
-  form_type: string;
-  ticker: string;
-  done: boolean;
-}
+export const RSSFeedV3ItemSchema = z.object({
+    title: z.string(),
+    date: z.string(),
+    link: z.string(),
+    cik: z.string(),
+    form_type: z.string(),
+    ticker: z.string(),
+    done: z.boolean()
+});
 
-// RSS Feed 8-K API Response
-export interface RSSFeed8KItem {
-  title: string;
-  symbol: string;
-  cik: string;
-  link: string;
-  finalLink: string;
-  date: string;
-  process: string;
-  hasFinancials: string;
-}
+export const RSSFeed8KItemSchema = z.object({
+    title: z.string(),
+    symbol: z.string(),
+    cik: z.string(),
+    link: z.string(),
+    finalLink: z.string(),
+    date: z.string(),
+    process: z.string(),
+    hasFinancials: z.string()
+});
 
-// SEC Filings API Response
-export interface SECFiling {
-  symbol: string;
-  cik: string;
-  type: string;
-  link: string;
-  finalLink: string;
-  acceptedDate: string;
-  fillingDate: string;
-}
+export const SECFilingSchema = z.object({
+    symbol: z.string(),
+    cik: z.string(),
+    type: z.string(),
+    link: z.string(),
+    finalLink: z.string(),
+    acceptedDate: z.string(),
+    fillingDate: z.string()
+});
 
-// Industry Classification API Response
-export interface IndustryClassification {
-  symbol: string;
-  name: string;
-  cik: string;
-  sicCode: string;
-  industryTitle: string;
-  businessAdress: string;
-  phoneNumber: string;
-}
+export const IndustryClassificationSchema = z.object({
+    symbol: z.string(),
+    name: z.string(),
+    cik: z.string(),
+    sicCode: z.string(),
+    industryTitle: z.string(),
+    businessAdress: z.string(),
+    phoneNumber: z.string()
+});
 
-// Industry Classification Codes API Response
-export interface IndustryClassificationCode {
-  office: string;
-  sicCode: string;
-  industryTitle: string;
-}
+export const IndustryClassificationCodeSchema = z.object({
+    office: z.string(),
+    sicCode: z.string(),
+    industryTitle: z.string()
+});
 
-// RSS Feed API (v4) Parameters
-export interface RSSFeedParams {
-  limit?: number;
-  type?: string;
-  from?: string;
-  to?: string;
-  isDone?: boolean;
-}
+export const RSSFeedParamsSchema = z.object({
+    limit: z.number().optional(),
+    type: z.string().optional(),
+    from: z.string().optional(),
+    to: z.string().optional(),
+    isDone: z.boolean().optional()
+});
 
-// RSS Feed V3 API Parameters
-export interface RSSFeedV3Params {
-  page?: number;
-  datatype?: string;
-}
+export const RSSFeedV3ParamsSchema = z.object({
+    page: z.number().optional(),
+    datatype: z.string().optional()
+});
 
-// RSS Feed All API Response
-export interface RSSFeedAllItem {
-  symbol: string;
-  fillingDate: string;
-  acceptedDate: string;
-  cik: string;
-  type: string;
-  link: string;
-  finalLink: string;
-}
+export const RSSFeedAllItemSchema = z.object({
+    symbol: z.string(),
+    fillingDate: z.string(),
+    acceptedDate: z.string(),
+    cik: z.string(),
+    type: z.string(),
+    link: z.string(),
+    finalLink: z.string()
+});
 
-// RSS Feed 8-K API Parameters
-export interface RSSFeed8KParams {
-  page?: number;
-  from?: string;
-  to?: string;
-  hasFinancial?: boolean;
-  limit?: number;
-}
+export const RSSFeed8KParamsSchema = z.object({
+    page: z.number().optional(),
+    from: z.string().optional(),
+    to: z.string().optional(),
+    hasFinancial: z.boolean().optional(),
+    limit: z.number().optional()
+});
 
-// SEC Filings API Parameters
-export interface SECFilingsParams {
-  page?: number;
-  type?: string;
-}
+export const SECFilingsParamsSchema = z.object({
+    page: z.number().optional(),
+    type: z.string().optional()
+});
 
-// Individual Industry Classification API Parameters
-export interface IndividualIndustryClassificationParams {
-  symbol?: string;
-  cik?: number;
-  sicCode?: number;
-}
+export const IndividualIndustryClassificationParamsSchema = z.object({
+    symbol: z.string().optional(),
+    cik: z.number().optional(),
+    sicCode: z.number().optional()
+});
 
-// Industry Classification Codes API Parameters
-export interface IndustryClassificationCodesParams {
-  industryTitle?: string;
-  sicCode?: number;
-}
+export const IndustryClassificationCodesParamsSchema = z.object({
+    industryTitle: z.string().optional(),
+    sicCode: z.number().optional()
+});
+
+export type RSSFeedItem = z.infer<typeof RSSFeedItemSchema>;
+export type RSSFeedV3Item = z.infer<typeof RSSFeedV3ItemSchema>;
+export type RSSFeed8KItem = z.infer<typeof RSSFeed8KItemSchema>;
+export type SECFiling = z.infer<typeof SECFilingSchema>;
+export type IndustryClassification = z.infer<typeof IndustryClassificationSchema>;
+export type IndustryClassificationCode = z.infer<typeof IndustryClassificationCodeSchema>;
+export type RSSFeedParams = z.infer<typeof RSSFeedParamsSchema>;
+export type RSSFeedV3Params = z.infer<typeof RSSFeedV3ParamsSchema>;
+export type RSSFeedAllItem = z.infer<typeof RSSFeedAllItemSchema>;
+export type RSSFeed8KParams = z.infer<typeof RSSFeed8KParamsSchema>;
+export type SECFilingsParams = z.infer<typeof SECFilingsParamsSchema>;
+export type IndividualIndustryClassificationParams = z.infer<typeof IndividualIndustryClassificationParamsSchema>;
+export type IndustryClassificationCodesParams = z.infer<typeof IndustryClassificationCodesParamsSchema>;

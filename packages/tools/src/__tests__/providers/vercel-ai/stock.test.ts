@@ -1,4 +1,4 @@
-import { stockTools } from '@/providers/vercel-ai/stock';
+import { stockTools } from '@/providers/vercel-ai';
 
 const mockStock = {
   getMarketCap: jest.fn(),

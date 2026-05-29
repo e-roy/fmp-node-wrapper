@@ -1,50 +1,75 @@
 // Quote-related types for FMP API
+//
+// Schema-first: Zod schemas are the source of truth; the TypeScript types are
+// derived via `z.infer`. Regenerate the base schemas from interfaces with
+// `pnpm --filter fmp-node-types gen:schemas` (see scripts/), then fold edits here.
+
+import { z } from 'zod';
 
 // Quote data structure - unified for all asset types
-export interface Quote {
-  symbol: string;
-  name: string;
-  price: number;
-  changesPercentage: number;
-  change: number;
-  dayLow: number;
-  dayHigh: number;
-  yearHigh: number;
-  yearLow: number;
-  marketCap: number | null;
-  priceAvg50: number;
-  priceAvg200: number;
-  exchange: string;
-  volume: number;
-  avgVolume: number;
-  open: number;
-  previousClose: number;
-  eps: number | null;
-  pe: number | null;
-  earningsAnnouncement: string | null;
-  sharesOutstanding: number | null;
-  timestamp: number;
-}
+export const QuoteSchema = z.object({
+  symbol: z.string(),
+  name: z.string(),
+  price: z.number(),
+  changesPercentage: z.number(),
+  change: z.number(),
+  dayLow: z.number(),
+  dayHigh: z.number(),
+  yearHigh: z.number(),
+  yearLow: z.number(),
+  marketCap: z.number().nullable(),
+  priceAvg50: z.number(),
+  priceAvg200: z.number(),
+  exchange: z.string(),
+  volume: z.number(),
+  avgVolume: z.number(),
+  open: z.number(),
+  previousClose: z.number(),
+  eps: z.number().nullable(),
+  pe: z.number().nullable(),
+  earningsAnnouncement: z.string().nullable(),
+  sharesOutstanding: z.number().nullable(),
+  timestamp: z.number(),
+});
+
+export type Quote = z.infer<typeof QuoteSchema>;
 
 // Historical price data structure
-export interface HistoricalPriceData {
-  date: string;
-  open: number;
-  high: number;
-  low: number;
-  close: number;
-  adjClose: number;
-  volume: number;
-  unadjustedVolume: number;
-  change: number;
-  changePercent: number;
-  vwap: number;
-  label: string;
-  changeOverTime: number;
-}
+export const HistoricalPriceDataSchema = z.object({
+  date: z.string(),
+  open: z.number(),
+  high: z.number(),
+  low: z.number(),
+  close: z.number(),
+  adjClose: z.number(),
+  volume: z.number(),
+  unadjustedVolume: z.number(),
+  change: z.number(),
+  changePercent: z.number(),
+  vwap: z.number(),
+  label: z.string(),
+  changeOverTime: z.number(),
+});
+
+export type HistoricalPriceData = z.infer<typeof HistoricalPriceDataSchema>;
 
 // Historical price response wrapper
-export interface HistoricalPriceResponse {
-  symbol: string;
-  historical: HistoricalPriceData[];
-}
+export const HistoricalPriceResponseSchema = z.object({
+  symbol: z.string(),
+  historical: z.array(HistoricalPriceDataSchema),
+});
+
+export type HistoricalPriceResponse = z.infer<typeof HistoricalPriceResponseSchema>;
+
+// Intraday bars (/historical-chart/{interval}/{symbol}) return a leaner shape
+// than HistoricalPriceData — only OHLCV, no adjusted/derived fields.
+export const IntradayPriceSchema = z.object({
+  date: z.string(),
+  open: z.number(),
+  low: z.number(),
+  high: z.number(),
+  close: z.number(),
+  volume: z.number(),
+});
+
+export type IntradayPrice = z.infer<typeof IntradayPriceSchema>;

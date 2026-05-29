@@ -11,11 +11,7 @@ This example demonstrates how to use FMP Tools with the OpenAI Agents SDK to cre
 
 ## Available Tools
 
-This example currently includes:
-
-- **getCompanyProfile** - Get comprehensive company profile information
-
-Additional tools from the FMP Tools library can be easily added to expand functionality.
+This example wires up the full FMP tool set via `fmpTools` from `fmp-ai-tools/openai`, so the agent can answer questions about quotes, financials, company profiles, market data, economic indicators, and more. To narrow the agent's scope, pass a specific subset of tools instead (see [Adding New Tools](#adding-new-tools)).
 
 ## Getting Started
 
@@ -92,12 +88,12 @@ src/
 
 ```typescript
 import { Agent, run } from '@openai/agents';
-import { getCompanyProfile } from 'fmp-ai-tools/openai';
+import { fmpTools } from 'fmp-ai-tools/openai';
 
 const agent = new Agent({
+  name: 'Stock Agent',
   model: 'gpt-4o-mini',
-  instructions: 'You are a financial assistant...',
-  tools: [getCompanyProfile],
+  tools: fmpTools,
 });
 
 const result = await run(agent, userMessage.content);
@@ -137,21 +133,15 @@ You can easily extend this example by:
 
 ## Adding New Tools
 
-To add more FMP tools to the agent:
+The example uses the full `fmpTools` set. To restrict the agent to a specific subset, import individual tools (or category arrays) and pass them instead:
 
 ```typescript
-import {
-  getCompanyProfile,
-  // Add more tools as they become available
-} from 'fmp-ai-tools/openai';
+import { getCompanyProfile, getStockQuote, financialTools } from 'fmp-ai-tools/openai';
 
 const agent = new Agent({
+  name: 'Stock Agent',
   model: 'gpt-4o-mini',
-  instructions: '...',
-  tools: [
-    getCompanyProfile,
-    // Add more tools here
-  ],
+  tools: [getCompanyProfile, getStockQuote, ...financialTools],
 });
 ```
 

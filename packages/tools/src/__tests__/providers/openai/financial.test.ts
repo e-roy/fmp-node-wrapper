@@ -10,7 +10,7 @@ import {
   getBalanceSheetGrowth,
   getFinancialGrowth,
   getEarningsHistorical,
-} from '@/providers/openai/financial';
+} from '@/providers/openai';
 
 const mockFinancial = {
   getBalanceSheet: jest.fn(),

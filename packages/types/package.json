@@ -1,6 +1,6 @@
 {
   "name": "fmp-node-types",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "Shared TypeScript types for FMP Node Wrapper ecosystem (internal package)",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -21,6 +21,7 @@
     "lint": "npx eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
     "type-check": "tsc --noEmit",
+    "gen:schemas": "ts-to-zod src/quote.ts src/generated/quote.zod.ts && ts-to-zod src/market.ts src/generated/market.zod.ts && ts-to-zod src/financial.ts src/generated/financial.zod.ts",
     "format": "prettier --write src/**/*.ts",
     "format:check": "prettier --check src/**/*.ts",
     "clean": "rm -rf dist"
@@ -43,7 +44,11 @@
   "devDependencies": {
     "@types/node": "^20.11.0",
     "prettier": "^3.2.5",
+    "ts-to-zod": "^5.1.0",
     "tsup": "^8.0.0",
     "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "zod": "^3.25.76"
   }
 }

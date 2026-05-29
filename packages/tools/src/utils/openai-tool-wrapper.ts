@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { tool } from '@openai/agents';
 import { logApiExecutionWithTiming } from './logger';
+import { toToolError } from './format-response';
 
 export interface OpenAIToolConfig<T extends z.ZodObject<any>> {
   name: string;
@@ -12,34 +13,23 @@ export interface OpenAIToolConfig<T extends z.ZodObject<any>> {
 export function createOpenAITool<T extends z.ZodObject<any>>(config: OpenAIToolConfig<T>) {
   const { name, description, inputSchema, execute } = config;
 
-  // Create a simple JSON schema from the Zod schema
-  const properties: Record<string, any> = {};
-  const required: string[] = [];
-
-  Object.entries(inputSchema.shape).forEach(([key, _fieldSchema]) => {
-    properties[key] = { type: 'string' };
-    required.push(key);
-  });
-
+  // @openai/agents derives the JSON schema from the Zod schema and validates
+  // input against it before invoking execute. The cast widens our generic T to
+  // the SDK's ZodObjectLike `parameters` type (runtime value is the real schema).
+  // We also parse here so Zod defaults/coercion are applied consistently before
+  // execute, regardless of whether the caller pre-validated.
   return tool({
     name,
     description,
-    parameters: {
-      type: 'object',
-      properties,
-      required,
-      additionalProperties: false,
-    } as any,
-    strict: true,
-    execute: async (args: z.TypeOf<T>) => {
+    parameters: inputSchema as z.ZodObject<any>,
+    execute: async (input: unknown) => {
       try {
-        const validatedInput = inputSchema.parse(args);
-        return await logApiExecutionWithTiming(name, validatedInput, () => execute(validatedInput));
+        const args = inputSchema.parse(input) as z.infer<T>;
+        return await logApiExecutionWithTiming(name, args, () => execute(args));
       } catch (error) {
-        if (error instanceof z.ZodError) {
-          return `Invalid input: ${error.errors.map(e => e.message).join(', ')}`;
-        }
-        return `Error executing ${name}: ${error instanceof Error ? error.message : String(error)}`;
+        // Never throw out of a tool — return a structured error the model can
+        // relay (e.g. a missing FMP_API_KEY, which throws from `new FMP()`).
+        return toToolError(error);
       }
     },
   });

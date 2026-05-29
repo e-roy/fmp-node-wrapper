@@ -347,12 +347,12 @@ Retrieve all supported countries that can be used as filters in the company scre
   {`interface Screener {
   symbol: string;
   companyName: string;
-  marketCap: number;
-  sector: string;
-  industry: string;
-  beta: number;
+  marketCap: number | null;
+  sector: string | null;
+  industry: string | null;
+  beta: number | null;
   price: number;
-  lastAnnualDividend: number;
+  lastAnnualDividend: number | null;
   volume: number;
   exchange: string;
   exchangeShortName: string;
@@ -372,7 +372,7 @@ Retrieve all supported countries that can be used as filters in the company scre
   countryName: string;
   countryCode: string;
   symbolSuffix: string;
-  delay: string;
+  delay: string | null;
 }`}
 </CodeBlock>
 

@@ -1,4 +1,4 @@
-import { getMarketCap, getStockSplits, getDividendHistory } from '@/providers/openai/stock';
+import { getMarketCap, getStockSplits, getDividendHistory } from '@/providers/openai';
 
 const mockStock = {
   getMarketCap: jest.fn(),

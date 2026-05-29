@@ -1,4 +1,4 @@
-import { getEarningsCalendar, getEconomicCalendar } from '@/providers/openai/calendar';
+import { getEarningsCalendar, getEconomicCalendar } from '@/providers/openai';
 
 const mockCalendar = {
   getEarningsCalendar: jest.fn(),

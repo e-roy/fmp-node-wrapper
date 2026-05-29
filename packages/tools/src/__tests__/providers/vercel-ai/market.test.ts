@@ -1,4 +1,4 @@
-import { marketTools } from '@/providers/vercel-ai/market';
+import { marketTools } from '@/providers/vercel-ai';
 
 const mockMarket = {
   getMarketPerformance: jest.fn(),

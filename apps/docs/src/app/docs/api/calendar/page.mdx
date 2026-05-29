@@ -77,10 +77,10 @@ Retrieve upcoming earnings announcements with estimated and actual earnings per 
         date: '2024-01-25',
         symbol: 'AAPL',
         eps: 2.18,
-        estimatedEps: 2.10,
+        epsEstimated: 2.10,
         time: 'AMC',
         revenue: 119575000000,
-        estimatedRevenue: 117000000000,
+        revenueEstimated: 117000000000,
         fiscalDateEnding: '2023-12-31',
         updatedFromDate: '2024-01-15'
       },
@@ -88,10 +88,10 @@ Retrieve upcoming earnings announcements with estimated and actual earnings per 
         date: '2024-01-26',
         symbol: 'MSFT',
         eps: 2.93,
-        estimatedEps: 2.78,
+        epsEstimated: 2.78,
         time: 'AMC',
         revenue: 62020000000,
-        estimatedRevenue: 61100000000,
+        revenueEstimated: 61100000000,
         fiscalDateEnding: '2023-12-31',
         updatedFromDate: '2024-01-16'
       }
@@ -259,7 +259,7 @@ Retrieve economic events and indicators from various countries with estimates an
         actual: 216000,
         change: 43000,
         impact: 'High',
-        changePercent: 24.86,
+        changePercentage: 24.86,
         unit: 'K'
       },
       {
@@ -272,7 +272,7 @@ Retrieve economic events and indicators from various countries with estimates an
         actual: 0.3,
         change: 0.2,
         impact: 'High',
-        changePercent: 200.00,
+        changePercentage: 200.00,
         unit: '%'
       }
     ]
@@ -452,7 +452,7 @@ Always check the success property before accessing data:
 if (earnings.success) {
 console.log('Earnings events:', earnings.data.length);
 earnings.data.forEach(event => {
-console.log(\`\${event.symbol}: \${event.estimatedEps} EPS\`);
+console.log(\`\${event.symbol}: \${event.epsEstimated} EPS\`);
 });
 } else {
 console.error('Error:', earnings.error);
