@@ -63,3 +63,6 @@ export * from './senate-house';
 
 // Stock types
 export * from './stock';
+
+// Aftermarket (extended-hours) types
+export * from './aftermarket';

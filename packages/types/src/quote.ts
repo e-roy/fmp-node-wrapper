@@ -34,6 +34,16 @@ export const QuoteSchema = z.object({
 
 export type Quote = z.infer<typeof QuoteSchema>;
 
+// Short quote (stable /quote-short) — a lean price/change/volume snapshot.
+export const QuoteShortSchema = z.object({
+  symbol: z.string(),
+  price: z.number(),
+  change: z.number(),
+  volume: z.number(),
+});
+
+export type QuoteShort = z.infer<typeof QuoteShortSchema>;
+
 // Historical price data structure
 export const HistoricalPriceDataSchema = z.object({
   date: z.string(),

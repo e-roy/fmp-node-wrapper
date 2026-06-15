@@ -6,37 +6,18 @@
 import { z } from 'zod';
 import { QuoteSchema } from './quote';
 
-// The named-holiday keys vary year to year (e.g. Juneteenth only appears from
-// 2021), so every holiday field except `year` is optional.
-export const MarketHolidaySchema = z.object({
-  year: z.number(),
-  'Martin Luther King, Jr. Day': z.string().optional(),
-  "Presidents' Day": z.string().optional(),
-  'Good Friday': z.string().optional(),
-  'Memorial Day': z.string().optional(),
-  Juneteenth: z.string().optional(),
-  'Independence Day': z.string().optional(),
-  'Labor Day': z.string().optional(),
-  'Thanksgiving Day': z.string().optional(),
-  Christmas: z.string().optional(),
+// Trading hours + current open/closed status for a single exchange.
+// One element per exchange from the stable /all-exchange-market-hours endpoint.
+export const ExchangeMarketHoursSchema = z.object({
+  exchange: z.string(),
+  name: z.string(),
+  openingHour: z.string(),
+  closingHour: z.string(),
+  timezone: z.string(),
+  isMarketOpen: z.boolean(),
 });
 
-export type MarketHoliday = z.infer<typeof MarketHolidaySchema>;
-
-export const MarketHoursSchema = z.object({
-  stockExchangeName: z.string(),
-  stockMarketHours: z.object({
-    openingHour: z.string(),
-    closingHour: z.string(),
-  }),
-  stockMarketHolidays: z.array(MarketHolidaySchema),
-  isTheStockMarketOpen: z.boolean(),
-  isTheEuronextMarketOpen: z.boolean(),
-  isTheForexMarketOpen: z.boolean(),
-  isTheCryptoMarketOpen: z.boolean(),
-});
-
-export type MarketHours = z.infer<typeof MarketHoursSchema>;
+export type ExchangeMarketHours = z.infer<typeof ExchangeMarketHoursSchema>;
 
 export const MarketPerformanceSchema = z.object({
   symbol: z.string(),
@@ -50,13 +31,26 @@ export const MarketPerformanceSchema = z.object({
 
 export type MarketPerformance = z.infer<typeof MarketPerformanceSchema>;
 
+// Per-sector average change for a given date/exchange (stable
+// /sector-performance-snapshot). `averageChange` is a numeric percentage.
 export const MarketSectorPerformanceSchema = z.object({
+  date: z.string(),
   sector: z.string(),
-  // The sector-performance endpoint returns this as a formatted string (e.g. "1.23%").
-  changesPercentage: z.string(),
+  exchange: z.string(),
+  averageChange: z.number(),
 });
 
 export type MarketSectorPerformance = z.infer<typeof MarketSectorPerformanceSchema>;
+
+// Per-industry P/E for a given date/exchange (stable /industry-pe-snapshot).
+export const IndustryPESnapshotSchema = z.object({
+  date: z.string(),
+  industry: z.string(),
+  exchange: z.string(),
+  pe: z.number(),
+});
+
+export type IndustryPESnapshot = z.infer<typeof IndustryPESnapshotSchema>;
 
 // The `/quotes/index` endpoint (used by both getMarketIndex and
 // getMarketPerformance) returns full quote objects for market indices — the

@@ -33,6 +33,11 @@ All endpoints return responses with a consistent structure: `{ success: boolean,
       path: '/stock/full/real-time-price/{symbols}',
       description: 'Get full real-time price data for multiple stocks',
     },
+    {
+      method: 'GET',
+      path: '/stable/stock-price-change',
+      description: 'Get price change percentages across standard horizons',
+    },
   ]}
 />
 
@@ -64,6 +69,50 @@ Retrieve market capitalization data for a specific stock.
       symbol: 'AAPL',
       date: '2023-12-29',
       marketCap: 2375000000000
+    },
+    error: null,
+    status: 200
+}`}
+</CodeBlock>
+
+## Get Price Change
+
+Retrieve the percentage price change for a stock across standard horizons (1D, 5D, 1M, 3M, 6M, YTD, 1Y, 3Y, 5Y, 10Y, and max) in a single call.
+
+<CodeBlock language="typescript">
+  {`const change = await fmp.stock.getPriceChange('AAPL');
+console.log(change.data.ytd, change.data['1Y']);`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: {
+      symbol: 'AAPL',
+      '1D': 1.38898,
+      '5D': -5.50726,
+      '1M': 0.28154,
+      '3M': 15.58883,
+      '6M': 6.23473,
+      ytd: 8.74347,
+      '1Y': 48.40863,
+      '3Y': 60.85206,
+      '5Y': 126.57112,
+      '10Y': 1114.58505,
+      max: 230231.12583
     },
     error: null,
     status: 200

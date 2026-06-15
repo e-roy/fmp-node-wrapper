@@ -24,6 +24,7 @@ import { TechnicalEndpoints } from './endpoints/technical';
 import { SECEndpoints } from './endpoints/sec';
 import { SenateHouseEndpoints } from './endpoints/senate-house';
 import { StockEndpoints } from './endpoints/stock';
+import { AftermarketEndpoints } from './endpoints/aftermarket';
 
 /**
  * Main FMP API client that provides access to all endpoints
@@ -76,6 +77,7 @@ export class FMP {
   public readonly sec: SECEndpoints;
   public readonly senateHouse: SenateHouseEndpoints;
   public readonly stock: StockEndpoints;
+  public readonly aftermarket: AftermarketEndpoints;
 
   constructor(config: FMPConfig = {}) {
     // Get API key from config or environment variable
@@ -114,6 +116,7 @@ export class FMP {
     this.sec = new SECEndpoints(client);
     this.senateHouse = new SenateHouseEndpoints(client);
     this.stock = new StockEndpoints(client);
+    this.aftermarket = new AftermarketEndpoints(client);
   }
 
   /**

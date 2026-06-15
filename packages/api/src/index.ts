@@ -28,6 +28,7 @@ export { AnalystEndpoints } from './endpoints/analyst';
 export { ValuationEndpoints } from './endpoints/valuation';
 export { TechnicalEndpoints } from './endpoints/technical';
 export { StockEndpoints } from './endpoints/stock';
+export { AftermarketEndpoints } from './endpoints/aftermarket';
 export { SenateHouseEndpoints } from './endpoints/senate-house';
 export { SECEndpoints } from './endpoints/sec';
 

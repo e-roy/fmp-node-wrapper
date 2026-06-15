@@ -223,7 +223,9 @@ function getTestParameters(toolName: string): any {
     case 'getMarketPerformance':
       return {};
     case 'getSectorPerformance':
-      return {};
+      return { date: '2024-06-10' };
+    case 'getIndustryPESnapshot':
+      return { date: '2024-06-10' };
     case 'getGainers':
       return {};
     case 'getLosers':

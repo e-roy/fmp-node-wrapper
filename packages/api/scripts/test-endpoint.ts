@@ -386,7 +386,10 @@ async function testEndpoint() {
         result = await fmp.market.getMostActive();
         break;
       case 'sector-performance':
-        result = await fmp.market.getSectorPerformance();
+        result = await fmp.market.getSectorPerformance({ date: '2024-06-10' });
+        break;
+      case 'industry-pe':
+        result = await fmp.market.getIndustryPESnapshot({ date: '2024-06-10' });
         break;
       case 'market-index':
         result = await fmp.market.getMarketIndex();

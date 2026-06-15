@@ -18,6 +18,18 @@ export const quoteDefinitions: FMPToolDefinition[] = [
     execute: async ({ symbol }) => toToolResponse(await getFMPClient().quote.getQuote(symbol)),
   }),
   defineTool({
+    name: 'getStockQuoteShort',
+    description:
+      'Get a short real-time quote (price, change, and volume only) for a symbol. Lighter than the full quote.',
+    inputSchema: z.object({
+      symbol: z
+        .string()
+        .min(1, 'Stock symbol is required')
+        .describe('The symbol to get the short quote for (e.g., AAPL, BTCUSD, EURUSD)'),
+    }),
+    execute: async ({ symbol }) => toToolResponse(await getFMPClient().quote.getQuoteShort(symbol)),
+  }),
+  defineTool({
     name: 'getHistoricalPrice',
     description:
       'Get historical daily prices (open/high/low/close/volume) for a symbol. Returns the most recent `limit` days.',

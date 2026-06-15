@@ -1,7 +1,13 @@
 // Unified quote endpoints for FMP API - handles stocks, crypto, forex, commodities, and ETFs
 
 import { FMPClient } from '@/client';
-import { APIResponse, Quote, HistoricalPriceResponse, IntradayPrice } from 'fmp-node-types';
+import {
+  APIResponse,
+  Quote,
+  QuoteShort,
+  HistoricalPriceResponse,
+  IntradayPrice,
+} from 'fmp-node-types';
 
 export class QuoteEndpoints {
   constructor(private client: FMPClient) {}
@@ -31,6 +37,26 @@ export class QuoteEndpoints {
   async getQuote(symbol: string): Promise<APIResponse<Quote>> {
     // All asset types use the same /quote/{symbol} endpoint
     return this.client.getSingle(`/quote/${symbol}`, 'v3');
+  }
+
+  /**
+   * Get a short real-time quote for any asset type (stocks, crypto, forex, commodities, ETFs)
+   *
+   * A lean alternative to {@link getQuote} returning only price, change, and volume.
+   * Lighter on bandwidth — useful for frequent polling or large symbol sweeps.
+   *
+   * @param symbol - The trading symbol (e.g., 'AAPL', 'BTCUSD', 'EURUSD')
+   *
+   * @returns Promise resolving to a short quote with price, change, and volume
+   *
+   * @example
+   * ```typescript
+   * const shortQuote = await fmp.quote.getQuoteShort('AAPL');
+   * console.log(`${shortQuote.data.price} (${shortQuote.data.change})`);
+   * ```
+   */
+  async getQuoteShort(symbol: string): Promise<APIResponse<QuoteShort>> {
+    return this.client.getSingle('/quote-short', 'stable', { symbol });
   }
 
   /**

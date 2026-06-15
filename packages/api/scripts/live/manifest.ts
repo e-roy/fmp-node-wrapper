@@ -9,6 +9,7 @@ import { z } from 'zod';
 import {
   // quote
   QuoteSchema,
+  QuoteShortSchema,
   HistoricalPriceResponseSchema,
   IntradayPriceSchema,
   // stock
@@ -17,10 +18,15 @@ import {
   StockDividendResponseSchema,
   StockRealTimePriceSchema,
   StockRealTimePriceFullSchema,
+  StockPriceChangeSchema,
+  // aftermarket
+  AftermarketTradeSchema,
+  AftermarketQuoteSchema,
   // market
-  MarketHoursSchema,
+  ExchangeMarketHoursSchema,
   MarketPerformanceSchema,
   MarketSectorPerformanceSchema,
+  IndustryPESnapshotSchema,
   MarketIndexSchema,
   // financial
   IncomeStatementSchema,
@@ -129,6 +135,7 @@ import type { FMP } from '../../src/fmp';
 export type Category =
   | 'quote'
   | 'stock'
+  | 'aftermarket'
   | 'financial'
   | 'market'
   | 'calendar'
@@ -163,10 +170,13 @@ export interface LiveCase {
 }
 
 const RANGE = { from: '2024-01-01', to: '2024-01-31' };
+// A past trading day with snapshot data available (sector/industry snapshots).
+const SNAPSHOT_DATE = '2024-06-10';
 
 export const manifest: LiveCase[] = [
   // ---- quote ----
   { category: 'quote', name: 'getQuote(AAPL)', schema: QuoteSchema, kind: 'object', call: (fmp) => fmp.quote.getQuote('AAPL') },
+  { category: 'quote', name: 'getQuoteShort(AAPL)', schema: QuoteShortSchema, kind: 'object', call: (fmp) => fmp.quote.getQuoteShort('AAPL') },
   { category: 'quote', name: 'getQuotes([AAPL,GOOGL])', schema: QuoteSchema, kind: 'array', call: (fmp) => fmp.quote.getQuotes(['AAPL', 'GOOGL']) },
   { category: 'quote', name: 'getHistoricalPrice(AAPL)', schema: HistoricalPriceResponseSchema, kind: 'object', call: (fmp) => fmp.quote.getHistoricalPrice({ symbol: 'AAPL', ...RANGE }) },
   { category: 'quote', name: 'getIntraday(AAPL,5min)', schema: IntradayPriceSchema, kind: 'array', call: (fmp) => fmp.quote.getIntraday({ symbol: 'AAPL', interval: '5min', from: '2024-01-02', to: '2024-01-03' }) },
@@ -177,14 +187,23 @@ export const manifest: LiveCase[] = [
   { category: 'stock', name: 'getDividendHistory(AAPL)', schema: StockDividendResponseSchema, kind: 'object', call: (fmp) => fmp.stock.getDividendHistory('AAPL') },
   { category: 'stock', name: 'getRealTimePrice([AAPL,MSFT])', schema: StockRealTimePriceSchema, kind: 'array', call: (fmp) => fmp.stock.getRealTimePrice(['AAPL', 'MSFT']) },
   { category: 'stock', name: 'getRealTimePriceForMultipleStocks([AAPL,MSFT])', schema: StockRealTimePriceFullSchema, kind: 'array', call: (fmp) => fmp.stock.getRealTimePriceForMultipleStocks(['AAPL', 'MSFT']) },
+  { category: 'stock', name: 'getPriceChange(AAPL)', schema: StockPriceChangeSchema, kind: 'object', call: (fmp) => fmp.stock.getPriceChange('AAPL') },
+
+  // ---- aftermarket ----
+  { category: 'aftermarket', name: 'getTrade(AAPL)', schema: AftermarketTradeSchema, kind: 'object', call: (fmp) => fmp.aftermarket.getTrade('AAPL') },
+  { category: 'aftermarket', name: 'getQuote(AAPL)', schema: AftermarketQuoteSchema, kind: 'object', call: (fmp) => fmp.aftermarket.getQuote('AAPL') },
 
   // ---- market ----
-  { category: 'market', name: 'getMarketHours()', schema: MarketHoursSchema, kind: 'object', call: (fmp) => fmp.market.getMarketHours() },
+  { category: 'market', name: 'getMarketHours()', schema: ExchangeMarketHoursSchema, kind: 'array', call: (fmp) => fmp.market.getMarketHours() },
   { category: 'market', name: 'getMarketPerformance()', schema: MarketIndexSchema, kind: 'array', call: (fmp) => fmp.market.getMarketPerformance() },
   { category: 'market', name: 'getGainers()', schema: MarketPerformanceSchema, kind: 'array', call: (fmp) => fmp.market.getGainers() },
   { category: 'market', name: 'getLosers()', schema: MarketPerformanceSchema, kind: 'array', call: (fmp) => fmp.market.getLosers() },
   { category: 'market', name: 'getMostActive()', schema: MarketPerformanceSchema, kind: 'array', call: (fmp) => fmp.market.getMostActive() },
-  { category: 'market', name: 'getSectorPerformance()', schema: MarketSectorPerformanceSchema, kind: 'array', call: (fmp) => fmp.market.getSectorPerformance() },
+  // The snapshot endpoints are accessible on Starter for RECENT dates only;
+  // a historical `date` value is a premium parameter (402), so these are
+  // plan-locked by default. Schemas were confirmed live against a recent date.
+  { category: 'market', name: 'getSectorPerformance(snapshot)', schema: MarketSectorPerformanceSchema, kind: 'array', planLocked: true, call: (fmp) => fmp.market.getSectorPerformance({ date: SNAPSHOT_DATE }) },
+  { category: 'market', name: 'getIndustryPESnapshot(snapshot)', schema: IndustryPESnapshotSchema, kind: 'array', planLocked: true, call: (fmp) => fmp.market.getIndustryPESnapshot({ date: SNAPSHOT_DATE }) },
   { category: 'market', name: 'getMarketIndex()', schema: MarketIndexSchema, kind: 'array', call: (fmp) => fmp.market.getMarketIndex() },
 
   // ---- financial ----

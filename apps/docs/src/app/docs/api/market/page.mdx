@@ -13,8 +13,8 @@ Access market-wide data including performance metrics, trading hours, sector inf
     },
     {
       method: 'GET',
-      path: '/market-hours',
-      description: 'Get market hours and status',
+      path: '/stable/all-exchange-market-hours',
+      description: 'Get trading hours and open/closed status for all exchanges',
     },
     {
       method: 'GET',
@@ -33,8 +33,13 @@ Access market-wide data including performance metrics, trading hours, sector inf
     },
     {
       method: 'GET',
-      path: '/sector-performance',
-      description: 'Get sector performance data',
+      path: '/stable/sector-performance-snapshot',
+      description: 'Get sector performance snapshot for a date',
+    },
+    {
+      method: 'GET',
+      path: '/stable/industry-pe-snapshot',
+      description: 'Get industry P/E snapshot for a date',
     },
     {
       method: 'GET',
@@ -89,40 +94,37 @@ Retrieve overall market performance data including major indices.
 
 ## Get Market Hours
 
-Retrieve current market trading hours and status information.
+Retrieve trading hours and the current open/closed status for every supported exchange. Returns one record per exchange.
 
-<CodeBlock language="typescript">{`const hours = await fmp.market.getMarketHours();`}</CodeBlock>
+<CodeBlock language="typescript">{`const hours = await fmp.market.getMarketHours();
+
+// Check whether the NASDAQ is currently open
+const nasdaq = hours.data.find(e => e.exchange === 'NASDAQ');
+console.log(nasdaq?.isMarketOpen);`}</CodeBlock>
 
 ### Example Response
 
 <CodeBlock language="typescript">
   {`{
   success: true,
-  data: {
-    stockExchangeName: 'NASDAQ',
-    stockMarketHours: {
-      openingHour: '09:30',
-      closingHour: '16:00'
+  data: [
+    {
+      exchange: 'NASDAQ',
+      name: 'NASDAQ Global Market',
+      openingHour: '09:30 AM -04:00',
+      closingHour: '04:00 PM -04:00',
+      timezone: 'America/New_York',
+      isMarketOpen: true
     },
-    stockMarketHolidays: [
-      {
-        year: 2024,
-        'Martin Luther King, Jr. Day': '2024-01-15',
-        "Presidents' Day": '2024-02-19',
-        'Good Friday': '2024-03-29',
-        'Memorial Day': '2024-05-27',
-        Juneteenth: '2024-06-19',
-        'Independence Day': '2024-07-04',
-        'Labor Day': '2024-09-02',
-        'Thanksgiving Day': '2024-11-28',
-        Christmas: '2024-12-25'
-      }
-    ],
-    isTheStockMarketOpen: true,
-    isTheEuronextMarketOpen: false,
-    isTheForexMarketOpen: true,
-    isTheCryptoMarketOpen: true
-  }
+    {
+      exchange: 'LSE',
+      name: 'London Stock Exchange',
+      openingHour: '08:00 AM +01:00',
+      closingHour: '04:30 PM +01:00',
+      timezone: 'Europe/London',
+      isMarketOpen: false
+    }
+  ]
 }`}
 </CodeBlock>
 
@@ -200,11 +202,38 @@ Retrieve the most actively traded stocks by volume.
 
 ## Get Sector Performance
 
-Retrieve performance data organized by market sectors.
+Retrieve a sector-performance snapshot for a given date, showing the average change per sector broken out by exchange. A `date` (YYYY-MM-DD) is required; `exchange` and `sector` are optional filters.
 
 <CodeBlock language="typescript">
-  {`const sectors = await fmp.market.getSectorPerformance();`}
+  {`const sectors = await fmp.market.getSectorPerformance({ date: '2024-06-10' });
+
+// Optionally filter to a single exchange
+const nyse = await fmp.market.getSectorPerformance({ date: '2024-06-10', exchange: 'NYSE' });`}
+
 </CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'date',
+      type: 'string',
+      required: true,
+      description: 'Snapshot date in YYYY-MM-DD format',
+    },
+    {
+      name: 'exchange',
+      type: 'string',
+      required: false,
+      description: 'Optional exchange filter (e.g., NASDAQ, NYSE)',
+    },
+    {
+      name: 'sector',
+      type: 'string',
+      required: false,
+      description: 'Optional sector filter (e.g., Technology)',
+    },
+  ]}
+/>
 
 ### Example Response
 
@@ -213,28 +242,75 @@ Retrieve performance data organized by market sectors.
   success: true,
   data: [
     {
+      date: '2024-06-10',
       sector: 'Technology',
-      changesPercentage: '1.25%'
+      exchange: 'NASDAQ',
+      averageChange: 1.2503
     },
     {
+      date: '2024-06-10',
       sector: 'Healthcare',
-      changesPercentage: '0.87%'
-    },
-    {
-      sector: 'Financial Services',
-      changesPercentage: '0.45%'
-    },
-    {
-      sector: 'Consumer Cyclical',
-      changesPercentage: '0.32%'
-    },
-    {
-      sector: 'Communication Services',
-      changesPercentage: '0.18%'
+      exchange: 'NASDAQ',
+      averageChange: -0.4417
     }
   ]
 }`}
 </CodeBlock>
+
+## Get Industry P/E Snapshot
+
+Retrieve an industry P/E snapshot for a given date, showing the average price-to-earnings ratio per industry broken out by exchange. A `date` (YYYY-MM-DD) is required; `exchange` and `industry` are optional filters.
+
+<CodeBlock language="typescript">
+  {`const pe = await fmp.market.getIndustryPESnapshot({ date: '2024-06-10' });`}
+</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'date',
+      type: 'string',
+      required: true,
+      description: 'Snapshot date in YYYY-MM-DD format',
+    },
+    {
+      name: 'exchange',
+      type: 'string',
+      required: false,
+      description: 'Optional exchange filter (e.g., NASDAQ, NYSE)',
+    },
+    {
+      name: 'industry',
+      type: 'string',
+      required: false,
+      description: 'Optional industry filter (e.g., Software)',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+  success: true,
+  data: [
+    {
+      date: '2024-06-10',
+      industry: 'Software - Application',
+      exchange: 'NASDAQ',
+      pe: 31.0862
+    },
+    {
+      date: '2024-06-10',
+      industry: 'Aerospace & Defense',
+      exchange: 'NASDAQ',
+      pe: 70.9790
+    }
+  ]
+}`}
+</CodeBlock>
+
+> **Note:** On the FMP Starter plan, the snapshot endpoints are available for recent dates only; older `date` values require a higher tier.
 
 ## Get Market Index
 
@@ -292,33 +368,16 @@ Retrieve detailed market index data.
 }`}
 </CodeBlock>
 
-### MarketHours
+### ExchangeMarketHours
 
 <CodeBlock language="typescript">
-{`interface MarketHours {
-  stockExchangeName: string;
-  stockMarketHours: {
-    openingHour: string;
-    closingHour: string;
-  };
-  stockMarketHolidays: MarketHoliday[];
-  isTheStockMarketOpen: boolean;
-  isTheEuronextMarketOpen: boolean;
-  isTheForexMarketOpen: boolean;
-  isTheCryptoMarketOpen: boolean;
-}
-
-interface MarketHoliday {
-year: number;
-'Martin Luther King, Jr. Day'?: string;
-"Presidents' Day"?: string;
-'Good Friday'?: string;
-'Memorial Day'?: string;
-Juneteenth?: string;
-'Independence Day'?: string;
-'Labor Day'?: string;
-'Thanksgiving Day'?: string;
-Christmas?: string;
+{`interface ExchangeMarketHours {
+  exchange: string;
+  name: string;
+  openingHour: string;
+  closingHour: string;
+  timezone: string;
+  isMarketOpen: boolean;
 }`}
 
 </CodeBlock>
@@ -327,8 +386,21 @@ Christmas?: string;
 
 <CodeBlock language="typescript">
   {`interface MarketSectorPerformance {
+  date: string;
   sector: string;
-  changesPercentage: string; // Formatted string, e.g. "1.23%"
+  exchange: string;
+  averageChange: number;
+}`}
+</CodeBlock>
+
+### IndustryPESnapshot
+
+<CodeBlock language="typescript">
+  {`interface IndustryPESnapshot {
+  date: string;
+  industry: string;
+  exchange: string;
+  pe: number;
 }`}
 </CodeBlock>
 

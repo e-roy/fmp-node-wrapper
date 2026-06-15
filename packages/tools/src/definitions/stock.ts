@@ -31,4 +31,12 @@ export const stockDefinitions: FMPToolDefinition[] = [
     execute: async ({ symbol }) =>
       toToolResponse(await getFMPClient().stock.getDividendHistory(symbol)),
   }),
+  defineTool({
+    name: 'getStockPriceChange',
+    description:
+      'Get the percentage price change for a stock across standard horizons (1D, 5D, 1M, 3M, 6M, YTD, 1Y, 3Y, 5Y, 10Y, max)',
+    inputSchema: symbolSchema,
+    execute: async ({ symbol }) =>
+      toToolResponse(await getFMPClient().stock.getPriceChange(symbol)),
+  }),
 ];

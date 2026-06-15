@@ -30,6 +30,25 @@ describe('StockEndpoints', () => {
     });
   });
 
+  describe('getPriceChange', () => {
+    it('should get price change using /stock-price-change stable endpoint', async () => {
+      const mockResponse = {
+        success: true,
+        data: { symbol: 'AAPL', '1D': 1.38, ytd: 8.74, '1Y': 48.4, max: 230231.12 },
+        error: null,
+        status: 200,
+      };
+      mockClient.getSingle.mockResolvedValue(mockResponse);
+
+      const result = await stockEndpoints.getPriceChange('AAPL');
+
+      expect(mockClient.getSingle).toHaveBeenCalledWith('/stock-price-change', 'stable', {
+        symbol: 'AAPL',
+      });
+      expect(result).toEqual(mockResponse);
+    });
+  });
+
   describe('getStockSplits', () => {
     it('should get stock splits using /historical-price-full/stock_split/{symbol} endpoint', async () => {
       const mockResponse = {

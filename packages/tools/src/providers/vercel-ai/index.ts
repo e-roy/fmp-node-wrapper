@@ -22,6 +22,7 @@ import {
   technicalDefinitions,
   senateHouseDefinitions,
   stockDefinitions,
+  aftermarketDefinitions,
   type FMPToolDefinition,
 } from '@/definitions';
 
@@ -47,6 +48,7 @@ export const valuationTools = toToolSet(valuationDefinitions);
 export const technicalTools = toToolSet(technicalDefinitions);
 export const senateHouseTools = toToolSet(senateHouseDefinitions);
 export const stockTools = toToolSet(stockDefinitions);
+export const aftermarketTools = toToolSet(aftermarketDefinitions);
 
 // Combine all tools into a single ToolSet
 export const fmpTools: ToolSet = {
@@ -67,10 +69,11 @@ export const fmpTools: ToolSet = {
   ...technicalTools,
   ...senateHouseTools,
   ...stockTools,
+  ...aftermarketTools,
 };
 
 // Individual tools for direct import
-export const { getStockQuote, getHistoricalPrice, getIntraday } = quoteTools;
+export const { getStockQuote, getStockQuoteShort, getHistoricalPrice, getIntraday } = quoteTools;
 export const {
   getCompanyProfile,
   getCompanySharesFloat,
@@ -100,8 +103,14 @@ export const {
 } = financialTools;
 export const { getInsiderTrading } = insiderTools;
 export const { getInstitutionalHolders } = institutionalTools;
-export const { getMarketPerformance, getSectorPerformance, getGainers, getLosers, getMostActive } =
-  marketTools;
+export const {
+  getMarketPerformance,
+  getSectorPerformance,
+  getIndustryPESnapshot,
+  getGainers,
+  getLosers,
+  getMostActive,
+} = marketTools;
 export const {
   getSenateTrading,
   getHouseTrading,
@@ -117,4 +126,5 @@ export const { getAnalystEstimates, getPriceTargetConsensus, getStockGrades, get
   analystTools;
 export const { getDiscountedCashFlow, getCompanyRating } = valuationTools;
 export const { getTechnicalIndicator } = technicalTools;
-export const { getMarketCap, getStockSplits, getDividendHistory } = stockTools;
+export const { getMarketCap, getStockSplits, getDividendHistory, getStockPriceChange } = stockTools;
+export const { getAftermarketTrade, getAftermarketQuote } = aftermarketTools;
