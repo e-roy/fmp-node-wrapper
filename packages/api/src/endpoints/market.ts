@@ -3,9 +3,10 @@
 import { FMPClient } from '@/client';
 import {
   APIResponse,
-  MarketHours,
+  ExchangeMarketHours,
   MarketPerformance,
   MarketSectorPerformance,
+  IndustryPESnapshot,
   MarketIndex,
 } from 'fmp-node-types';
 
@@ -13,35 +14,32 @@ export class MarketEndpoints {
   constructor(private client: FMPClient) {}
 
   /**
-   * Get current market hours and trading status
+   * Get trading hours and current open/closed status for all exchanges
    *
-   * Provides real-time information about market trading hours, including
-   * whether markets are currently open or closed, trading session times,
-   * and upcoming market holidays. Essential for determining trading
-   * availability and market status.
+   * Returns one record per supported exchange (NYSE, NASDAQ, LSE, etc.) with its
+   * opening/closing hours, timezone, and whether it is currently open. Essential
+   * for determining trading availability across global markets.
    *
-   * @returns Promise resolving to market hours data with trading status and session information
+   * @returns Promise resolving to an array of per-exchange market-hours records
    *
    * @example
    * ```typescript
-   * // Get current market status
-   * const marketHours = await fmp.market.getMarketHours();
-   * console.log(`Market is ${marketHours.data.isTheStockMarketOpen ? 'OPEN' : 'CLOSED'}`);
-   * console.log(`Current time: ${marketHours.data.currentTime}`);
-   * console.log(`Next trading day: ${marketHours.data.nextTradingDay}`);
+   * // Get market status for every exchange
+   * const hours = await fmp.market.getMarketHours();
    *
-   * // Check if it's a trading day
-   * if (marketHours.data.isTheStockMarketOpen) {
-   *   console.log('Markets are currently open for trading');
-   * } else {
-   *   console.log('Markets are closed');
-   * }
+   * // Check whether the NASDAQ is currently open
+   * const nasdaq = hours.data.find(e => e.exchange === 'NASDAQ');
+   * console.log(`NASDAQ is ${nasdaq?.isMarketOpen ? 'OPEN' : 'CLOSED'}`);
+   *
+   * // List all currently-open exchanges
+   * const open = hours.data.filter(e => e.isMarketOpen).map(e => e.exchange);
+   * console.log(`Open now: ${open.join(', ')}`);
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#market-hours|FMP Market Hours Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable/all-exchange-market-hours|FMP Exchange Market Hours Documentation}
    */
-  async getMarketHours(): Promise<APIResponse<MarketHours>> {
-    return this.client.get('/market-hours', 'v3');
+  async getMarketHours(): Promise<APIResponse<ExchangeMarketHours[]>> {
+    return this.client.get('/all-exchange-market-hours', 'stable');
   }
 
   /**
@@ -205,55 +203,68 @@ export class MarketEndpoints {
   }
 
   /**
-   * Get sector performance data for the current trading day
+   * Get a sector-performance snapshot for a given date
    *
-   * Provides performance data for all major market sectors including
-   * technology, healthcare, financials, energy, and others. Essential for
-   * sector rotation analysis, identifying leading/lagging sectors, and
-   * understanding market breadth and sector-specific trends.
+   * Returns the average price change per sector for the requested date, broken
+   * out by exchange. Essential for sector-rotation analysis and identifying
+   * leading/lagging sectors. A `date` is required (YYYY-MM-DD).
    *
-   * @returns Promise resolving to array of sector performance data with percentage changes
+   * @param params - Snapshot parameters
+   * @param params.date - The date to snapshot, in YYYY-MM-DD format (required)
+   * @param params.exchange - Optional exchange filter (e.g. 'NASDAQ', 'NYSE')
+   * @param params.sector - Optional sector filter (e.g. 'Technology')
+   *
+   * @returns Promise resolving to an array of per-sector average changes
    *
    * @example
    * ```typescript
-   * // Get sector performance for the day
-   * const sectorPerformance = await fmp.market.getSectorPerformance();
-   * console.log(`Sector performance for ${sectorPerformance.data.length} sectors:`);
-   *
-   * sectorPerformance.data.forEach(sector => {
-   *   const changeColor = sector.changesPercentage >= 0 ? 'green' : 'red';
-   *   console.log(`${sector.sector}: ${sector.changesPercentage}%`);
-   *   console.log(`  Change: ${sector.changesPercentage >= 0 ? '+' : ''}${sector.changesPercentage}%`);
+   * const snapshot = await fmp.market.getSectorPerformance({ date: '2024-06-10' });
+   * snapshot.data.forEach(s => {
+   *   console.log(`${s.sector} (${s.exchange}): ${s.averageChange.toFixed(2)}%`);
    * });
    *
-   * // Find best performing sectors
-   * const topSectors = sectorPerformance.data
-   *   .sort((a, b) => b.changesPercentage - a.changesPercentage)
-   *   .slice(0, 3);
-   * console.log('Top 3 performing sectors:');
-   * topSectors.forEach((sector, index) => {
-   *   console.log(`${index + 1}. ${sector.sector}: ${sector.changesPercentage}%`);
-   * });
-   *
-   * // Find worst performing sectors
-   * const bottomSectors = sectorPerformance.data
-   *   .sort((a, b) => a.changesPercentage - b.changesPercentage)
-   *   .slice(0, 3);
-   * console.log('Bottom 3 performing sectors:');
-   * bottomSectors.forEach((sector, index) => {
-   *   console.log(`${index + 1}. ${sector.sector}: ${sector.changesPercentage}%`);
-   * });
-   *
-   * // Check for sector rotation
-   * const gainingSectors = sectorPerformance.data.filter(sector => sector.changesPercentage > 0);
-   * const losingSectors = sectorPerformance.data.filter(sector => sector.changesPercentage < 0);
-   * console.log(`Sectors gaining: ${gainingSectors.length}, Sectors losing: ${losingSectors.length}`);
+   * // Filter to a single exchange
+   * const nyse = await fmp.market.getSectorPerformance({ date: '2024-06-10', exchange: 'NYSE' });
    * ```
    *
-   * @see {@link https://site.financialmodelingprep.com/developer/docs#sector-performance-market-overview|FMP Sector Performance Documentation}
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable/sector-performance-snapshot|FMP Sector Performance Snapshot Documentation}
    */
-  async getSectorPerformance(): Promise<APIResponse<MarketSectorPerformance[]>> {
-    return this.client.get('/sector-performance', 'v3');
+  async getSectorPerformance(params: {
+    date: string;
+    exchange?: string;
+    sector?: string;
+  }): Promise<APIResponse<MarketSectorPerformance[]>> {
+    return this.client.get('/sector-performance-snapshot', 'stable', params);
+  }
+
+  /**
+   * Get an industry P/E snapshot for a given date
+   *
+   * Returns the average price-to-earnings ratio per industry for the requested
+   * date, broken out by exchange. Useful for relative-valuation analysis across
+   * industries. A `date` is required (YYYY-MM-DD).
+   *
+   * @param params - Snapshot parameters
+   * @param params.date - The date to snapshot, in YYYY-MM-DD format (required)
+   * @param params.exchange - Optional exchange filter (e.g. 'NASDAQ', 'NYSE')
+   * @param params.industry - Optional industry filter (e.g. 'Software')
+   *
+   * @returns Promise resolving to an array of per-industry P/E ratios
+   *
+   * @example
+   * ```typescript
+   * const pe = await fmp.market.getIndustryPESnapshot({ date: '2024-06-10' });
+   * pe.data.forEach(i => console.log(`${i.industry} (${i.exchange}): ${i.pe.toFixed(1)}`));
+   * ```
+   *
+   * @see {@link https://site.financialmodelingprep.com/developer/docs/stable/industry-pe-snapshot|FMP Industry PE Snapshot Documentation}
+   */
+  async getIndustryPESnapshot(params: {
+    date: string;
+    exchange?: string;
+    industry?: string;
+  }): Promise<APIResponse<IndustryPESnapshot[]>> {
+    return this.client.get('/industry-pe-snapshot', 'stable', params);
   }
 
   /**

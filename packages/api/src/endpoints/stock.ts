@@ -6,6 +6,7 @@ import {
   StockDividendResponse,
   StockRealTimePrice,
   StockRealTimePriceFull,
+  StockPriceChange,
   StockListResponse,
   CompaniesPriceListResponse,
 } from 'fmp-node-types';
@@ -38,6 +39,26 @@ export class StockEndpoints {
    */
   async getMarketCap(symbol: string): Promise<APIResponse<MarketCap>> {
     return this.client.getSingle(`/market-capitalization/${symbol}`, 'v3');
+  }
+
+  /**
+   * Get the percentage price change for a stock across standard horizons
+   *
+   * Returns price change percentages over 1D, 5D, 1M, 3M, 6M, YTD, 1Y, 3Y, 5Y,
+   * 10Y, and max ranges in a single call. Handy for performance summaries.
+   *
+   * @param symbol - The stock symbol (e.g., 'AAPL')
+   *
+   * @returns Promise resolving to price-change percentages across horizons
+   *
+   * @example
+   * ```typescript
+   * const change = await fmp.stock.getPriceChange('AAPL');
+   * console.log(`YTD: ${change.data.ytd}% | 1Y: ${change.data['1Y']}%`);
+   * ```
+   */
+  async getPriceChange(symbol: string): Promise<APIResponse<StockPriceChange>> {
+    return this.client.getSingle('/stock-price-change', 'stable', { symbol });
   }
 
   /**

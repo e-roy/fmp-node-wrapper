@@ -1,0 +1,122 @@
+# Aftermarket Endpoints
+
+The Aftermarket Endpoints provide extended-hours (pre/post-market) trade and quote data for a symbol — the latest aftermarket trade and the latest aftermarket bid/ask.
+
+All endpoints return responses with a consistent structure: `{ success: boolean, data: T | null, error: string | null, status: number }`.
+
+## Available Methods
+
+<ApiTable
+  endpoints={[
+    {
+      method: 'GET',
+      path: '/stable/aftermarket-trade',
+      description: 'Get the latest extended-hours trade for a symbol',
+    },
+    {
+      method: 'GET',
+      path: '/stable/aftermarket-quote',
+      description: 'Get the latest extended-hours bid/ask quote for a symbol',
+    },
+  ]}
+/>
+
+## Get Aftermarket Trade
+
+Retrieve the most recent extended-hours trade, including price, trade size, and timestamp.
+
+<CodeBlock language="typescript">{`const trade = await fmp.aftermarket.getTrade('AAPL');`}</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol (e.g., "AAPL")',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: {
+      symbol: 'AAPL',
+      price: 296.28,
+      tradeSize: 1,
+      timestamp: 1781268145000
+    },
+    error: null,
+    status: 200
+}`}
+</CodeBlock>
+
+## Get Aftermarket Quote
+
+Retrieve the most recent extended-hours bid/ask quote, including bid/ask prices and sizes, volume, and timestamp.
+
+<CodeBlock language="typescript">{`const quote = await fmp.aftermarket.getQuote('AAPL');`}</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Stock symbol (e.g., "AAPL")',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: {
+      symbol: 'AAPL',
+      bidSize: 9,
+      bidPrice: 296.24,
+      askSize: 202,
+      askPrice: 296.29,
+      volume: 220963.66824,
+      timestamp: 1781268138000
+    },
+    error: null,
+    status: 200
+}`}
+</CodeBlock>
+
+## Response Types
+
+### AftermarketTrade
+
+<CodeBlock language="typescript">
+  {`interface AftermarketTrade {
+  symbol: string;
+  price: number;
+  tradeSize: number;
+  timestamp: number;
+}`}
+</CodeBlock>
+
+### AftermarketQuote
+
+<CodeBlock language="typescript">
+  {`interface AftermarketQuote {
+  symbol: string;
+  bidSize: number;
+  bidPrice: number;
+  askSize: number;
+  askPrice: number;
+  volume: number;
+  timestamp: number;
+}`}
+</CodeBlock>
+
+---
+
+**Looking for regular-session data?** See the [Quote Endpoints](/docs/api/quote) and [Stock Endpoints](/docs/api/stock).

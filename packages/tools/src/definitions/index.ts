@@ -15,6 +15,7 @@ import { valuationDefinitions } from './valuation';
 import { technicalDefinitions } from './technical';
 import { senateHouseDefinitions } from './senate-house';
 import { stockDefinitions } from './stock';
+import { aftermarketDefinitions } from './aftermarket';
 import type { FMPToolDefinition } from './types';
 
 export * from './types';
@@ -37,6 +38,7 @@ export {
   technicalDefinitions,
   senateHouseDefinitions,
   stockDefinitions,
+  aftermarketDefinitions,
 };
 
 /** Every tool definition, in a stable order shared by all providers. */
@@ -58,4 +60,5 @@ export const allDefinitions: FMPToolDefinition[] = [
   ...technicalDefinitions,
   ...senateHouseDefinitions,
   ...stockDefinitions,
+  ...aftermarketDefinitions,
 ];

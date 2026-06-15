@@ -5,6 +5,15 @@ import { defineTool, type FMPToolDefinition } from './types';
 
 const empty = z.object({});
 
+const snapshotDateSchema = z.object({
+  date: z.string().min(1).describe('Snapshot date in YYYY-MM-DD format'),
+  exchange: z
+    .string()
+    .optional()
+    .nullable()
+    .describe('Optional exchange filter (e.g., NASDAQ, NYSE)'),
+});
+
 export const marketDefinitions: FMPToolDefinition[] = [
   defineTool({
     name: 'getMarketPerformance',
@@ -14,9 +23,29 @@ export const marketDefinitions: FMPToolDefinition[] = [
   }),
   defineTool({
     name: 'getSectorPerformance',
-    description: 'Get sector performance data showing how different market sectors are performing',
-    inputSchema: empty,
-    execute: async () => toToolResponse(await getFMPClient().market.getSectorPerformance()),
+    description:
+      'Get a sector-performance snapshot for a given date, showing the average change per sector by exchange',
+    inputSchema: snapshotDateSchema,
+    execute: async ({ date, exchange }) =>
+      toToolResponse(
+        await getFMPClient().market.getSectorPerformance({
+          date,
+          exchange: exchange ?? undefined,
+        }),
+      ),
+  }),
+  defineTool({
+    name: 'getIndustryPESnapshot',
+    description:
+      'Get an industry P/E snapshot for a given date, showing the average price-to-earnings ratio per industry by exchange',
+    inputSchema: snapshotDateSchema,
+    execute: async ({ date, exchange }) =>
+      toToolResponse(
+        await getFMPClient().market.getIndustryPESnapshot({
+          date,
+          exchange: exchange ?? undefined,
+        }),
+      ),
   }),
   defineTool({
     name: 'getGainers',

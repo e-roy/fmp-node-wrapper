@@ -31,6 +31,7 @@ const apiNavigationGroups = [
     title: 'Market Data',
     items: [
       { name: 'Market Endpoints', href: '/docs/api/market' },
+      { name: 'Aftermarket Endpoints', href: '/docs/api/aftermarket' },
       { name: 'Economic Endpoints', href: '/docs/api/economic' },
       { name: 'News Endpoints', href: '/docs/api/news' },
     ],

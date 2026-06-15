@@ -23,6 +23,7 @@ import {
   technicalDefinitions,
   senateHouseDefinitions,
   stockDefinitions,
+  aftermarketDefinitions,
   type FMPToolDefinition,
 } from '@/definitions';
 
@@ -36,6 +37,7 @@ const pick = (defs: FMPToolDefinition[]): Tool<unknown>[] => defs.map(def => byN
 
 // Individual tools for direct import
 export const getStockQuote = byName.getStockQuote;
+export const getStockQuoteShort = byName.getStockQuoteShort;
 export const getHistoricalPrice = byName.getHistoricalPrice;
 export const getIntraday = byName.getIntraday;
 export const getCompanyProfile = byName.getCompanyProfile;
@@ -68,6 +70,7 @@ export const getInsiderTrading = byName.getInsiderTrading;
 export const getInstitutionalHolders = byName.getInstitutionalHolders;
 export const getMarketPerformance = byName.getMarketPerformance;
 export const getSectorPerformance = byName.getSectorPerformance;
+export const getIndustryPESnapshot = byName.getIndustryPESnapshot;
 export const getGainers = byName.getGainers;
 export const getLosers = byName.getLosers;
 export const getMostActive = byName.getMostActive;
@@ -91,6 +94,9 @@ export const getTechnicalIndicator = byName.getTechnicalIndicator;
 export const getMarketCap = byName.getMarketCap;
 export const getStockSplits = byName.getStockSplits;
 export const getDividendHistory = byName.getDividendHistory;
+export const getStockPriceChange = byName.getStockPriceChange;
+export const getAftermarketTrade = byName.getAftermarketTrade;
+export const getAftermarketQuote = byName.getAftermarketQuote;
 
 // Tool groups as arrays for OpenAI Agents
 export const quoteTools = pick(quoteDefinitions);
@@ -110,6 +116,7 @@ export const valuationTools = pick(valuationDefinitions);
 export const technicalTools = pick(technicalDefinitions);
 export const senateHouseTools = pick(senateHouseDefinitions);
 export const stockTools = pick(stockDefinitions);
+export const aftermarketTools = pick(aftermarketDefinitions);
 
 // Combine all tools into a single array
 export const fmpTools: Tool<unknown>[] = allDefinitions.map(def => byName[def.name]);

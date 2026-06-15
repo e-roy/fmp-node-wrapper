@@ -18,6 +18,11 @@ The Quote Endpoints provide unified access to real-time quotes, historical data,
     },
     {
       method: 'GET',
+      path: '/stable/quote-short',
+      description: 'Get a short quote (price, change, volume) for any asset type',
+    },
+    {
+      method: 'GET',
       path: '/historical-price-full/{symbol}',
       description: 'Get historical price data for any asset type',
     },
@@ -103,6 +108,37 @@ const forexQuote = await fmp.quote.getQuote('EURUSD');
 // ETF quote
 const etfQuote = await fmp.quote.getQuote('SPY');`}
 
+</CodeBlock>
+
+## Get Short Quote
+
+Retrieve a lean quote with just price, change, and volume. Lighter on bandwidth than the full quote — useful for frequent polling.
+
+<CodeBlock language="typescript">{`const short = await fmp.quote.getQuoteShort('AAPL');`}</CodeBlock>
+
+<ParameterTable
+  parameters={[
+    {
+      name: 'symbol',
+      type: 'string',
+      required: true,
+      description: 'Asset symbol (e.g., "AAPL", "BTCUSD", "EURUSD")',
+    },
+  ]}
+/>
+
+### Example Response
+
+<CodeBlock language="typescript">
+  {`{
+    success: true,
+    data: {
+      symbol: 'AAPL',
+      price: 150.25,
+      change: 3.15,
+      volume: 45678900
+    }
+}`}
 </CodeBlock>
 
 ## Get Multiple Quotes

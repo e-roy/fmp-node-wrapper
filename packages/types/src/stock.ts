@@ -72,6 +72,25 @@ export const StockRealTimePriceFullSchema = z.object({
 
 export type StockRealTimePriceFull = z.infer<typeof StockRealTimePriceFullSchema>;
 
+// Price change across standard horizons (stable /stock-price-change).
+// Values are percentage changes; keys mirror FMP's numeric-prefixed fields.
+export const StockPriceChangeSchema = z.object({
+  symbol: z.string(),
+  '1D': z.number(),
+  '5D': z.number(),
+  '1M': z.number(),
+  '3M': z.number(),
+  '6M': z.number(),
+  ytd: z.number(),
+  '1Y': z.number(),
+  '3Y': z.number(),
+  '5Y': z.number(),
+  '10Y': z.number(),
+  max: z.number(),
+});
+
+export type StockPriceChange = z.infer<typeof StockPriceChangeSchema>;
+
 // Generic response wrappers — kept as plain interfaces because Zod schemas
 // cannot represent open generics. Not part of the schema-first surface.
 

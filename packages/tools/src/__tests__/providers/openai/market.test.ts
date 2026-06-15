@@ -34,8 +34,11 @@ describe('OpenAI Market Tools (minimal coverage)', () => {
 
   it('getSectorPerformance executes and returns data', async () => {
     mockMarket.getSectorPerformance.mockResolvedValueOnce({ data: [{ sector: 'Technology' }] });
-    const result = await (getSectorPerformance as any).execute({});
-    expect(mockMarket.getSectorPerformance).toHaveBeenCalled();
+    const result = await (getSectorPerformance as any).execute({ date: '2024-06-10' });
+    expect(mockMarket.getSectorPerformance).toHaveBeenCalledWith({
+      date: '2024-06-10',
+      exchange: undefined,
+    });
     expect(JSON.parse(result)).toEqual([{ sector: 'Technology' }]);
   });
 

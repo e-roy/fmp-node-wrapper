@@ -1,7 +1,10 @@
 import { fmpTools } from '../../../providers/vercel-ai';
 
 const mockClient = {
-  quote: { getQuote: jest.fn().mockResolvedValue({ data: {} }) },
+  quote: {
+    getQuote: jest.fn().mockResolvedValue({ data: {} }),
+    getQuoteShort: jest.fn().mockResolvedValue({ data: {} }),
+  },
   company: {
     getCompanyProfile: jest.fn().mockResolvedValue({ data: {} }),
     getSharesFloat: jest.fn().mockResolvedValue({ data: {} }),
@@ -38,6 +41,7 @@ const mockClient = {
   market: {
     getMarketPerformance: jest.fn().mockResolvedValue({ data: [] }),
     getSectorPerformance: jest.fn().mockResolvedValue({ data: [] }),
+    getIndustryPESnapshot: jest.fn().mockResolvedValue({ data: [] }),
     getGainers: jest.fn().mockResolvedValue({ data: [] }),
     getLosers: jest.fn().mockResolvedValue({ data: [] }),
     getMostActive: jest.fn().mockResolvedValue({ data: [] }),
@@ -54,6 +58,11 @@ const mockClient = {
     getMarketCap: jest.fn().mockResolvedValue({ data: [] }),
     getStockSplits: jest.fn().mockResolvedValue({ data: [] }),
     getDividendHistory: jest.fn().mockResolvedValue({ data: [] }),
+    getPriceChange: jest.fn().mockResolvedValue({ data: {} }),
+  },
+  aftermarket: {
+    getTrade: jest.fn().mockResolvedValue({ data: {} }),
+    getQuote: jest.fn().mockResolvedValue({ data: {} }),
   },
 };
 
@@ -114,7 +123,8 @@ describe('Vercel AI Provider Index (minimal)', () => {
       getInsiderTrading: { symbol: 'AAPL', page: 0 },
       getInstitutionalHolders: { symbol: 'AAPL' },
       getMarketPerformance: {},
-      getSectorPerformance: {},
+      getSectorPerformance: { date: '2024-06-10' },
+      getIndustryPESnapshot: { date: '2024-06-10' },
       getGainers: {},
       getLosers: {},
       getMostActive: {},
@@ -127,6 +137,10 @@ describe('Vercel AI Provider Index (minimal)', () => {
       getMarketCap: { symbol: 'AAPL' },
       getStockSplits: { symbol: 'AAPL' },
       getDividendHistory: { symbol: 'AAPL' },
+      getStockQuoteShort: { symbol: 'AAPL' },
+      getStockPriceChange: { symbol: 'AAPL' },
+      getAftermarketTrade: { symbol: 'AAPL' },
+      getAftermarketQuote: { symbol: 'AAPL' },
     };
 
     for (const [name, tool] of Object.entries(fmpTools)) {

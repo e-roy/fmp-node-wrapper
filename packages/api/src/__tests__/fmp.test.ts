@@ -67,6 +67,7 @@ describe('FMP', () => {
     expect(fmp.mutualFund).toBeDefined();
     expect(fmp.economic).toBeDefined();
     expect(fmp.market).toBeDefined();
+    expect(fmp.aftermarket).toBeDefined();
   });
 
   it('should provide access to underlying client', () => {
@@ -89,6 +90,12 @@ describe('FMP', () => {
     expect(typeof fmp.market.getMarketPerformance).toBe('function');
     expect(typeof fmp.market.getGainers).toBe('function');
     expect(typeof fmp.market.getLosers).toBe('function');
+    expect(typeof fmp.market.getIndustryPESnapshot).toBe('function');
+  });
+
+  it('should have working aftermarket endpoints', () => {
+    expect(typeof fmp.aftermarket.getTrade).toBe('function');
+    expect(typeof fmp.aftermarket.getQuote).toBe('function');
   });
 
   describe('API Key Validation', () => {

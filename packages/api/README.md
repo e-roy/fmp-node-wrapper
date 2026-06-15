@@ -142,6 +142,7 @@ const fmp = new FMP({
 - **`fmp.mutualFund`** - Mutual fund data
 - **`fmp.economic`** - Economic indicators
 - **`fmp.market`** - Market-wide data and performance
+- **`fmp.aftermarket`** - Extended-hours (pre/post-market) trade and quote data
 - **`fmp.list`** - Stock lists and indices
 - **`fmp.screener`** - Stock screener with filters and available exchanges/sectors/industries/countries
 - **`fmp.calendar`** - Earnings and economic calendar
@@ -161,6 +162,9 @@ const quote = await fmp.quote.getQuote('AAPL');
 
 // Get multiple quotes
 const quotes = await fmp.quote.getQuotes(['AAPL', 'MSFT', 'GOOGL']);
+
+// Get a short quote (price, change, volume only)
+const shortQuote = await fmp.quote.getQuoteShort('AAPL');
 
 // Get historical prices
 const historical = await fmp.quote.getHistoricalPrice({
@@ -199,6 +203,9 @@ const fullRealTimeData = await fmp.stock.getRealTimePriceForMultipleStocks([
   'MSFT',
   'GOOGL',
 ]);
+
+// Get price change across horizons (1D, 5D, 1M ... 10Y, max)
+const priceChange = await fmp.stock.getPriceChange('AAPL');
 ```
 
 ### Financial Statements
@@ -233,7 +240,7 @@ const ratios = await fmp.financial.getFinancialRatios({ symbol: 'AAPL' });
 ### Market Data
 
 ```typescript
-// Get market hours
+// Get market hours + open/closed status for all exchanges
 const hours = await fmp.market.getMarketHours();
 
 // Get market performance
@@ -246,8 +253,21 @@ const losers = await fmp.market.getLosers();
 // Get most active stocks
 const mostActive = await fmp.market.getMostActive();
 
-// Get sector performance
-const sectors = await fmp.market.getSectorPerformance();
+// Get a sector-performance snapshot for a date
+const sectors = await fmp.market.getSectorPerformance({ date: '2024-06-10' });
+
+// Get an industry P/E snapshot for a date
+const industryPE = await fmp.market.getIndustryPESnapshot({ date: '2024-06-10' });
+```
+
+### Aftermarket Data
+
+```typescript
+// Get the latest extended-hours trade
+const trade = await fmp.aftermarket.getTrade('AAPL');
+
+// Get the latest extended-hours bid/ask quote
+const aftermarketQuote = await fmp.aftermarket.getQuote('AAPL');
 ```
 
 ### Economic Indicators

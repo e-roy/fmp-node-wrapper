@@ -42,6 +42,11 @@ describe('OpenAI providers index exports', () => {
       'getMarketCap',
       'getStockSplits',
       'getDividendHistory',
+      'getStockQuoteShort',
+      'getStockPriceChange',
+      'getIndustryPESnapshot',
+      'getAftermarketTrade',
+      'getAftermarketQuote',
     ];
 
     keys.forEach(k => expect(OpenAIProviders).toHaveProperty(k));
@@ -60,6 +65,7 @@ describe('OpenAI providers index exports', () => {
       'quoteTools',
       'senateHouseTools',
       'stockTools',
+      'aftermarketTools',
       'fmpTools',
     ];
 

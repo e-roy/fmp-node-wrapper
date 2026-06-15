@@ -75,6 +75,25 @@ describe('QuoteEndpoints', () => {
     });
   });
 
+  describe('getQuoteShort', () => {
+    it('should get a short quote using /quote-short stable endpoint', async () => {
+      const mockResponse = {
+        success: true,
+        data: { symbol: 'AAPL', price: 150, change: 1.2, volume: 1000000 },
+        error: null,
+        status: 200,
+      };
+      mockClient.getSingle.mockResolvedValue(mockResponse);
+
+      const result = await quoteEndpoints.getQuoteShort('AAPL');
+
+      expect(mockClient.getSingle).toHaveBeenCalledWith('/quote-short', 'stable', {
+        symbol: 'AAPL',
+      });
+      expect(result).toEqual(mockResponse);
+    });
+  });
+
   describe('getHistoricalPrice', () => {
     it('should get historical prices for any asset type', async () => {
       const mockResponse = {
