@@ -12,23 +12,23 @@ Before you begin, make sure you have:
 
 - **FMP API Key** - Get your free API key from [Financial Modeling Prep](https://site.financialmodelingprep.com/pricing-plans?couponCode=eroy) (10% discount on paid plans)
 - **OpenAI API Key** - Required for the AI model (get from [OpenAI Platform](https://platform.openai.com/api-keys))
-- **Node.js 18+** - Required for OpenAI Agents
-- **@openai/agents** - Version 0.1.0 or 0.1.1 only (other versions are not compatible)
-- **zod** - Version ^3.25.76 (required for schema validation)
+- **Node.js 20+** - Required for OpenAI Agents
+- **@openai/agents** - Version `>=0.11.0` (optional peer dependency)
+- **zod** - Version `^4.0.0` (required for schema validation)
 
 ## Installation
 
-Install the required packages:
+`@openai/agents` is an optional peer dependency, so install it alongside `fmp-ai-tools` and `zod`:
 
-<CodeBlock language="bash">{`npm install fmp-ai-tools @openai/agents@0.1.1 zod`}</CodeBlock>
+<CodeBlock language="bash">{`npm install fmp-ai-tools @openai/agents zod`}</CodeBlock>
 
-<CodeBlock language="bash">{`pnpm add fmp-ai-tools @openai/agents@0.1.1 zod`}</CodeBlock>
+<CodeBlock language="bash">{`pnpm add fmp-ai-tools @openai/agents zod`}</CodeBlock>
 
-<CodeBlock language="bash">{`yarn add fmp-ai-tools @openai/agents@0.1.1 zod`}</CodeBlock>
+<CodeBlock language="bash">{`yarn add fmp-ai-tools @openai/agents zod`}</CodeBlock>
 
-**⚠️ Important Version Requirements:**
-- `@openai/agents`: Must be exactly version 0.1.0 or 0.1.1
-- `zod`: Must be version ^3.25.76
+**Version Requirements:**
+- `@openai/agents`: `>=0.11.0`
+- `zod`: `^4.0.0`
 
 ## Quick Start
 
@@ -416,17 +416,17 @@ The tools include built-in error handling and validation:
 
 ### OpenAI Agents Version Requirements
 
-**⚠️ Critical**: FMP Tools only works with specific versions of `@openai/agents`:
+FMP Tools targets the current `@openai/agents` releases:
 
-- ✅ **Supported**: `@openai/agents@0.1.0` and `@openai/agents@0.1.1`
-- ❌ **Not Supported**: Any other versions (including newer versions)
+- ✅ **Supported**: `@openai/agents@>=0.11.0` (tested against `0.11.x`)
+- ❌ **Not Supported**: `0.1.x` and other pre-`0.11` releases
 
 ### Zod Version Requirements
 
-**⚠️ Important**: The `zod` package must be compatible with the schema validation:
+The OpenAI tool wrapper passes the Zod schema natively to the agents `tool()`, so a current `zod` is required:
 
-- ✅ **Supported**: `zod@^3.25.76` or `zod@^4.0.0`
-- ❌ **Not Supported**: Older versions of zod
+- ✅ **Supported**: `zod@^4.0.0`
+- ❌ **Not Supported**: `zod@3` and older
 
 ### Common Installation Issues
 
@@ -435,7 +435,7 @@ If you encounter errors like:
 - `Module not found: @openai/agents`
 - `TypeError: Cannot read property 'tool' of undefined`
 
-**Solution**: Ensure you're using the exact versions specified above.
+**Solution**: Ensure `@openai/agents` is `>=0.11.0` and `zod` is `^4.0.0`.
 
 ## Performance Considerations
 

@@ -6,6 +6,7 @@ import {
   ParameterTable,
   ParameterTableProps,
 } from '@/components/mdx/api-table';
+import { Callout } from '@/components/docs/callout';
 
 type MDXComponents = Record<
   string,
@@ -17,73 +18,67 @@ type MDXComponents = Record<
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
-    h1: (props: React.ComponentProps<'h1'>) => (
-      <h1 className="text-4xl font-bold mb-6" {...props} />
+    // Headings/paragraphs are styled by the global `.f-prose` rules; ids come
+    // from rehype-slug and flow through props for scroll-spy/TOC anchoring.
+    h1: (props: React.ComponentProps<'h1'>) => <h1 {...props} />,
+    h2: (props: React.ComponentProps<'h2'>) => <h2 {...props} />,
+    h3: (props: React.ComponentProps<'h3'>) => <h3 {...props} />,
+    h4: (props: React.ComponentProps<'h4'>) => (
+      <h4 className="text-[15px] font-semibold text-t1" {...props} />
     ),
-    h2: (props: React.ComponentProps<'h2'>) => (
-      <h2 className="text-2xl font-semibold mb-4" {...props} />
-    ),
-    h3: (props: React.ComponentProps<'h3'>) => (
-      <h3 className="text-xl font-semibold mb-3" {...props} />
-    ),
-    p: (props: React.ComponentProps<'p'>) => (
-      <p className="mb-4 text-neutral-700 dark:text-neutral-300" {...props} />
-    ),
+    p: (props: React.ComponentProps<'p'>) => <p {...props} />,
     ul: (props: React.ComponentProps<'ul'>) => (
-      <ul className="list-disc list-inside mb-4" {...props} />
-    ),
-    ol: (props: React.ComponentProps<'ol'>) => (
-      <ol className="list-decimal list-inside mb-4" {...props} />
-    ),
-    li: (props: React.ComponentProps<'li'>) => <li className="mb-1" {...props} />,
-    code: (props: React.ComponentProps<'code'>) => (
-      <code
-        className="bg-neutral-100 dark:bg-neutral-800 px-1 py-0.5 rounded text-sm font-mono"
+      <ul
+        className="list-disc pl-5 flex flex-col gap-1.5 text-[15px] text-t2 marker:text-t3"
         {...props}
       />
     ),
-    pre: (props: React.ComponentProps<'pre'>) => <pre className="mb-4" {...props} />,
+    ol: (props: React.ComponentProps<'ol'>) => (
+      <ol
+        className="list-decimal pl-5 flex flex-col gap-1.5 text-[15px] text-t2 marker:text-t3"
+        {...props}
+      />
+    ),
+    li: (props: React.ComponentProps<'li'>) => <li {...props} />,
+    a: (props: React.ComponentProps<'a'>) => <a {...props} />,
+    strong: (props: React.ComponentProps<'strong'>) => (
+      <strong className="font-semibold text-t1" {...props} />
+    ),
+    hr: (props: React.ComponentProps<'hr'>) => (
+      <hr className="border-0 border-t border-border my-2" {...props} />
+    ),
     blockquote: (props: React.ComponentProps<'blockquote'>) => (
-      <blockquote
-        className="border-l-4 border-blue-500 pl-4 italic text-neutral-600 dark:text-neutral-400 mb-4"
+      <blockquote className="border-l-2 border-acc-line pl-4 italic text-t3" {...props} />
+    ),
+    code: ({ className, ...props }: React.ComponentProps<'code'>) => {
+      // Fenced/block code carries a `language-*` class; inline code does not.
+      const isBlock = typeof className === 'string' && className.includes('language-');
+      if (isBlock) {
+        return <code className={className} {...props} />;
+      }
+      return <code className="f-inline-code" {...props} />;
+    },
+    pre: (props: React.ComponentProps<'pre'>) => (
+      <pre
+        className="f-code overflow-x-auto p-[18px] font-mono text-[13px] leading-[1.75] text-t2"
         {...props}
       />
     ),
     table: (props: React.ComponentProps<'table'>) => (
-      <div className="overflow-x-auto mb-4">
-        <table
-          className="min-w-full border border-neutral-300 dark:border-neutral-600 rounded-lg border-collapse"
-          {...props}
-        />
+      <div className="f-tablewrap" style={{ margin: '6px 0' }}>
+        <table className="f-table" {...props} />
       </div>
     ),
     thead: (props: React.ComponentProps<'thead'>) => <thead {...props} />,
     tbody: (props: React.ComponentProps<'tbody'>) => <tbody {...props} />,
-    tr: (props: React.ComponentProps<'tr'>) => (
-      <tr className="hover:bg-neutral-50 dark:hover:bg-neutral-700" {...props} />
-    ),
-    th: (props: React.ComponentProps<'th'>) => (
-      <th
-        className="px-4 py-3 text-left text-sm font-medium text-neutral-900 dark:text-white border-b border-neutral-300 dark:border-neutral-600 bg-neutral-50 dark:bg-neutral-800"
-        {...props}
-      />
-    ),
-    td: (props: React.ComponentProps<'td'>) => (
-      <td
-        className="px-4 py-3 text-sm text-neutral-900 dark:text-neutral-100 border-b border-neutral-300 dark:border-neutral-600"
-        {...props}
-      />
-    ),
-    a: (props: React.ComponentProps<'a'>) => (
-      <a
-        className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 underline decoration-2 underline-offset-2 hover:decoration-blue-800 dark:hover:decoration-blue-300 transition-colors duration-200 font-medium"
-        {...props}
-      />
-    ),
+    tr: (props: React.ComponentProps<'tr'>) => <tr {...props} />,
+    th: (props: React.ComponentProps<'th'>) => <th {...props} />,
+    td: (props: React.ComponentProps<'td'>) => <td {...props} />,
     // Custom components
     CodeBlock,
     ApiTable,
     ParameterTable,
+    Callout,
     ...components,
   };
 }

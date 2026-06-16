@@ -1,16 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
+import { Copy, Check } from 'lucide-react';
 
 type LazyHighlighterProps = {
   language?: string;
   filename?: string;
   code: string;
 };
-import { Copy, Check } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 
 export interface CodeBlockProps {
   children: string;
@@ -52,6 +50,37 @@ function handleIndentation(code: string): string {
   return result;
 }
 
+function normalizeLanguage(lang?: string): string | undefined {
+  if (!lang) return undefined;
+  const lower = lang.toLowerCase();
+  if (lower === 'env' || lower === 'sh' || lower === 'shell') return 'bash';
+  if (lower === 'ts') return 'typescript';
+  if (lower === 'js') return 'javascript';
+  if (lower === 'gitignore') return 'bash';
+  return lower;
+}
+
+// Friendly label for the right-aligned language tag.
+function langLabel(lang?: string): string {
+  const n = normalizeLanguage(lang);
+  switch (n) {
+    case 'typescript':
+      return 'TypeScript';
+    case 'javascript':
+      return 'JavaScript';
+    case 'tsx':
+      return 'TSX';
+    case 'bash':
+      return 'bash';
+    case 'json':
+      return 'JSON';
+    case 'diff':
+      return 'diff';
+    default:
+      return n ? n : '';
+  }
+}
+
 export function CodeBlock({
   children,
   language = 'typescript',
@@ -59,73 +88,56 @@ export function CodeBlock({
   showCopyButton = true,
 }: CodeBlockProps) {
   const [copied, setCopied] = useState(false);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Handle the indentation issue caused by MDX template literal processing
   const processedCode = handleIndentation(children);
+  const tabLabel = filename || langLabel(language);
 
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(processedCode);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error('Failed to copy code:', err);
+      return;
     }
+    setCopied(true);
+    if (timer.current) clearTimeout(timer.current);
+    timer.current = setTimeout(() => setCopied(false), 1400);
   };
 
   return (
-    <div className="my-6 group relative">
-      {filename && (
-        <div className="bg-neutral-800 text-neutral-300 px-4 py-2 rounded-t-lg text-sm font-mono flex justify-between items-center">
-          <span>{filename}</span>
+    <div className="f-code" style={{ margin: '6px 0' }}>
+      <div className="f-code-head">
+        <span className="f-code-tab on">{tabLabel}</span>
+        <span className="f-code-lang">
+          {langLabel(language)}
           {showCopyButton && (
-            <Button
-              variant="ghost"
-              size="icon"
+            <button
+              className="f-copybtn"
+              style={{ width: 26, height: 26 }}
               onClick={handleCopy}
-              className={cn(
-                'opacity-0 group-hover:opacity-100 transition-opacity duration-200 h-6 w-6 text-neutral-300 hover:text-white hover:bg-neutral-700',
-              )}
               title="Copy code"
+              aria-label="Copy code"
+              type="button"
             >
-              {copied ? <Check className="w-3 h-3 text-green-400" /> : <Copy className="w-3 h-3" />}
-            </Button>
+              {copied ? (
+                <span className="f-ok">
+                  <Check size={12} />
+                </span>
+              ) : (
+                <Copy size={13} />
+              )}
+            </button>
           )}
-        </div>
-      )}
-      <div className="relative">
-        <LazyHighlighter
-          language={normalizeLanguage(language)}
-          filename={filename}
-          code={processedCode}
-        />
-        {showCopyButton && !filename && (
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleCopy}
-            className={cn(
-              'absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-neutral-800/80 hover:bg-neutral-700 h-8 w-8 text-neutral-300 hover:text-white',
-            )}
-            title="Copy code"
-          >
-            {copied ? <Check className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
-          </Button>
-        )}
+        </span>
       </div>
+      <LazyHighlighter
+        language={normalizeLanguage(language)}
+        filename={filename}
+        code={processedCode}
+      />
     </div>
   );
-}
-
-function normalizeLanguage(lang?: string): string | undefined {
-  if (!lang) return undefined;
-  const lower = lang.toLowerCase();
-  // Map a few common aliases used in docs to registered languages
-  if (lower === 'env' || lower === 'sh' || lower === 'shell') return 'bash';
-  if (lower === 'ts') return 'typescript';
-  if (lower === 'js') return 'javascript';
-  if (lower === 'gitignore') return 'bash';
-  return lower;
 }
 
 const LazyHighlighter = dynamic<LazyHighlighterProps>(
