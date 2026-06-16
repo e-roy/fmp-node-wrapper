@@ -1,213 +1,267 @@
-'use client';
-
+import React from 'react';
 import Link from 'next/link';
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from '@/components/ui/card';
+import { ArrowRight, Star } from 'lucide-react';
+import { SiteNav } from '@/components/layout/site-nav';
 import { Footer } from '@/components/layout/footer';
+import { InstallPill } from '@/components/layout/pills';
+import { Tick } from '@/components/layout/brand';
+import { InteractiveCodeBox } from '@/components/landing/interactive-code-box';
+
+const AFFILIATE_URL =
+  'https://site.financialmodelingprep.com/pricing-plans?couponCode=eroy';
+
+function HeroAffiliate() {
+  return (
+    <a
+      href={AFFILIATE_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 10,
+        marginTop: 22,
+        padding: '7px 8px 7px 7px',
+        borderRadius: 99,
+        border: '1px solid var(--acc-line)',
+        background: 'var(--acc-dim)',
+        fontSize: 13,
+        color: 'var(--t2)',
+        alignSelf: 'flex-start',
+      }}
+    >
+      <span
+        style={{
+          fontFamily: 'var(--font-mono)',
+          fontSize: 11,
+          fontWeight: 700,
+          color: 'var(--acc)',
+          background: 'oklch(0.78 0.14 163 / 0.18)',
+          borderRadius: 99,
+          padding: '2px 9px',
+        }}
+      >
+        10% OFF
+      </span>
+      <span>
+        Get your FMP API key with code{' '}
+        <span style={{ color: 'var(--t1)', fontFamily: 'var(--font-mono)' }}>eroy</span>
+      </span>
+      <span style={{ color: 'var(--acc)', display: 'inline-flex' }}>
+        <ArrowRight size={15} />
+      </span>
+    </a>
+  );
+}
+
+const STATS: Array<[string, string]> = [
+  ['16', 'API modules'],
+  ['100%', 'typed responses'],
+  ['45+', 'endpoint tests'],
+  ['2', 'packages, one ecosystem'],
+];
+
+const WHY: Array<[string, string, string]> = [
+  ['TS', 'Type safe', 'Every response and parameter is fully typed.'],
+  ['{}', 'Easy to use', 'One client, sixteen modules, zero boilerplate.'],
+  ['$_', 'High performance', 'Thin wrapper — optimized for speed and efficiency.'],
+  ['AI', 'AI ready', 'Tool definitions for Vercel AI SDK & OpenAI Agents SDK.'],
+];
 
 export default function Home() {
   return (
-    <div className="h-full flex flex-col">
-      <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-8 lg:mb-12">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 lg:mb-6 text-neutral-900 dark:text-white">
-              FMP Node Wrapper
-            </h1>
-            <p className="text-base lg:text-lg text-neutral-500 dark:text-neutral-400">
-              A comprehensive Node.js ecosystem for the Financial Modeling Prep API
-            </p>
-            <Card className="h-full hover:shadow-lg transition-all duration-300 border-2 hover:border-orange-200 dark:hover:border-orange-800 mt-4">
-              <CardHeader className="text-center">
-                <CardDescription className="text-lg text-orange-600 dark:text-orange-400">
-                  Financial Modeling Prep API Key - Link for 10% off
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <a
-                  href="https://site.financialmodelingprep.com/pricing-plans?couponCode=eroy"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-lg text-blue-500 dark:text-blue-400 hover:underline"
-                >
-                  https://site.financialmodelingprep.com/pricing-plans?couponCode=eroy
-                </a>
-                <div className="text-sm text-neutral-600 dark:text-neutral-300 italic">
-                  I don&apos;t get paid for the working on this project. Using this link helps
-                  support the project with affiliate earnings.
-                </div>
-                <div className="flex items-center justify-center space-x-2 text-sm text-neutral-600 dark:text-neutral-300">
-                  <span>If this project helps you, consider giving it a</span>
-                  <a
-                    href="https://github.com/e-roy/fmp-node-wrapper"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center space-x-1 text-yellow-600 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300 transition-colors font-medium"
-                  >
-                    <svg
-                      className="w-4 h-4 fill-current"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                    </svg>
-                    <span>star</span>
-                  </a>
-                  <span>on GitHub.</span>
-                </div>
-              </CardContent>
-            </Card>
+    <div className="flex flex-col min-h-screen">
+      <SiteNav active="api" />
+
+      {/* split hero with interactive code box */}
+      <div className="f-hero">
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div className="f-chips" style={{ marginBottom: 22 }}>
+            <span className="f-chip">MIT</span>
+            <span className="f-chip">TypeScript 5</span>
+            <span className="f-chip">Node 20+</span>
           </div>
-
-          {/* Main Library Selection */}
-          <div className="grid gap-6 lg:gap-8 sm:grid-cols-1 md:grid-cols-2 mb-12 lg:mb-16">
-            {/* FMP Node API */}
-            <Card className="h-full hover:shadow-lg transition-all duration-300 border-2 hover:border-blue-200 dark:hover:border-blue-800">
-              <CardHeader className="text-center">
-                <div className="text-3xl lg:text-4xl mb-3 lg:mb-4">🚀</div>
-                <CardTitle className="text-2xl lg:text-3xl text-neutral-900 dark:text-white">
-                  FMP Node API
-                </CardTitle>
-                <CardDescription className="text-base lg:text-lg text-neutral-600 dark:text-neutral-300">
-                  Core API wrapper for direct FMP API access
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <div className="flex items-center text-sm text-neutral-600 dark:text-neutral-300">
-                    <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                    Complete TypeScript support
-                  </div>
-                  <div className="flex items-center text-sm text-neutral-600 dark:text-neutral-300">
-                    <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                    All FMP endpoints covered
-                  </div>
-                  <div className="flex items-center text-sm text-neutral-600 dark:text-neutral-300">
-                    <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                    Built-in validation & error handling
-                  </div>
-                  <div className="flex items-center text-sm text-neutral-600 dark:text-neutral-300">
-                    <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                    Modular design for flexibility
-                  </div>
-                </div>
-
-                <div className="bg-neutral-50 dark:bg-neutral-900 p-3 rounded-lg">
-                  <code className="text-sm text-neutral-800 dark:text-neutral-200">
-                    npm install fmp-node-api
-                  </code>
-                </div>
-              </CardContent>
-              <CardFooter className="justify-center">
-                <Link
-                  href="/docs/api"
-                  className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
-                >
-                  View API Documentation →
-                </Link>
-              </CardFooter>
-            </Card>
-
-            {/* FMP Tools */}
-            <Card className="h-full hover:shadow-lg transition-all duration-300 border-2 hover:border-purple-200 dark:hover:border-purple-800">
-              <CardHeader className="text-center">
-                <div className="text-3xl lg:text-4xl mb-3 lg:mb-4">🤖</div>
-                <CardTitle className="text-2xl lg:text-3xl text-neutral-900 dark:text-white">
-                  FMP Tools
-                </CardTitle>
-                <CardDescription className="text-base lg:text-lg text-neutral-600 dark:text-neutral-300">
-                  AI tools for Vercel AI SDK and LLM integrations
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <div className="flex items-center text-sm text-neutral-600 dark:text-neutral-300">
-                    <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
-                    Vercel AI SDK integration
-                  </div>
-                  <div className="flex items-center text-sm text-neutral-600 dark:text-neutral-300">
-                    <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
-                    Ready-to-use AI tools
-                  </div>
-                  <div className="flex items-center text-sm text-neutral-600 dark:text-neutral-300">
-                    <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
-                    Multi-platform AI support
-                  </div>
-                  <div className="flex items-center text-sm text-neutral-600 dark:text-neutral-300">
-                    <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
-                    Chatbot & assistant ready
-                  </div>
-                </div>
-
-                <div className="bg-neutral-50 dark:bg-neutral-900 p-3 rounded-lg">
-                  <code className="text-sm text-neutral-800 dark:text-neutral-200">
-                    npm install fmp-ai-tools
-                  </code>
-                </div>
-              </CardContent>
-              <CardFooter className="justify-center">
-                <Link
-                  href="/docs/tools"
-                  className="inline-flex items-center px-6 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium"
-                >
-                  View Tools Documentation →
-                </Link>
-              </CardFooter>
-            </Card>
+          <h1 style={{ textWrap: 'balance' }}>
+            The Node.js toolkit for Financial Modeling Prep
+          </h1>
+          <p
+            style={{
+              fontSize: 17,
+              color: 'var(--t2)',
+              marginTop: 18,
+              maxWidth: 480,
+              textWrap: 'pretty',
+            }}
+          >
+            One typed client for quotes, financials, and market data — plus ready-made tools for
+            AI SDK integrations.
+          </p>
+          <div
+            style={{
+              display: 'flex',
+              gap: 12,
+              marginTop: 28,
+              alignItems: 'center',
+              flexWrap: 'wrap',
+            }}
+          >
+            <Link className="f-btn primary" href="/docs/api">
+              Get started →
+            </Link>
+            <Link className="f-btn ghost" href="/docs/tools">
+              AI Tools docs
+            </Link>
+            <a
+              className="f-btn ghost"
+              href="https://github.com/e-roy/fmp-node-wrapper"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Star size={15} /> Star on GitHub
+            </a>
           </div>
-
-          {/* Features Overview */}
-          <Card className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-blue-200 dark:border-blue-800">
-            <CardHeader>
-              <CardTitle className="text-xl lg:text-2xl text-neutral-900 dark:text-white text-center">
-                <h2>Why Choose FMP Node Wrapper?</h2>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                <div className="text-center">
-                  <div className="text-3xl mb-2">⚡</div>
-                  <h3 className="font-semibold mb-2 text-neutral-900 dark:text-white">
-                    High Performance
-                  </h3>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-300">
-                    Optimized for speed and efficiency
-                  </p>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl mb-2">🛡️</div>
-                  <h3 className="font-semibold mb-2 text-neutral-900 dark:text-white">Type Safe</h3>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-300">
-                    Full TypeScript support throughout
-                  </p>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl mb-2">🔧</div>
-                  <h3 className="font-semibold mb-2 text-neutral-900 dark:text-white">
-                    Easy to Use
-                  </h3>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-300">
-                    Simple, intuitive API design
-                  </p>
-                </div>
-                <div className="text-center">
-                  <div className="text-3xl mb-2">🤖</div>
-                  <h3 className="font-semibold mb-2 text-neutral-900 dark:text-white">AI Ready</h3>
-                  <p className="text-sm text-neutral-600 dark:text-neutral-300">
-                    Built-in AI tool integrations
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <InstallPill
+            command="npm install fmp-node-api"
+            style={{ marginTop: 16, alignSelf: 'flex-start' }}
+          />
+          <HeroAffiliate />
         </div>
-      </main>
+        <div>
+          <InteractiveCodeBox />
+          <p
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: 11,
+              color: 'var(--t3)',
+              marginTop: 12,
+              textAlign: 'center',
+            }}
+          >
+            Pick an example, then press Run — illustrative responses.
+          </p>
+        </div>
+      </div>
+
+      {/* stats strip */}
+      <div className="f-statsband">
+        <div className="f-stats">
+          {STATS.map(([n, l]) => (
+            <div className="f-stat" key={l}>
+              <div className="num">{n}</div>
+              <div className="lbl">{l}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* package cards */}
+      <div className="f-pkgs">
+        <div className="f-card" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <span className="f-glyph" style={{ color: 'var(--acc)' }}>
+              $_
+            </span>
+            <div>
+              <h2 style={{ fontSize: 19, fontWeight: 600, letterSpacing: '-0.01em' }}>
+                fmp-node-api
+              </h2>
+              <p style={{ fontSize: 13.5, color: 'var(--t3)' }}>
+                Core API wrapper for direct FMP access
+              </p>
+            </div>
+            <span className="f-chip acc" style={{ marginLeft: 'auto' }}>
+              v0.2.x
+            </span>
+          </div>
+          <ul className="f-check">
+            <li>
+              <Tick /> Complete TypeScript support
+            </li>
+            <li>
+              <Tick /> All FMP stable endpoints covered
+            </li>
+            <li>
+              <Tick /> Built-in validation &amp; error handling
+            </li>
+            <li>
+              <Tick /> Modular design — import what you need
+            </li>
+          </ul>
+          <InstallPill
+            command="npm install fmp-node-api"
+            style={{ width: '100%', justifyContent: 'flex-start' }}
+          />
+          <Link href="/docs/api" style={{ color: 'var(--acc)', fontSize: 14, fontWeight: 550 }}>
+            API documentation →
+          </Link>
+        </div>
+
+        <div className="f-card" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+            <span className="f-glyph" style={{ color: 'var(--vio)' }}>
+              AI
+            </span>
+            <div>
+              <h2 style={{ fontSize: 19, fontWeight: 600, letterSpacing: '-0.01em' }}>
+                fmp-ai-tools
+              </h2>
+              <p style={{ fontSize: 13.5, color: 'var(--t3)' }}>
+                Financial tools for LLM integrations
+              </p>
+            </div>
+            <span className="f-chip vio" style={{ marginLeft: 'auto' }}>
+              v0.2.x
+            </span>
+          </div>
+          <ul className="f-check vio">
+            <li>
+              <Tick violet /> Vercel AI SDK integration
+            </li>
+            <li>
+              <Tick violet /> OpenAI Agents SDK integration
+            </li>
+            <li>
+              <Tick violet /> Ready-to-use tool definitions
+            </li>
+            <li>
+              <Tick violet /> Chatbot &amp; assistant ready
+            </li>
+          </ul>
+          <InstallPill
+            command="npm install fmp-ai-tools"
+            style={{ width: '100%', justifyContent: 'flex-start' }}
+          />
+          <Link href="/docs/tools" style={{ color: 'var(--vio)', fontSize: 14, fontWeight: 550 }}>
+            Tools documentation →
+          </Link>
+        </div>
+      </div>
+
+      {/* why grid */}
+      <div className="f-whywrap">
+        <p className="f-sectionlabel" style={{ marginBottom: 22 }}>
+          Why this wrapper
+        </p>
+        <div className="f-why">
+          {WHY.map(([g, t, d]) => (
+            <div key={t} style={{ borderTop: '1px solid var(--line2)', paddingTop: 18 }}>
+              <span
+                className="f-glyph"
+                style={{ width: 32, height: 32, fontSize: 11.5, marginBottom: 12 }}
+              >
+                {g}
+              </span>
+              <h3 style={{ fontSize: 15, fontWeight: 600, marginTop: 10 }}>{t}</h3>
+              <p
+                style={{ fontSize: 13.5, color: 'var(--t3)', marginTop: 4, textWrap: 'pretty' }}
+              >
+                {d}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+
       <Footer />
     </div>
   );

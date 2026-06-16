@@ -12,8 +12,9 @@ Before you begin, make sure you have:
 
 - **FMP API Key** - Get your free API key from [Financial Modeling Prep](https://site.financialmodelingprep.com/pricing-plans?couponCode=eroy) (10% discount on paid plans)
 - **OpenAI API Key** - Required for the AI model (get from [OpenAI Platform](https://platform.openai.com/api-keys))
-- **Node.js 18+** - Required for Vercel AI SDK
-- **zod** - Version ^3.25.76 (required for schema validation)
+- **Node.js 20+** - Required for the Vercel AI SDK
+- **ai** - Version `>=6.0.0` (Vercel AI SDK)
+- **zod** - Version `^4.0.0` (required for schema validation)
 
 ## Installation
 
@@ -25,8 +26,9 @@ Install the required packages:
 
 <CodeBlock language="bash">{`yarn add fmp-ai-tools ai @ai-sdk/openai zod`}</CodeBlock>
 
-**⚠️ Version Requirements:**
-- `zod`: Must be version ^3.25.76
+**Version Requirements:**
+- `ai`: `>=6.0.0`
+- `zod`: `^4.0.0`
 
 ## Quick Start
 
