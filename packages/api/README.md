@@ -549,7 +549,7 @@ pnpm test:coverage      # Generate coverage report
 Run from the repo root (it builds `fmp-node-types` first so the runner uses fresh schemas):
 
 ```bash
-pnpm test:live                                   # all seeded cases
+pnpm test:live                                   # every manifest case (plan-locked excluded)
 pnpm test:live --category quote,stock            # only these categories
 pnpm test:live --endpoint getQuote               # cases whose name matches
 pnpm test:live --dry-run                         # list cases, make NO API calls
@@ -563,9 +563,9 @@ Each result is classified:
 - **SKIP** — plan-locked (HTTP 402/403) or rate/quota limited (429)
 - **DRIFT** — extra top-level fields, or a non-nullable field came back `null`
 
-Flags: `--delay <ms>` (default 400) paces calls; `--max-calls <n>` (default 50) caps live calls; `--include-locked` also runs cases marked `planLocked`; `--fail-on-drift` makes DRIFT fail the exit code. The runner is sequential and throttled to stay within limited API plans — the first full run doubles as a calibration pass: mark any consistently plan-locked endpoints `planLocked: true` in `scripts/live/manifest.ts` so later default runs skip them. Exits non-zero when any case FAILs.
+Flags: `--delay <ms>` (default 400) paces calls; `--timeout <ms>` (default 30000) is the per-request timeout; `--sample <n>` (default 3) is how many array rows are validated per response; `--max-calls <n>` optionally caps live calls (default: no cap — every selected case runs; a retry can exceed the cap by one); `--include-locked` also runs cases marked `planLocked`; `--fail-on-drift` makes DRIFT fail the exit code. The runner is sequential and throttled to stay within limited API plans (a full run is ~120 calls in ~1–2 minutes) and retries a transient failure (network error / timeout / 5xx) once. Mark any consistently plan-locked endpoints `planLocked: true` in `scripts/live/manifest.ts` so default runs skip them. Exits non-zero when any case FAILs.
 
-> Coverage note: the seeded manifest currently covers the `quote`, `stock`, `financial`, and `market` categories. The classifier logic is unit-tested in `src/__tests__/live/validate.test.ts` (no API key needed).
+> Coverage note: the manifest covers every endpoint category. The classifier logic is unit-tested in `src/__tests__/live/validate.test.ts` (no API key needed).
 
 ## Development
 
@@ -671,7 +671,7 @@ src/
 scripts/
 ├── test-endpoint.ts       # Manual live-API endpoint inspector (raw JSON, one endpoint)
 └── live/                  # Live-API shape-check tool (pnpm test:live)
-    ├── run.ts             # CLI runner (flags, throttle, budget, summary)
+    ├── run.ts             # CLI runner (flags, throttle, retry, summary)
     ├── manifest.ts        # Data-driven registry of cases (endpoint + inputs + schema)
     └── tsconfig.json      # Type-checks the runner (pnpm type-check:live)
 ```
