@@ -23,7 +23,7 @@ All endpoints return responses with a consistent structure: `{ success: boolean,
 
 ## Get Aftermarket Trade
 
-Retrieve the most recent extended-hours trade, including price, trade size, and timestamp.
+Retrieve the most recent extended-hours trade, including price, trade size, and timestamp. `tradeSize` is `null` when FMP reports no trade size (for example after the post-market session closes).
 
 <CodeBlock language="typescript">{`const trade = await fmp.aftermarket.getTrade('AAPL');`}</CodeBlock>
 
@@ -98,7 +98,7 @@ Retrieve the most recent extended-hours bid/ask quote, including bid/ask prices 
   {`interface AftermarketTrade {
   symbol: string;
   price: number;
-  tradeSize: number;
+  tradeSize: number | null;
   timestamp: number;
 }`}
 </CodeBlock>

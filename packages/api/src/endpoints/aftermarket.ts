@@ -11,6 +11,7 @@ export class AftermarketEndpoints {
    *
    * Returns the most recent aftermarket trade including price, trade size, and
    * timestamp. Useful for tracking price action outside regular trading hours.
+   * `tradeSize` is `null` when FMP reports no trade size (e.g. after the post-market session closes).
    *
    * @param symbol - The stock symbol (e.g., 'AAPL')
    *

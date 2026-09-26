@@ -70,6 +70,7 @@ Retrieve senate trading data for a specific stock symbol.
   data: [
     {
       "symbol": "AAPL",
+      "senateID": "W000802",
       "disclosureDate": "2014-02-27",
       "transactionDate": "2014-02-10",
       "firstName": "Sheldon",
@@ -126,6 +127,7 @@ Retrieve senate trading data through RSS feed with pagination.
   data: [
     {
       "symbol": "AAPL",
+      "senateID": "W000802",
       "disclosureDate": "2014-02-27",
       "transactionDate": "2014-02-10",
       "firstName": "Sheldon",
@@ -176,6 +178,7 @@ Retrieve senate trading data for a specific senator by name.
   data: [
     {
       symbol: "AAPL",
+      senateID: "M000934",
       disclosureDate: "2024-01-15",
       transactionDate: "2024-01-10",
       firstName: "Jerry",
@@ -226,6 +229,7 @@ Retrieve house trading data for a specific stock symbol.
   data: [
     {
       "symbol": "AAPL",
+      "senateID": "M001157",
       "disclosureDate": "2018-07-09",
       "transactionDate": "2017-06-27",
       "firstName": "K. Michael",
@@ -282,6 +286,7 @@ Retrieve house trading data through RSS feed with pagination.
   data: [
     {
       "symbol": "AAPL",
+      "senateID": "M001157",
       "disclosureDate": "2018-07-09",
       "transactionDate": "2017-06-27",
       "firstName": "K. Michael",
@@ -332,6 +337,7 @@ Retrieve house trading data for a specific representative by name.
   data: [
     {
       symbol: "TSLA",
+      senateID: "P000197",
       disclosureDate: "2024-01-20",
       transactionDate: "2024-01-15",
       firstName: "Nancy",
@@ -360,6 +366,7 @@ Retrieve house trading data for a specific representative by name.
 <CodeBlock language="typescript">
   {`interface SenateTradingResponse {
   symbol: string;
+  senateID: string;
   disclosureDate: string;
   transactionDate: string;
   firstName: string;
@@ -382,6 +389,7 @@ Retrieve house trading data for a specific representative by name.
 <CodeBlock language="typescript">
   {`interface HouseTradingResponse {
   symbol: string;
+  senateID: string;
   disclosureDate: string;
   transactionDate: string;
   firstName: string;
@@ -404,6 +412,7 @@ Retrieve house trading data for a specific representative by name.
 <CodeBlock language="typescript">
   {`interface SenateHouseTradingByNameResponse {
   symbol: string;
+  senateID: string;
   disclosureDate: string;
   transactionDate: string;
   firstName: string;

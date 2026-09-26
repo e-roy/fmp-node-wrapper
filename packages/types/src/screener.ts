@@ -36,6 +36,7 @@ export const ScreenerSchema = z.object({
     price: z.number(),
     lastAnnualDividend: z.number().nullable(),
     volume: z.number(),
+    avgVolume: z.number(),
     exchange: z.string(),
     exchangeShortName: z.string(),
     country: z.string(),
