@@ -92,7 +92,7 @@ export async function POST(req: Request) {
 FMP_API_KEY=your_api_key_here
 ```
 
-Get your API key from [Financial Modeling Prep](https://site.financialmodelingprep.com/pricing-plans?couponCode=eroy) and get your API key. This link will get you 10% off.
+Get an API key from [Financial Modeling Prep](https://site.financialmodelingprep.com/pricing-plans).
 
 The tools internally use the `fmp-node-api` library, which reads this environment variable to authenticate with the Financial Modeling Prep API.
 

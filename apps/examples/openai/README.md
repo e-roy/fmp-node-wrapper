@@ -17,7 +17,7 @@ This example wires up the full FMP tool set via `fmpTools` from `fmp-ai-tools/op
 
 ### Prerequisites
 
-1. **FMP API Key** - Get your API key from [Financial Modeling Prep](https://site.financialmodelingprep.com/pricing-plans?couponCode=eroy) - Link for 10% off
+1. **FMP API Key** - Get an API key from [Financial Modeling Prep](https://site.financialmodelingprep.com/pricing-plans)
 2. **OpenAI API Key** - Get your API key from [OpenAI](https://platform.openai.com/api-keys)
 
 ### Environment Variables

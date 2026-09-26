@@ -830,34 +830,6 @@
   margin-top: 2px;
 }
 
-/* affiliate banner */
-.f-affiliate {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  border: 1px solid var(--line2);
-  border-radius: 12px;
-  background: var(--bg1);
-  padding: 14px 20px;
-  font-size: 13.5px;
-  color: var(--t2);
-}
-.f-affiliate .tag {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--acc);
-  background: var(--acc-dim);
-  border: 1px solid var(--acc-line);
-  border-radius: 99px;
-  padding: 3px 10px;
-  flex-shrink: 0;
-}
-.f-affiliate .arrow {
-  margin-left: auto;
-  color: var(--acc);
-}
-
 /* search box (docs header) */
 .f-search {
   display: flex;
@@ -1134,9 +1106,6 @@
   .f-ic-tab {
     padding: 6px 9px;
     font-size: 11.5px;
-  }
-  .f-affiliate {
-    flex-wrap: wrap;
   }
 }
 
