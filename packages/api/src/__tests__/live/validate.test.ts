@@ -3,6 +3,7 @@ import {
   classifyTransport,
   classifyShape,
   classifyResult,
+  isTransientFailure,
   type TransportResult,
 } from '../../live/validate';
 
@@ -43,6 +44,27 @@ describe('classifyTransport', () => {
 
   it('classifies other failures as FAIL', () => {
     expect(classifyTransport({ success: false, data: null, error: 'boom', status: 500 })?.outcome).toBe('FAIL');
+  });
+});
+
+describe('isTransientFailure', () => {
+  const fail = (status: number, error = 'boom'): TransportResult => ({ success: false, data: null, error, status });
+
+  it('retries a client-reported network error / timeout', () => {
+    expect(isTransientFailure(fail(500, 'Network error: timeout of 10000ms exceeded'))).toBe(true);
+  });
+
+  it('retries a 5xx from FMP', () => {
+    expect(isTransientFailure(fail(502))).toBe(true);
+    expect(isTransientFailure(fail(503))).toBe(true);
+  });
+
+  it('never retries success, 4xx, plan-locks or rate limits', () => {
+    expect(isTransientFailure(ok())).toBe(false);
+    expect(isTransientFailure(fail(404))).toBe(false);
+    expect(isTransientFailure(fail(402, 'Restricted Endpoint'))).toBe(false);
+    expect(isTransientFailure(fail(429, 'Limit Reach'))).toBe(false);
+    expect(isTransientFailure(fail(500, 'Premium Query Parameter'))).toBe(false);
   });
 });
 

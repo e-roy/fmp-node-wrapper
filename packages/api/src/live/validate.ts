@@ -56,6 +56,16 @@ export function classifyTransport(res: TransportResult): Classification | null {
   return { outcome: 'FAIL', detail: `request failed (${res.status}): ${res.error || 'unknown error'}` };
 }
 
+/**
+ * True when a failed request is worth retrying once: no HTTP response
+ * (timeout / reset, which the client reports as status 500) or a 5xx from FMP.
+ * Plan-locks, auth, other 4xx and rate limits are deterministic and never retried.
+ */
+export function isTransientFailure(res: TransportResult): boolean {
+  if (res.success || res.status < 500) return false;
+  return classifyError(res.status, res.error ?? '').errorType === 'unknown';
+}
+
 /** Classify a single object value against an (object) schema. */
 export function classifyShape(schema: z.ZodTypeAny, value: unknown): Classification {
   const driftDetails: string[] = [];

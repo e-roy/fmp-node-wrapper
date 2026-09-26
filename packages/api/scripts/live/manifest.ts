@@ -172,6 +172,11 @@ export interface LiveCase {
 const RANGE = { from: '2024-01-01', to: '2024-01-31' };
 // A past trading day with snapshot data available (sector/industry snapshots).
 const SNAPSHOT_DATE = '2024-06-10';
+// News on Starter only serves a recent window (a `from` older than ~6–12 months is a
+// premium parameter → 402), so news cases query the trailing 30 days.
+const DAY_MS = 24 * 60 * 60 * 1000;
+const isoDate = (d: Date): string => d.toISOString().slice(0, 10);
+const NEWS_RANGE = { from: isoDate(new Date(Date.now() - 30 * DAY_MS)), to: isoDate(new Date()) };
 
 export const manifest: LiveCase[] = [
   // ---- quote ----
@@ -290,12 +295,12 @@ export const manifest: LiveCase[] = [
 
   // ---- news ----
   { category: 'news', name: 'getArticles()', schema: ArticleSchema, kind: 'array', call: (fmp) => fmp.news.getArticles({ page: 0, limit: 10 }) },
-  { category: 'news', name: 'getStockNews()', schema: NewsSchema, kind: 'array', call: (fmp) => fmp.news.getStockNews({ from: '2025-07-01', to: '2025-07-31', page: 0, limit: 10 }) },
-  { category: 'news', name: 'getCryptoNews()', schema: NewsSchema, kind: 'array', call: (fmp) => fmp.news.getCryptoNews({ from: '2025-07-01', to: '2025-07-31', page: 0, limit: 10 }) },
-  { category: 'news', name: 'getForexNews()', schema: NewsSchema, kind: 'array', call: (fmp) => fmp.news.getForexNews({ from: '2025-07-01', to: '2025-07-31', page: 0, limit: 10 }) },
-  { category: 'news', name: 'getStockNewsBySymbol([TSLA,GOOGL])', schema: NewsSchema, kind: 'array', call: (fmp) => fmp.news.getStockNewsBySymbol({ symbols: ['TSLA', 'GOOGL'], from: '2025-07-01', to: '2025-07-31', page: 0, limit: 10 }) },
-  { category: 'news', name: 'getCryptoNewsBySymbol([BTCUSD])', schema: NewsSchema, kind: 'array', call: (fmp) => fmp.news.getCryptoNewsBySymbol({ symbols: ['BTCUSD', 'ETHUSD'], from: '2025-07-01', to: '2025-07-31', page: 0, limit: 10 }) },
-  { category: 'news', name: 'getForexNewsBySymbol([EURUSD])', schema: NewsSchema, kind: 'array', call: (fmp) => fmp.news.getForexNewsBySymbol({ symbols: ['EURUSD', 'GBPUSD'], from: '2025-07-01', to: '2025-07-31', page: 0, limit: 10 }) },
+  { category: 'news', name: 'getStockNews()', schema: NewsSchema, kind: 'array', call: (fmp) => fmp.news.getStockNews({ ...NEWS_RANGE, page: 0, limit: 10 }) },
+  { category: 'news', name: 'getCryptoNews()', schema: NewsSchema, kind: 'array', call: (fmp) => fmp.news.getCryptoNews({ ...NEWS_RANGE, page: 0, limit: 10 }) },
+  { category: 'news', name: 'getForexNews()', schema: NewsSchema, kind: 'array', call: (fmp) => fmp.news.getForexNews({ ...NEWS_RANGE, page: 0, limit: 10 }) },
+  { category: 'news', name: 'getStockNewsBySymbol([TSLA,GOOGL])', schema: NewsSchema, kind: 'array', call: (fmp) => fmp.news.getStockNewsBySymbol({ symbols: ['TSLA', 'GOOGL'], ...NEWS_RANGE, page: 0, limit: 10 }) },
+  { category: 'news', name: 'getCryptoNewsBySymbol([BTCUSD])', schema: NewsSchema, kind: 'array', call: (fmp) => fmp.news.getCryptoNewsBySymbol({ symbols: ['BTCUSD', 'ETHUSD'], ...NEWS_RANGE, page: 0, limit: 10 }) },
+  { category: 'news', name: 'getForexNewsBySymbol([EURUSD])', schema: NewsSchema, kind: 'array', call: (fmp) => fmp.news.getForexNewsBySymbol({ symbols: ['EURUSD', 'GBPUSD'], ...NEWS_RANGE, page: 0, limit: 10 }) },
 
   // ---- screener ----
   { category: 'screener', name: 'getScreener(limit=10)', schema: ScreenerSchema, kind: 'array', call: (fmp) => fmp.screener.getScreener({ limit: 10 }) },
