@@ -423,11 +423,11 @@ limit: 20
 
 <CodeBlock language="typescript">
   {`interface News {
-  symbol: string;
+  symbol: string | null; // null on market-wide stories with no single ticker
   publishedDate: string;
   publisher: string;
   title: string;
-  image: string;
+  image: string | null;
   site: string;
   text: string;
   url: string;
