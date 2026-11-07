@@ -6,8 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Monorepo managed with **pnpm workspaces** + **Turborepo**. Three published packages plus apps:
 
-- `packages/types/` (`fmp-node-types`) — shared TypeScript interfaces, one file per endpoint category. No runtime code. Internal-only; not published standalone but bundled into the others.
-- `packages/api/` (`fmp-node-api`) — the main API wrapper. Depends on `fmp-node-types`.
+- `packages/types/` (`fmp-node-types`) — canonical Zod schemas + `z.infer` types, one file per endpoint category. Published, and a real runtime `dependency` of `fmp-node-api` (it carries the `zod@3` that the types resolve against, so consumers on zod 4 still get real types).
+- `packages/api/` (`fmp-node-api`) — the main API wrapper. Depends on `fmp-node-types` and re-exports its types **type-only** (`export type *`); the runtime JS never ships the schemas. tsup's d.ts bundler rewrites `export type *` to `export *`, so `scripts/restore-type-only-exports.mjs` runs after every build to restore it (and fails the build if the output changes).
 - `packages/tools/` (`fmp-ai-tools`) — AI/LLM tool definitions. Depends on `fmp-node-api` and `fmp-node-types`.
 - `apps/docs/` — Next.js 15 documentation site that consumes `fmp-node-api`.
 - `apps/examples/vercel-ai/` — example Next.js app using `fmp-ai-tools`.

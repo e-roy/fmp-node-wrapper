@@ -12,7 +12,8 @@
       "types": "./dist/providers/openai/index.d.ts",
       "import": "./dist/providers/openai/index.mjs",
       "require": "./dist/providers/openai/index.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "sideEffects": false,
   "files": [

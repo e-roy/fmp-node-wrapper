@@ -21,13 +21,14 @@
       "types": "./dist/utils/validation.d.ts",
       "import": "./dist/utils/validation.mjs",
       "require": "./dist/utils/validation.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "files": [
     "dist/**"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && node scripts/restore-type-only-exports.mjs",
     "dev": "tsup --watch",
     "lint": "npx eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
@@ -74,13 +75,13 @@
   },
   "homepage": "https://fmp-node-wrapper-docs.vercel.app",
   "dependencies": {
-    "axios": "^1.13.0"
+    "axios": "^1.13.0",
+    "fmp-node-types": "workspace:*"
   },
   "devDependencies": {
     "@types/jest": "^29.5.12",
     "@types/node": "^20.11.0",
     "dotenv": "^16.3.1",
-    "fmp-node-types": "workspace:*",
     "jest": "^29.7.0",
     "prettier": "^3.2.5",
     "ts-jest": "^29.1.2",
