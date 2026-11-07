@@ -60,7 +60,9 @@ export const IPOCalendarSchema = z.object({
     actions: z.string(),
     shares: z.number().nullable(),
     priceRange: z.string().nullable(),
-    marketCap: z.number().nullable()
+    marketCap: z.number().nullable(),
+    // Offering size in USD; null until priced (verified live 2026-11-07).
+    dealSize: z.number().nullable()
 });
 
 export const SplitsCalendarSchema = z.object({
