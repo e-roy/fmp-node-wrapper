@@ -1,4 +1,4 @@
-import { toToolResponse, toToolError } from '@/utils/format-response';
+import { limitRows, toToolResponse, toToolError } from '@/utils/format-response';
 
 describe('toToolResponse', () => {
   it('returns pretty JSON of data on success', () => {
@@ -41,6 +41,26 @@ describe('toToolResponse', () => {
     // Defensive: partial responses (no `success` field) should still return data.
     const out = toToolResponse({ data: { ok: true } } as never);
     expect(JSON.parse(out)).toEqual({ ok: true });
+  });
+});
+
+describe('limitRows', () => {
+  const ok = (data: { n: number }[]) => ({ success: true, data, error: null, status: 200 });
+
+  it('caps an array payload at `limit` rows, keeping the original order', () => {
+    expect(limitRows(ok([{ n: 1 }, { n: 2 }, { n: 3 }]), 2).data).toEqual([{ n: 1 }, { n: 2 }]);
+  });
+
+  it('sorts before capping when a comparator is given', () => {
+    const res = limitRows(ok([{ n: 1 }, { n: 3 }, { n: 2 }]), 2, (a, b) => b.n - a.n);
+    expect(res.data).toEqual([{ n: 3 }, { n: 2 }]);
+  });
+
+  it('passes failures and non-array payloads through unchanged', () => {
+    const failed = { success: false, data: null, error: 'boom', status: 500 };
+    expect(limitRows(failed as never, 1)).toBe(failed);
+    const single = { success: true, data: { n: 1 }, error: null, status: 200 };
+    expect(limitRows(single as never, 1)).toBe(single);
   });
 });
 

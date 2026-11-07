@@ -1,13 +1,13 @@
 import { z } from 'zod';
 import { getFMPClient } from '@/client';
-import { toToolResponse } from '@/utils/format-response';
+import { limitRows, toToolResponse } from '@/utils/format-response';
 import { defineTool, type FMPToolDefinition } from './types';
 
 export const etfDefinitions: FMPToolDefinition[] = [
   defineTool({
     name: 'getETFHoldings',
     description:
-      'Get ETF holdings for a specific ETF symbol, showing the underlying assets and their weights',
+      'Get the largest holdings of an ETF (by portfolio weight), showing the underlying assets and their weights',
     inputSchema: z.object({
       symbol: z
         .string()
@@ -18,14 +18,22 @@ export const etfDefinitions: FMPToolDefinition[] = [
         .optional()
         .nullable()
         .describe('Date for holdings in YYYY-MM-DD format (optional)'),
+      limit: z
+        .number()
+        .int()
+        .positive()
+        .default(50)
+        .describe('Max number of holdings to return, largest weight first (default 50)'),
     }),
-    execute: async ({ symbol, date }) => {
+    execute: async ({ symbol, date, limit = 50 }) => {
       // `date` is optional; the holdings params type treats it as required, so widen.
       const params: any = { symbol };
       if (date) {
         params.date = date;
       }
-      return toToolResponse(await getFMPClient().etf.getHoldings(params));
+      return toToolResponse(
+        limitRows(await getFMPClient().etf.getHoldings(params), limit, (a, b) => b.pctVal - a.pctVal),
+      );
     },
   }),
   defineTool({

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { getFMPClient } from '@/client';
-import { toToolResponse } from '@/utils/format-response';
+import { limitRows, toToolResponse } from '@/utils/format-response';
 import { defineTool, type FMPToolDefinition } from './types';
 
 const empty = z.object({});
@@ -17,9 +17,18 @@ const snapshotDateSchema = z.object({
 export const marketDefinitions: FMPToolDefinition[] = [
   defineTool({
     name: 'getMarketPerformance',
-    description: 'Get overall market performance data including major indices performance',
-    inputSchema: empty,
-    execute: async () => toToolResponse(await getFMPClient().market.getMarketPerformance()),
+    description:
+      'Get overall market performance data including major indices performance (at most `limit` indices)',
+    inputSchema: z.object({
+      limit: z
+        .number()
+        .int()
+        .positive()
+        .default(50)
+        .describe('Max number of indices to return (default 50)'),
+    }),
+    execute: async ({ limit = 50 }) =>
+      toToolResponse(limitRows(await getFMPClient().market.getMarketPerformance(), limit)),
   }),
   defineTool({
     name: 'getSectorPerformance',

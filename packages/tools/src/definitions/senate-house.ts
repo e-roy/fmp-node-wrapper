@@ -1,7 +1,14 @@
 import { z } from 'zod';
 import { getFMPClient } from '@/client';
-import { toToolResponse } from '@/utils/format-response';
+import { limitRows, toToolResponse } from '@/utils/format-response';
 import { defineTool, type FMPToolDefinition } from './types';
+
+const byNameLimit = z
+  .number()
+  .int()
+  .positive()
+  .default(50)
+  .describe('Max number of trades to return (default 50)');
 
 const symbolSchema = z.object({
   symbol: z
@@ -38,28 +45,34 @@ export const senateHouseDefinitions: FMPToolDefinition[] = [
   defineTool({
     name: 'getSenateTradingByName',
     description:
-      'Get senate trading data for a specific senator by name showing their trading activity',
+      'Get senate trading data for a specific senator by name showing their trading activity (at most `limit` trades)',
     inputSchema: z.object({
       name: z
         .string()
         .min(1, 'Name is required')
         .describe('The name of the senator to get trading data for'),
+      limit: byNameLimit,
     }),
-    execute: async ({ name }) =>
-      toToolResponse(await getFMPClient().senateHouse.getSenateTradingByName({ name })),
+    execute: async ({ name, limit = 50 }) =>
+      toToolResponse(
+        limitRows(await getFMPClient().senateHouse.getSenateTradingByName({ name }), limit),
+      ),
   }),
   defineTool({
     name: 'getHouseTradingByName',
     description:
-      'Get house trading data for a specific representative by name showing their trading activity',
+      'Get house trading data for a specific representative by name showing their trading activity (at most `limit` trades)',
     inputSchema: z.object({
       name: z
         .string()
         .min(1, 'Name is required')
         .describe('The name of the representative to get trading data for'),
+      limit: byNameLimit,
     }),
-    execute: async ({ name }) =>
-      toToolResponse(await getFMPClient().senateHouse.getHouseTradingByName({ name })),
+    execute: async ({ name, limit = 50 }) =>
+      toToolResponse(
+        limitRows(await getFMPClient().senateHouse.getHouseTradingByName({ name }), limit),
+      ),
   }),
   defineTool({
     name: 'getSenateTradingRSSFeed',

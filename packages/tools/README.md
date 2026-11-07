@@ -339,6 +339,7 @@ Each tool accepts specific parameters. Here are some common ones:
 - `from` - Start date in YYYY-MM-DD format
 - `to` - End date in YYYY-MM-DD format
 - `name` - For economic indicators: specific indicator name
+- `limit` - Max rows returned by tools that wrap large list endpoints (earnings/economic calendars, institutional and ETF holdings, market performance, executive compensation, congressional trades by name; defaults 20–50). Institutional and ETF holdings are sorted largest-first.
 
 ## Error Handling
 

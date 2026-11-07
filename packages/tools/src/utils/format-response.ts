@@ -26,6 +26,22 @@ export function toToolResponse(res: APIResponse<unknown>): string {
 }
 
 /**
+ * Cap an array payload at `limit` rows (optionally sorting first) so a single tool
+ * call can't flood the model's context — some FMP endpoints return thousands of
+ * rows (megabytes of JSON). Failed and non-array responses pass through unchanged.
+ */
+export function limitRows<T>(
+  res: APIResponse<T[]>,
+  limit: number,
+  compare?: (a: T, b: T) => number,
+): APIResponse<T[]> {
+  // Same rule as toToolResponse: only an explicit failure skips the cap.
+  if (res.success === false || !Array.isArray(res.data)) return res;
+  const rows = compare ? [...res.data].sort(compare) : res.data;
+  return { ...res, data: rows.slice(0, limit) };
+}
+
+/**
  * Format a *thrown* error into the same structured shape `toToolResponse` uses.
  *
  * Some failures throw instead of returning an `APIResponse` — most notably a

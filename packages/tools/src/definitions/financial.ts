@@ -51,7 +51,7 @@ export const financialDefinitions: FMPToolDefinition[] = [
   ),
   statementTool(
     'getFinancialRatios',
-    'Get financial ratios for a company including profitability, liquidity, and efficiency metrics',
+    'Get financial ratios for a company by period: valuation (P/E incl. diluted P/E, PEG, P/B, P/S, P/FCF, EV multiple), profitability margins, liquidity, leverage, efficiency, and per-share metrics',
     'financial ratios',
     args => getFMPClient().financial.getFinancialRatios(args),
   ),
@@ -108,7 +108,7 @@ export const financialDefinitions: FMPToolDefinition[] = [
   defineTool({
     name: 'getFinancialRatiosTTM',
     description:
-      'Get current trailing-twelve-month (TTM) financial ratios for a company (margins, returns, liquidity)',
+      'Get current trailing-twelve-month (TTM) financial ratios for a company (one snapshot row): valuation (P/E incl. diluted P/E, PEG, P/B, P/S, P/FCF, EV multiple), margins, liquidity, leverage, and per-share metrics',
     inputSchema: z.object({ symbol: symbol('TTM financial ratios') }),
     execute: async ({ symbol }) =>
       toToolResponse(await getFMPClient().financial.getFinancialRatiosTTM({ symbol })),
