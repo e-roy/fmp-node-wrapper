@@ -170,12 +170,18 @@ export interface LiveCase {
 }
 
 const RANGE = { from: '2024-01-01', to: '2024-01-31' };
-// A past trading day with snapshot data available (sector/industry snapshots).
-const SNAPSHOT_DATE = '2024-06-10';
-// News on Starter only serves a recent window (a `from` older than ~6–12 months is a
-// premium parameter → 402), so news cases query the trailing 30 days.
 const DAY_MS = 24 * 60 * 60 * 1000;
 const isoDate = (d: Date): string => d.toISOString().slice(0, 10);
+// Sector/industry snapshots are served on Starter for recent dates only (a date
+// ~2 years back is a premium parameter → 402), so query the weekday ~1 week ago;
+// weekend dates return no rows.
+const SNAPSHOT_DATE = (() => {
+  const d = new Date(Date.now() - 7 * DAY_MS);
+  const toFriday = d.getUTCDay() === 6 ? 1 : d.getUTCDay() === 0 ? 2 : 0;
+  return isoDate(new Date(d.getTime() - toFriday * DAY_MS));
+})();
+// News on Starter only serves a recent window (a `from` older than ~6–12 months is a
+// premium parameter → 402), so news cases query the trailing 30 days.
 const NEWS_RANGE = { from: isoDate(new Date(Date.now() - 30 * DAY_MS)), to: isoDate(new Date()) };
 
 export const manifest: LiveCase[] = [
@@ -204,11 +210,8 @@ export const manifest: LiveCase[] = [
   { category: 'market', name: 'getGainers()', schema: MarketPerformanceSchema, kind: 'array', call: (fmp) => fmp.market.getGainers() },
   { category: 'market', name: 'getLosers()', schema: MarketPerformanceSchema, kind: 'array', call: (fmp) => fmp.market.getLosers() },
   { category: 'market', name: 'getMostActive()', schema: MarketPerformanceSchema, kind: 'array', call: (fmp) => fmp.market.getMostActive() },
-  // The snapshot endpoints are accessible on Starter for RECENT dates only;
-  // a historical `date` value is a premium parameter (402), so these are
-  // plan-locked by default. Schemas were confirmed live against a recent date.
-  { category: 'market', name: 'getSectorPerformance(snapshot)', schema: MarketSectorPerformanceSchema, kind: 'array', planLocked: true, call: (fmp) => fmp.market.getSectorPerformance({ date: SNAPSHOT_DATE }) },
-  { category: 'market', name: 'getIndustryPESnapshot(snapshot)', schema: IndustryPESnapshotSchema, kind: 'array', planLocked: true, call: (fmp) => fmp.market.getIndustryPESnapshot({ date: SNAPSHOT_DATE }) },
+  { category: 'market', name: 'getSectorPerformance(snapshot)', schema: MarketSectorPerformanceSchema, kind: 'array', call: (fmp) => fmp.market.getSectorPerformance({ date: SNAPSHOT_DATE }) },
+  { category: 'market', name: 'getIndustryPESnapshot(snapshot)', schema: IndustryPESnapshotSchema, kind: 'array', call: (fmp) => fmp.market.getIndustryPESnapshot({ date: SNAPSHOT_DATE }) },
   { category: 'market', name: 'getMarketIndex()', schema: MarketIndexSchema, kind: 'array', call: (fmp) => fmp.market.getMarketIndex() },
 
   // ---- financial ----
