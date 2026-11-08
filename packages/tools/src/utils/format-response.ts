@@ -42,6 +42,30 @@ export function limitRows<T>(
 }
 
 /**
+ * `toToolResponse` for list endpoints, capped at `limit` rows. When rows are cut,
+ * the model receives `{ data, truncated: true, note }` saying how many rows exist
+ * and how to reach the rest, instead of silently getting a partial list.
+ */
+export function toCappedToolResponse<T>(
+  res: APIResponse<T[]>,
+  limit: number,
+  options: { compare?: (a: T, b: T) => number; hint?: string } = {},
+): string {
+  const total = res.success !== false && Array.isArray(res.data) ? res.data.length : 0;
+  const capped = limitRows(res, limit, options.compare);
+  if (total <= limit) return toToolResponse(capped);
+  return JSON.stringify(
+    {
+      data: capped.data,
+      truncated: true,
+      note: `Showing ${limit} of ${total} rows. ${options.hint ?? 'Increase `limit` to see more.'}`,
+    },
+    null,
+    2,
+  );
+}
+
+/**
  * Format a *thrown* error into the same structured shape `toToolResponse` uses.
  *
  * Some failures throw instead of returning an `APIResponse` — most notably a

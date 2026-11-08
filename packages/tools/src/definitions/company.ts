@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { getFMPClient } from '@/client';
-import { limitRows, toToolResponse } from '@/utils/format-response';
+import { toCappedToolResponse, toToolResponse } from '@/utils/format-response';
 import { defineTool, type FMPToolDefinition } from './types';
 
 const symbolSchema = z.object({
@@ -36,8 +36,8 @@ export const companyDefinitions: FMPToolDefinition[] = [
         .default(20)
         .describe('Max number of compensation records to return (default 20)'),
     }),
-    execute: async ({ symbol, limit = 20 }) =>
-      toToolResponse(limitRows(await getFMPClient().company.getExecutiveCompensation(symbol), limit)),
+    execute: async ({ symbol, limit }) =>
+      toCappedToolResponse(await getFMPClient().company.getExecutiveCompensation(symbol), limit ?? 20),
   }),
   defineTool({
     name: 'getStockPeers',

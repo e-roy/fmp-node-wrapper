@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { getFMPClient } from '@/client';
-import { limitRows, toToolResponse } from '@/utils/format-response';
+import { toCappedToolResponse, toToolResponse } from '@/utils/format-response';
 import { defineTool, type FMPToolDefinition } from './types';
 
 const empty = z.object({});
@@ -27,8 +27,8 @@ export const marketDefinitions: FMPToolDefinition[] = [
         .default(50)
         .describe('Max number of indices to return (default 50)'),
     }),
-    execute: async ({ limit = 50 }) =>
-      toToolResponse(limitRows(await getFMPClient().market.getMarketPerformance(), limit)),
+    execute: async ({ limit }) =>
+      toCappedToolResponse(await getFMPClient().market.getMarketPerformance(), limit ?? 50),
   }),
   defineTool({
     name: 'getSectorPerformance',

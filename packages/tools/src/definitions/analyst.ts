@@ -22,8 +22,10 @@ export const analystDefinitions: FMPToolDefinition[] = [
         .default(10)
         .describe('Max number of periods to return (default 10)'),
     }),
-    execute: async ({ symbol, period = 'annual', limit = 10 }) =>
-      toToolResponse(await getFMPClient().analyst.getEstimates({ symbol, period, limit })),
+    execute: async ({ symbol, period = 'annual', limit }) =>
+      toToolResponse(
+        await getFMPClient().analyst.getEstimates({ symbol, period, limit: limit ?? 10 }),
+      ),
   }),
   defineTool({
     name: 'getPriceTargetConsensus',
@@ -48,10 +50,10 @@ export const analystDefinitions: FMPToolDefinition[] = [
         .default(20)
         .describe('Max number of grade entries to return (default 20)'),
     }),
-    execute: async ({ symbol, limit = 20 }) => {
+    execute: async ({ symbol, limit }) => {
       const res = await getFMPClient().analyst.getGrades({ symbol });
       if (res.success && Array.isArray(res.data)) {
-        return toToolResponse({ ...res, data: res.data.slice(0, limit) } as APIResponse<unknown>);
+        return toToolResponse({ ...res, data: res.data.slice(0, limit ?? 20) } as APIResponse<unknown>);
       }
       return toToolResponse(res);
     },

@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { getFMPClient } from '@/client';
-import { limitRows, toToolResponse } from '@/utils/format-response';
+import { toCappedToolResponse, toToolResponse } from '@/utils/format-response';
 import { defineTool, type FMPToolDefinition } from './types';
 
 export const etfDefinitions: FMPToolDefinition[] = [
@@ -17,7 +17,7 @@ export const etfDefinitions: FMPToolDefinition[] = [
         .string()
         .optional()
         .nullable()
-        .describe('Date for holdings in YYYY-MM-DD format (optional)'),
+        .describe('Holdings date in YYYY-MM-DD format (optional; defaults to the latest filing)'),
       limit: z
         .number()
         .int()
@@ -25,15 +25,28 @@ export const etfDefinitions: FMPToolDefinition[] = [
         .default(50)
         .describe('Max number of holdings to return, largest weight first (default 50)'),
     }),
-    execute: async ({ symbol, date, limit = 50 }) => {
+    execute: async ({ symbol, date, limit }) => {
+      const client = getFMPClient();
+      // FMP returns no holdings without a date, so default to the latest filing date.
+      let holdingsDate = date ?? undefined;
+      if (!holdingsDate) {
+        const dates = await client.etf.getHoldingDates(symbol);
+        if (dates.success !== false && Array.isArray(dates.data)) {
+          holdingsDate = dates.data.reduce<string | undefined>(
+            (latest, d) => (!latest || d.date > latest ? d.date : latest),
+            undefined,
+          );
+        }
+      }
       // `date` is optional; the holdings params type treats it as required, so widen.
       const params: any = { symbol };
-      if (date) {
-        params.date = date;
+      if (holdingsDate) {
+        params.date = holdingsDate;
       }
-      return toToolResponse(
-        limitRows(await getFMPClient().etf.getHoldings(params), limit, (a, b) => b.pctVal - a.pctVal),
-      );
+      return toCappedToolResponse(await client.etf.getHoldings(params), limit ?? 50, {
+        compare: (a, b) => b.pctVal - a.pctVal,
+        hint: `Largest positions first, as of ${holdingsDate ?? 'the requested date'}.`,
+      });
     },
   }),
   defineTool({

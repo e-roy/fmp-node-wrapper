@@ -5,6 +5,7 @@ const mockFinancial = {
   getIncomeStatement: jest.fn(),
   getCashFlowStatement: jest.fn(),
   getFinancialRatios: jest.fn(),
+  getEarningsHistorical: jest.fn(),
 };
 
 jest.mock('@/client', () => ({
@@ -76,5 +77,13 @@ describe('Vercel AI Financial Tools (minimal)', () => {
       period: 'annual',
     });
     expect(JSON.parse(result)).toEqual([{ symbol: 'AAPL' }]);
+  });
+
+  it('getEarningsHistorical applies the schema default (10) without input parsing', async () => {
+    mockFinancial.getEarningsHistorical.mockResolvedValueOnce({ data: [{ symbol: 'AAPL' }] });
+
+    await (financialTools.getEarningsHistorical.execute as any)({ symbol: 'AAPL' });
+
+    expect(mockFinancial.getEarningsHistorical).toHaveBeenCalledWith({ symbol: 'AAPL', limit: 10 });
   });
 });

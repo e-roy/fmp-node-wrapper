@@ -27,9 +27,9 @@ export const screenerDefinitions: FMPToolDefinition[] = [
         .default(50)
         .describe('Max number of results to return (default 50)'),
     }),
-    execute: async ({ limit = 50, ...filters }) => {
+    execute: async ({ limit, ...filters }) => {
       // Drop null/undefined so they aren't sent as query params.
-      const params: Record<string, unknown> = { limit };
+      const params: Record<string, unknown> = { limit: limit ?? 50 };
       for (const [key, value] of Object.entries(filters)) {
         if (value !== null && value !== undefined) params[key] = value;
       }

@@ -16,11 +16,12 @@ describe('getInstitutionalHolders (minimal coverage)', () => {
   });
 
   it('executes and returns data (happy path)', async () => {
-    mockInstitutional.getInstitutionalHolders.mockResolvedValueOnce({ data: [{ symbol: 'AAPL' }] });
+    const holder = { holder: 'VANGUARD GROUP INC', shares: 100, dateReported: '2026-09-30', change: 0 };
+    mockInstitutional.getInstitutionalHolders.mockResolvedValueOnce({ data: [holder] });
 
     const result = await (getInstitutionalHolders as any).execute({ symbol: 'AAPL' });
 
     expect(mockInstitutional.getInstitutionalHolders).toHaveBeenCalledWith({ symbol: 'AAPL' });
-    expect(JSON.parse(result)).toEqual([{ symbol: 'AAPL' }]);
+    expect(JSON.parse(result)).toEqual([holder]);
   });
 });

@@ -31,7 +31,7 @@ export const technicalDefinitions: FMPToolDefinition[] = [
         .default(50)
         .describe('Max number of most-recent bars to return (default 50)'),
     }),
-    execute: async ({ symbol, type, periodLength = 10, timeframe = '1day', limit = 50 }) => {
+    execute: async ({ symbol, type, periodLength = 10, timeframe = '1day', limit }) => {
       const res = await getFMPClient().technical.getTechnicalIndicator({
         symbol,
         type,
@@ -39,7 +39,7 @@ export const technicalDefinitions: FMPToolDefinition[] = [
         timeframe,
       });
       if (res.success && Array.isArray(res.data)) {
-        return toToolResponse({ ...res, data: res.data.slice(0, limit) } as APIResponse<unknown>);
+        return toToolResponse({ ...res, data: res.data.slice(0, limit ?? 50) } as APIResponse<unknown>);
       }
       return toToolResponse(res);
     },

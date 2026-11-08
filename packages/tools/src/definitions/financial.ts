@@ -24,7 +24,7 @@ const statementTool = (
     description,
     inputSchema: z.object({ symbol: symbol(what), period, limit }),
     execute: async ({ symbol, period, limit }) =>
-      toToolResponse(await call({ symbol, period, limit })),
+      toToolResponse(await call({ symbol, period, limit: limit ?? undefined })),
   });
 
 export const financialDefinitions: FMPToolDefinition[] = [
@@ -87,7 +87,9 @@ export const financialDefinitions: FMPToolDefinition[] = [
       limit: z.number().default(10).describe('The number of periods to retrieve'),
     }),
     execute: async ({ symbol, limit }) =>
-      toToolResponse(await getFMPClient().financial.getEarningsHistorical({ symbol, limit })),
+      toToolResponse(
+        await getFMPClient().financial.getEarningsHistorical({ symbol, limit: limit ?? 10 }),
+      ),
   }),
   defineTool({
     name: 'getFinancialScores',

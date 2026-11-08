@@ -1,4 +1,9 @@
-import { limitRows, toToolResponse, toToolError } from '@/utils/format-response';
+import {
+  limitRows,
+  toCappedToolResponse,
+  toToolResponse,
+  toToolError,
+} from '@/utils/format-response';
 
 describe('toToolResponse', () => {
   it('returns pretty JSON of data on success', () => {
@@ -61,6 +66,30 @@ describe('limitRows', () => {
     expect(limitRows(failed as never, 1)).toBe(failed);
     const single = { success: true, data: { n: 1 }, error: null, status: 200 };
     expect(limitRows(single as never, 1)).toBe(single);
+  });
+});
+
+describe('toCappedToolResponse', () => {
+  const ok = (data: { n: number }[]) => ({ success: true, data, error: null, status: 200 });
+
+  it('returns the plain array when nothing is cut', () => {
+    expect(JSON.parse(toCappedToolResponse(ok([{ n: 1 }]), 5))).toEqual([{ n: 1 }]);
+  });
+
+  it('wraps a cut list with a truncation note', () => {
+    const out = JSON.parse(
+      toCappedToolResponse(ok([{ n: 1 }, { n: 2 }, { n: 3 }]), 2, { hint: 'Narrow the range.' }),
+    );
+    expect(out).toEqual({
+      data: [{ n: 1 }, { n: 2 }],
+      truncated: true,
+      note: 'Showing 2 of 3 rows. Narrow the range.',
+    });
+  });
+
+  it('keeps the structured error shape on failure', () => {
+    const failed = { success: false, data: null, error: 'boom', status: 500 };
+    expect(JSON.parse(toCappedToolResponse(failed as never, 2)).error).toBe(true);
   });
 });
 

@@ -44,7 +44,7 @@ export const quoteDefinitions: FMPToolDefinition[] = [
         .default(30)
         .describe('Max number of most-recent days to return (default 30)'),
     }),
-    execute: async ({ symbol, from, to, limit = 30 }) => {
+    execute: async ({ symbol, from, to, limit }) => {
       const res = await getFMPClient().quote.getHistoricalPrice({
         symbol,
         from: from ?? undefined,
@@ -55,7 +55,7 @@ export const quoteDefinitions: FMPToolDefinition[] = [
       if (res.success && data && Array.isArray(data.historical)) {
         return toToolResponse({
           ...res,
-          data: { ...data, historical: data.historical.slice(0, limit) },
+          data: { ...data, historical: data.historical.slice(0, limit ?? 30) },
         } as APIResponse<unknown>);
       }
       return toToolResponse(res);
@@ -80,7 +80,7 @@ export const quoteDefinitions: FMPToolDefinition[] = [
         .default(50)
         .describe('Max number of most-recent bars to return (default 50)'),
     }),
-    execute: async ({ symbol, interval = '5min', from, to, limit = 50 }) => {
+    execute: async ({ symbol, interval = '5min', from, to, limit }) => {
       const res = await getFMPClient().quote.getIntraday({
         symbol,
         interval,
@@ -88,7 +88,7 @@ export const quoteDefinitions: FMPToolDefinition[] = [
         to: to ?? undefined,
       });
       if (res.success && Array.isArray(res.data)) {
-        return toToolResponse({ ...res, data: res.data.slice(0, limit) } as APIResponse<unknown>);
+        return toToolResponse({ ...res, data: res.data.slice(0, limit ?? 50) } as APIResponse<unknown>);
       }
       return toToolResponse(res);
     },

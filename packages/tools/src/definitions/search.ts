@@ -22,9 +22,13 @@ export const searchDefinitions: FMPToolDefinition[] = [
         .nullable()
         .describe('Restrict to a specific exchange (optional, e.g., "NASDAQ")'),
     }),
-    execute: async ({ query, limit = 10, exchange }) =>
+    execute: async ({ query, limit, exchange }) =>
       toToolResponse(
-        await getFMPClient().search.search({ query, limit, exchange: exchange ?? undefined }),
+        await getFMPClient().search.search({
+          query,
+          limit: limit ?? 10,
+          exchange: exchange ?? undefined,
+        }),
       ),
   }),
 ];

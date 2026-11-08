@@ -339,7 +339,8 @@ Each tool accepts specific parameters. Here are some common ones:
 - `from` - Start date in YYYY-MM-DD format
 - `to` - End date in YYYY-MM-DD format
 - `name` - For economic indicators: specific indicator name
-- `limit` - Max rows returned by tools that wrap large list endpoints (earnings/economic calendars, institutional and ETF holdings, market performance, executive compensation, congressional trades by name; defaults 20–50). Institutional and ETF holdings are sorted largest-first.
+- `limit` - Max rows returned by tools that wrap large list endpoints (earnings/economic calendars, institutional and ETF holdings, market performance, executive compensation, congressional trades by name; defaults 20–50). When rows are cut, the tool returns `{ data, truncated: true, note }` saying how many rows exist. Institutional holders (latest filing per holder from the past year) and ETF holdings (latest filing date by default) are sorted largest-first.
+- `symbols` - `getEarningsCalendar` only: return just these companies (a week can hold ~2,000 worldwide)
 
 ## Error Handling
 

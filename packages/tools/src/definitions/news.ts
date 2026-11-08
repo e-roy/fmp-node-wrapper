@@ -17,12 +17,12 @@ export const newsDefinitions: FMPToolDefinition[] = [
         .default(20)
         .describe('Max number of articles to return (default 20)'),
     }),
-    execute: async ({ from, to, limit = 20 }) =>
+    execute: async ({ from, to, limit }) =>
       toToolResponse(
         await getFMPClient().news.getStockNews({
           from: from ?? undefined,
           to: to ?? undefined,
-          limit,
+          limit: limit ?? 20,
         }),
       ),
   }),
@@ -43,13 +43,13 @@ export const newsDefinitions: FMPToolDefinition[] = [
         .default(20)
         .describe('Max number of articles to return (default 20)'),
     }),
-    execute: async ({ symbols, from, to, limit = 20 }) =>
+    execute: async ({ symbols, from, to, limit }) =>
       toToolResponse(
         await getFMPClient().news.getStockNewsBySymbol({
           symbols,
           from: from ?? undefined,
           to: to ?? undefined,
-          limit,
+          limit: limit ?? 20,
         }),
       ),
   }),
