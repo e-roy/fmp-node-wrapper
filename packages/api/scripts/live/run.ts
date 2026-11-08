@@ -191,7 +191,7 @@ async function main(): Promise<void> {
     }
     const ms = Date.now() - start;
 
-    const cls = classifyResult(res, c.schema, c.kind, sampleSize);
+    const cls = classifyResult(res, c.schema, c.kind, Math.max(sampleSize, c.sample ?? 0));
     const detail = retried ? `${cls.detail} (retried)`.trim() : cls.detail;
     rows.push({ name: c.name, category: c.category, outcome: cls.outcome, detail, ms });
     if (cls.stopRun) stopped = true;

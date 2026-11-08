@@ -167,6 +167,8 @@ export interface LiveCase {
   call: (fmp: FMP) => Promise<{ success: boolean; data: unknown; error: string | null; status: number }>;
   /** Skip by default (known plan-locked); run only with --include-locked. */
   planLocked?: boolean;
+  /** Validate at least this many array rows, overriding --sample (for sparse nulls). */
+  sample?: number;
 }
 
 const RANGE = { from: '2024-01-01', to: '2024-01-31' };
@@ -183,6 +185,15 @@ const SNAPSHOT_DATE = (() => {
 // News on Starter only serves a recent window (a `from` older than ~6–12 months is a
 // premium parameter → 402), so news cases query the trailing 30 days.
 const NEWS_RANGE = { from: isoDate(new Date(Date.now() - 30 * DAY_MS)), to: isoDate(new Date()) };
+// Calendars query ±1 week around today so the check sees FMP's current shape —
+// a fixed historical window missed newly-null fields (e.g. EarningsConfirmed.time).
+const CALENDAR_RANGE = {
+  from: isoDate(new Date(Date.now() - 7 * DAY_MS)),
+  to: isoDate(new Date(Date.now() + 7 * DAY_MS)),
+};
+// Their nulls are sparse (EconomicsCalendar.changePercentage first appeared at row
+// 744), so validate every row rather than the first --sample rows.
+const EVERY_ROW = Number.MAX_SAFE_INTEGER;
 
 export const manifest: LiveCase[] = [
   // ---- quote ----
@@ -205,7 +216,7 @@ export const manifest: LiveCase[] = [
   { category: 'aftermarket', name: 'getQuote(AAPL)', schema: AftermarketQuoteSchema, kind: 'object', call: (fmp) => fmp.aftermarket.getQuote('AAPL') },
 
   // ---- market ----
-  { category: 'market', name: 'getMarketHours()', schema: ExchangeMarketHoursSchema, kind: 'array', call: (fmp) => fmp.market.getMarketHours() },
+  { category: 'market', name: 'getMarketHours()', schema: ExchangeMarketHoursSchema, kind: 'array', sample: EVERY_ROW, call: (fmp) => fmp.market.getMarketHours() },
   { category: 'market', name: 'getMarketPerformance()', schema: MarketIndexSchema, kind: 'array', call: (fmp) => fmp.market.getMarketPerformance() },
   { category: 'market', name: 'getGainers()', schema: MarketPerformanceSchema, kind: 'array', call: (fmp) => fmp.market.getGainers() },
   { category: 'market', name: 'getLosers()', schema: MarketPerformanceSchema, kind: 'array', call: (fmp) => fmp.market.getLosers() },
@@ -234,12 +245,12 @@ export const manifest: LiveCase[] = [
   { category: 'financial', name: 'getRevenueGeographicSegmentation(AAPL)', schema: RevenueGeographicSegmentationSchema, kind: 'array', call: (fmp) => fmp.financial.getRevenueGeographicSegmentation({ symbol: 'AAPL' }) },
 
   // ---- calendar ----
-  { category: 'calendar', name: 'getEarningsCalendar()', schema: EarningsCalendarSchema, kind: 'array', call: (fmp) => fmp.calendar.getEarningsCalendar({ from: '2024-01-15', to: '2024-01-21' }) },
-  { category: 'calendar', name: 'getEarningsConfirmed()', schema: EarningsConfirmedSchema, kind: 'array', call: (fmp) => fmp.calendar.getEarningsConfirmed(RANGE) },
-  { category: 'calendar', name: 'getDividendsCalendar()', schema: DividendsCalendarSchema, kind: 'array', call: (fmp) => fmp.calendar.getDividendsCalendar(RANGE) },
-  { category: 'calendar', name: 'getEconomicsCalendar()', schema: EconomicsCalendarSchema, kind: 'array', call: (fmp) => fmp.calendar.getEconomicsCalendar(RANGE) },
-  { category: 'calendar', name: 'getIPOCalendar()', schema: IPOCalendarSchema, kind: 'array', call: (fmp) => fmp.calendar.getIPOCalendar(RANGE) },
-  { category: 'calendar', name: 'getSplitsCalendar()', schema: SplitsCalendarSchema, kind: 'array', call: (fmp) => fmp.calendar.getSplitsCalendar(RANGE) },
+  { category: 'calendar', name: 'getEarningsCalendar()', schema: EarningsCalendarSchema, kind: 'array', sample: EVERY_ROW, call: (fmp) => fmp.calendar.getEarningsCalendar(CALENDAR_RANGE) },
+  { category: 'calendar', name: 'getEarningsConfirmed()', schema: EarningsConfirmedSchema, kind: 'array', sample: EVERY_ROW, call: (fmp) => fmp.calendar.getEarningsConfirmed(CALENDAR_RANGE) },
+  { category: 'calendar', name: 'getDividendsCalendar()', schema: DividendsCalendarSchema, kind: 'array', sample: EVERY_ROW, call: (fmp) => fmp.calendar.getDividendsCalendar(CALENDAR_RANGE) },
+  { category: 'calendar', name: 'getEconomicsCalendar()', schema: EconomicsCalendarSchema, kind: 'array', sample: EVERY_ROW, call: (fmp) => fmp.calendar.getEconomicsCalendar(CALENDAR_RANGE) },
+  { category: 'calendar', name: 'getIPOCalendar()', schema: IPOCalendarSchema, kind: 'array', sample: EVERY_ROW, call: (fmp) => fmp.calendar.getIPOCalendar(CALENDAR_RANGE) },
+  { category: 'calendar', name: 'getSplitsCalendar()', schema: SplitsCalendarSchema, kind: 'array', sample: EVERY_ROW, call: (fmp) => fmp.calendar.getSplitsCalendar(CALENDAR_RANGE) },
 
   // ---- company ----
   { category: 'company', name: 'getCompanyProfile(AAPL)', schema: CompanyProfileSchema, kind: 'object', call: (fmp) => fmp.company.getCompanyProfile('AAPL') },
