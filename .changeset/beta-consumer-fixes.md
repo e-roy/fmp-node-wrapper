@@ -4,7 +4,7 @@
 "fmp-ai-tools": patch
 ---
 
-Fixes found while testing 0.2.4-beta.0 in a downstream app:
+Packaging, schema and AI-tool fixes:
 
 - **Types no longer degrade to `any`**: `fmp-node-types` is now a real dependency of `fmp-node-api`, so the published types resolve against its own `zod@3`. Apps on zod 4 (every `fmp-ai-tools` user) or without zod previously got silently-`any` fields (e.g. `Quote['price']` accepted a string).
 - **Schemas are type-only re-exports**: `fmp-node-api` and `fmp-node-api/types` re-export the types with `export type *`. The Zod schemas (e.g. `QuoteSchema`) were declared as values but never shipped at runtime — using one is now a compile error instead of `undefined` at runtime. Import schemas from `fmp-node-types` directly if you need them.

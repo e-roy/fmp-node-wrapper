@@ -4,9 +4,9 @@
 
 ### Patch Changes
 
-- Fixes from retesting 0.2.4-beta.1 in a downstream app:
+- Schema and AI-tool fixes:
   - **ExchangeMarketHours**: add optional `openingAdditional` / `closingAdditional` (the afternoon session for exchanges with a midday break, e.g. HKSE).
-  - **EarningsConfirmed**: `time` and `when` are now `string | null` — FMP leaves them null until a time is confirmed (this null crashed a downstream earnings view).
+  - **EarningsConfirmed**: `time` and `when` are now `string | null` — FMP leaves them null until a time is confirmed.
   - **EconomicsCalendar**: `changePercentage` is now `number | null`.
   - **AI tools — no silent truncation**: capped tools now return `{ data, truncated: true, note }` (e.g. "Showing 50 of 1969 rows…") when rows are cut, instead of a bare partial list.
   - **AI tools — `getEarningsCalendar`**: new `symbols` filter, so "upcoming earnings for AAPL/MSFT/NVDA" works even though a single week holds ~2,000 companies worldwide.
@@ -21,7 +21,7 @@
 
 ### Patch Changes
 
-- Fixes found while testing 0.2.4-beta.0 in a downstream app:
+- Packaging, schema and AI-tool fixes:
   - **Types no longer degrade to `any`**: `fmp-node-types` is now a real dependency of `fmp-node-api`, so the published types resolve against its own `zod@3`. Apps on zod 4 (every `fmp-ai-tools` user) or without zod previously got silently-`any` fields (e.g. `Quote['price']` accepted a string).
   - **Schemas are type-only re-exports**: `fmp-node-api` and `fmp-node-api/types` re-export the types with `export type *`. The Zod schemas (e.g. `QuoteSchema`) were declared as values but never shipped at runtime — using one is now a compile error instead of `undefined` at runtime. Import schemas from `fmp-node-types` directly if you need them.
   - **IPOCalendar**: add `dealSize` (`number | null`; null until the offering is priced).
