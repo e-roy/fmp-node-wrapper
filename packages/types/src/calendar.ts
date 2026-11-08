@@ -19,8 +19,9 @@ export const EarningsCalendarSchema = z.object({
 export const EarningsConfirmedSchema = z.object({
     symbol: z.string(),
     exchange: z.string(),
-    time: z.string(),
-    when: z.string(),
+    // Usually null until the company confirms a time (95% of recent rows; `when` 19%).
+    time: z.string().nullable(),
+    when: z.string().nullable(),
     date: z.string(),
     publicationDate: z.string(),
     title: z.string(),
@@ -48,7 +49,8 @@ export const EconomicsCalendarSchema = z.object({
     actual: z.number().nullable(),
     change: z.number().nullable(),
     impact: z.string(),
-    changePercentage: z.number(),
+    // null on some events (175 of 4,337 recent rows; verified live 2026-11-08).
+    changePercentage: z.number().nullable(),
     unit: z.string().nullable()
 });
 
