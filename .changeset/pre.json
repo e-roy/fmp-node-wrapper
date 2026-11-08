@@ -11,6 +11,7 @@
   },
   "changesets": [
     "beta-consumer-fixes",
+    "beta-retest-fixes",
     "live-drift-fixes"
   ]
 }
