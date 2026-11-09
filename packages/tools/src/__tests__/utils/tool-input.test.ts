@@ -21,13 +21,14 @@ describe('stripNulls', () => {
 
 describe('capLimit', () => {
   it('uses the default when nothing (or null) is requested', () => {
-    expect(capLimit(undefined, 20, 50)).toEqual({ limit: 20 });
-    expect(capLimit(null, 20, 50)).toEqual({ limit: 20 });
+    expect(capLimit(undefined, 20, 50)).toEqual({ limit: 20, max: 50 });
+    expect(capLimit(null, 20, 50)).toEqual({ limit: 20, max: 50 });
   });
 
   it('caps at the maximum and says so', () => {
     expect(capLimit(2000, 20, 50)).toEqual({
       limit: 50,
+      max: 50,
       notice: 'Requested 2000 rows, but this tool returns at most 50 per call.',
     });
   });

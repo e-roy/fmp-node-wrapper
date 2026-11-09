@@ -41,11 +41,12 @@ export function capLimit(
   requested: number | null | undefined,
   defaultRows: number,
   maxRows: number,
-): { limit: number; notice?: string } {
+): { limit: number; max: number; notice?: string } {
   const wanted = requested ?? defaultRows;
-  if (wanted <= maxRows) return { limit: wanted };
+  if (wanted <= maxRows) return { limit: wanted, max: maxRows };
   return {
     limit: maxRows,
+    max: maxRows,
     notice: `Requested ${wanted} rows, but this tool returns at most ${maxRows} per call.`,
   };
 }

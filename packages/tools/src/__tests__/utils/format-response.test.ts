@@ -93,6 +93,14 @@ describe('toCappedToolResponse', () => {
     const failed = { success: false, data: null, error: 'boom', status: 500 };
     expect(JSON.parse(toCappedToolResponse(failed as never, 2)).error).toBe(true);
   });
+
+  it('only suggests a larger `limit` when the tool is below its maximum', () => {
+    const rows = ok([{ n: 1 }, { n: 2 }, { n: 3 }]);
+    expect(JSON.parse(toCappedToolResponse(rows, 2, { max: 5 })).note).toContain('Increase `limit`');
+    const atMax = JSON.parse(toCappedToolResponse(rows, 2, { max: 2 })).note;
+    expect(atMax).not.toContain('Increase `limit`');
+    expect(atMax).toContain('most this tool returns per call');
+  });
 });
 
 describe('toToolError', () => {

@@ -32,6 +32,7 @@ export const marketDefinitions: FMPToolDefinition[] = [
       const cap = capLimit(limit, 50, 100);
       return toCappedToolResponse(await getFMPClient().market.getMarketPerformance(), cap.limit, {
         notice: cap.notice,
+        max: cap.max,
       });
     },
   }),

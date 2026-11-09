@@ -42,7 +42,7 @@ export const companyDefinitions: FMPToolDefinition[] = [
       return toCappedToolResponse(
         await getFMPClient().company.getExecutiveCompensation(symbol),
         cap.limit,
-        { notice: cap.notice },
+        { notice: cap.notice, max: cap.max },
       );
     },
   }),

@@ -42,7 +42,9 @@ export const quoteDefinitions: FMPToolDefinition[] = [
         .int()
         .positive()
         .default(30)
-        .describe('Max number of most-recent days to return (default 30, max 365)'),
+        .describe(
+          'Max number of most-recent days to return (default 30, max 252 = about one trading year)',
+        ),
     }),
     execute: async ({ symbol, from, to, limit }) => {
       const res = await getFMPClient().quote.getHistoricalPrice({
@@ -53,7 +55,7 @@ export const quoteDefinitions: FMPToolDefinition[] = [
       // Response is { symbol, historical: [...] } (newest first): cap the inner list,
       // and flag the cut so the model knows older days exist.
       const data = res.data as { symbol?: string; historical?: unknown[] } | null;
-      const cap = capLimit(limit, 30, 365);
+      const cap = capLimit(limit, 30, 252);
       if (res.success === false || !data || !Array.isArray(data.historical)) {
         return toToolResponse(res);
       }
@@ -64,7 +66,13 @@ export const quoteDefinitions: FMPToolDefinition[] = [
       const note = [
         truncated ? `Showing the ${historical.length} most recent of ${total} days.` : undefined,
         cap.notice,
-        truncated ? 'Narrow the date range or increase `limit` to see older days.' : undefined,
+        !truncated
+          ? undefined
+          : cap.limit < cap.max
+            ? 'Narrow the date range or increase `limit` to see older days.'
+            : cap.notice
+              ? 'Narrow the date range to see older days.'
+              : 'That is the most this tool returns per call; narrow the date range to see older days.',
       ]
         .filter(Boolean)
         .join(' ');

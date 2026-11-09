@@ -59,7 +59,7 @@ export const senateHouseDefinitions: FMPToolDefinition[] = [
       return toCappedToolResponse(
         await getFMPClient().senateHouse.getSenateTradingByName({ name }),
         cap.limit,
-        { notice: cap.notice },
+        { notice: cap.notice, max: cap.max },
       );
     },
   }),
@@ -79,7 +79,7 @@ export const senateHouseDefinitions: FMPToolDefinition[] = [
       return toCappedToolResponse(
         await getFMPClient().senateHouse.getHouseTradingByName({ name }),
         cap.limit,
-        { notice: cap.notice },
+        { notice: cap.notice, max: cap.max },
       );
     },
   }),
