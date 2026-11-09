@@ -11,7 +11,11 @@ export const screenerDefinitions: FMPToolDefinition[] = [
       'Screen for stocks matching financial criteria (market cap, price, sector, exchange, etc.). Returns matching companies.',
     inputSchema: z.object({
       marketCapMoreThan: z.number().optional().nullable().describe('Minimum market capitalization'),
-      marketCapLowerThan: z.number().optional().nullable().describe('Maximum market capitalization'),
+      marketCapLowerThan: z
+        .number()
+        .optional()
+        .nullable()
+        .describe('Maximum market capitalization'),
       priceMoreThan: z.number().optional().nullable().describe('Minimum stock price'),
       priceLowerThan: z.number().optional().nullable().describe('Maximum stock price'),
       sector: z.string().optional().nullable().describe('Sector filter (e.g., "Technology")'),
@@ -25,11 +29,11 @@ export const screenerDefinitions: FMPToolDefinition[] = [
         .int()
         .positive()
         .default(50)
-        .describe('Max number of results to return (default 50)'),
+        .describe('Max number of results to return (default 50, max 100)'),
     }),
     execute: async ({ limit, ...filters }) => {
       // Drop null/undefined so they aren't sent as query params.
-      const params: Record<string, unknown> = { limit: limit ?? 50 };
+      const params: Record<string, unknown> = { limit: Math.min(limit ?? 50, 100) };
       for (const [key, value] of Object.entries(filters)) {
         if (value !== null && value !== undefined) params[key] = value;
       }

@@ -34,10 +34,13 @@ export const companyDefinitions: FMPToolDefinition[] = [
         .int()
         .positive()
         .default(20)
-        .describe('Max number of compensation records to return (default 20)'),
+        .describe('Max number of compensation records to return (default 20, max 100)'),
     }),
     execute: async ({ symbol, limit }) =>
-      toCappedToolResponse(await getFMPClient().company.getExecutiveCompensation(symbol), limit ?? 20),
+      toCappedToolResponse(
+        await getFMPClient().company.getExecutiveCompensation(symbol),
+        Math.min(limit ?? 20, 100),
+      ),
   }),
   defineTool({
     name: 'getStockPeers',

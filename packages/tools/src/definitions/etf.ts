@@ -23,7 +23,7 @@ export const etfDefinitions: FMPToolDefinition[] = [
         .int()
         .positive()
         .default(50)
-        .describe('Max number of holdings to return, largest weight first (default 50)'),
+        .describe('Max number of holdings to return, largest weight first (default 50, max 100)'),
     }),
     execute: async ({ symbol, date, limit }) => {
       const client = getFMPClient();
@@ -43,15 +43,20 @@ export const etfDefinitions: FMPToolDefinition[] = [
       if (holdingsDate) {
         params.date = holdingsDate;
       }
-      return toCappedToolResponse(await client.etf.getHoldings(params), limit ?? 50, {
-        compare: (a, b) => b.pctVal - a.pctVal,
-        hint: `Largest positions first, as of ${holdingsDate ?? 'the requested date'}.`,
-      });
+      return toCappedToolResponse(
+        await client.etf.getHoldings(params),
+        Math.min(limit ?? 50, 100),
+        {
+          compare: (a, b) => b.pctVal - a.pctVal,
+          hint: `Largest positions first, as of ${holdingsDate ?? 'the requested date'}.`,
+        },
+      );
     },
   }),
   defineTool({
     name: 'getETFProfile',
-    description: 'Get ETF profile information including fund details, expense ratio, and key metrics',
+    description:
+      'Get ETF profile information including fund details, expense ratio, and key metrics',
     inputSchema: z.object({
       symbol: z
         .string()

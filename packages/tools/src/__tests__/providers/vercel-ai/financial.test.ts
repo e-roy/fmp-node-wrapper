@@ -30,6 +30,7 @@ describe('Vercel AI Financial Tools (minimal)', () => {
     expect(mockFinancial.getBalanceSheet).toHaveBeenCalledWith({
       symbol: 'AAPL',
       period: 'annual',
+      limit: 5,
     });
     expect(JSON.parse(result)).toEqual([{ symbol: 'AAPL' }]);
   });
@@ -45,6 +46,7 @@ describe('Vercel AI Financial Tools (minimal)', () => {
     expect(mockFinancial.getIncomeStatement).toHaveBeenCalledWith({
       symbol: 'AAPL',
       period: 'annual',
+      limit: 5,
     });
     expect(JSON.parse(result)).toEqual([{ symbol: 'AAPL' }]);
   });
@@ -60,6 +62,7 @@ describe('Vercel AI Financial Tools (minimal)', () => {
     expect(mockFinancial.getCashFlowStatement).toHaveBeenCalledWith({
       symbol: 'AAPL',
       period: 'annual',
+      limit: 5,
     });
     expect(JSON.parse(result)).toEqual([{ symbol: 'AAPL' }]);
   });
@@ -75,6 +78,7 @@ describe('Vercel AI Financial Tools (minimal)', () => {
     expect(mockFinancial.getFinancialRatios).toHaveBeenCalledWith({
       symbol: 'AAPL',
       period: 'annual',
+      limit: 5,
     });
     expect(JSON.parse(result)).toEqual([{ symbol: 'AAPL' }]);
   });

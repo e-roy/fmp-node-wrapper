@@ -3,6 +3,12 @@ import { getFMPClient } from '@/client';
 import { toCappedToolResponse } from '@/utils/format-response';
 import { defineTool, type FMPToolDefinition } from './types';
 
+const MAX_ROWS = 100;
+// FMP serves at most 90 days (inclusive) per calendar request; a longer range
+// silently keeps only its LAST 90 days, dropping the soonest dates.
+const MAX_RANGE_DAYS = 90;
+const DAY_MS = 24 * 60 * 60 * 1000;
+
 const dateRangeSchema = z.object({
   from: z.string().optional().nullable().describe('Start date in YYYY-MM-DD format (optional)'),
   to: z.string().optional().nullable().describe('End date in YYYY-MM-DD format (optional)'),
@@ -11,14 +17,35 @@ const dateRangeSchema = z.object({
     .int()
     .positive()
     .default(50)
-    .describe('Max number of entries to return (default 50)'),
+    .describe(`Max number of entries to return (default 50, max ${MAX_ROWS})`),
 });
+
+/**
+ * Keep a requested range within FMP's 90-day window, anchored at `from` (the soonest
+ * dates), and return a notice telling the model how to fetch the rest.
+ */
+export function clampRange(
+  from?: string | null,
+  to?: string | null,
+): { from?: string; to?: string; notice?: string } {
+  if (!from || !to) return { from: from ?? undefined, to: to ?? undefined };
+  const start = Date.parse(from);
+  const lastAllowed = start + (MAX_RANGE_DAYS - 1) * DAY_MS;
+  if (Number.isNaN(start) || !(Date.parse(to) > lastAllowed)) return { from, to };
+  const clampedTo = new Date(lastAllowed).toISOString().slice(0, 10);
+  const nextFrom = new Date(lastAllowed + DAY_MS).toISOString().slice(0, 10);
+  return {
+    from,
+    to: clampedTo,
+    notice: `FMP serves at most ${MAX_RANGE_DAYS} days per request, so this covers ${from} to ${clampedTo}; call again with from=${nextFrom} for the rest.`,
+  };
+}
 
 export const calendarDefinitions: FMPToolDefinition[] = [
   defineTool({
     name: 'getEarningsCalendar',
     description:
-      'Get earnings calendar showing upcoming and recent earnings announcements, in date order. A week can hold ~2,000 companies worldwide, so pass `symbols` to look up specific companies (e.g. mega-cap tech) instead of scanning the whole calendar.',
+      'Get earnings calendar showing upcoming and recent earnings announcements, in date order. A week can hold ~2,000 companies worldwide, so pass `symbols` to look up specific companies (e.g. mega-cap tech) instead of scanning the whole calendar. Ranges longer than 90 days are cut to the first 90.',
     inputSchema: dateRangeSchema.extend({
       symbols: z
         .array(z.string().min(1))
@@ -27,9 +54,10 @@ export const calendarDefinitions: FMPToolDefinition[] = [
         .describe('Only return these symbols (e.g., ["AAPL", "MSFT", "NVDA"])'),
     }),
     execute: async ({ from, to, symbols, limit }) => {
+      const range = clampRange(from, to);
       const res = await getFMPClient().calendar.getEarningsCalendar({
-        from: from ?? undefined,
-        to: to ?? undefined,
+        from: range.from,
+        to: range.to,
       });
       // FMP has no symbol filter for this endpoint, so filter the date range here.
       const wanted = symbols?.length ? new Set(symbols.map(s => s.toUpperCase())) : null;
@@ -37,7 +65,8 @@ export const calendarDefinitions: FMPToolDefinition[] = [
         wanted && res.success !== false && Array.isArray(res.data)
           ? { ...res, data: res.data.filter(row => wanted.has(row.symbol.toUpperCase())) }
           : res;
-      return toCappedToolResponse(filtered, limit ?? 50, {
+      return toCappedToolResponse(filtered, Math.min(limit ?? 50, MAX_ROWS), {
+        notice: range.notice,
         hint: 'Rows are in date order. Pass `symbols` to find specific companies, or narrow the date range.',
       });
     },
@@ -45,16 +74,18 @@ export const calendarDefinitions: FMPToolDefinition[] = [
   defineTool({
     name: 'getEconomicCalendar',
     description:
-      'Get economic calendar showing upcoming and recent economic events and indicators, in date order (at most `limit` entries; narrow the date range for full coverage)',
+      'Get economic calendar showing upcoming and recent economic events and indicators, in date order (at most `limit` entries; ranges longer than 90 days are cut to the first 90)',
     inputSchema: dateRangeSchema,
-    execute: async ({ from, to, limit }) =>
-      toCappedToolResponse(
-        await getFMPClient().calendar.getEconomicsCalendar({
-          from: from ?? undefined,
-          to: to ?? undefined,
-        }),
-        limit ?? 50,
-        { hint: 'Rows are in date order; narrow the date range to see the rest.' },
-      ),
+    execute: async ({ from, to, limit }) => {
+      const range = clampRange(from, to);
+      return toCappedToolResponse(
+        await getFMPClient().calendar.getEconomicsCalendar({ from: range.from, to: range.to }),
+        Math.min(limit ?? 50, MAX_ROWS),
+        {
+          notice: range.notice,
+          hint: 'Rows are in date order; narrow the date range to see the rest.',
+        },
+      );
+    },
   }),
 ];

@@ -83,6 +83,8 @@ describe('toCappedToolResponse', () => {
     expect(out).toEqual({
       data: [{ n: 1 }, { n: 2 }],
       truncated: true,
+      total: 3,
+      returned: 2,
       note: 'Showing 2 of 3 rows. Narrow the range.',
     });
   });

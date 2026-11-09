@@ -8,7 +8,7 @@ const byNameLimit = z
   .int()
   .positive()
   .default(50)
-  .describe('Max number of trades to return (default 50)');
+  .describe('Max number of trades to return (default 50, max 100)');
 
 const symbolSchema = z.object({
   symbol: z
@@ -56,7 +56,7 @@ export const senateHouseDefinitions: FMPToolDefinition[] = [
     execute: async ({ name, limit }) =>
       toCappedToolResponse(
         await getFMPClient().senateHouse.getSenateTradingByName({ name }),
-        limit ?? 50,
+        Math.min(limit ?? 50, 100),
       ),
   }),
   defineTool({
@@ -73,7 +73,7 @@ export const senateHouseDefinitions: FMPToolDefinition[] = [
     execute: async ({ name, limit }) =>
       toCappedToolResponse(
         await getFMPClient().senateHouse.getHouseTradingByName({ name }),
-        limit ?? 50,
+        Math.min(limit ?? 50, 100),
       ),
   }),
   defineTool({

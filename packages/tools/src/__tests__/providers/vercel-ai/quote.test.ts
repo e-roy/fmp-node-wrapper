@@ -66,6 +66,8 @@ describe('Vercel AI Quote Tools (minimal)', () => {
       from: undefined,
       to: undefined,
     });
-    expect(JSON.parse(result)).toHaveLength(10);
+    const out = JSON.parse(result);
+    expect(out.data).toHaveLength(10);
+    expect(out).toMatchObject({ truncated: true, total: 100, returned: 10 });
   });
 });

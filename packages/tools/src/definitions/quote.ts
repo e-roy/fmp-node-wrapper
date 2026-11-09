@@ -1,8 +1,7 @@
 import { z } from 'zod';
 import { getFMPClient } from '@/client';
-import { toToolResponse } from '@/utils/format-response';
+import { toCappedToolResponse, toToolResponse } from '@/utils/format-response';
 import { defineTool, type FMPToolDefinition } from './types';
-import type { APIResponse } from 'fmp-node-api';
 
 export const quoteDefinitions: FMPToolDefinition[] = [
   defineTool({
@@ -42,7 +41,7 @@ export const quoteDefinitions: FMPToolDefinition[] = [
         .int()
         .positive()
         .default(30)
-        .describe('Max number of most-recent days to return (default 30)'),
+        .describe('Max number of most-recent days to return (default 30, max 365)'),
     }),
     execute: async ({ symbol, from, to, limit }) => {
       const res = await getFMPClient().quote.getHistoricalPrice({
@@ -50,13 +49,29 @@ export const quoteDefinitions: FMPToolDefinition[] = [
         from: from ?? undefined,
         to: to ?? undefined,
       });
-      // Response is { symbol, historical: [...] } (newest first); cap to `limit`.
-      const data = res.data as { historical?: unknown[] } | null;
-      if (res.success && data && Array.isArray(data.historical)) {
-        return toToolResponse({
-          ...res,
-          data: { ...data, historical: data.historical.slice(0, limit ?? 30) },
-        } as APIResponse<unknown>);
+      // Response is { symbol, historical: [...] } (newest first): cap the inner list,
+      // and flag the cut so the model knows older days exist.
+      const data = res.data as { symbol?: string; historical?: unknown[] } | null;
+      const max = Math.min(limit ?? 30, 365);
+      if (
+        res.success !== false &&
+        data &&
+        Array.isArray(data.historical) &&
+        data.historical.length > max
+      ) {
+        const total = data.historical.length;
+        return JSON.stringify(
+          {
+            ...data,
+            historical: data.historical.slice(0, max),
+            truncated: true,
+            total,
+            returned: max,
+            note: `Showing the ${max} most recent of ${total} days. Narrow the date range or increase \`limit\` to see older days.`,
+          },
+          null,
+          2,
+        );
       }
       return toToolResponse(res);
     },
@@ -78,19 +93,18 @@ export const quoteDefinitions: FMPToolDefinition[] = [
         .int()
         .positive()
         .default(50)
-        .describe('Max number of most-recent bars to return (default 50)'),
+        .describe('Max number of most-recent bars to return (default 50, max 390)'),
     }),
-    execute: async ({ symbol, interval = '5min', from, to, limit }) => {
-      const res = await getFMPClient().quote.getIntraday({
-        symbol,
-        interval,
-        from: from ?? undefined,
-        to: to ?? undefined,
-      });
-      if (res.success && Array.isArray(res.data)) {
-        return toToolResponse({ ...res, data: res.data.slice(0, limit ?? 50) } as APIResponse<unknown>);
-      }
-      return toToolResponse(res);
-    },
+    execute: async ({ symbol, interval = '5min', from, to, limit }) =>
+      toCappedToolResponse(
+        await getFMPClient().quote.getIntraday({
+          symbol,
+          interval,
+          from: from ?? undefined,
+          to: to ?? undefined,
+        }),
+        Math.min(limit ?? 50, 390),
+        { hint: 'Most recent bars first; narrow the date range to see earlier bars.' },
+      ),
   }),
 ];

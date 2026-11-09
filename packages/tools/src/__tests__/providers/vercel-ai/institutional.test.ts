@@ -47,7 +47,7 @@ describe('Vercel AI Institutional Tools (minimal)', () => {
     expect(result.note).toContain('Showing 2 of 3 rows');
   });
 
-  it('getInstitutionalHolders drops stale filings and merges name variants', async () => {
+  it('getInstitutionalHolders keeps the last two quarters and merges name variants', async () => {
     mockInstitutional.getInstitutionalHolders.mockResolvedValueOnce({
       success: true,
       data: [
@@ -55,6 +55,7 @@ describe('Vercel AI Institutional Tools (minimal)', () => {
         { holder: 'BlackRock Inc.', shares: 1050, dateReported: '2026-03-31' },
         { holder: 'BlackRock Fund Advisors', shares: 77, dateReported: '2016-12-31' },
         { holder: 'VANGUARD GROUP INC', shares: 1426, dateReported: '2025-12-31' },
+        { holder: 'VANGUARD CAPITAL MANAGEMENT LLC', shares: 900, dateReported: '2026-09-30' },
       ],
     });
 
@@ -62,11 +63,25 @@ describe('Vercel AI Institutional Tools (minimal)', () => {
       await (institutionalTools.getInstitutionalHolders.execute as any)({ symbol: 'AAPL' }),
     );
 
-    // Newest filing per holder within a year of the newest filing, largest first.
+    // Newest is 2026-09-30, so 2026-06-30 stays; 2026-03-31 and older (incl. the
+    // pre-restructuring Vanguard entity) drop out. Largest first.
     expect(result.map((h: { holder: string }) => h.holder)).toEqual([
-      'VANGUARD GROUP INC',
       'BlackRock, Inc.',
+      'VANGUARD CAPITAL MANAGEMENT LLC',
     ]);
+  });
+
+  it('getInstitutionalHolders enforces the max limit', async () => {
+    mockInstitutional.getInstitutionalHolders.mockResolvedValueOnce({
+      success: true,
+      data: Array.from({ length: 150 }, (_, i) => ({ holder: `H${i}`, shares: i, dateReported: '2026-09-30' })),
+    });
+
+    const result = JSON.parse(
+      await (institutionalTools.getInstitutionalHolders.execute as any)({ symbol: 'AAPL', limit: 2000 }),
+    );
+
+    expect(result).toMatchObject({ truncated: true, total: 150, returned: 100 });
   });
 
   it('getInstitutionalHolders falls back to the default limit when limit is null', async () => {

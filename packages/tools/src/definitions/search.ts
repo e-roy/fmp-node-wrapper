@@ -15,7 +15,7 @@ export const searchDefinitions: FMPToolDefinition[] = [
         .int()
         .positive()
         .default(10)
-        .describe('Max number of results to return (default 10)'),
+        .describe('Max number of results to return (default 10, max 50)'),
       exchange: z
         .string()
         .optional()
@@ -26,7 +26,7 @@ export const searchDefinitions: FMPToolDefinition[] = [
       toToolResponse(
         await getFMPClient().search.search({
           query,
-          limit: limit ?? 10,
+          limit: Math.min(limit ?? 10, 50),
           exchange: exchange ?? undefined,
         }),
       ),

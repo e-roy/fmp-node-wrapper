@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { tool } from '@openai/agents';
 import { logApiExecutionWithTiming } from './logger';
 import { toToolError } from './format-response';
+import { stripNulls } from './tool-input';
 
 export interface OpenAIToolConfig<T extends z.ZodObject<any>> {
   name: string;
@@ -24,7 +25,8 @@ export function createOpenAITool<T extends z.ZodObject<any>>(config: OpenAIToolC
     parameters: inputSchema as z.ZodObject<any>,
     execute: async (input: unknown) => {
       try {
-        const args = inputSchema.parse(input) as z.infer<T>;
+        // `null` means "not set", so it falls back to the schema default.
+        const args = inputSchema.parse(stripNulls(input)) as z.infer<T>;
         return await logApiExecutionWithTiming(name, args, () => execute(args));
       } catch (error) {
         // Never throw out of a tool — return a structured error the model can

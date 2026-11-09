@@ -42,24 +42,30 @@ export function limitRows<T>(
 }
 
 /**
- * `toToolResponse` for list endpoints, capped at `limit` rows. When rows are cut,
- * the model receives `{ data, truncated: true, note }` saying how many rows exist
- * and how to reach the rest, instead of silently getting a partial list.
+ * `toToolResponse` for list endpoints, capped at `limit` rows. When rows are cut (or
+ * a `notice` must reach the model, e.g. a clamped date range), the model receives
+ * `{ data, truncated, total, returned, note }` instead of a silently partial list.
  */
 export function toCappedToolResponse<T>(
   res: APIResponse<T[]>,
   limit: number,
-  options: { compare?: (a: T, b: T) => number; hint?: string } = {},
+  options: { compare?: (a: T, b: T) => number; hint?: string; notice?: string } = {},
 ): string {
   const total = res.success !== false && Array.isArray(res.data) ? res.data.length : 0;
   const capped = limitRows(res, limit, options.compare);
-  if (total <= limit) return toToolResponse(capped);
+  const truncated = total > limit;
+  if (capped.success === false || !Array.isArray(capped.data) || (!truncated && !options.notice)) {
+    return toToolResponse(capped);
+  }
+  const note = [
+    truncated ? `Showing ${capped.data.length} of ${total} rows.` : undefined,
+    options.notice,
+    truncated ? (options.hint ?? 'Increase `limit` to see more.') : undefined,
+  ]
+    .filter(Boolean)
+    .join(' ');
   return JSON.stringify(
-    {
-      data: capped.data,
-      truncated: true,
-      note: `Showing ${limit} of ${total} rows. ${options.hint ?? 'Increase `limit` to see more.'}`,
-    },
+    { data: capped.data, truncated, total, returned: capped.data.length, note },
     null,
     2,
   );

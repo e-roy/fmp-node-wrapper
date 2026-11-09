@@ -10,7 +10,12 @@ const period = z
 
 const symbol = (what: string) => z.string().min(1).describe(`The stock symbol to get ${what} for`);
 
-const limit = z.number().default(5).describe('The number of periods to retrieve');
+const limit = z
+  .number()
+  .int()
+  .positive()
+  .default(5)
+  .describe('The number of periods to retrieve (default 5, max 20)');
 
 /** Build a standard statement tool: symbol + period + limit -> fmp.financial[method]. */
 const statementTool = (
@@ -24,7 +29,7 @@ const statementTool = (
     description,
     inputSchema: z.object({ symbol: symbol(what), period, limit }),
     execute: async ({ symbol, period, limit }) =>
-      toToolResponse(await call({ symbol, period, limit: limit ?? undefined })),
+      toToolResponse(await call({ symbol, period, limit: Math.min(limit ?? 5, 20) })),
   });
 
 export const financialDefinitions: FMPToolDefinition[] = [
@@ -84,11 +89,19 @@ export const financialDefinitions: FMPToolDefinition[] = [
     description: 'Get earnings historical for a company',
     inputSchema: z.object({
       symbol: symbol('earnings historical'),
-      limit: z.number().default(10).describe('The number of periods to retrieve'),
+      limit: z
+        .number()
+        .int()
+        .positive()
+        .default(10)
+        .describe('The number of periods to retrieve (default 10, max 40)'),
     }),
     execute: async ({ symbol, limit }) =>
       toToolResponse(
-        await getFMPClient().financial.getEarningsHistorical({ symbol, limit: limit ?? 10 }),
+        await getFMPClient().financial.getEarningsHistorical({
+          symbol,
+          limit: Math.min(limit ?? 10, 40),
+        }),
       ),
   }),
   defineTool({

@@ -25,10 +25,13 @@ export const marketDefinitions: FMPToolDefinition[] = [
         .int()
         .positive()
         .default(50)
-        .describe('Max number of indices to return (default 50)'),
+        .describe('Max number of indices to return (default 50, max 100)'),
     }),
     execute: async ({ limit }) =>
-      toCappedToolResponse(await getFMPClient().market.getMarketPerformance(), limit ?? 50),
+      toCappedToolResponse(
+        await getFMPClient().market.getMarketPerformance(),
+        Math.min(limit ?? 50, 100),
+      ),
   }),
   defineTool({
     name: 'getSectorPerformance',

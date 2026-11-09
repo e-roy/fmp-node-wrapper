@@ -51,6 +51,8 @@ describe('Vercel AI Analyst Tools (minimal)', () => {
     const result = await (analystTools.getStockGrades.execute as any)({ symbol: 'AAPL', limit: 5 });
 
     expect(mockAnalyst.getGrades).toHaveBeenCalledWith({ symbol: 'AAPL' });
-    expect(JSON.parse(result)).toHaveLength(5);
+    const out = JSON.parse(result);
+    expect(out.data).toHaveLength(5);
+    expect(out).toMatchObject({ truncated: true, total: 40, returned: 5 });
   });
 });
