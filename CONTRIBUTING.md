@@ -22,8 +22,8 @@ This project is committed to providing a welcoming and inclusive environment for
 
 ### Prerequisites
 
-- Node.js 18+
-- pnpm (recommended) or npm
+- Node.js 22.13+
+- pnpm 11 (any pnpm 11 install switches to the exact version pinned in `package.json`; npm and yarn are not supported)
 - Git
 - A Financial Modeling Prep API key (for testing)
 

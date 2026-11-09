@@ -571,8 +571,8 @@ Flags: `--delay <ms>` (default 400) paces calls; `--timeout <ms>` (default 30000
 
 ### Prerequisites
 
-- Node.js 18+
-- pnpm (recommended) or npm
+- Node.js 22.13+
+- pnpm 11 (any pnpm 11 install switches to the exact version pinned in `package.json`; npm and yarn are not supported)
 - FMP API key
 
 ### Setup

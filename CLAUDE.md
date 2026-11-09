@@ -18,6 +18,8 @@ Dependency chain is `types → api → tools`. Turbo encodes this: most tasks `d
 
 **Always run from the repo root, and use `pnpm` exclusively** (npm/yarn will break the workspace). Turbo fans tasks out to packages.
 
+The toolchain is **pnpm 11 on Node 22.13+**. The exact pnpm version is pinned in root `package.json#packageManager` (Turborepo reads that field to detect pnpm), and any pnpm 11 switches to it. pnpm settings live in `pnpm-workspace.yaml`; `.npmrc` holds only the registry (pnpm 11 reads nothing else from it). Dependency install scripts are blocked unless reviewed in `allowBuilds` (`strictDepBuilds` fails the install on any unreviewed one). Don't set `minimumReleaseAge` in the repo: the 1-day default applies, and a project value would override a stricter global one.
+
 ```bash
 pnpm build              # build all packages (tsup, respects dep order)
 pnpm test               # all tests (depends on ^build)
@@ -83,7 +85,7 @@ To add a tool: add one `defineTool({...})` to the relevant `src/definitions/<cat
 
 ## Build & publish
 
-Each package builds with **tsup** to dual CJS+ESM with `.d.ts` (see per-package `tsup.config.ts`); `axios` is marked external in the API build. Versioning/publishing uses **Changesets**: `pnpm changeset` to record a change, `pnpm publish-packages` to build+lint+test+**live-check**+version+publish. The `pnpm test:live` step is a **release gate**: it validates the real FMP API against the canonical schemas and aborts the publish on any FAIL across the full manifest (e.g. a renamed/removed route); DRIFT does not block a release — the weekly `live-check.yml` job runs with `--fail-on-drift` to surface it. So always release via `pnpm publish-packages` (the CI publish job runs the same gate as its own step). It needs `FMP_API_KEY` present at release time.
+Each package builds with **tsup** to dual CJS+ESM with `.d.ts` (see per-package `tsup.config.ts`); `axios` is marked external in the API build. Versioning/publishing uses **Changesets**: `pnpm changeset` to record a change, `pnpm publish-packages` to build+lint+test+**live-check**+version+publish. Changesets 3 publishes through pnpm natively (`pnpm info`/`pnpm publish`, no npm CLI). Its `changeset version` exits 1 when nothing is pending, so the release paths call `scripts/changeset-version.js`, which skips the version step when there are no changesets. The `pnpm test:live` step is a **release gate**: it validates the real FMP API against the canonical schemas and aborts the publish on any FAIL across the full manifest (e.g. a renamed/removed route); DRIFT does not block a release — the weekly `live-check.yml` job runs with `--fail-on-drift` to surface it. So always release via `pnpm publish-packages` (the CI publish job runs the same gate as its own step). It needs `FMP_API_KEY` present at release time.
 
 ## Conventions
 
