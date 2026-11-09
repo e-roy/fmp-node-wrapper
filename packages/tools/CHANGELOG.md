@@ -1,5 +1,44 @@
 # fmp-ai-tools
 
+## 0.2.4
+
+### Patch Changes
+
+Schema fixes (verified against the live FMP API):
+
+- **FinancialRatios / FinancialRatiosTTM**: add `priceToEarningsDilutedRatio` and `priceToEarningsDilutedGrowthRatio` (and their `…TTM` forms).
+- **Senate/House trading** (all three schemas): add `senateID` (the member's congressional Bioguide ID).
+- **Screener**: add `avgVolume`. **IPOCalendar**: add `dealSize` (`number | null`).
+- **ExchangeMarketHours**: add optional `openingAdditional` / `closingAdditional` (the afternoon session after a midday break, e.g. HKSE).
+- **Now nullable**: `AftermarketTrade.tradeSize`, `News.symbol`, `News.image`, `EarningsConfirmed.time` / `.when`, and `EconomicsCalendar.changePercentage`. With `strictNullChecks`, code that reads these may need a null check.
+
+Packaging:
+
+- **Types no longer degrade to `any`**: `fmp-node-types` is now a real dependency of `fmp-node-api`, so the published types resolve against its own `zod@3`. Apps on zod 4 (every `fmp-ai-tools` user) or without zod now get real types.
+- **Schemas are type-only re-exports**: `fmp-node-api` and `fmp-node-api/types` re-export the types with `export type *`. Using a Zod schema (e.g. `QuoteSchema`) as a value is now a compile error instead of `undefined` at runtime; import schemas from `fmp-node-types` if you need them.
+- **`./package.json`** is exported from all three packages.
+
+API:
+
+- **Plan errors**: when FMP rejects only one parameter value ("Premium Query Parameter", e.g. a quarterly period or an older date), the error says so instead of calling the whole endpoint unavailable.
+- **Docs**: `getEarningsCalendar` / `getEconomicsCalendar` document FMP's 90-day window per request (a longer range silently returns only its last 90 days), and `getEarningsConfirmed` documents FMP's cap of 100 rows per request.
+
+AI tools:
+
+- **Bounded outputs**: every `limit` has a default and a hard maximum, stated in its description; larger requests are capped with a note. `getAnalystEstimates` allows at most 10 (FMP's Starter plan rejects more), and `getHistoricalPrice` at most 252 (about one trading year).
+- **No silent truncation**: when rows are cut or a request is capped, tools return `{ data, truncated, total, returned, note }` instead of a bare partial list.
+- **`getEarningsCalendar`**: new `symbols` filter (a single week holds ~2,000 companies worldwide).
+- **Calendar ranges**: ranges longer than FMP's 90-day window are cut to the first 90 days, and a `from` without a `to` gets an explicit 90-day window; the `note` says where to continue.
+- **`getInstitutionalHolders`**: each holder's latest 13F filing from the last two reporting quarters, name variants merged, largest first.
+- **`getETFHoldings`**: defaults to the latest holdings date (FMP returns nothing without one), largest weight first.
+- **Defaults**: `null` means "use the default" for every defaulted parameter, on both the Vercel AI SDK and OpenAI Agents providers.
+- **Descriptions**: the financial-ratio tools name the valuation multiples they return (P/E incl. diluted P/E, PEG, P/B, P/S, P/FCF, EV multiple).
+
+Docs: FMP API-key links are now plain links (no referral code or discount wording).
+
+- Updated dependencies
+  - fmp-node-api@0.2.4
+
 ## 0.2.4-beta.4
 
 ### Patch Changes
