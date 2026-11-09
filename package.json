@@ -39,22 +39,23 @@
     "type-check": "turbo run type-check",
     "format": "turbo run format",
     "format:check": "turbo run format:check",
-    "publish-packages": "turbo run build lint test --filter=./packages/* && pnpm test:live && changeset version && changeset publish"
+    "publish-packages": "turbo run build lint test --filter=./packages/* && pnpm test:live && node scripts/changeset-version.js && changeset publish"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.27.1",
+    "@changesets/cli": "^3.0.3",
     "@eslint/js": "^9.0.0",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
     "eslint": "^9.0.0",
     "jest": "^29.7.0",
+    "prettier": "^3.2.5",
     "rimraf": "^5.0.5",
     "ts-jest": "^29.1.2",
     "turbo": "^2.9.14",
     "typescript": "^5.3.3"
   },
-  "packageManager": "pnpm@9.2.0",
+  "packageManager": "pnpm@11.28.9",
   "engines": {
-    "node": ">=20.9.0"
+    "node": ">=22.13.0"
   }
 }
