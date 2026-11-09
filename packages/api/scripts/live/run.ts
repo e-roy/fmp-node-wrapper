@@ -178,14 +178,15 @@ async function main(): Promise<void> {
     }
     if (calls > 0) await sleep(delay);
 
+    const client = c.timeout ? new FMP({ apiKey, timeout: c.timeout }) : fmp;
     const start = Date.now();
-    let res = await callCase(c, fmp);
+    let res = await callCase(c, client);
     calls++;
     let retried = false;
     if (isTransientFailure(res)) {
       // One retry so a transient blip (timeout / reset / 5xx) doesn't fail the whole run.
       await sleep(RETRY_BACKOFF_MS);
-      res = await callCase(c, fmp);
+      res = await callCase(c, client);
       calls++;
       retried = true;
     }

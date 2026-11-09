@@ -45,6 +45,17 @@ describe('classifyTransport', () => {
   it('classifies other failures as FAIL', () => {
     expect(classifyTransport({ success: false, data: null, error: 'boom', status: 500 })?.outcome).toBe('FAIL');
   });
+
+  it('classifies FMP gateway errors (502/503/504) as SKIP', () => {
+    for (const status of [502, 503, 504]) {
+      expect(classifyTransport({ success: false, data: null, error: 'Gateway Timeout', status })?.outcome).toBe('SKIP');
+    }
+  });
+
+  it('keeps a client-side timeout (no response, reported as 500) a FAIL', () => {
+    const c = classifyTransport({ success: false, data: null, error: 'Network error: timeout of 30000ms exceeded', status: 500 });
+    expect(c?.outcome).toBe('FAIL');
+  });
 });
 
 describe('isTransientFailure', () => {

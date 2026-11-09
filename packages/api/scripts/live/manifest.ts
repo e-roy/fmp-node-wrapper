@@ -169,6 +169,8 @@ export interface LiveCase {
   planLocked?: boolean;
   /** Validate at least this many array rows, overriding --sample (for sparse nulls). */
   sample?: number;
+  /** Per-request timeout for this case (ms), overriding --timeout (for slow endpoints). */
+  timeout?: number;
 }
 
 const RANGE = { from: '2024-01-01', to: '2024-01-31' };
@@ -283,7 +285,9 @@ export const manifest: LiveCase[] = [
   { category: 'insider', name: 'getInsidersBySymbol(AAPL)', schema: InsidersBySymbolResponseSchema, kind: 'array', call: (fmp) => fmp.insider.getInsidersBySymbol({ symbol: 'AAPL' }) },
   { category: 'insider', name: 'getInsiderTradeStatistics(AAPL)', schema: InsiderTradeStatisticsResponseSchema, kind: 'array', call: (fmp) => fmp.insider.getInsiderTradeStatistics({ symbol: 'AAPL' }) },
   { category: 'insider', name: 'getCikMapper()', schema: CikMapperResponseSchema, kind: 'array', call: (fmp) => fmp.insider.getCikMapper({ page: 0 }) },
-  { category: 'insider', name: 'getCikMapperByName(zuckerberg)', schema: CikMapperResponseSchema, kind: 'array', call: (fmp) => fmp.insider.getCikMapperByName({ name: 'zuckerberg', page: 0 }) },
+  // FMP's name search can stall for 30-60 s (then 504s at its gateway), so give it
+  // longer than FMP's own cut-off; a 504 is reported as SKIP rather than FAIL.
+  { category: 'insider', name: 'getCikMapperByName(zuckerberg)', schema: CikMapperResponseSchema, kind: 'array', timeout: 65_000, call: (fmp) => fmp.insider.getCikMapperByName({ name: 'zuckerberg', page: 0 }) },
   { category: 'insider', name: 'getCikMapperBySymbol(MSFT)', schema: CikMapperBySymbolResponseSchema, kind: 'object', call: (fmp) => fmp.insider.getCikMapperBySymbol({ symbol: 'MSFT' }) },
   { category: 'insider', name: 'getBeneficialOwnership(AAPL)', schema: BeneficialOwnershipResponseSchema, kind: 'array', call: (fmp) => fmp.insider.getBeneficialOwnership({ symbol: 'AAPL', limit: 10 }) },
   { category: 'insider', name: 'getFailToDeliver(GE)', schema: FailToDeliverResponseSchema, kind: 'array', call: (fmp) => fmp.insider.getFailToDeliver({ symbol: 'GE', page: 0 }) },
