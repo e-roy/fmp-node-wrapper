@@ -115,6 +115,6 @@ jobs:
         run: pnpm test:live
 
       - name: Version and publish
-        run: pnpm exec changeset version && pnpm exec changeset publish
+        run: node scripts/changeset-version.js && pnpm exec changeset publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
