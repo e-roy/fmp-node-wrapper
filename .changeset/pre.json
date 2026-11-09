@@ -13,6 +13,7 @@
     "beta-consumer-fixes",
     "beta-retest-fixes",
     "live-drift-fixes",
+    "tool-caps-and-null-defaults",
     "tool-limits-and-ranges"
   ]
 }
