@@ -6,6 +6,8 @@ import { z } from "zod";
 
 export const SenateTradingResponseSchema = z.object({
     symbol: z.string(),
+    // Congressional Bioguide ID (e.g. "P000197"); FMP uses this key for House members too.
+    senateID: z.string(),
     disclosureDate: z.string(),
     transactionDate: z.string(),
     firstName: z.string(),
@@ -25,6 +27,7 @@ export const SenateTradingResponseSchema = z.object({
 
 export const HouseTradingResponseSchema = z.object({
     symbol: z.string(),
+    senateID: z.string(),
     disclosureDate: z.string(),
     transactionDate: z.string(),
     firstName: z.string(),
@@ -43,6 +46,7 @@ export const HouseTradingResponseSchema = z.object({
 
 export const SenateHouseTradingByNameResponseSchema = z.object({
     symbol: z.string(),
+    senateID: z.string(),
     disclosureDate: z.string(),
     transactionDate: z.string(),
     firstName: z.string(),

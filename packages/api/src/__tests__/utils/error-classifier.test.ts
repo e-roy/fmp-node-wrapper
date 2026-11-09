@@ -20,6 +20,17 @@ describe('classifyError', () => {
     expect(classifyError(200, 'Please upgrade your plan').errorType).toBe('plan-restricted');
   });
 
+  it('says only the parameter value is locked for a "Premium Query Parameter" error', () => {
+    const c = classifyError(
+      402,
+      "Premium Query Parameter: 'Special Endpoint : This value set for 'period' is not available under your current subscription",
+    );
+    expect(c.errorType).toBe('plan-restricted');
+    expect(c.message).toMatch(/^A parameter value in this request is not available/);
+    expect(c.message).toContain("value set for 'period'");
+    expect(classifyError(402, 'Restricted Endpoint').message).toMatch(/^This endpoint is not available/);
+  });
+
   it('classifies 429 as rate-limit', () => {
     const c = classifyError(429, 'Limit Reach');
     expect(c.errorType).toBe('rate-limit');

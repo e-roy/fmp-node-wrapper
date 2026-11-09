@@ -250,6 +250,8 @@ export const FinancialRatiosSchema = z.object({
   priceToEarningsRatio: z.number(),
   priceToEarningsGrowthRatio: z.number(),
   forwardPriceToEarningsGrowthRatio: z.number(),
+  priceToEarningsDilutedRatio: z.number(),
+  priceToEarningsDilutedGrowthRatio: z.number(),
   priceToBookRatio: z.number(),
   priceToSalesRatio: z.number(),
   priceToFreeCashFlowRatio: z.number(),
@@ -600,7 +602,7 @@ export const KeyMetricsTTMSchema = z.object({
 export type KeyMetricsTTM = z.infer<typeof KeyMetricsTTMSchema>;
 
 // Financial Ratios TTM (trailing-twelve-month snapshot) — stable /ratios-ttm.
-// Verified against the live FMP `stable` API (2026-05-27).
+// Verified against the live FMP `stable` API (2026-05-27; diluted P/E fields added 2026-09-26).
 export const FinancialRatiosTTMSchema = z.object({
   symbol: z.string(),
   grossProfitMarginTTM: z.number(),
@@ -623,6 +625,8 @@ export const FinancialRatiosTTMSchema = z.object({
   priceToEarningsRatioTTM: z.number(),
   priceToEarningsGrowthRatioTTM: z.number(),
   forwardPriceToEarningsGrowthRatioTTM: z.number(),
+  priceToEarningsDilutedRatioTTM: z.number(),
+  priceToEarningsDilutedGrowthRatioTTM: z.number(),
   priceToBookRatioTTM: z.number(),
   priceToSalesRatioTTM: z.number(),
   priceToFreeCashFlowRatioTTM: z.number(),

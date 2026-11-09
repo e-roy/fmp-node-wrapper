@@ -1,4 +1,9 @@
-import { toToolResponse, toToolError } from '@/utils/format-response';
+import {
+  limitRows,
+  toCappedToolResponse,
+  toToolResponse,
+  toToolError,
+} from '@/utils/format-response';
 
 describe('toToolResponse', () => {
   it('returns pretty JSON of data on success', () => {
@@ -41,6 +46,60 @@ describe('toToolResponse', () => {
     // Defensive: partial responses (no `success` field) should still return data.
     const out = toToolResponse({ data: { ok: true } } as never);
     expect(JSON.parse(out)).toEqual({ ok: true });
+  });
+});
+
+describe('limitRows', () => {
+  const ok = (data: { n: number }[]) => ({ success: true, data, error: null, status: 200 });
+
+  it('caps an array payload at `limit` rows, keeping the original order', () => {
+    expect(limitRows(ok([{ n: 1 }, { n: 2 }, { n: 3 }]), 2).data).toEqual([{ n: 1 }, { n: 2 }]);
+  });
+
+  it('sorts before capping when a comparator is given', () => {
+    const res = limitRows(ok([{ n: 1 }, { n: 3 }, { n: 2 }]), 2, (a, b) => b.n - a.n);
+    expect(res.data).toEqual([{ n: 3 }, { n: 2 }]);
+  });
+
+  it('passes failures and non-array payloads through unchanged', () => {
+    const failed = { success: false, data: null, error: 'boom', status: 500 };
+    expect(limitRows(failed as never, 1)).toBe(failed);
+    const single = { success: true, data: { n: 1 }, error: null, status: 200 };
+    expect(limitRows(single as never, 1)).toBe(single);
+  });
+});
+
+describe('toCappedToolResponse', () => {
+  const ok = (data: { n: number }[]) => ({ success: true, data, error: null, status: 200 });
+
+  it('returns the plain array when nothing is cut', () => {
+    expect(JSON.parse(toCappedToolResponse(ok([{ n: 1 }]), 5))).toEqual([{ n: 1 }]);
+  });
+
+  it('wraps a cut list with a truncation note', () => {
+    const out = JSON.parse(
+      toCappedToolResponse(ok([{ n: 1 }, { n: 2 }, { n: 3 }]), 2, { hint: 'Narrow the range.' }),
+    );
+    expect(out).toEqual({
+      data: [{ n: 1 }, { n: 2 }],
+      truncated: true,
+      total: 3,
+      returned: 2,
+      note: 'Showing 2 of 3 rows. Narrow the range.',
+    });
+  });
+
+  it('keeps the structured error shape on failure', () => {
+    const failed = { success: false, data: null, error: 'boom', status: 500 };
+    expect(JSON.parse(toCappedToolResponse(failed as never, 2)).error).toBe(true);
+  });
+
+  it('only suggests a larger `limit` when the tool is below its maximum', () => {
+    const rows = ok([{ n: 1 }, { n: 2 }, { n: 3 }]);
+    expect(JSON.parse(toCappedToolResponse(rows, 2, { max: 5 })).note).toContain('Increase `limit`');
+    const atMax = JSON.parse(toCappedToolResponse(rows, 2, { max: 2 })).note;
+    expect(atMax).not.toContain('Increase `limit`');
+    expect(atMax).toContain('most this tool returns per call');
   });
 });
 

@@ -106,10 +106,11 @@ jobs:
       - name: Build packages
         run: pnpm build
 
-      # Release gate: validate the live FMP API against the canonical schemas before
-      # publishing, so a broken/renamed route can never ship. Kept as its own step
-      # (rather than relying on publish-packages) so CI publishes are gated
-      # independently of how the publish command is invoked.
+      # Release gate: validate the live FMP API (every manifest case) against the
+      # canonical schemas before publishing, so a broken/renamed route can never ship.
+      # FAIL blocks the release; DRIFT is reported but does not (no --fail-on-drift).
+      # Kept as its own step (rather than relying on publish-packages) so CI publishes
+      # are gated independently of how the publish command is invoked.
       - name: Live API drift check (release gate)
         run: pnpm test:live
 

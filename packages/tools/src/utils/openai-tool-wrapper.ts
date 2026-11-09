@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { tool } from '@openai/agents';
 import { logApiExecutionWithTiming } from './logger';
 import { toToolError } from './format-response';
+import { acceptNullForDefaults, stripNulls } from './tool-input';
 
 export interface OpenAIToolConfig<T extends z.ZodObject<any>> {
   name: string;
@@ -14,17 +15,18 @@ export function createOpenAITool<T extends z.ZodObject<any>>(config: OpenAIToolC
   const { name, description, inputSchema, execute } = config;
 
   // @openai/agents derives the JSON schema from the Zod schema and validates
-  // input against it before invoking execute. The cast widens our generic T to
-  // the SDK's ZodObjectLike `parameters` type (runtime value is the real schema).
-  // We also parse here so Zod defaults/coercion are applied consistently before
-  // execute, regardless of whether the caller pre-validated.
+  // input against it before invoking execute — so it gets a copy whose defaulted
+  // fields also accept `null` (otherwise `limit: null` is rejected before our
+  // null handling runs). We then parse with the real schema so Zod defaults and
+  // coercion apply consistently, regardless of whether the caller pre-validated.
   return tool({
     name,
     description,
-    parameters: inputSchema as z.ZodObject<any>,
+    parameters: acceptNullForDefaults(inputSchema),
     execute: async (input: unknown) => {
       try {
-        const args = inputSchema.parse(input) as z.infer<T>;
+        // `null` means "not set", so it falls back to the schema default.
+        const args = inputSchema.parse(stripNulls(input)) as z.infer<T>;
         return await logApiExecutionWithTiming(name, args, () => execute(args));
       } catch (error) {
         // Never throw out of a tool — return a structured error the model can

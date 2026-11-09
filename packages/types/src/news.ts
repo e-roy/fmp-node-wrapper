@@ -5,11 +5,13 @@
 import { z } from "zod";
 
 export const NewsSchema = z.object({
-    symbol: z.string(),
+    // null on market-wide stories with no single ticker (verified live 2026-09-26).
+    symbol: z.string().nullable(),
     publishedDate: z.string(),
     publisher: z.string(),
     title: z.string(),
-    image: z.string(),
+    // null when the article has no image (verified live 2026-09-26).
+    image: z.string().nullable(),
     site: z.string(),
     text: z.string(),
     url: z.string()

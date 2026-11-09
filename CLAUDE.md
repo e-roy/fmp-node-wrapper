@@ -6,8 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Monorepo managed with **pnpm workspaces** + **Turborepo**. Three published packages plus apps:
 
-- `packages/types/` (`fmp-node-types`) — shared TypeScript interfaces, one file per endpoint category. No runtime code. Internal-only; not published standalone but bundled into the others.
-- `packages/api/` (`fmp-node-api`) — the main API wrapper. Depends on `fmp-node-types`.
+- `packages/types/` (`fmp-node-types`) — canonical Zod schemas + `z.infer` types, one file per endpoint category. Published, and a real runtime `dependency` of `fmp-node-api` (it carries the `zod@3` that the types resolve against, so consumers on zod 4 still get real types).
+- `packages/api/` (`fmp-node-api`) — the main API wrapper. Depends on `fmp-node-types` and re-exports its types **type-only** (`export type *`); the runtime JS never ships the schemas. tsup's d.ts bundler rewrites `export type *` to `export *`, so `scripts/restore-type-only-exports.mjs` runs after every build to restore it (and fails the build if the output changes).
 - `packages/tools/` (`fmp-ai-tools`) — AI/LLM tool definitions. Depends on `fmp-node-api` and `fmp-node-types`.
 - `apps/docs/` — Next.js 15 documentation site that consumes `fmp-node-api`.
 - `apps/examples/vercel-ai/` — example Next.js app using `fmp-ai-tools`.
@@ -41,7 +41,7 @@ pnpm test:tool              # packages/tools manual tool runner
 pnpm test:live [flags]      # live-API shape check vs Zod schemas; PASS/FAIL/SKIP/DRIFT (packages/api/scripts/live)
 ```
 
-`test:live` validates real responses against the canonical Zod schemas in `fmp-node-types` (schema-first; types are `z.infer`). It is sequential + throttled and supports `--category`, `--endpoint`, `--delay`, `--max-calls`, `--dry-run`, `--include-locked`, `--fail-on-drift`. Seeded for `quote`/`stock`/`financial`/`market`; classifier logic is unit-tested in `packages/api/src/__tests__/live/`. Add new cases in `scripts/live/manifest.ts`.
+`test:live` validates real responses against the canonical Zod schemas in `fmp-node-types` (schema-first; types are `z.infer`). It is sequential + throttled, runs **every** manifest case by default (plan-locked ones excluded; `--max-calls` is an optional cap), retries a transient network/5xx failure once, and supports `--category`, `--endpoint`, `--delay`, `--timeout`, `--sample`, `--max-calls`, `--dry-run`, `--include-locked`, `--fail-on-drift`. The manifest covers every endpoint category (~120 cases; a full run is ~1–2 min and ~30 MB); classifier logic is unit-tested in `packages/api/src/__tests__/live/`. Add new cases in `scripts/live/manifest.ts`.
 
 ### API key for tests
 
@@ -83,7 +83,7 @@ To add a tool: add one `defineTool({...})` to the relevant `src/definitions/<cat
 
 ## Build & publish
 
-Each package builds with **tsup** to dual CJS+ESM with `.d.ts` (see per-package `tsup.config.ts`); `axios` is marked external in the API build. Versioning/publishing uses **Changesets**: `pnpm changeset` to record a change, `pnpm publish-packages` to build+lint+test+**live-check**+version+publish. The `pnpm test:live` step is a **release gate**: it validates the real FMP API against the canonical schemas and aborts the publish on any FAIL (e.g. a renamed/removed route), so always release via `pnpm publish-packages` (the CI publish job runs the same gate as its own step). It needs `FMP_API_KEY` present at release time.
+Each package builds with **tsup** to dual CJS+ESM with `.d.ts` (see per-package `tsup.config.ts`); `axios` is marked external in the API build. Versioning/publishing uses **Changesets**: `pnpm changeset` to record a change, `pnpm publish-packages` to build+lint+test+**live-check**+version+publish. The `pnpm test:live` step is a **release gate**: it validates the real FMP API against the canonical schemas and aborts the publish on any FAIL across the full manifest (e.g. a renamed/removed route); DRIFT does not block a release — the weekly `live-check.yml` job runs with `--fail-on-drift` to surface it. So always release via `pnpm publish-packages` (the CI publish job runs the same gate as its own step). It needs `FMP_API_KEY` present at release time.
 
 ## Conventions
 

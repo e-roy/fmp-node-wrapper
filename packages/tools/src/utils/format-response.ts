@@ -26,6 +26,66 @@ export function toToolResponse(res: APIResponse<unknown>): string {
 }
 
 /**
+ * Cap an array payload at `limit` rows (optionally sorting first) so a single tool
+ * call can't flood the model's context — some FMP endpoints return thousands of
+ * rows (megabytes of JSON). Failed and non-array responses pass through unchanged.
+ */
+export function limitRows<T>(
+  res: APIResponse<T[]>,
+  limit: number,
+  compare?: (a: T, b: T) => number,
+): APIResponse<T[]> {
+  // Same rule as toToolResponse: only an explicit failure skips the cap.
+  if (res.success === false || !Array.isArray(res.data)) return res;
+  const rows = compare ? [...res.data].sort(compare) : res.data;
+  return { ...res, data: rows.slice(0, limit) };
+}
+
+/**
+ * `toToolResponse` for list endpoints, capped at `limit` rows. When rows are cut (or
+ * a `notice` must reach the model, e.g. a clamped date range), the model receives
+ * `{ data, truncated, total, returned, note }` instead of a silently partial list.
+ */
+export function toCappedToolResponse<T>(
+  res: APIResponse<T[]>,
+  limit: number,
+  options: {
+    compare?: (a: T, b: T) => number;
+    hint?: string;
+    notice?: string | Array<string | undefined>;
+    /** The tool's hard maximum, so the default hint doesn't suggest a larger `limit` at it. */
+    max?: number;
+  } = {},
+): string {
+  const total = res.success !== false && Array.isArray(res.data) ? res.data.length : 0;
+  const capped = limitRows(res, limit, options.compare);
+  const truncated = total > limit;
+  const notices = [options.notice].flat().filter(Boolean);
+  const atMax = options.max !== undefined && limit >= options.max;
+  // At the maximum there's nothing to increase; skip the hint if a notice already says so.
+  const defaultHint = !atMax
+    ? 'Increase `limit` to see more.'
+    : notices.length
+      ? undefined
+      : 'That is the most this tool returns per call.';
+  if (capped.success === false || !Array.isArray(capped.data) || (!truncated && !notices.length)) {
+    return toToolResponse(capped);
+  }
+  const note = [
+    truncated ? `Showing ${capped.data.length} of ${total} rows.` : undefined,
+    ...notices,
+    truncated ? (options.hint ?? defaultHint) : undefined,
+  ]
+    .filter(Boolean)
+    .join(' ');
+  return JSON.stringify(
+    { data: capped.data, truncated, total, returned: capped.data.length, note },
+    null,
+    2,
+  );
+}
+
+/**
  * Format a *thrown* error into the same structured shape `toToolResponse` uses.
  *
  * Some failures throw instead of returning an `APIResponse` — most notably a

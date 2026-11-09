@@ -51,6 +51,20 @@ describe('Vercel AI Analyst Tools (minimal)', () => {
     const result = await (analystTools.getStockGrades.execute as any)({ symbol: 'AAPL', limit: 5 });
 
     expect(mockAnalyst.getGrades).toHaveBeenCalledWith({ symbol: 'AAPL' });
-    expect(JSON.parse(result)).toHaveLength(5);
+    const out = JSON.parse(result);
+    expect(out.data).toHaveLength(5);
+    expect(out).toMatchObject({ truncated: true, total: 40, returned: 5 });
+  });
+
+  it('getAnalystEstimates caps limit at 10 (Starter rejects more) and says so', async () => {
+    mockAnalyst.getEstimates.mockResolvedValueOnce({ success: true, data: [{ symbol: 'AAPL' }] });
+
+    const result = JSON.parse(
+      await (analystTools.getAnalystEstimates.execute as any)({ symbol: 'AAPL', period: 'annual', limit: 40 }),
+    );
+
+    expect(mockAnalyst.getEstimates).toHaveBeenCalledWith({ symbol: 'AAPL', period: 'annual', limit: 10 });
+    expect(result).toMatchObject({ truncated: false, total: 1, returned: 1 });
+    expect(result.note).toContain('at most 10 per call');
   });
 });

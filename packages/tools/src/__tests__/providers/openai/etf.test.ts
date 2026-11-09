@@ -2,6 +2,7 @@ import { getETFHoldings, getETFProfile } from '@/providers/openai';
 
 const mockETF = {
   getHoldings: jest.fn(),
+  getHoldingDates: jest.fn(),
   getProfile: jest.fn(),
 };
 
@@ -16,12 +17,16 @@ describe('OpenAI ETF Tools (minimal)', () => {
     jest.clearAllMocks();
   });
 
-  it('getETFHoldings executes and returns data', async () => {
+  it('getETFHoldings defaults to the latest holdings date when none is given', async () => {
+    mockETF.getHoldingDates.mockResolvedValueOnce({
+      data: [{ date: '2026-03-31' }, { date: '2026-06-30' }],
+    });
     mockETF.getHoldings.mockResolvedValueOnce({ data: [{ symbol: 'AAPL' }] });
 
     const result = await (getETFHoldings as any).execute({ symbol: 'SPY' });
 
-    expect(mockETF.getHoldings).toHaveBeenCalledWith({ symbol: 'SPY' });
+    expect(mockETF.getHoldingDates).toHaveBeenCalledWith('SPY');
+    expect(mockETF.getHoldings).toHaveBeenCalledWith({ symbol: 'SPY', date: '2026-06-30' });
     expect(JSON.parse(result)).toEqual([{ symbol: 'AAPL' }]);
   });
 

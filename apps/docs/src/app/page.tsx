@@ -7,47 +7,30 @@ import { InstallPill } from '@/components/layout/pills';
 import { Tick } from '@/components/layout/brand';
 import { InteractiveCodeBox } from '@/components/landing/interactive-code-box';
 
-const AFFILIATE_URL =
-  'https://site.financialmodelingprep.com/pricing-plans?couponCode=eroy';
+const FMP_PRICING_URL = 'https://site.financialmodelingprep.com/pricing-plans';
 
-function HeroAffiliate() {
+function HeroApiKeyLink() {
   return (
     <a
-      href={AFFILIATE_URL}
+      href={FMP_PRICING_URL}
       target="_blank"
       rel="noopener noreferrer"
       style={{
         display: 'inline-flex',
         alignItems: 'center',
-        gap: 10,
+        gap: 8,
         marginTop: 22,
-        padding: '7px 8px 7px 7px',
+        padding: '7px 12px 7px 14px',
         borderRadius: 99,
-        border: '1px solid var(--acc-line)',
-        background: 'var(--acc-dim)',
+        border: '1px solid var(--line2)',
+        background: 'var(--bg1)',
         fontSize: 13,
         color: 'var(--t2)',
         alignSelf: 'flex-start',
       }}
     >
-      <span
-        style={{
-          fontFamily: 'var(--font-mono)',
-          fontSize: 11,
-          fontWeight: 700,
-          color: 'var(--acc)',
-          background: 'oklch(0.78 0.14 163 / 0.18)',
-          borderRadius: 99,
-          padding: '2px 9px',
-        }}
-      >
-        10% OFF
-      </span>
-      <span>
-        Get your FMP API key with code{' '}
-        <span style={{ color: 'var(--t1)', fontFamily: 'var(--font-mono)' }}>eroy</span>
-      </span>
-      <span style={{ color: 'var(--acc)', display: 'inline-flex' }}>
+      <span>Get an FMP API key</span>
+      <span style={{ color: 'var(--t3)', display: 'inline-flex' }}>
         <ArrowRight size={15} />
       </span>
     </a>
@@ -124,7 +107,7 @@ export default function Home() {
             command="npm install fmp-node-api"
             style={{ marginTop: 16, alignSelf: 'flex-start' }}
           />
-          <HeroAffiliate />
+          <HeroApiKeyLink />
         </div>
         <div>
           <InteractiveCodeBox />

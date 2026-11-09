@@ -3,6 +3,7 @@ name: Live API Drift Check
 # Validates the live FMP API against the canonical Zod schemas in fmp-node-types.
 # Runs on a schedule (and on demand) — NOT on every push/PR — so the deterministic
 # mocked unit tests gate PRs while this job catches real API contract drift.
+# Runs every manifest case (no call budget) — ~120 calls, ~1–2 min on the Starter plan.
 
 on:
   schedule:
@@ -17,6 +18,7 @@ on:
 jobs:
   live-check:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     env:
       FMP_API_KEY: ${{ secrets.FMP_API_KEY }}
 

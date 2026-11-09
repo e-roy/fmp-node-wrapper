@@ -6,7 +6,8 @@
 //
 //   PASS  - response matches the schema's known fields
 //   FAIL  - an expected field is missing, or has the wrong (non-null) type
-//   SKIP  - transport-level: plan-locked (402/403) or quota/rate-limited (429)
+//   SKIP  - transport-level: plan-locked (402/403), quota/rate-limited (429), or
+//           FMP's gateway unavailable (502/503/504 — an outage, not a contract change)
 //   DRIFT - extra top-level keys, or a non-nullable field came back null
 //
 // Note: extra-key (DRIFT) detection is top-level only; extra keys nested inside
@@ -34,6 +35,8 @@ export interface Classification {
 
 const OUTCOME_RANK: Record<Outcome, number> = { PASS: 0, DRIFT: 1, SKIP: 2, FAIL: 3 };
 
+const GATEWAY_STATUSES = new Set([502, 503, 504]);
+
 /**
  * Classify a transport-level outcome. Returns null when the request succeeded
  * (so the caller proceeds to shape validation). Delegates the failure
@@ -53,7 +56,23 @@ export function classifyTransport(res: TransportResult): Classification | null {
     return { outcome: 'SKIP', detail: `plan-locked (${res.status}): ${res.error ?? ''}`.trim() };
   }
 
+  // FMP's gateway gave up (seen as 504s on the slow CIK name search): the route
+  // exists but couldn't be checked, so don't fail the run on it.
+  if (GATEWAY_STATUSES.has(res.status)) {
+    return { outcome: 'SKIP', detail: `FMP gateway unavailable (${res.status}): ${res.error ?? ''}`.trim() };
+  }
+
   return { outcome: 'FAIL', detail: `request failed (${res.status}): ${res.error || 'unknown error'}` };
+}
+
+/**
+ * True when a failed request is worth retrying once: no HTTP response
+ * (timeout / reset, which the client reports as status 500) or a 5xx from FMP.
+ * Plan-locks, auth, other 4xx and rate limits are deterministic and never retried.
+ */
+export function isTransientFailure(res: TransportResult): boolean {
+  if (res.success || res.status < 500) return false;
+  return classifyError(res.status, res.error ?? '').errorType === 'unknown';
 }
 
 /** Classify a single object value against an (object) schema. */

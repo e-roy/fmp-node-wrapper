@@ -1,10 +1,7 @@
 'use client';
 
 import React, { useRef, useState } from 'react';
-import { Copy, Check, ArrowRight } from 'lucide-react';
-
-const AFFILIATE_URL =
-  'https://site.financialmodelingprep.com/pricing-plans?couponCode=eroy';
+import { Copy, Check } from 'lucide-react';
 
 export function InstallPill({
   command,
@@ -41,26 +38,5 @@ export function InstallPill({
         )}
       </button>
     </div>
-  );
-}
-
-export function AffiliatePill({ style }: { style?: React.CSSProperties }) {
-  return (
-    <a
-      className="f-affiliate"
-      href={AFFILIATE_URL}
-      target="_blank"
-      rel="noopener noreferrer"
-      style={style}
-    >
-      <span className="tag">10% OFF</span>
-      <span>
-        Get your FMP API key with code <span className="f-inline-code">eroy</span> — the affiliate
-        link helps support this project.
-      </span>
-      <span className="arrow">
-        <ArrowRight size={16} />
-      </span>
-    </a>
   );
 }

@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import type { APIResponse } from 'fmp-node-api';
 import { getFMPClient } from '@/client';
-import { toToolResponse } from '@/utils/format-response';
+import { toCappedToolResponse } from '@/utils/format-response';
+import { capLimit } from '@/utils/tool-input';
 import { defineTool, type FMPToolDefinition } from './types';
 
 export const technicalDefinitions: FMPToolDefinition[] = [
@@ -29,19 +29,20 @@ export const technicalDefinitions: FMPToolDefinition[] = [
         .int()
         .positive()
         .default(50)
-        .describe('Max number of most-recent bars to return (default 50)'),
+        .describe('Max number of most-recent bars to return (default 50, max 365)'),
     }),
-    execute: async ({ symbol, type, periodLength = 10, timeframe = '1day', limit = 50 }) => {
+    execute: async ({ symbol, type, periodLength = 10, timeframe = '1day', limit }) => {
       const res = await getFMPClient().technical.getTechnicalIndicator({
         symbol,
         type,
         periodLength,
         timeframe,
       });
-      if (res.success && Array.isArray(res.data)) {
-        return toToolResponse({ ...res, data: res.data.slice(0, limit) } as APIResponse<unknown>);
-      }
-      return toToolResponse(res);
+      const cap = capLimit(limit, 50, 365);
+      return toCappedToolResponse(res, cap.limit, {
+        notice: cap.notice,
+        hint: 'Most recent bars first.',
+      });
     },
   }),
 ];

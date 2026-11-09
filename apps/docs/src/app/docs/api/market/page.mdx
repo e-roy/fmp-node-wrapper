@@ -376,6 +376,8 @@ Retrieve detailed market index data.
   name: string;
   openingHour: string;
   closingHour: string;
+  openingAdditional?: string; // afternoon session after a midday break (e.g. HKSE)
+  closingAdditional?: string;
   timezone: string;
   isMarketOpen: boolean;
 }`}

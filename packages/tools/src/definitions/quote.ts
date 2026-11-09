@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import { getFMPClient } from '@/client';
-import { toToolResponse } from '@/utils/format-response';
+import { toCappedToolResponse, toToolResponse } from '@/utils/format-response';
+import { capLimit } from '@/utils/tool-input';
 import { defineTool, type FMPToolDefinition } from './types';
-import type { APIResponse } from 'fmp-node-api';
 
 export const quoteDefinitions: FMPToolDefinition[] = [
   defineTool({
@@ -42,23 +42,46 @@ export const quoteDefinitions: FMPToolDefinition[] = [
         .int()
         .positive()
         .default(30)
-        .describe('Max number of most-recent days to return (default 30)'),
+        .describe(
+          'Max number of most-recent days to return (default 30, max 252 = about one trading year)',
+        ),
     }),
-    execute: async ({ symbol, from, to, limit = 30 }) => {
+    execute: async ({ symbol, from, to, limit }) => {
       const res = await getFMPClient().quote.getHistoricalPrice({
         symbol,
         from: from ?? undefined,
         to: to ?? undefined,
       });
-      // Response is { symbol, historical: [...] } (newest first); cap to `limit`.
-      const data = res.data as { historical?: unknown[] } | null;
-      if (res.success && data && Array.isArray(data.historical)) {
-        return toToolResponse({
-          ...res,
-          data: { ...data, historical: data.historical.slice(0, limit) },
-        } as APIResponse<unknown>);
+      // Response is { symbol, historical: [...] } (newest first): cap the inner list,
+      // and flag the cut so the model knows older days exist.
+      const data = res.data as { symbol?: string; historical?: unknown[] } | null;
+      const cap = capLimit(limit, 30, 252);
+      if (res.success === false || !data || !Array.isArray(data.historical)) {
+        return toToolResponse(res);
       }
-      return toToolResponse(res);
+      const total = data.historical.length;
+      const truncated = total > cap.limit;
+      if (!truncated && !cap.notice) return toToolResponse(res);
+      const historical = data.historical.slice(0, cap.limit);
+      const note = [
+        truncated ? `Showing the ${historical.length} most recent of ${total} days.` : undefined,
+        cap.notice,
+        !truncated
+          ? undefined
+          : cap.limit < cap.max
+            ? 'Narrow the date range or increase `limit` to see older days.'
+            : cap.notice
+              ? 'Narrow the date range to see older days.'
+              : 'That is the most this tool returns per call; narrow the date range to see older days.',
+      ]
+        .filter(Boolean)
+        .join(' ');
+      // Same envelope keys as every other capped tool, with the usual payload in `data`.
+      return JSON.stringify(
+        { data: { ...data, historical }, truncated, total, returned: historical.length, note },
+        null,
+        2,
+      );
     },
   }),
   defineTool({
@@ -78,19 +101,23 @@ export const quoteDefinitions: FMPToolDefinition[] = [
         .int()
         .positive()
         .default(50)
-        .describe('Max number of most-recent bars to return (default 50)'),
+        .describe('Max number of most-recent bars to return (default 50, max 390)'),
     }),
-    execute: async ({ symbol, interval = '5min', from, to, limit = 50 }) => {
-      const res = await getFMPClient().quote.getIntraday({
-        symbol,
-        interval,
-        from: from ?? undefined,
-        to: to ?? undefined,
-      });
-      if (res.success && Array.isArray(res.data)) {
-        return toToolResponse({ ...res, data: res.data.slice(0, limit) } as APIResponse<unknown>);
-      }
-      return toToolResponse(res);
+    execute: async ({ symbol, interval = '5min', from, to, limit }) => {
+      const cap = capLimit(limit, 50, 390);
+      return toCappedToolResponse(
+        await getFMPClient().quote.getIntraday({
+          symbol,
+          interval,
+          from: from ?? undefined,
+          to: to ?? undefined,
+        }),
+        cap.limit,
+        {
+          notice: cap.notice,
+          hint: 'Most recent bars first; narrow the date range to see earlier bars.',
+        },
+      );
     },
   }),
 ];

@@ -1,5 +1,122 @@
 # fmp-ai-tools
 
+## 0.2.4
+
+### Patch Changes
+
+Schema fixes (verified against the live FMP API):
+
+- **FinancialRatios / FinancialRatiosTTM**: add `priceToEarningsDilutedRatio` and `priceToEarningsDilutedGrowthRatio` (and their `…TTM` forms).
+- **Senate/House trading** (all three schemas): add `senateID` (the member's congressional Bioguide ID).
+- **Screener**: add `avgVolume`. **IPOCalendar**: add `dealSize` (`number | null`).
+- **ExchangeMarketHours**: add optional `openingAdditional` / `closingAdditional` (the afternoon session after a midday break, e.g. HKSE).
+- **Now nullable**: `AftermarketTrade.tradeSize`, `News.symbol`, `News.image`, `EarningsConfirmed.time` / `.when`, and `EconomicsCalendar.changePercentage`. With `strictNullChecks`, code that reads these may need a null check.
+
+Packaging:
+
+- **Types no longer degrade to `any`**: `fmp-node-types` is now a real dependency of `fmp-node-api`, so the published types resolve against its own `zod@3`. Apps on zod 4 (every `fmp-ai-tools` user) or without zod now get real types.
+- **Schemas are type-only re-exports**: `fmp-node-api` and `fmp-node-api/types` re-export the types with `export type *`. Using a Zod schema (e.g. `QuoteSchema`) as a value is now a compile error instead of `undefined` at runtime; import schemas from `fmp-node-types` if you need them.
+- **`./package.json`** is exported from all three packages.
+
+API:
+
+- **Plan errors**: when FMP rejects only one parameter value ("Premium Query Parameter", e.g. a quarterly period or an older date), the error says so instead of calling the whole endpoint unavailable.
+- **Docs**: `getEarningsCalendar` / `getEconomicsCalendar` document FMP's 90-day window per request (a longer range silently returns only its last 90 days), and `getEarningsConfirmed` documents FMP's cap of 100 rows per request.
+
+AI tools:
+
+- **Bounded outputs**: every `limit` has a default and a hard maximum, stated in its description; larger requests are capped with a note. `getAnalystEstimates` allows at most 10 (FMP's Starter plan rejects more), and `getHistoricalPrice` at most 252 (about one trading year).
+- **No silent truncation**: when rows are cut or a request is capped, tools return `{ data, truncated, total, returned, note }` instead of a bare partial list.
+- **`getEarningsCalendar`**: new `symbols` filter (a single week holds ~2,000 companies worldwide).
+- **Calendar ranges**: ranges longer than FMP's 90-day window are cut to the first 90 days, and a `from` without a `to` gets an explicit 90-day window; the `note` says where to continue.
+- **`getInstitutionalHolders`**: each holder's latest 13F filing from the last two reporting quarters, name variants merged, largest first.
+- **`getETFHoldings`**: defaults to the latest holdings date (FMP returns nothing without one), largest weight first.
+- **Defaults**: `null` means "use the default" for every defaulted parameter, on both the Vercel AI SDK and OpenAI Agents providers.
+- **Descriptions**: the financial-ratio tools name the valuation multiples they return (P/E incl. diluted P/E, PEG, P/B, P/S, P/FCF, EV multiple).
+
+Docs: FMP API-key links are now plain links (no referral code or discount wording).
+
+- Updated dependencies
+  - fmp-node-api@0.2.4
+
+## 0.2.4-beta.4
+
+### Patch Changes
+
+- AI-tool consistency fixes:
+  - **`getAnalystEstimates`**: `limit` max is now 10 — FMP's Starter plan rejects more as a premium query parameter, which surfaced as a misleading "not available on your plan" error.
+  - **OpenAI Agents provider — `null` defaults**: the Agents SDK validates input before the tool runs, so `null` for a defaulted parameter was rejected there. The SDK now receives a schema whose defaulted fields also accept `null`, and the tool applies the default — matching the Vercel AI SDK provider.
+  - **Calendar tools — lone `from`**: FMP ignores a `from` without a `to` (it returns the 90 days ending today). The tools now send an explicit 90-day window starting at `from` and say so.
+  - **`getHistoricalPrice`**: the truncation envelope now has the same keys as every other tool (`{ data, truncated, total, returned, note }`, with `{ symbol, historical }` in `data`).
+  - **Over-the-max requests**: tools whose limit is applied by the API (news, screener, search, statements, estimates, earnings history) now include a `note` when the requested `limit` exceeded the maximum, instead of quietly returning fewer rows.
+  - **Docs**: `getEarningsConfirmed` returns at most 100 rows per request, and which 100 isn't guaranteed — query short ranges for complete coverage.
+
+- Updated dependencies
+  - fmp-node-api@0.2.4-beta.4
+
+## 0.2.4-beta.3
+
+### Patch Changes
+
+- AI-tool output bounds, calendar date ranges, and defaults:
+  - **AI tools — hard maximums**: every `limit` now has a maximum (listed in its description, e.g. "default 50, max 100"); larger requests are capped instead of returning hundreds of kilobytes.
+  - **AI tools — no silent truncation anywhere**: `getHistoricalPrice`, `getIntraday`, `getStockGrades` and `getTechnicalIndicator` now flag cut results too, and the truncation envelope carries numeric `total` and `returned` alongside the `note`.
+  - **AI tools — calendar ranges**: FMP serves at most 90 days per earnings/economic calendar request and silently keeps only the last 90 of a longer range. The tools now cut long ranges to the first 90 days and say where to continue.
+  - **AI tools — `getInstitutionalHolders`**: considers only the last two reporting quarters, so a filer that has since been replaced by successor entities isn't counted next to them.
+  - **AI tools — defaults**: `null` now means "use the default" for every defaulted parameter (e.g. `period`, `interval`, `timeframe`), on both providers.
+  - **Docs**: `getEarningsCalendar` / `getEconomicsCalendar` document FMP's 90-day window, and `getEarningsConfirmed` documents FMP's cap of 100 rows per request.
+
+- Updated dependencies
+  - fmp-node-api@0.2.4-beta.3
+
+## 0.2.4-beta.2
+
+### Patch Changes
+
+- Schema and AI-tool fixes:
+  - **ExchangeMarketHours**: add optional `openingAdditional` / `closingAdditional` (the afternoon session for exchanges with a midday break, e.g. HKSE).
+  - **EarningsConfirmed**: `time` and `when` are now `string | null` — FMP leaves them null until a time is confirmed.
+  - **EconomicsCalendar**: `changePercentage` is now `number | null`.
+  - **AI tools — no silent truncation**: capped tools now return `{ data, truncated: true, note }` (e.g. "Showing 50 of 1969 rows…") when rows are cut, instead of a bare partial list.
+  - **AI tools — `getEarningsCalendar`**: new `symbols` filter, so "upcoming earnings for AAPL/MSFT/NVDA" works even though a single week holds ~2,000 companies worldwide.
+  - **AI tools — `getInstitutionalHolders`**: keeps each holder's latest filing from the past year and merges name variants, so stale filings (e.g. a 2024 "BlackRock Inc." next to 2026 "BlackRock, Inc.") no longer rank as current holders.
+  - **AI tools — `getETFHoldings`**: defaults to the latest holdings date (FMP returns nothing without one).
+  - **AI tools — defaults**: a `null` `limit` now falls back to the default instead of returning an empty list, and `getEarningsHistorical` defaults to 10 rows on every provider (was 5 when called without input parsing).
+
+- Updated dependencies
+  - fmp-node-api@0.2.4-beta.2
+
+## 0.2.4-beta.1
+
+### Patch Changes
+
+- Packaging, schema and AI-tool fixes:
+  - **Types no longer degrade to `any`**: `fmp-node-types` is now a real dependency of `fmp-node-api`, so the published types resolve against its own `zod@3`. Apps on zod 4 (every `fmp-ai-tools` user) or without zod previously got silently-`any` fields (e.g. `Quote['price']` accepted a string).
+  - **Schemas are type-only re-exports**: `fmp-node-api` and `fmp-node-api/types` re-export the types with `export type *`. The Zod schemas (e.g. `QuoteSchema`) were declared as values but never shipped at runtime — using one is now a compile error instead of `undefined` at runtime. Import schemas from `fmp-node-types` directly if you need them.
+  - **IPOCalendar**: add `dealSize` (`number | null`; null until the offering is priced).
+  - **Exports**: `./package.json` is now exported from all three packages.
+  - **AI tools — bounded outputs**: tools that wrap large list endpoints take an optional `limit` so one call can't overflow the model's context (e.g. the earnings calendar returned ~1.5 MB for one week): `getEarningsCalendar`, `getEconomicCalendar` (default 50), `getInstitutionalHolders` (default 20, largest holders first), `getETFHoldings` (default 50, largest weight first), `getMarketPerformance` (default 50), `getCompanyExecutiveCompensation` (default 20), `getSenateTradingByName` / `getHouseTradingByName` (default 50).
+  - **AI tools — ratio descriptions**: `getFinancialRatios` / `getFinancialRatiosTTM` now name the valuation multiples they return (P/E incl. diluted P/E, PEG, P/B, P/S, P/FCF, EV multiple) so models use them instead of deriving P/E.
+
+- Updated dependencies
+  - fmp-node-api@0.2.4-beta.1
+
+## 0.2.4-beta.0
+
+### Patch Changes
+
+- c628484: Sync schemas with the live FMP API (drift found by the full live check):
+  - **FinancialRatios** / **FinancialRatiosTTM**: add `priceToEarningsDilutedRatio` and `priceToEarningsDilutedGrowthRatio` (and their `…TTM` forms).
+  - **SenateTradingResponse**, **HouseTradingResponse**, **SenateHouseTradingByNameResponse**: add `senateID` (the member's congressional Bioguide ID; present on House rows too).
+  - **Screener**: add `avgVolume`.
+  - **AftermarketTrade**: `tradeSize` is now `number | null` — FMP returns `null` when no extended-hours trade size is reported (e.g. after the post-market session closes).
+  - **News**: `symbol` is now `string | null` (market-wide stories have no single ticker) and `image` is now `string | null` (articles without an image).
+
+  Docs: FMP API-key links are now plain links (no referral code or discount wording).
+
+- Updated dependencies [c628484]
+  - fmp-node-api@0.2.4-beta.0
+
 ## 0.2.3
 
 ### Patch Changes

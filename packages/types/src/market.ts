@@ -13,6 +13,10 @@ export const ExchangeMarketHoursSchema = z.object({
   name: z.string(),
   openingHour: z.string(),
   closingHour: z.string(),
+  // Afternoon session after a midday break (e.g. HKSE "01:00 PM +08:00"); absent
+  // for exchanges without one — 7 of 81 had it (verified live 2026-11-08).
+  openingAdditional: z.string().optional(),
+  closingAdditional: z.string().optional(),
   timezone: z.string(),
   isMarketOpen: z.boolean(),
 });

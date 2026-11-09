@@ -1,7 +1,15 @@
 import { z } from 'zod';
 import { getFMPClient } from '@/client';
-import { toToolResponse } from '@/utils/format-response';
+import { toCappedToolResponse, toToolResponse } from '@/utils/format-response';
+import { capLimit } from '@/utils/tool-input';
 import { defineTool, type FMPToolDefinition } from './types';
+
+const byNameLimit = z
+  .number()
+  .int()
+  .positive()
+  .default(50)
+  .describe('Max number of trades to return (default 50, max 100)');
 
 const symbolSchema = z.object({
   symbol: z
@@ -38,28 +46,42 @@ export const senateHouseDefinitions: FMPToolDefinition[] = [
   defineTool({
     name: 'getSenateTradingByName',
     description:
-      'Get senate trading data for a specific senator by name showing their trading activity',
+      'Get senate trading data for a specific senator by name showing their trading activity (at most `limit` trades)',
     inputSchema: z.object({
       name: z
         .string()
         .min(1, 'Name is required')
         .describe('The name of the senator to get trading data for'),
+      limit: byNameLimit,
     }),
-    execute: async ({ name }) =>
-      toToolResponse(await getFMPClient().senateHouse.getSenateTradingByName({ name })),
+    execute: async ({ name, limit }) => {
+      const cap = capLimit(limit, 50, 100);
+      return toCappedToolResponse(
+        await getFMPClient().senateHouse.getSenateTradingByName({ name }),
+        cap.limit,
+        { notice: cap.notice, max: cap.max },
+      );
+    },
   }),
   defineTool({
     name: 'getHouseTradingByName',
     description:
-      'Get house trading data for a specific representative by name showing their trading activity',
+      'Get house trading data for a specific representative by name showing their trading activity (at most `limit` trades)',
     inputSchema: z.object({
       name: z
         .string()
         .min(1, 'Name is required')
         .describe('The name of the representative to get trading data for'),
+      limit: byNameLimit,
     }),
-    execute: async ({ name }) =>
-      toToolResponse(await getFMPClient().senateHouse.getHouseTradingByName({ name })),
+    execute: async ({ name, limit }) => {
+      const cap = capLimit(limit, 50, 100);
+      return toCappedToolResponse(
+        await getFMPClient().senateHouse.getHouseTradingByName({ name }),
+        cap.limit,
+        { notice: cap.notice, max: cap.max },
+      );
+    },
   }),
   defineTool({
     name: 'getSenateTradingRSSFeed',

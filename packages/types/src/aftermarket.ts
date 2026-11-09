@@ -10,7 +10,9 @@ import { z } from 'zod';
 export const AftermarketTradeSchema = z.object({
   symbol: z.string(),
   price: z.number(),
-  tradeSize: z.number(),
+  // null when FMP reports no extended-hours trade size (seen after the
+  // post-market session closes; verified live 2026-09-26).
+  tradeSize: z.number().nullable(),
   timestamp: z.number(),
 });
 

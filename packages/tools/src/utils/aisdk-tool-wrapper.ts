@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { tool } from 'ai';
 import { logApiExecutionWithTiming } from './logger';
 import { toToolError } from './format-response';
+import { applyDefaults } from './tool-input';
 
 interface AISDKToolConfig {
   name: string;
@@ -19,7 +20,10 @@ export const createTool = (config: AISDKToolConfig) => {
     inputSchema: inputSchema as any,
     execute: async (input: any) => {
       try {
-        return await logApiExecutionWithTiming(name, input, () => execute(input));
+        // The AI SDK validates model input, but direct `execute` calls skip that, so
+        // apply schema defaults (and treat `null` as "not set") here as well.
+        const args = applyDefaults(inputSchema, input);
+        return await logApiExecutionWithTiming(name, args, () => execute(args));
       } catch (error) {
         // Never throw out of a tool — return a structured error the model can
         // relay (e.g. a missing FMP_API_KEY, which throws from `new FMP()`).

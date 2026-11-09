@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { getFMPClient } from '@/client';
-import { toToolResponse } from '@/utils/format-response';
+import { toCappedToolResponse, toToolResponse } from '@/utils/format-response';
+import { capLimit } from '@/utils/tool-input';
 import { defineTool, type FMPToolDefinition } from './types';
 
 const period = z
@@ -10,7 +11,12 @@ const period = z
 
 const symbol = (what: string) => z.string().min(1).describe(`The stock symbol to get ${what} for`);
 
-const limit = z.number().default(5).describe('The number of periods to retrieve');
+const limit = z
+  .number()
+  .int()
+  .positive()
+  .default(5)
+  .describe('The number of periods to retrieve (default 5, max 20)');
 
 /** Build a standard statement tool: symbol + period + limit -> fmp.financial[method]. */
 const statementTool = (
@@ -23,8 +29,12 @@ const statementTool = (
     name,
     description,
     inputSchema: z.object({ symbol: symbol(what), period, limit }),
-    execute: async ({ symbol, period, limit }) =>
-      toToolResponse(await call({ symbol, period, limit })),
+    execute: async ({ symbol, period, limit }) => {
+      const cap = capLimit(limit, 5, 20);
+      return toCappedToolResponse(await call({ symbol, period, limit: cap.limit }), cap.limit, {
+        notice: cap.notice,
+      });
+    },
   });
 
 export const financialDefinitions: FMPToolDefinition[] = [
@@ -51,7 +61,7 @@ export const financialDefinitions: FMPToolDefinition[] = [
   ),
   statementTool(
     'getFinancialRatios',
-    'Get financial ratios for a company including profitability, liquidity, and efficiency metrics',
+    'Get financial ratios for a company by period: valuation (P/E incl. diluted P/E, PEG, P/B, P/S, P/FCF, EV multiple), profitability margins, liquidity, leverage, efficiency, and per-share metrics',
     'financial ratios',
     args => getFMPClient().financial.getFinancialRatios(args),
   ),
@@ -84,10 +94,21 @@ export const financialDefinitions: FMPToolDefinition[] = [
     description: 'Get earnings historical for a company',
     inputSchema: z.object({
       symbol: symbol('earnings historical'),
-      limit: z.number().default(10).describe('The number of periods to retrieve'),
+      limit: z
+        .number()
+        .int()
+        .positive()
+        .default(10)
+        .describe('The number of periods to retrieve (default 10, max 40)'),
     }),
-    execute: async ({ symbol, limit }) =>
-      toToolResponse(await getFMPClient().financial.getEarningsHistorical({ symbol, limit })),
+    execute: async ({ symbol, limit }) => {
+      const cap = capLimit(limit, 10, 40);
+      return toCappedToolResponse(
+        await getFMPClient().financial.getEarningsHistorical({ symbol, limit: cap.limit }),
+        cap.limit,
+        { notice: cap.notice },
+      );
+    },
   }),
   defineTool({
     name: 'getFinancialScores',
@@ -108,7 +129,7 @@ export const financialDefinitions: FMPToolDefinition[] = [
   defineTool({
     name: 'getFinancialRatiosTTM',
     description:
-      'Get current trailing-twelve-month (TTM) financial ratios for a company (margins, returns, liquidity)',
+      'Get current trailing-twelve-month (TTM) financial ratios for a company (one snapshot row): valuation (P/E incl. diluted P/E, PEG, P/B, P/S, P/FCF, EV multiple), margins, liquidity, leverage, and per-share metrics',
     inputSchema: z.object({ symbol: symbol('TTM financial ratios') }),
     execute: async ({ symbol }) =>
       toToolResponse(await getFMPClient().financial.getFinancialRatiosTTM({ symbol })),

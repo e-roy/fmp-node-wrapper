@@ -1,13 +1,14 @@
 import { z } from 'zod';
 import { getFMPClient } from '@/client';
-import { toToolResponse } from '@/utils/format-response';
+import { toCappedToolResponse, toToolResponse } from '@/utils/format-response';
+import { capLimit } from '@/utils/tool-input';
 import { defineTool, type FMPToolDefinition } from './types';
 
 export const etfDefinitions: FMPToolDefinition[] = [
   defineTool({
     name: 'getETFHoldings',
     description:
-      'Get ETF holdings for a specific ETF symbol, showing the underlying assets and their weights',
+      'Get the largest holdings of an ETF (by portfolio weight), showing the underlying assets and their weights',
     inputSchema: z.object({
       symbol: z
         .string()
@@ -17,20 +18,44 @@ export const etfDefinitions: FMPToolDefinition[] = [
         .string()
         .optional()
         .nullable()
-        .describe('Date for holdings in YYYY-MM-DD format (optional)'),
+        .describe('Holdings date in YYYY-MM-DD format (optional; defaults to the latest filing)'),
+      limit: z
+        .number()
+        .int()
+        .positive()
+        .default(50)
+        .describe('Max number of holdings to return, largest weight first (default 50, max 100)'),
     }),
-    execute: async ({ symbol, date }) => {
+    execute: async ({ symbol, date, limit }) => {
+      const client = getFMPClient();
+      // FMP returns no holdings without a date, so default to the latest filing date.
+      let holdingsDate = date ?? undefined;
+      if (!holdingsDate) {
+        const dates = await client.etf.getHoldingDates(symbol);
+        if (dates.success !== false && Array.isArray(dates.data)) {
+          holdingsDate = dates.data.reduce<string | undefined>(
+            (latest, d) => (!latest || d.date > latest ? d.date : latest),
+            undefined,
+          );
+        }
+      }
       // `date` is optional; the holdings params type treats it as required, so widen.
       const params: any = { symbol };
-      if (date) {
-        params.date = date;
+      if (holdingsDate) {
+        params.date = holdingsDate;
       }
-      return toToolResponse(await getFMPClient().etf.getHoldings(params));
+      const cap = capLimit(limit, 50, 100);
+      return toCappedToolResponse(await client.etf.getHoldings(params), cap.limit, {
+        notice: cap.notice,
+        compare: (a, b) => b.pctVal - a.pctVal,
+        hint: `Largest positions first, as of ${holdingsDate ?? 'the requested date'}.`,
+      });
     },
   }),
   defineTool({
     name: 'getETFProfile',
-    description: 'Get ETF profile information including fund details, expense ratio, and key metrics',
+    description:
+      'Get ETF profile information including fund details, expense ratio, and key metrics',
     inputSchema: z.object({
       symbol: z
         .string()

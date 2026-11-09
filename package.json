@@ -35,7 +35,7 @@
     "lint:all": "turbo run lint",
     "lint:fix": "turbo run lint:fix",
     "clean": "turbo run clean",
-    "clean:install": "npx rimraf node_modules packages/api/node_modules apps/docs/node_modules pnpm-lock.yaml && pnpm install",
+    "clean:install": "rimraf node_modules packages/api/node_modules apps/docs/node_modules pnpm-lock.yaml && pnpm install",
     "type-check": "turbo run type-check",
     "format": "turbo run format",
     "format:check": "turbo run format:check",

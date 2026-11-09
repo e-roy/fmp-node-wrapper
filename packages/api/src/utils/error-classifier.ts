@@ -43,10 +43,12 @@ export function classifyError(status: number, rawMessage: string): ClassifiedErr
     };
   }
   if (status === 402 || status === 403 || matchesPlanPattern) {
-    return {
-      errorType: 'plan-restricted',
-      message: `This endpoint is not available on your current FMP plan. (${status}: ${msg})`,
-    };
+    // "Premium Query Parameter" means one parameter VALUE is locked (e.g. a
+    // quarterly period, an older date, a larger limit) — the endpoint itself works.
+    const what = /premium query parameter/i.test(msg)
+      ? 'A parameter value in this request is not available on your current FMP plan (the endpoint itself is)'
+      : 'This endpoint is not available on your current FMP plan';
+    return { errorType: 'plan-restricted', message: `${what}. (${status}: ${msg})` };
   }
   if (status === 404) {
     return { errorType: 'not-found', message: `Not found: ${msg}` };

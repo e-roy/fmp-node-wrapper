@@ -167,11 +167,35 @@ export interface LiveCase {
   call: (fmp: FMP) => Promise<{ success: boolean; data: unknown; error: string | null; status: number }>;
   /** Skip by default (known plan-locked); run only with --include-locked. */
   planLocked?: boolean;
+  /** Validate at least this many array rows, overriding --sample (for sparse nulls). */
+  sample?: number;
+  /** Per-request timeout for this case (ms), overriding --timeout (for slow endpoints). */
+  timeout?: number;
 }
 
 const RANGE = { from: '2024-01-01', to: '2024-01-31' };
-// A past trading day with snapshot data available (sector/industry snapshots).
-const SNAPSHOT_DATE = '2024-06-10';
+const DAY_MS = 24 * 60 * 60 * 1000;
+const isoDate = (d: Date): string => d.toISOString().slice(0, 10);
+// Sector/industry snapshots are served on Starter for recent dates only (a date
+// ~2 years back is a premium parameter → 402), so query the weekday ~1 week ago;
+// weekend dates return no rows.
+const SNAPSHOT_DATE = (() => {
+  const d = new Date(Date.now() - 7 * DAY_MS);
+  const toFriday = d.getUTCDay() === 6 ? 1 : d.getUTCDay() === 0 ? 2 : 0;
+  return isoDate(new Date(d.getTime() - toFriday * DAY_MS));
+})();
+// News on Starter only serves a recent window (a `from` older than ~6–12 months is a
+// premium parameter → 402), so news cases query the trailing 30 days.
+const NEWS_RANGE = { from: isoDate(new Date(Date.now() - 30 * DAY_MS)), to: isoDate(new Date()) };
+// Calendars query ±1 week around today so the check sees FMP's current shape —
+// a fixed historical window missed newly-null fields (e.g. EarningsConfirmed.time).
+const CALENDAR_RANGE = {
+  from: isoDate(new Date(Date.now() - 7 * DAY_MS)),
+  to: isoDate(new Date(Date.now() + 7 * DAY_MS)),
+};
+// Their nulls are sparse (EconomicsCalendar.changePercentage first appeared at row
+// 744), so validate every row rather than the first --sample rows.
+const EVERY_ROW = Number.MAX_SAFE_INTEGER;
 
 export const manifest: LiveCase[] = [
   // ---- quote ----
@@ -194,16 +218,13 @@ export const manifest: LiveCase[] = [
   { category: 'aftermarket', name: 'getQuote(AAPL)', schema: AftermarketQuoteSchema, kind: 'object', call: (fmp) => fmp.aftermarket.getQuote('AAPL') },
 
   // ---- market ----
-  { category: 'market', name: 'getMarketHours()', schema: ExchangeMarketHoursSchema, kind: 'array', call: (fmp) => fmp.market.getMarketHours() },
+  { category: 'market', name: 'getMarketHours()', schema: ExchangeMarketHoursSchema, kind: 'array', sample: EVERY_ROW, call: (fmp) => fmp.market.getMarketHours() },
   { category: 'market', name: 'getMarketPerformance()', schema: MarketIndexSchema, kind: 'array', call: (fmp) => fmp.market.getMarketPerformance() },
   { category: 'market', name: 'getGainers()', schema: MarketPerformanceSchema, kind: 'array', call: (fmp) => fmp.market.getGainers() },
   { category: 'market', name: 'getLosers()', schema: MarketPerformanceSchema, kind: 'array', call: (fmp) => fmp.market.getLosers() },
   { category: 'market', name: 'getMostActive()', schema: MarketPerformanceSchema, kind: 'array', call: (fmp) => fmp.market.getMostActive() },
-  // The snapshot endpoints are accessible on Starter for RECENT dates only;
-  // a historical `date` value is a premium parameter (402), so these are
-  // plan-locked by default. Schemas were confirmed live against a recent date.
-  { category: 'market', name: 'getSectorPerformance(snapshot)', schema: MarketSectorPerformanceSchema, kind: 'array', planLocked: true, call: (fmp) => fmp.market.getSectorPerformance({ date: SNAPSHOT_DATE }) },
-  { category: 'market', name: 'getIndustryPESnapshot(snapshot)', schema: IndustryPESnapshotSchema, kind: 'array', planLocked: true, call: (fmp) => fmp.market.getIndustryPESnapshot({ date: SNAPSHOT_DATE }) },
+  { category: 'market', name: 'getSectorPerformance(snapshot)', schema: MarketSectorPerformanceSchema, kind: 'array', call: (fmp) => fmp.market.getSectorPerformance({ date: SNAPSHOT_DATE }) },
+  { category: 'market', name: 'getIndustryPESnapshot(snapshot)', schema: IndustryPESnapshotSchema, kind: 'array', call: (fmp) => fmp.market.getIndustryPESnapshot({ date: SNAPSHOT_DATE }) },
   { category: 'market', name: 'getMarketIndex()', schema: MarketIndexSchema, kind: 'array', call: (fmp) => fmp.market.getMarketIndex() },
 
   // ---- financial ----
@@ -226,12 +247,12 @@ export const manifest: LiveCase[] = [
   { category: 'financial', name: 'getRevenueGeographicSegmentation(AAPL)', schema: RevenueGeographicSegmentationSchema, kind: 'array', call: (fmp) => fmp.financial.getRevenueGeographicSegmentation({ symbol: 'AAPL' }) },
 
   // ---- calendar ----
-  { category: 'calendar', name: 'getEarningsCalendar()', schema: EarningsCalendarSchema, kind: 'array', call: (fmp) => fmp.calendar.getEarningsCalendar({ from: '2024-01-15', to: '2024-01-21' }) },
-  { category: 'calendar', name: 'getEarningsConfirmed()', schema: EarningsConfirmedSchema, kind: 'array', call: (fmp) => fmp.calendar.getEarningsConfirmed(RANGE) },
-  { category: 'calendar', name: 'getDividendsCalendar()', schema: DividendsCalendarSchema, kind: 'array', call: (fmp) => fmp.calendar.getDividendsCalendar(RANGE) },
-  { category: 'calendar', name: 'getEconomicsCalendar()', schema: EconomicsCalendarSchema, kind: 'array', call: (fmp) => fmp.calendar.getEconomicsCalendar(RANGE) },
-  { category: 'calendar', name: 'getIPOCalendar()', schema: IPOCalendarSchema, kind: 'array', call: (fmp) => fmp.calendar.getIPOCalendar(RANGE) },
-  { category: 'calendar', name: 'getSplitsCalendar()', schema: SplitsCalendarSchema, kind: 'array', call: (fmp) => fmp.calendar.getSplitsCalendar(RANGE) },
+  { category: 'calendar', name: 'getEarningsCalendar()', schema: EarningsCalendarSchema, kind: 'array', sample: EVERY_ROW, call: (fmp) => fmp.calendar.getEarningsCalendar(CALENDAR_RANGE) },
+  { category: 'calendar', name: 'getEarningsConfirmed()', schema: EarningsConfirmedSchema, kind: 'array', sample: EVERY_ROW, call: (fmp) => fmp.calendar.getEarningsConfirmed(CALENDAR_RANGE) },
+  { category: 'calendar', name: 'getDividendsCalendar()', schema: DividendsCalendarSchema, kind: 'array', sample: EVERY_ROW, call: (fmp) => fmp.calendar.getDividendsCalendar(CALENDAR_RANGE) },
+  { category: 'calendar', name: 'getEconomicsCalendar()', schema: EconomicsCalendarSchema, kind: 'array', sample: EVERY_ROW, call: (fmp) => fmp.calendar.getEconomicsCalendar(CALENDAR_RANGE) },
+  { category: 'calendar', name: 'getIPOCalendar()', schema: IPOCalendarSchema, kind: 'array', sample: EVERY_ROW, call: (fmp) => fmp.calendar.getIPOCalendar(CALENDAR_RANGE) },
+  { category: 'calendar', name: 'getSplitsCalendar()', schema: SplitsCalendarSchema, kind: 'array', sample: EVERY_ROW, call: (fmp) => fmp.calendar.getSplitsCalendar(CALENDAR_RANGE) },
 
   // ---- company ----
   { category: 'company', name: 'getCompanyProfile(AAPL)', schema: CompanyProfileSchema, kind: 'object', call: (fmp) => fmp.company.getCompanyProfile('AAPL') },
@@ -264,7 +285,9 @@ export const manifest: LiveCase[] = [
   { category: 'insider', name: 'getInsidersBySymbol(AAPL)', schema: InsidersBySymbolResponseSchema, kind: 'array', call: (fmp) => fmp.insider.getInsidersBySymbol({ symbol: 'AAPL' }) },
   { category: 'insider', name: 'getInsiderTradeStatistics(AAPL)', schema: InsiderTradeStatisticsResponseSchema, kind: 'array', call: (fmp) => fmp.insider.getInsiderTradeStatistics({ symbol: 'AAPL' }) },
   { category: 'insider', name: 'getCikMapper()', schema: CikMapperResponseSchema, kind: 'array', call: (fmp) => fmp.insider.getCikMapper({ page: 0 }) },
-  { category: 'insider', name: 'getCikMapperByName(zuckerberg)', schema: CikMapperResponseSchema, kind: 'array', call: (fmp) => fmp.insider.getCikMapperByName({ name: 'zuckerberg', page: 0 }) },
+  // FMP's name search can stall for 30-60 s (then 504s at its gateway), so give it
+  // longer than FMP's own cut-off; a 504 is reported as SKIP rather than FAIL.
+  { category: 'insider', name: 'getCikMapperByName(zuckerberg)', schema: CikMapperResponseSchema, kind: 'array', timeout: 65_000, call: (fmp) => fmp.insider.getCikMapperByName({ name: 'zuckerberg', page: 0 }) },
   { category: 'insider', name: 'getCikMapperBySymbol(MSFT)', schema: CikMapperBySymbolResponseSchema, kind: 'object', call: (fmp) => fmp.insider.getCikMapperBySymbol({ symbol: 'MSFT' }) },
   { category: 'insider', name: 'getBeneficialOwnership(AAPL)', schema: BeneficialOwnershipResponseSchema, kind: 'array', call: (fmp) => fmp.insider.getBeneficialOwnership({ symbol: 'AAPL', limit: 10 }) },
   { category: 'insider', name: 'getFailToDeliver(GE)', schema: FailToDeliverResponseSchema, kind: 'array', call: (fmp) => fmp.insider.getFailToDeliver({ symbol: 'GE', page: 0 }) },
@@ -290,12 +313,12 @@ export const manifest: LiveCase[] = [
 
   // ---- news ----
   { category: 'news', name: 'getArticles()', schema: ArticleSchema, kind: 'array', call: (fmp) => fmp.news.getArticles({ page: 0, limit: 10 }) },
-  { category: 'news', name: 'getStockNews()', schema: NewsSchema, kind: 'array', call: (fmp) => fmp.news.getStockNews({ from: '2025-07-01', to: '2025-07-31', page: 0, limit: 10 }) },
-  { category: 'news', name: 'getCryptoNews()', schema: NewsSchema, kind: 'array', call: (fmp) => fmp.news.getCryptoNews({ from: '2025-07-01', to: '2025-07-31', page: 0, limit: 10 }) },
-  { category: 'news', name: 'getForexNews()', schema: NewsSchema, kind: 'array', call: (fmp) => fmp.news.getForexNews({ from: '2025-07-01', to: '2025-07-31', page: 0, limit: 10 }) },
-  { category: 'news', name: 'getStockNewsBySymbol([TSLA,GOOGL])', schema: NewsSchema, kind: 'array', call: (fmp) => fmp.news.getStockNewsBySymbol({ symbols: ['TSLA', 'GOOGL'], from: '2025-07-01', to: '2025-07-31', page: 0, limit: 10 }) },
-  { category: 'news', name: 'getCryptoNewsBySymbol([BTCUSD])', schema: NewsSchema, kind: 'array', call: (fmp) => fmp.news.getCryptoNewsBySymbol({ symbols: ['BTCUSD', 'ETHUSD'], from: '2025-07-01', to: '2025-07-31', page: 0, limit: 10 }) },
-  { category: 'news', name: 'getForexNewsBySymbol([EURUSD])', schema: NewsSchema, kind: 'array', call: (fmp) => fmp.news.getForexNewsBySymbol({ symbols: ['EURUSD', 'GBPUSD'], from: '2025-07-01', to: '2025-07-31', page: 0, limit: 10 }) },
+  { category: 'news', name: 'getStockNews()', schema: NewsSchema, kind: 'array', call: (fmp) => fmp.news.getStockNews({ ...NEWS_RANGE, page: 0, limit: 10 }) },
+  { category: 'news', name: 'getCryptoNews()', schema: NewsSchema, kind: 'array', call: (fmp) => fmp.news.getCryptoNews({ ...NEWS_RANGE, page: 0, limit: 10 }) },
+  { category: 'news', name: 'getForexNews()', schema: NewsSchema, kind: 'array', call: (fmp) => fmp.news.getForexNews({ ...NEWS_RANGE, page: 0, limit: 10 }) },
+  { category: 'news', name: 'getStockNewsBySymbol([TSLA,GOOGL])', schema: NewsSchema, kind: 'array', call: (fmp) => fmp.news.getStockNewsBySymbol({ symbols: ['TSLA', 'GOOGL'], ...NEWS_RANGE, page: 0, limit: 10 }) },
+  { category: 'news', name: 'getCryptoNewsBySymbol([BTCUSD])', schema: NewsSchema, kind: 'array', call: (fmp) => fmp.news.getCryptoNewsBySymbol({ symbols: ['BTCUSD', 'ETHUSD'], ...NEWS_RANGE, page: 0, limit: 10 }) },
+  { category: 'news', name: 'getForexNewsBySymbol([EURUSD])', schema: NewsSchema, kind: 'array', call: (fmp) => fmp.news.getForexNewsBySymbol({ symbols: ['EURUSD', 'GBPUSD'], ...NEWS_RANGE, page: 0, limit: 10 }) },
 
   // ---- screener ----
   { category: 'screener', name: 'getScreener(limit=10)', schema: ScreenerSchema, kind: 'array', call: (fmp) => fmp.screener.getScreener({ limit: 10 }) },

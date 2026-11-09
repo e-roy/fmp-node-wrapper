@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { getFMPClient } from '@/client';
-import { toToolResponse } from '@/utils/format-response';
+import { toCappedToolResponse } from '@/utils/format-response';
+import { capLimit } from '@/utils/tool-input';
 import { defineTool, type FMPToolDefinition } from './types';
 
 export const newsDefinitions: FMPToolDefinition[] = [
@@ -15,16 +16,20 @@ export const newsDefinitions: FMPToolDefinition[] = [
         .int()
         .positive()
         .default(20)
-        .describe('Max number of articles to return (default 20)'),
+        .describe('Max number of articles to return (default 20, max 50)'),
     }),
-    execute: async ({ from, to, limit = 20 }) =>
-      toToolResponse(
+    execute: async ({ from, to, limit }) => {
+      const cap = capLimit(limit, 20, 50);
+      return toCappedToolResponse(
         await getFMPClient().news.getStockNews({
           from: from ?? undefined,
           to: to ?? undefined,
-          limit,
+          limit: cap.limit,
         }),
-      ),
+        cap.limit,
+        { notice: cap.notice },
+      );
+    },
   }),
   defineTool({
     name: 'getStockNewsBySymbol',
@@ -41,16 +46,20 @@ export const newsDefinitions: FMPToolDefinition[] = [
         .int()
         .positive()
         .default(20)
-        .describe('Max number of articles to return (default 20)'),
+        .describe('Max number of articles to return (default 20, max 50)'),
     }),
-    execute: async ({ symbols, from, to, limit = 20 }) =>
-      toToolResponse(
+    execute: async ({ symbols, from, to, limit }) => {
+      const cap = capLimit(limit, 20, 50);
+      return toCappedToolResponse(
         await getFMPClient().news.getStockNewsBySymbol({
           symbols,
           from: from ?? undefined,
           to: to ?? undefined,
-          limit,
+          limit: cap.limit,
         }),
-      ),
+        cap.limit,
+        { notice: cap.notice },
+      );
+    },
   }),
 ];

@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { getFMPClient } from '@/client';
-import { toToolResponse } from '@/utils/format-response';
+import { toCappedToolResponse, toToolResponse } from '@/utils/format-response';
+import { capLimit } from '@/utils/tool-input';
 import { defineTool, type FMPToolDefinition } from './types';
 
 const symbolSchema = z.object({
@@ -27,10 +28,23 @@ export const companyDefinitions: FMPToolDefinition[] = [
   }),
   defineTool({
     name: 'getCompanyExecutiveCompensation',
-    description: 'Get the company executive compensation',
-    inputSchema: symbolSchema,
-    execute: async ({ symbol }) =>
-      toToolResponse(await getFMPClient().company.getExecutiveCompensation(symbol)),
+    description: 'Get the company executive compensation (at most `limit` records)',
+    inputSchema: symbolSchema.extend({
+      limit: z
+        .number()
+        .int()
+        .positive()
+        .default(20)
+        .describe('Max number of compensation records to return (default 20, max 100)'),
+    }),
+    execute: async ({ symbol, limit }) => {
+      const cap = capLimit(limit, 20, 100);
+      return toCappedToolResponse(
+        await getFMPClient().company.getExecutiveCompensation(symbol),
+        cap.limit,
+        { notice: cap.notice, max: cap.max },
+      );
+    },
   }),
   defineTool({
     name: 'getStockPeers',

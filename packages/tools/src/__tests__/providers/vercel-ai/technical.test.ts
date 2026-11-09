@@ -37,6 +37,27 @@ describe('Vercel AI Technical Tools (minimal)', () => {
       periodLength: 14,
       timeframe: '1day',
     });
-    expect(JSON.parse(result)).toHaveLength(10);
+    const out = JSON.parse(result);
+    expect(out.data).toHaveLength(10);
+    expect(out).toMatchObject({ truncated: true, total: 100, returned: 10 });
+  });
+
+  it('getTechnicalIndicator treats null as "use the default" for every defaulted param', async () => {
+    mockTechnical.getTechnicalIndicator.mockResolvedValueOnce({ success: true, data: [] });
+
+    await (technicalTools.getTechnicalIndicator.execute as any)({
+      symbol: 'AAPL',
+      type: 'rsi',
+      periodLength: null,
+      timeframe: null,
+      limit: null,
+    });
+
+    expect(mockTechnical.getTechnicalIndicator).toHaveBeenCalledWith({
+      symbol: 'AAPL',
+      type: 'rsi',
+      periodLength: 10,
+      timeframe: '1day',
+    });
   });
 });
