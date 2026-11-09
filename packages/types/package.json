@@ -19,7 +19,7 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
-    "lint": "npx eslint src/**/*.ts",
+    "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
     "type-check": "tsc --noEmit",
     "gen:schemas": "ts-to-zod src/quote.ts src/generated/quote.zod.ts && ts-to-zod src/market.ts src/generated/market.zod.ts && ts-to-zod src/financial.ts src/generated/financial.zod.ts",

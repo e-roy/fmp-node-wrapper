@@ -26,7 +26,7 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:tool": "tsx scripts/test-tools-simple.ts",
-    "lint": "npx eslint src/**/*.ts",
+    "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
     "type-check": "tsc --noEmit --skipLibCheck",
     "format": "prettier --write src/**/*.ts",

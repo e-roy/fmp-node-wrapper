@@ -30,7 +30,7 @@
   "scripts": {
     "build": "tsup && node scripts/restore-type-only-exports.mjs",
     "dev": "tsup --watch",
-    "lint": "npx eslint src/**/*.ts",
+    "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
     "test": "jest",
     "test:watch": "jest --watch",
