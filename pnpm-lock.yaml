@@ -26,6 +26,9 @@ importers:
       jest:
         specifier: ^29.7.0
         version: 29.7.0(@types/node@20.19.1)(supports-color@8.1.1)
+      prettier:
+        specifier: ^3.2.5
+        version: 3.6.2
       rimraf:
         specifier: ^5.0.5
         version: 5.0.10
