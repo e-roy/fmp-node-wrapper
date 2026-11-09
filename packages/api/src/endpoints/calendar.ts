@@ -19,9 +19,12 @@ export class CalendarEndpoints {
    * within a specified date range. Essential for tracking earnings season,
    * market events, and investment timing decisions.
    *
+   * FMP serves at most 90 days (inclusive) per request: a longer range silently
+   * returns only its last 90 days, so split long ranges into 90-day windows.
+   *
    * @param params - Earnings calendar request parameters
-   * @param params.from - Start date in YYYY-MM-DD format (optional, defaults to today)
-   * @param params.to - End date in YYYY-MM-DD format (optional, defaults to 30 days from today)
+   * @param params.from - Start date in YYYY-MM-DD format (optional; without dates FMP returns roughly the next 3 months)
+   * @param params.to - End date in YYYY-MM-DD format (optional)
    *
    * @returns Promise resolving to array of earnings calendar data with announcement details
    *
@@ -65,6 +68,10 @@ export class CalendarEndpoints {
    * Provides confirmed earnings announcements with verified dates and times.
    * These are earnings announcements that have been officially confirmed
    * by companies, providing more reliable scheduling information.
+   *
+   * FMP returns upcoming confirmations only, and at most 100 rows per request —
+   * query shorter ranges to cover a longer period. `time` and `when` are often
+   * `null` until the company confirms a time.
    *
    * @param params - Confirmed earnings calendar request parameters
    * @param params.from - Start date in YYYY-MM-DD format (optional, defaults to today)
@@ -159,6 +166,9 @@ export class CalendarEndpoints {
    * Provides upcoming economic events, indicators, and data releases
    * that can impact financial markets. Essential for understanding
    * market-moving events and economic trends.
+   *
+   * FMP serves at most 90 days (inclusive) per request: a longer range silently
+   * returns only its last 90 days, so split long ranges into 90-day windows.
    *
    * @param params - Economic calendar request parameters
    * @param params.from - Start date in YYYY-MM-DD format (optional, defaults to today)

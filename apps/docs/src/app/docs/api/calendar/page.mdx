@@ -41,7 +41,7 @@ The Calendar Endpoints provide access to various financial calendars including e
 
 ## Get Earnings Calendar
 
-Retrieve upcoming earnings announcements with estimated and actual earnings per share (EPS) and revenue data.
+Retrieve upcoming earnings announcements with estimated and actual earnings per share (EPS) and revenue data. FMP serves at most 90 days (inclusive) per request: a longer range silently returns only its **last** 90 days, so split long ranges into 90-day windows. Without dates, FMP returns roughly the next 3 months.
 
 <CodeBlock language="typescript">
   {`const earningsCalendar = await fmp.calendar.getEarningsCalendar({
@@ -101,7 +101,7 @@ Retrieve upcoming earnings announcements with estimated and actual earnings per 
 
 ## Get Earnings Confirmed
 
-Retrieve confirmed earnings announcements with detailed information including publication dates and URLs.
+Retrieve confirmed earnings announcements with detailed information including publication dates and URLs. FMP returns upcoming confirmations only, at most 100 rows per request; query shorter ranges to cover a longer period.
 
 <CodeBlock language="typescript">
   {`const earningsConfirmed = await fmp.calendar.getEarningsConfirmed({
@@ -217,7 +217,7 @@ Retrieve upcoming dividend payments and declarations with payment dates and amou
 
 ## Get Economic Calendar
 
-Retrieve economic events and indicators from various countries with estimates and actual values.
+Retrieve economic events and indicators from various countries with estimates and actual values. FMP serves at most 90 days (inclusive) per request: a longer range silently returns only its **last** 90 days, so split long ranges into 90-day windows.
 
 <CodeBlock language="typescript">
   {`const economicCalendar = await fmp.calendar.getEconomicsCalendar({
