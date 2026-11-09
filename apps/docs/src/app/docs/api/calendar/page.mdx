@@ -101,7 +101,7 @@ Retrieve upcoming earnings announcements with estimated and actual earnings per 
 
 ## Get Earnings Confirmed
 
-Retrieve confirmed earnings announcements with detailed information including publication dates and URLs. FMP returns upcoming confirmations only, at most 100 rows per request; query shorter ranges to cover a longer period.
+Retrieve confirmed earnings announcements with detailed information including publication dates and URLs. FMP returns at most 100 rows per request, and which 100 isn't guaranteed (not simply the earliest or latest dates), so query short ranges (a few days) for complete coverage.
 
 <CodeBlock language="typescript">
   {`const earningsConfirmed = await fmp.calendar.getEarningsConfirmed({

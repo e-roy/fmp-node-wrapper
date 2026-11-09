@@ -69,9 +69,9 @@ export class CalendarEndpoints {
    * These are earnings announcements that have been officially confirmed
    * by companies, providing more reliable scheduling information.
    *
-   * FMP returns upcoming confirmations only, and at most 100 rows per request —
-   * query shorter ranges to cover a longer period. `time` and `when` are often
-   * `null` until the company confirms a time.
+   * FMP returns at most 100 rows per request, and which 100 isn't guaranteed (not
+   * simply the earliest or latest dates) — query short ranges (a few days) for
+   * complete coverage. `time` and `when` are often `null` until a time is confirmed.
    *
    * @param params - Confirmed earnings calendar request parameters
    * @param params.from - Start date in YYYY-MM-DD format (optional, defaults to today)
