@@ -339,8 +339,8 @@ Each tool accepts specific parameters. Here are some common ones:
 - `from` - Start date in YYYY-MM-DD format
 - `to` - End date in YYYY-MM-DD format
 - `name` - For economic indicators: specific indicator name
-- `limit` - Max rows a list tool returns. Every `limit` has a default and a hard maximum (listed in each tool's parameter description, e.g. "default 50, max 100"); larger values are capped. When rows are cut, the tool returns `{ data, truncated: true, total, returned, note }`. Institutional holders (latest filing per holder from the last two reporting quarters) and ETF holdings (latest filing date by default) are sorted largest-first.
-- `from` / `to` - For the earnings and economic calendars, FMP serves at most 90 days per request, so longer ranges are cut to the first 90 days and the response `note` says where to continue.
+- `limit` - Max rows a list tool returns. Every `limit` has a default and a hard maximum (listed in each tool's parameter description, e.g. "default 50, max 100"); larger values are capped. When rows are cut, or a request exceeds the maximum, the tool returns `{ data, truncated, total, returned, note }` (for `getHistoricalPrice`, `data` holds the usual `{ symbol, historical }`). Institutional holders (latest filing per holder from the last two reporting quarters) and ETF holdings (latest filing date by default) are sorted largest-first.
+- `from` / `to` - For the earnings and economic calendars, FMP serves at most 90 days per request, so longer ranges are cut to the first 90 days and the response `note` says where to continue; a `from` without a `to` covers the 90 days starting at `from`.
 - `symbols` - `getEarningsCalendar` only: return just these companies (a week can hold ~2,000 worldwide)
 
 ## Error Handling

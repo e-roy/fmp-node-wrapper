@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { getFMPClient } from '@/client';
 import { toCappedToolResponse, toToolResponse } from '@/utils/format-response';
+import { capLimit } from '@/utils/tool-input';
 import { defineTool, type FMPToolDefinition } from './types';
 
 const byNameLimit = z
@@ -53,11 +54,14 @@ export const senateHouseDefinitions: FMPToolDefinition[] = [
         .describe('The name of the senator to get trading data for'),
       limit: byNameLimit,
     }),
-    execute: async ({ name, limit }) =>
-      toCappedToolResponse(
+    execute: async ({ name, limit }) => {
+      const cap = capLimit(limit, 50, 100);
+      return toCappedToolResponse(
         await getFMPClient().senateHouse.getSenateTradingByName({ name }),
-        Math.min(limit ?? 50, 100),
-      ),
+        cap.limit,
+        { notice: cap.notice },
+      );
+    },
   }),
   defineTool({
     name: 'getHouseTradingByName',
@@ -70,11 +74,14 @@ export const senateHouseDefinitions: FMPToolDefinition[] = [
         .describe('The name of the representative to get trading data for'),
       limit: byNameLimit,
     }),
-    execute: async ({ name, limit }) =>
-      toCappedToolResponse(
+    execute: async ({ name, limit }) => {
+      const cap = capLimit(limit, 50, 100);
+      return toCappedToolResponse(
         await getFMPClient().senateHouse.getHouseTradingByName({ name }),
-        Math.min(limit ?? 50, 100),
-      ),
+        cap.limit,
+        { notice: cap.notice },
+      );
+    },
   }),
   defineTool({
     name: 'getSenateTradingRSSFeed',

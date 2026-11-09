@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { getFMPClient } from '@/client';
-import { toToolResponse } from '@/utils/format-response';
+import { toCappedToolResponse, toToolResponse } from '@/utils/format-response';
+import { capLimit } from '@/utils/tool-input';
 import { defineTool, type FMPToolDefinition } from './types';
 
 const period = z
@@ -28,8 +29,12 @@ const statementTool = (
     name,
     description,
     inputSchema: z.object({ symbol: symbol(what), period, limit }),
-    execute: async ({ symbol, period, limit }) =>
-      toToolResponse(await call({ symbol, period, limit: Math.min(limit ?? 5, 20) })),
+    execute: async ({ symbol, period, limit }) => {
+      const cap = capLimit(limit, 5, 20);
+      return toCappedToolResponse(await call({ symbol, period, limit: cap.limit }), cap.limit, {
+        notice: cap.notice,
+      });
+    },
   });
 
 export const financialDefinitions: FMPToolDefinition[] = [
@@ -96,13 +101,14 @@ export const financialDefinitions: FMPToolDefinition[] = [
         .default(10)
         .describe('The number of periods to retrieve (default 10, max 40)'),
     }),
-    execute: async ({ symbol, limit }) =>
-      toToolResponse(
-        await getFMPClient().financial.getEarningsHistorical({
-          symbol,
-          limit: Math.min(limit ?? 10, 40),
-        }),
-      ),
+    execute: async ({ symbol, limit }) => {
+      const cap = capLimit(limit, 10, 40);
+      return toCappedToolResponse(
+        await getFMPClient().financial.getEarningsHistorical({ symbol, limit: cap.limit }),
+        cap.limit,
+        { notice: cap.notice },
+      );
+    },
   }),
   defineTool({
     name: 'getFinancialScores',

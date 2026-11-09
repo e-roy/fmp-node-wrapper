@@ -42,7 +42,11 @@ describe('Vercel AI Quote Tools (minimal)', () => {
       from: undefined,
       to: undefined,
     });
-    expect(JSON.parse(result).historical).toHaveLength(5);
+    // Same envelope as every capped tool, with the usual { symbol, historical } in `data`.
+    const out = JSON.parse(result);
+    expect(out.data.symbol).toBe('AAPL');
+    expect(out.data.historical).toHaveLength(5);
+    expect(out).toMatchObject({ truncated: true, total: 100, returned: 5 });
   });
 
   it('getIntraday caps the array to the limit', async () => {

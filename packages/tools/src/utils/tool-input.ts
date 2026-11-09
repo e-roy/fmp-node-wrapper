@@ -16,3 +16,36 @@ export function applyDefaults(schema: z.ZodTypeAny, input: unknown): any {
   const parsed = schema.safeParse(stripped);
   return parsed.success ? parsed.data : stripped;
 }
+
+/**
+ * A copy of `schema` whose defaulted fields also accept `null`. SDKs that validate
+ * input before calling the tool (OpenAI Agents) would otherwise reject `null` for
+ * e.g. `limit`; the tool then strips the nulls and applies the real defaults.
+ */
+export function acceptNullForDefaults(schema: z.ZodObject<any>): z.ZodObject<any> {
+  const shape = Object.fromEntries(
+    Object.entries(schema.shape).map(([key, field]) => {
+      if (!(field instanceof z.ZodDefault)) return [key, field];
+      const nullable = field.nullable();
+      return [key, field.description ? nullable.describe(field.description) : nullable];
+    }),
+  );
+  return z.object(shape);
+}
+
+/**
+ * Resolve a requested `limit` against its default and hard maximum. When the request
+ * exceeds the maximum, `notice` tells the model so a shorter list isn't a surprise.
+ */
+export function capLimit(
+  requested: number | null | undefined,
+  defaultRows: number,
+  maxRows: number,
+): { limit: number; notice?: string } {
+  const wanted = requested ?? defaultRows;
+  if (wanted <= maxRows) return { limit: wanted };
+  return {
+    limit: maxRows,
+    notice: `Requested ${wanted} rows, but this tool returns at most ${maxRows} per call.`,
+  };
+}

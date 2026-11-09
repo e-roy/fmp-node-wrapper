@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { getFMPClient } from '@/client';
 import { toCappedToolResponse, toToolResponse } from '@/utils/format-response';
+import { capLimit } from '@/utils/tool-input';
 import { defineTool, type FMPToolDefinition } from './types';
 
 const empty = z.object({});
@@ -27,11 +28,12 @@ export const marketDefinitions: FMPToolDefinition[] = [
         .default(50)
         .describe('Max number of indices to return (default 50, max 100)'),
     }),
-    execute: async ({ limit }) =>
-      toCappedToolResponse(
-        await getFMPClient().market.getMarketPerformance(),
-        Math.min(limit ?? 50, 100),
-      ),
+    execute: async ({ limit }) => {
+      const cap = capLimit(limit, 50, 100);
+      return toCappedToolResponse(await getFMPClient().market.getMarketPerformance(), cap.limit, {
+        notice: cap.notice,
+      });
+    },
   }),
   defineTool({
     name: 'getSectorPerformance',

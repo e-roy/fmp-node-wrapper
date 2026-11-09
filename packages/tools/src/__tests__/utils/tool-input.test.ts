@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { applyDefaults, stripNulls } from '@/utils/tool-input';
+import { applyDefaults, capLimit, stripNulls } from '@/utils/tool-input';
 
 const schema = z.object({
   symbol: z.string().min(1),
@@ -16,6 +16,20 @@ describe('stripNulls', () => {
   it('passes non-objects through', () => {
     expect(stripNulls(null)).toBeNull();
     expect(stripNulls([1])).toEqual([1]);
+  });
+});
+
+describe('capLimit', () => {
+  it('uses the default when nothing (or null) is requested', () => {
+    expect(capLimit(undefined, 20, 50)).toEqual({ limit: 20 });
+    expect(capLimit(null, 20, 50)).toEqual({ limit: 20 });
+  });
+
+  it('caps at the maximum and says so', () => {
+    expect(capLimit(2000, 20, 50)).toEqual({
+      limit: 50,
+      notice: 'Requested 2000 rows, but this tool returns at most 50 per call.',
+    });
   });
 });
 

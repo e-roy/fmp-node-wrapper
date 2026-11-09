@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { getFMPClient } from '@/client';
 import { toCappedToolResponse } from '@/utils/format-response';
+import { capLimit } from '@/utils/tool-input';
 import { defineTool, type FMPToolDefinition } from './types';
 
 const MAX_ROWS = 100;
@@ -20,6 +21,8 @@ const dateRangeSchema = z.object({
     .describe(`Max number of entries to return (default 50, max ${MAX_ROWS})`),
 });
 
+const isoDate = (ms: number): string => new Date(ms).toISOString().slice(0, 10);
+
 /**
  * Keep a requested range within FMP's 90-day window, anchored at `from` (the soonest
  * dates), and return a notice telling the model how to fetch the rest.
@@ -28,12 +31,23 @@ export function clampRange(
   from?: string | null,
   to?: string | null,
 ): { from?: string; to?: string; notice?: string } {
-  if (!from || !to) return { from: from ?? undefined, to: to ?? undefined };
+  if (!from) return { to: to ?? undefined };
   const start = Date.parse(from);
+  if (Number.isNaN(start)) return { from, to: to ?? undefined };
   const lastAllowed = start + (MAX_RANGE_DAYS - 1) * DAY_MS;
-  if (Number.isNaN(start) || !(Date.parse(to) > lastAllowed)) return { from, to };
-  const clampedTo = new Date(lastAllowed).toISOString().slice(0, 10);
-  const nextFrom = new Date(lastAllowed + DAY_MS).toISOString().slice(0, 10);
+  if (!to) {
+    // FMP ignores a lone `from` (it returns the 90 days ending today), so give it
+    // an explicit end: the full 90-day window starting at `from`.
+    const end = isoDate(lastAllowed);
+    return {
+      from,
+      to: end,
+      notice: `No end date given, so this covers ${from} to ${end} (FMP's ${MAX_RANGE_DAYS}-day maximum).`,
+    };
+  }
+  if (!(Date.parse(to) > lastAllowed)) return { from, to };
+  const clampedTo = isoDate(lastAllowed);
+  const nextFrom = isoDate(lastAllowed + DAY_MS);
   return {
     from,
     to: clampedTo,
@@ -65,8 +79,9 @@ export const calendarDefinitions: FMPToolDefinition[] = [
         wanted && res.success !== false && Array.isArray(res.data)
           ? { ...res, data: res.data.filter(row => wanted.has(row.symbol.toUpperCase())) }
           : res;
-      return toCappedToolResponse(filtered, Math.min(limit ?? 50, MAX_ROWS), {
-        notice: range.notice,
+      const cap = capLimit(limit, 50, MAX_ROWS);
+      return toCappedToolResponse(filtered, cap.limit, {
+        notice: [range.notice, cap.notice],
         hint: 'Rows are in date order. Pass `symbols` to find specific companies, or narrow the date range.',
       });
     },
@@ -78,11 +93,12 @@ export const calendarDefinitions: FMPToolDefinition[] = [
     inputSchema: dateRangeSchema,
     execute: async ({ from, to, limit }) => {
       const range = clampRange(from, to);
+      const cap = capLimit(limit, 50, MAX_ROWS);
       return toCappedToolResponse(
         await getFMPClient().calendar.getEconomicsCalendar({ from: range.from, to: range.to }),
-        Math.min(limit ?? 50, MAX_ROWS),
+        cap.limit,
         {
-          notice: range.notice,
+          notice: [range.notice, cap.notice],
           hint: 'Rows are in date order; narrow the date range to see the rest.',
         },
       );

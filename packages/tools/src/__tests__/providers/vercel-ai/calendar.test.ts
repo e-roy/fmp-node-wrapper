@@ -67,6 +67,17 @@ describe('Vercel AI Calendar Tools (minimal)', () => {
     expect(result.note).toContain('from=2027-01-18');
   });
 
+  it('getEarningsCalendar turns a lone `from` into an explicit 90-day window', async () => {
+    mockCalendar.getEarningsCalendar.mockResolvedValueOnce({ success: true, data: [{ symbol: 'NVDA' }] });
+
+    const result = JSON.parse(
+      await (calendarTools.getEarningsCalendar.execute as any)({ from: '2026-11-16', symbols: ['NVDA'] }),
+    );
+
+    expect(mockCalendar.getEarningsCalendar).toHaveBeenCalledWith({ from: '2026-11-16', to: '2027-02-13' });
+    expect(result.note).toContain('No end date given');
+  });
+
   it('getEarningsCalendar flags truncation instead of silently dropping rows', async () => {
     mockCalendar.getEarningsCalendar.mockResolvedValueOnce({
       success: true,

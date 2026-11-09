@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { getFMPClient } from '@/client';
 import { toCappedToolResponse, toToolResponse } from '@/utils/format-response';
+import { capLimit } from '@/utils/tool-input';
 import { defineTool, type FMPToolDefinition } from './types';
 
 export const quoteDefinitions: FMPToolDefinition[] = [
@@ -52,28 +53,27 @@ export const quoteDefinitions: FMPToolDefinition[] = [
       // Response is { symbol, historical: [...] } (newest first): cap the inner list,
       // and flag the cut so the model knows older days exist.
       const data = res.data as { symbol?: string; historical?: unknown[] } | null;
-      const max = Math.min(limit ?? 30, 365);
-      if (
-        res.success !== false &&
-        data &&
-        Array.isArray(data.historical) &&
-        data.historical.length > max
-      ) {
-        const total = data.historical.length;
-        return JSON.stringify(
-          {
-            ...data,
-            historical: data.historical.slice(0, max),
-            truncated: true,
-            total,
-            returned: max,
-            note: `Showing the ${max} most recent of ${total} days. Narrow the date range or increase \`limit\` to see older days.`,
-          },
-          null,
-          2,
-        );
+      const cap = capLimit(limit, 30, 365);
+      if (res.success === false || !data || !Array.isArray(data.historical)) {
+        return toToolResponse(res);
       }
-      return toToolResponse(res);
+      const total = data.historical.length;
+      const truncated = total > cap.limit;
+      if (!truncated && !cap.notice) return toToolResponse(res);
+      const historical = data.historical.slice(0, cap.limit);
+      const note = [
+        truncated ? `Showing the ${historical.length} most recent of ${total} days.` : undefined,
+        cap.notice,
+        truncated ? 'Narrow the date range or increase `limit` to see older days.' : undefined,
+      ]
+        .filter(Boolean)
+        .join(' ');
+      // Same envelope keys as every other capped tool, with the usual payload in `data`.
+      return JSON.stringify(
+        { data: { ...data, historical }, truncated, total, returned: historical.length, note },
+        null,
+        2,
+      );
     },
   }),
   defineTool({
@@ -95,16 +95,21 @@ export const quoteDefinitions: FMPToolDefinition[] = [
         .default(50)
         .describe('Max number of most-recent bars to return (default 50, max 390)'),
     }),
-    execute: async ({ symbol, interval = '5min', from, to, limit }) =>
-      toCappedToolResponse(
+    execute: async ({ symbol, interval = '5min', from, to, limit }) => {
+      const cap = capLimit(limit, 50, 390);
+      return toCappedToolResponse(
         await getFMPClient().quote.getIntraday({
           symbol,
           interval,
           from: from ?? undefined,
           to: to ?? undefined,
         }),
-        Math.min(limit ?? 50, 390),
-        { hint: 'Most recent bars first; narrow the date range to see earlier bars.' },
-      ),
+        cap.limit,
+        {
+          notice: cap.notice,
+          hint: 'Most recent bars first; narrow the date range to see earlier bars.',
+        },
+      );
+    },
   }),
 ];

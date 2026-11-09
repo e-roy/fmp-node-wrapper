@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { getFMPClient } from '@/client';
 import { toCappedToolResponse, toToolResponse } from '@/utils/format-response';
+import { capLimit } from '@/utils/tool-input';
 import { defineTool, type FMPToolDefinition } from './types';
 
 export const analystDefinitions: FMPToolDefinition[] = [
@@ -19,16 +20,17 @@ export const analystDefinitions: FMPToolDefinition[] = [
         .int()
         .positive()
         .default(10)
-        .describe('Max number of periods to return (default 10, max 40)'),
+        // FMP's Starter plan rejects limit > 10 here (premium query parameter).
+        .describe('Max number of periods to return (default 10, max 10)'),
     }),
-    execute: async ({ symbol, period = 'annual', limit }) =>
-      toToolResponse(
-        await getFMPClient().analyst.getEstimates({
-          symbol,
-          period,
-          limit: Math.min(limit ?? 10, 40),
-        }),
-      ),
+    execute: async ({ symbol, period = 'annual', limit }) => {
+      const cap = capLimit(limit, 10, 10);
+      return toCappedToolResponse(
+        await getFMPClient().analyst.getEstimates({ symbol, period, limit: cap.limit }),
+        cap.limit,
+        { notice: cap.notice },
+      );
+    },
   }),
   defineTool({
     name: 'getPriceTargetConsensus',
@@ -53,14 +55,13 @@ export const analystDefinitions: FMPToolDefinition[] = [
         .default(20)
         .describe('Max number of grade entries to return (default 20, max 100)'),
     }),
-    execute: async ({ symbol, limit }) =>
-      toCappedToolResponse(
-        await getFMPClient().analyst.getGrades({ symbol }),
-        Math.min(limit ?? 20, 100),
-        {
-          hint: 'Most recent grades first.',
-        },
-      ),
+    execute: async ({ symbol, limit }) => {
+      const cap = capLimit(limit, 20, 100);
+      return toCappedToolResponse(await getFMPClient().analyst.getGrades({ symbol }), cap.limit, {
+        notice: cap.notice,
+        hint: 'Most recent grades first.',
+      });
+    },
   }),
   defineTool({
     name: 'getGradesConsensus',

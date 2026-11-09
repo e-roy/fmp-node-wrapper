@@ -1,7 +1,8 @@
 import { z } from 'zod';
 import type { ScreenerParams } from 'fmp-node-api';
 import { getFMPClient } from '@/client';
-import { toToolResponse } from '@/utils/format-response';
+import { toCappedToolResponse } from '@/utils/format-response';
+import { capLimit } from '@/utils/tool-input';
 import { defineTool, type FMPToolDefinition } from './types';
 
 export const screenerDefinitions: FMPToolDefinition[] = [
@@ -33,11 +34,16 @@ export const screenerDefinitions: FMPToolDefinition[] = [
     }),
     execute: async ({ limit, ...filters }) => {
       // Drop null/undefined so they aren't sent as query params.
-      const params: Record<string, unknown> = { limit: Math.min(limit ?? 50, 100) };
+      const cap = capLimit(limit, 50, 100);
+      const params: Record<string, unknown> = { limit: cap.limit };
       for (const [key, value] of Object.entries(filters)) {
         if (value !== null && value !== undefined) params[key] = value;
       }
-      return toToolResponse(await getFMPClient().screener.getScreener(params as ScreenerParams));
+      return toCappedToolResponse(
+        await getFMPClient().screener.getScreener(params as ScreenerParams),
+        cap.limit,
+        { notice: cap.notice },
+      );
     },
   }),
 ];

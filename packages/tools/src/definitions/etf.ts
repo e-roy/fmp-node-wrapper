@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { getFMPClient } from '@/client';
 import { toCappedToolResponse, toToolResponse } from '@/utils/format-response';
+import { capLimit } from '@/utils/tool-input';
 import { defineTool, type FMPToolDefinition } from './types';
 
 export const etfDefinitions: FMPToolDefinition[] = [
@@ -43,14 +44,12 @@ export const etfDefinitions: FMPToolDefinition[] = [
       if (holdingsDate) {
         params.date = holdingsDate;
       }
-      return toCappedToolResponse(
-        await client.etf.getHoldings(params),
-        Math.min(limit ?? 50, 100),
-        {
-          compare: (a, b) => b.pctVal - a.pctVal,
-          hint: `Largest positions first, as of ${holdingsDate ?? 'the requested date'}.`,
-        },
-      );
+      const cap = capLimit(limit, 50, 100);
+      return toCappedToolResponse(await client.etf.getHoldings(params), cap.limit, {
+        notice: cap.notice,
+        compare: (a, b) => b.pctVal - a.pctVal,
+        hint: `Largest positions first, as of ${holdingsDate ?? 'the requested date'}.`,
+      });
     },
   }),
   defineTool({

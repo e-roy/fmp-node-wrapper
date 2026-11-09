@@ -2,6 +2,7 @@ import { z } from 'zod';
 import type { InstitutionalHolderResponse } from 'fmp-node-api';
 import { getFMPClient } from '@/client';
 import { toCappedToolResponse } from '@/utils/format-response';
+import { capLimit } from '@/utils/tool-input';
 import { defineTool, type FMPToolDefinition } from './types';
 
 const MAX_ROWS = 100;
@@ -62,7 +63,9 @@ export const institutionalDefinitions: FMPToolDefinition[] = [
         res.success !== false && Array.isArray(res.data)
           ? { ...res, data: currentHolders(res.data) }
           : res;
-      return toCappedToolResponse(current, Math.min(limit ?? 20, MAX_ROWS), {
+      const cap = capLimit(limit, 20, MAX_ROWS);
+      return toCappedToolResponse(current, cap.limit, {
+        notice: cap.notice,
         compare: (a, b) => b.shares - a.shares,
         hint: 'Holders are ordered by shares held, largest first.',
       });

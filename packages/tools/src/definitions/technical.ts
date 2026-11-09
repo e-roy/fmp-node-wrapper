@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { getFMPClient } from '@/client';
 import { toCappedToolResponse } from '@/utils/format-response';
+import { capLimit } from '@/utils/tool-input';
 import { defineTool, type FMPToolDefinition } from './types';
 
 export const technicalDefinitions: FMPToolDefinition[] = [
@@ -37,7 +38,9 @@ export const technicalDefinitions: FMPToolDefinition[] = [
         periodLength,
         timeframe,
       });
-      return toCappedToolResponse(res, Math.min(limit ?? 50, 365), {
+      const cap = capLimit(limit, 50, 365);
+      return toCappedToolResponse(res, cap.limit, {
+        notice: cap.notice,
         hint: 'Most recent bars first.',
       });
     },

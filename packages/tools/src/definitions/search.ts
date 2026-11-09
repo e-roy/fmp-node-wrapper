@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { getFMPClient } from '@/client';
-import { toToolResponse } from '@/utils/format-response';
+import { toCappedToolResponse } from '@/utils/format-response';
+import { capLimit } from '@/utils/tool-input';
 import { defineTool, type FMPToolDefinition } from './types';
 
 export const searchDefinitions: FMPToolDefinition[] = [
@@ -22,13 +23,17 @@ export const searchDefinitions: FMPToolDefinition[] = [
         .nullable()
         .describe('Restrict to a specific exchange (optional, e.g., "NASDAQ")'),
     }),
-    execute: async ({ query, limit, exchange }) =>
-      toToolResponse(
+    execute: async ({ query, limit, exchange }) => {
+      const cap = capLimit(limit, 10, 50);
+      return toCappedToolResponse(
         await getFMPClient().search.search({
           query,
-          limit: Math.min(limit ?? 10, 50),
+          limit: cap.limit,
           exchange: exchange ?? undefined,
         }),
-      ),
+        cap.limit,
+        { notice: cap.notice },
+      );
+    },
   }),
 ];

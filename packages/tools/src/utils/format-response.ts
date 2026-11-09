@@ -49,17 +49,22 @@ export function limitRows<T>(
 export function toCappedToolResponse<T>(
   res: APIResponse<T[]>,
   limit: number,
-  options: { compare?: (a: T, b: T) => number; hint?: string; notice?: string } = {},
+  options: {
+    compare?: (a: T, b: T) => number;
+    hint?: string;
+    notice?: string | Array<string | undefined>;
+  } = {},
 ): string {
   const total = res.success !== false && Array.isArray(res.data) ? res.data.length : 0;
   const capped = limitRows(res, limit, options.compare);
   const truncated = total > limit;
-  if (capped.success === false || !Array.isArray(capped.data) || (!truncated && !options.notice)) {
+  const notices = [options.notice].flat().filter(Boolean);
+  if (capped.success === false || !Array.isArray(capped.data) || (!truncated && !notices.length)) {
     return toToolResponse(capped);
   }
   const note = [
     truncated ? `Showing ${capped.data.length} of ${total} rows.` : undefined,
-    options.notice,
+    ...notices,
     truncated ? (options.hint ?? 'Increase `limit` to see more.') : undefined,
   ]
     .filter(Boolean)
