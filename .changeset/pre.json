@@ -12,6 +12,7 @@
   "changesets": [
     "beta-consumer-fixes",
     "beta-retest-fixes",
-    "live-drift-fixes"
+    "live-drift-fixes",
+    "tool-limits-and-ranges"
   ]
 }
