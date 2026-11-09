@@ -28,12 +28,11 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version: '22.x'
 
+      # Installs the pnpm version pinned in package.json#packageManager.
       - name: Install pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 9.2.0
+        uses: pnpm/action-setup@v6
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
