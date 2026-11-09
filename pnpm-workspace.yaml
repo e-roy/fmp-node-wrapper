@@ -4,3 +4,22 @@ packages:
   - 'packages/*'
   - 'packages/types'
   - 'packages/tools'
+
+# Expose ESLint and its TypeScript plugins at the root node_modules so shared
+# configs can resolve them (pnpm 11's default publicHoistPattern is empty).
+publicHoistPattern:
+  - 'eslint*'
+  - '@typescript-eslint*'
+
+preferOffline: true
+
+audit:
+  level: moderate
+
+# Reviewed dependency install scripts (strictDepBuilds fails the install on
+# any unreviewed one). All three ship prebuilt binaries via optional
+# dependencies, so their scripts stay off.
+allowBuilds:
+  esbuild: false
+  sharp: false
+  unrs-resolver: false
