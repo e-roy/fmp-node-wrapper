@@ -62,7 +62,7 @@ export default function Home() {
           <div className="f-chips" style={{ marginBottom: 22 }}>
             <span className="f-chip">MIT</span>
             <span className="f-chip">TypeScript 5</span>
-            <span className="f-chip">Node 20+</span>
+            <span className="f-chip">Node 22+</span>
           </div>
           <h1 style={{ textWrap: 'balance' }}>
             The Node.js toolkit for Financial Modeling Prep
